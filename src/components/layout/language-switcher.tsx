@@ -10,28 +10,18 @@ export function LanguageSwitcher({ translationsMap }: { translationsMap: Transla
   const pathName = usePathname()
   const params = useParams()
 
-  // This is a more robust way to determine the current locale.
-  // It checks the URL path first, which is the most reliable source of truth.
-  const getCurrentLocale = () => {
-    const segments = pathName.split('/');
-    if (i18n.locales.includes(segments[1] as any)) {
-      return segments[1];
-    }
-    return i18n.defaultLocale;
-  }
-  const currentLocale = getCurrentLocale();
+  const currentLocale = (params.locale as string) || i18n.defaultLocale;
+  const currentSlug = params.slug as string | undefined;
 
   const redirectedPathName = (newLocale: string) => {
     if (!pathName) return '/'
 
-    const isBlogPage = pathName.includes('/blog/');
-    const currentSlugFromParams = params.slug as string;
-    
-    if (isBlogPage && currentSlugFromParams && translationsMap) {
+    // 1. Handle blog post pages
+    if (currentSlug && translationsMap) {
       let translationKey: string | null = null;
       // Find the translation key for the current slug and locale
       for (const key in translationsMap) {
-        const found = translationsMap[key].find(t => t.locale === currentLocale && t.slug === currentSlugFromParams);
+        const found = translationsMap[key].find(t => t.locale === currentLocale && t.slug === currentSlug);
         if (found) {
           translationKey = key;
           break;
@@ -39,7 +29,6 @@ export function LanguageSwitcher({ translationsMap }: { translationsMap: Transla
       }
 
       if (translationKey) {
-        // BUG FIX: Use the found translationKey, not the loop variable 'key'
         const targetTranslation = translationsMap[translationKey].find(t => t.locale === newLocale);
         if (targetTranslation) {
           if (newLocale === i18n.defaultLocale) {
@@ -50,22 +39,16 @@ export function LanguageSwitcher({ translationsMap }: { translationsMap: Transla
       }
     }
 
-    // Fallback for non-blog pages or if translation is not found
-    const segments = pathName.split('/');
-    const isLocalized = i18n.locales.includes(segments[1] as any);
+    // 2. Handle all other pages (homepage, etc.)
+    const pathWithoutLocale = currentLocale === i18n.defaultLocale
+        ? pathName
+        : pathName.replace(`/${currentLocale}`, '') || '/';
     
-    let pathWithoutLocale = isLocalized ? `/${segments.slice(2).join('/')}` : pathName;
-    if (pathWithoutLocale === '') pathWithoutLocale = '/';
-
     if (newLocale === i18n.defaultLocale) {
-        return pathWithoutLocale;
-    }
-    
-    if (pathWithoutLocale === '/') {
-        return `/${newLocale}`;
+      return pathWithoutLocale;
     }
 
-    return `/${newLocale}${pathWithoutLocale}`;
+    return `/${newLocale}${pathWithoutLocale === '/' ? '' : pathWithoutLocale}`;
   }
 
   const isActive = (locale: string) => currentLocale === locale;
