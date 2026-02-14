@@ -1,7 +1,7 @@
 import fs from 'fs';
 import path from 'path';
 import matter from 'gray-matter';
-import { i18n } from '@/i18n-config';
+import { i18n, type Locale } from '@/i18n-config';
 
 const postsDirectory = path.join(process.cwd(), '_posts');
 
@@ -24,10 +24,11 @@ export type Post<TFrontmatter> = {
 };
 
 
-export function getSortedPostsData(locale: string = i18n.defaultLocale): Post<PostFrontmatter>[] {
-  const localeDirectory = path.join(postsDirectory, locale);
+export function getSortedPostsData(locale?: string): Post<PostFrontmatter>[] {
+  const targetLocale = i18n.locales.includes(locale as Locale) ? locale : i18n.defaultLocale;
+  const localeDirectory = path.join(postsDirectory, targetLocale!);
+  
   let fileNames: string[];
-
   try {
     fileNames = fs.readdirSync(localeDirectory);
   } catch (err) {
@@ -45,7 +46,7 @@ export function getSortedPostsData(locale: string = i18n.defaultLocale): Post<Po
       return {
         slug,
         frontmatter: data as PostFrontmatter,
-        locale,
+        locale: targetLocale!,
       };
     });
 
@@ -65,8 +66,9 @@ export type PostData = {
   locale: string;
 };
 
-export async function getPostData(slug: string, locale: string = i18n.defaultLocale): Promise<PostData | null> {
-  const fullPath = path.join(postsDirectory, locale, `${slug}.mdx`);
+export async function getPostData(slug: string, locale?: string): Promise<PostData | null> {
+  const targetLocale = i18n.locales.includes(locale as Locale) ? locale : i18n.defaultLocale;
+  const fullPath = path.join(postsDirectory, targetLocale!, `${slug}.mdx`);
   
   if (!fs.existsSync(fullPath)) {
     return null;
@@ -79,12 +81,13 @@ export async function getPostData(slug: string, locale: string = i18n.defaultLoc
     slug,
     frontmatter: data as PostFrontmatter,
     content,
-    locale,
+    locale: targetLocale!,
   };
 }
 
-export function getAllPostSlugs(locale: string = i18n.defaultLocale) {
-    const localeDirectory = path.join(postsDirectory, locale);
+export function getAllPostSlugs(locale?: string) {
+    const targetLocale = i18n.locales.includes(locale as Locale) ? locale : i18n.defaultLocale;
+    const localeDirectory = path.join(postsDirectory, targetLocale!);
     let fileNames: string[];
     try {
       fileNames = fs.readdirSync(localeDirectory);
@@ -132,6 +135,7 @@ export function getAllTranslationsMap(): TranslationsMap {
     const posts = getSortedPostsData(locale);
     for (const post of posts) {
       const key = post.frontmatter.translationKey;
+      if (!key) continue;
       if (!translationsMap[key]) {
         translationsMap[key] = [];
       }
