@@ -4,8 +4,9 @@ import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import { cn } from '@/lib/utils';
 import { LanguageSwitcher } from './language-switcher';
+import { TranslationsMap } from '@/lib/posts';
 
-export function Header() {
+export function Header({ translationsMap }: { translationsMap: TranslationsMap }) {
   const [isVisible, setIsVisible] = useState(true);
   const lastScrollY = useRef(0);
 
@@ -36,7 +37,7 @@ export function Header() {
             <Link href="/" className="font-headline text-2xl font-bold tracking-tighter">
                 SG
             </Link>
-            <LanguageSwitcher />
+            <LanguageSwitcher translationsMap={translationsMap} />
         </nav>
     </header>
   );

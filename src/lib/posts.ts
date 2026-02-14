@@ -116,3 +116,30 @@ export function getAllLocales() {
     return [];
   }
 }
+
+export type TranslationsMap = {
+  [key: string]: {
+    locale: string;
+    slug: string;
+  }[];
+};
+
+export function getAllTranslationsMap(): TranslationsMap {
+  const allLocales = getAllLocales();
+  const translationsMap: TranslationsMap = {};
+
+  for (const locale of allLocales) {
+    const posts = getSortedPostsData(locale);
+    for (const post of posts) {
+      const key = post.frontmatter.translationKey;
+      if (!translationsMap[key]) {
+        translationsMap[key] = [];
+      }
+      const existing = translationsMap[key].find(t => t.locale === locale);
+      if (!existing) {
+        translationsMap[key].push({ locale, slug: post.slug });
+      }
+    }
+  }
+  return translationsMap;
+}
