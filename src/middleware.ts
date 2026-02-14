@@ -1,20 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { match } from '@formatjs/intl-localematcher';
-import Negotiator from 'negotiator';
 import { i18n } from './i18n-config';
-
-function getLocale(request: NextRequest): string {
-  const negotiatorHeaders: Record<string, string> = {};
-  request.headers.forEach((value, key) => (negotiatorHeaders[key] = value));
-
-  const languages = new Negotiator({ headers: negotiatorHeaders }).languages();
-  
-  try {
-    return match(languages, i18n.locales, i18n.defaultLocale);
-  } catch (error) {
-    return i18n.defaultLocale;
-  }
-}
 
 export function middleware(request: NextRequest) {
   const pathname = request.nextUrl.pathname;
@@ -32,17 +17,14 @@ export function middleware(request: NextRequest) {
     (locale) => !pathname.startsWith(`/${locale}/`) && pathname !== `/${locale}`
   );
 
+  // If the locale is missing, this is an English (default locale) page.
+  // Rewrite the path to include the 'en' locale for Next.js's router
+  // while keeping the URL clean for the user.
   if (pathnameIsMissingLocale) {
-    const locale = getLocale(request);
-
-    if (locale === i18n.defaultLocale) {
-      return NextResponse.rewrite(
-        new URL(`/${locale}${pathname.startsWith('/') ? '' : '/'}${pathname}`, request.url)
-      );
-    }
+    const defaultLocale = i18n.defaultLocale;
     
-    return NextResponse.redirect(
-      new URL(`/${locale}${pathname.startsWith('/') ? '' : '/'}${pathname}`, request.url)
+    return NextResponse.rewrite(
+      new URL(`/${defaultLocale}${pathname.startsWith('/') ? '' : '/'}${pathname}`, request.url)
     );
   }
 }
