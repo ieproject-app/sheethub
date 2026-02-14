@@ -41,18 +41,25 @@ export function LanguageSwitcher({ translationsMap }: { translationsMap: Transla
     }
 
     // Fallback for non-blog pages or if translation is not found
-    const pathIsLocalized = i18n.locales.includes(pathName.split('/')[1] as any);
-    const pathWithoutLocale = pathIsLocalized ? pathName.substring(pathName.indexOf('/', 1)) : pathName;
+    const segments = pathName.split('/');
+    const isLocalized = i18n.locales.includes(segments[1] as any);
+
+    let pathWithoutLocale = pathName;
+    if (isLocalized) {
+        // e.g. /id/about -> /about or /id -> /
+        const newPath = segments.slice(2).join('/');
+        pathWithoutLocale = `/${newPath}`;
+    }
 
     if (newLocale === i18n.defaultLocale) {
-      return pathWithoutLocale || '/';
+        return pathWithoutLocale;
+    }
+    
+    if (pathWithoutLocale === '/') {
+        return `/${newLocale}`;
     }
 
-    const newPath = `/${newLocale}${pathWithoutLocale}`;
-    if (newPath !== '/' && newPath.endsWith('/')) {
-      return newPath.slice(0, -1);
-    }
-    return newPath;
+    return `/${newLocale}${pathWithoutLocale}`;
   }
 
   return (
