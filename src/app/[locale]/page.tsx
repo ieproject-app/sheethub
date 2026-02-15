@@ -34,7 +34,7 @@ export default function Home({ params: { locale } }: { params: { locale: string 
                     )}
                   >
                     <Link href={`${linkPrefix}/blog/${post.slug}`} className="block group" aria-label={`Read more about ${post.frontmatter.title}`}>
-                      <article className="relative w-full h-96 rounded-xl overflow-hidden shadow-2xl">
+                      <article className="relative w-full aspect-[4/3] rounded-xl overflow-hidden shadow-2xl">
                         {heroImage && (
                           <Image
                             src={heroImage.imageUrl}
