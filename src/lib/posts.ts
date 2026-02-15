@@ -43,6 +43,10 @@ export function getSortedPostsData(locale?: string): Post<PostFrontmatter>[] {
       const fileContents = fs.readFileSync(fullPath, 'utf8');
       const { data } = matter(fileContents);
 
+      if (!data.heroImage) {
+        data.heroImage = 'understanding-nextjs';
+      }
+
       return {
         slug,
         frontmatter: data as PostFrontmatter,
@@ -76,6 +80,10 @@ export async function getPostData(slug: string, locale?: string): Promise<PostDa
 
   const fileContents = fs.readFileSync(fullPath, 'utf8');
   const { data, content } = matter(fileContents);
+
+  if (!data.heroImage) {
+    data.heroImage = 'understanding-nextjs';
+  }
 
   return {
     slug,
