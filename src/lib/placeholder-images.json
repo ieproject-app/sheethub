@@ -47,6 +47,30 @@
       "description": "Abstract visualization of a CSS grid",
       "imageUrl": "https://images.unsplash.com/photo-1521185495037-fac355938198?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=MnwzNDE5ODJ8MHwxfGFsbHx8fHx8fHx8fDE2NzE4OTI2MTc&ixlib=rb-4.1.0&q=80&w=1080",
       "imageHint": "css grid"
+    },
+    {
+      "id": "footer-about",
+      "description": "Portrait of a person in a creative setting",
+      "imageUrl": "https://images.unsplash.com/photo-1522075469751-3a6694fb2f61?q=80&w=1160&auto=format&fit=crop",
+      "imageHint": "person portrait"
+    },
+    {
+      "id": "footer-notes",
+      "description": "A minimalist notebook and pen",
+      "imageUrl": "https://images.unsplash.com/photo-1484480974693-6ca0a78fb36b?q=80&w=1170&auto=format&fit=crop",
+      "imageHint": "notebook writing"
+    },
+    {
+      "id": "footer-tools",
+      "description": "A collection of useful digital tools or code",
+      "imageUrl": "https://images.unsplash.com/photo-1555949963-ff9fe0c870eb?q=80&w=1170&auto=format&fit=crop",
+      "imageHint": "digital tools"
+    },
+    {
+      "id": "footer-archive",
+      "description": "An old library archive",
+      "imageUrl": "https://images.unsplash.com/photo-1568667256549-094345857637?q=80&w=1015&auto=format&fit=crop",
+      "imageHint": "library archive"
     }
   ]
 }

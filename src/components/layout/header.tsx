@@ -17,7 +17,6 @@ import {
 
 const menuItems = [
     { name: 'Blog', href: '/blog' },
-    { name: 'Notes', href: '/notes' },
     { name: 'Projects', href: '/projects' },
 ];
 
@@ -25,6 +24,7 @@ const moreMenuItems = [
     { name: 'About', href: '/about' },
     { name: 'Archive', href: '/archive' },
     { name: 'Contact', href: '/contact' },
+    { name: 'Notes', href: '/notes' },
 ];
 
 const allMenuItems = [...menuItems, ...moreMenuItems];

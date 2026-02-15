@@ -1,4 +1,5 @@
 import { Header } from '@/components/layout/header';
+import { Footer } from '@/components/layout/footer';
 import { i18n } from '@/i18n-config';
 import { getAllTranslationsMap as getAllPostTranslationsMap } from '@/lib/posts';
 import { getAllNotesTranslationsMap } from '@/lib/notes';
@@ -36,6 +37,7 @@ export default function LocaleLayout({
       <body className="font-body antialiased">
         <Header translationsMap={translationsMap} />
         <main>{children}</main>
+        <Footer locale={params.locale} />
         <Toaster />
       </body>
     </html>
