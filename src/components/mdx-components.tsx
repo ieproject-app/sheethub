@@ -7,12 +7,13 @@ import { ImageCarousel } from './mdx/ImageCarousel'
 
 // This component handles how `<code>` tags are rendered.
 const CustomCode = (props: any) => {
-  const isCodeBlock = props.className?.includes('language-');
-
+  // rehype-pretty-code adds a `data-language` attribute to code blocks.
+  // We can use this to distinguish between block and inline code.
+  const isCodeBlock = 'data-language' in props;
+  
   if (isCodeBlock) {
     // For code blocks, rehype-pretty-code has already done the syntax highlighting.
-    // It passes the necessary props to `code`. We just render it.
-    // The parent <pre> tag is handled by rehype-pretty-code's wrapper.
+    // It passes the necessary props to `code`. We just render it without any extra styles.
     return <code {...props} />;
   }
 
