@@ -1,10 +1,13 @@
+diff --git a/node_modules/next-themes/package.json b/node_modules/next-themes/package.json
+index 5a35967..b2c3a33 100644
 --- a/node_modules/next-themes/package.json
 +++ b/node_modules/next-themes/package.json
-@@ -38,7 +38,7 @@
+@@ -37,7 +37,7 @@
    "peerDependencies": {
-     "next": ">=9",
--    "react": "^16.8 || ^17 || ^18"
-+    "react": "^16.8 || ^17 || ^18 || ^19"
+-    "react": "^16.8 || ^17 || ^18",
+-    "react-dom": "^16.8 || ^17 || ^18"
++    "react": "^16.8 || ^17 || ^18 || ^19",
++    "react-dom": "^16.8 || ^17 || ^18 || ^19"
    },
-   "peerDependenciesMeta": {
-     "next": {
+   "dependencies": {},
+   "devDependencies": {
