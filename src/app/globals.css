@@ -2,6 +2,13 @@
 @tailwind components;
 @tailwind utilities;
 
+@layer components {
+  /* Custom style for inline code snippets, won't affect rehype-pretty-code blocks */
+  :not(pre) > code {
+    @apply font-code relative rounded bg-muted px-[0.4rem] py-[0.2rem] font-mono text-sm font-semibold text-foreground/80;
+  }
+}
+
 @layer base {
   :root {
     --background: 210 17% 98%; /* #F9FAFB */

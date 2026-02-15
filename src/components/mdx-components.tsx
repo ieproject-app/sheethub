@@ -5,22 +5,6 @@ import { Note } from './mdx/Note'
 import { Warning } from './mdx/Warning'
 import { ImageCarousel } from './mdx/ImageCarousel'
 
-// This component handles how `<code>` tags are rendered.
-const CustomCode = (props: any) => {
-  // rehype-pretty-code adds a `data-language` attribute to code blocks.
-  // We can use this to distinguish between block and inline code.
-  const isCodeBlock = 'data-language' in props;
-  
-  if (isCodeBlock) {
-    // For code blocks, rehype-pretty-code has already done the syntax highlighting.
-    // It passes the necessary props to `code`. We just render it without any extra styles.
-    return <code {...props} />;
-  }
-
-  // For inline code, we apply our own simple styling.
-  return <code className="font-code relative rounded bg-muted px-[0.4rem] py-[0.2rem] font-mono text-sm font-semibold" {...props} />;
-}
-
 // This component handles how `<img>` tags are rendered via MDX.
 const CustomImage = (props: any) => (
     <div className="my-8">
@@ -64,7 +48,6 @@ export const mdxComponents: MDXComponents = {
     ol: MdxOl,
     li: MdxLi,
     blockquote: MdxBlockquote,
-    code: CustomCode,
     Image: CustomImage,
     Note,
     Warning,
