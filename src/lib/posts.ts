@@ -54,7 +54,23 @@ export function getSortedPostsData(locale?: string): Post<PostFrontmatter>[] {
       };
     });
 
-  return allPostsData.sort((a, b) => {
+  const postsWithKeys = new Map<string, Post<PostFrontmatter>>();
+  const postsWithoutKeys: Post<PostFrontmatter>[] = [];
+
+  for (const post of allPostsData) {
+      const key = post.frontmatter.translationKey;
+      if (key) {
+          if (!postsWithKeys.has(key) || new Date(post.frontmatter.date) > new Date(postsWithKeys.get(key)!.frontmatter.date)) {
+              postsWithKeys.set(key, post);
+          }
+      } else {
+          postsWithoutKeys.push(post);
+      }
+  }
+
+  const uniquePosts = [...Array.from(postsWithKeys.values()), ...postsWithoutKeys];
+
+  return uniquePosts.sort((a, b) => {
     if (new Date(a.frontmatter.date) < new Date(b.frontmatter.date)) {
       return 1;
     } else {

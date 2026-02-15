@@ -39,14 +39,36 @@ export function getSortedNotesData(locale?: string): Note<NoteFrontmatter>[] {
       const fileContents = fs.readFileSync(fullPath, 'utf8');
       const { data } = matter(fileContents);
 
+      // Return null for invalid/empty files
+      if (!data.title || !data.date) {
+        return null;
+      }
+
       return {
         slug,
         frontmatter: data as NoteFrontmatter,
         locale: targetLocale!,
       };
-    });
+    })
+    .filter((note): note is Note<NoteFrontmatter> => note !== null); // Filter out null values
 
-  return allNotesData.sort((a, b) => {
+  const notesWithKeys = new Map<string, Note<NoteFrontmatter>>();
+  const notesWithoutKeys: Note<NoteFrontmatter>[] = [];
+
+  for (const note of allNotesData) {
+      const key = note.frontmatter.translationKey;
+      if (key) {
+          if (!notesWithKeys.has(key) || new Date(note.frontmatter.date) > new Date(notesWithKeys.get(key)!.frontmatter.date)) {
+              notesWithKeys.set(key, note);
+          }
+      } else {
+          notesWithoutKeys.push(note);
+      }
+  }
+
+  const uniqueNotes = [...Array.from(notesWithKeys.values()), ...notesWithoutKeys];
+
+  return uniqueNotes.sort((a, b) => {
     if (new Date(a.frontmatter.date) < new Date(b.frontmatter.date)) {
       return 1;
     } else {
@@ -137,6 +159,8 @@ export function getAllNotesTranslationsMap(): NotesTranslationsMap {
       const fullPath = path.join(localeDirectory, fileName);
       const fileContents = fs.readFileSync(fullPath, 'utf8');
       const { data } = matter(fileContents);
+
+      if (!data.translationKey) continue;
       const frontmatter = data as NoteFrontmatter;
 
       const key = frontmatter.translationKey;
