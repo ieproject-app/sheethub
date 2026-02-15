@@ -14,6 +14,8 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
+import { ScrollArea } from '@/components/ui/scroll-area';
+import { Badge } from '@/components/ui/badge';
 
 const menuItems = [
     { name: 'Blog', href: '/blog' },
@@ -29,12 +31,38 @@ const moreMenuItems = [
 
 const allMenuItems = [...menuItems, ...moreMenuItems];
 
-export function Header({ translationsMap }: { translationsMap: TranslationsMap }) {
+type SearchableItem = {
+  slug: string;
+  title: string;
+  description: string;
+  type: 'blog' | 'note';
+  href: string;
+};
+
+export function Header({ translationsMap, searchableData }: { translationsMap: TranslationsMap, searchableData: SearchableItem[] }) {
   const [isVisible, setIsVisible] = useState(true);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
+  const [query, setQuery] = useState('');
+  const [results, setResults] = useState<SearchableItem[]>([]);
   const lastScrollY = useRef(0);
   const searchInputRef = useRef<HTMLInputElement>(null);
   const headerRef = useRef<HTMLElement>(null);
+
+  // Search logic
+  useEffect(() => {
+    if (query.length > 1) {
+      const lowerCaseQuery = query.toLowerCase();
+      const filteredData = searchableData.filter(
+        item =>
+          item.title.toLowerCase().includes(lowerCaseQuery) ||
+          (item.description && item.description.toLowerCase().includes(lowerCaseQuery))
+      );
+      setResults(filteredData);
+    } else {
+      setResults([]);
+    }
+  }, [query, searchableData]);
+
 
   // Scroll visibility logic
   useEffect(() => {
@@ -65,11 +93,13 @@ export function Header({ translationsMap }: { translationsMap: TranslationsMap }
     const handleClickOutside = (event: MouseEvent) => {
       if (headerRef.current && !headerRef.current.contains(event.target as Node)) {
         setIsSearchOpen(false);
+        setQuery('');
       }
     };
     const handleKeydown = (event: KeyboardEvent) => {
         if (event.key === 'Escape') {
             setIsSearchOpen(false);
+            setQuery('');
         }
     }
     document.addEventListener('mousedown', handleClickOutside);
@@ -79,6 +109,11 @@ export function Header({ translationsMap }: { translationsMap: TranslationsMap }
         document.removeEventListener('keydown', handleKeydown);
     };
   }, [headerRef]);
+
+  const handleResultClick = () => {
+    setIsSearchOpen(false);
+    setQuery('');
+  };
 
   return (
     <header ref={headerRef} className={cn(
@@ -192,21 +227,64 @@ export function Header({ translationsMap }: { translationsMap: TranslationsMap }
                 <Input 
                     ref={searchInputRef}
                     type="search" 
-                    placeholder="Search..."
+                    placeholder="Search posts and notes..."
                     className="w-full h-full bg-transparent border-none rounded-full pl-12 pr-12 focus-visible:ring-0 focus-visible:ring-offset-0 text-primary-foreground placeholder:text-primary-foreground/50"
                     aria-hidden={!isSearchOpen}
+                    value={query}
+                    onChange={(e) => setQuery(e.target.value)}
                 />
                 <Button 
                     variant="ghost" 
                     size="icon" 
                     className="rounded-full absolute right-2 z-20 h-9 w-9"
-                    onClick={() => setIsSearchOpen(false)}
+                    onClick={() => { setIsSearchOpen(false); setQuery(''); }}
                     aria-label="Close search"
                 >
                    <X className="h-5 w-5" />
                 </Button>
             </div>
         </nav>
+        {/* Search Results */}
+        {isSearchOpen && (
+          <div className="w-full md:w-auto mx-auto mt-2 md:max-w-sm lg:max-w-md">
+            <div className="bg-background rounded-lg border shadow-lg max-h-[400px] overflow-hidden">
+                {query.length > 1 ? (
+                    results.length > 0 ? (
+                        <ScrollArea className="h-full max-h-[400px]">
+                            <div className="p-2">
+                                <p className="px-2 py-1.5 text-xs font-semibold text-muted-foreground">{results.length} results found</p>
+                                <ul>
+                                    {results.map((item) => (
+                                    <li key={`${item.type}-${item.slug}`}>
+                                        <Link 
+                                            href={item.href} 
+                                            onClick={handleResultClick} 
+                                            className="block p-3 rounded-md hover:bg-accent transition-colors"
+                                        >
+                                            <div className="flex items-center justify-between">
+                                                <span className="font-medium text-sm text-primary truncate">{item.title}</span>
+                                                <Badge variant="outline" className="capitalize text-xs ml-2 shrink-0">{item.type}</Badge>
+                                            </div>
+                                            <p className="text-xs text-muted-foreground mt-1 line-clamp-2">{item.description}</p>
+                                        </Link>
+                                    </li>
+                                    ))}
+                                </ul>
+                            </div>
+                        </ScrollArea>
+                    ) : (
+                        <div className="p-6 text-center text-sm text-muted-foreground">
+                            No results found for &quot;{query}&quot;.
+                        </div>
+                    )
+                ) : (
+                    <div className="p-6 text-center text-sm text-muted-foreground">
+                        Search for articles by title or description.
+                    </div>
+                )}
+            </div>
+          </div>
+        )}
     </header>
   );
 }

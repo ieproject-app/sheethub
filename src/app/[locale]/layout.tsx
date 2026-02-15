@@ -1,8 +1,8 @@
 import { Header } from '@/components/layout/header';
 import { Footer } from '@/components/layout/footer';
 import { i18n } from '@/i18n-config';
-import { getAllTranslationsMap as getAllPostTranslationsMap } from '@/lib/posts';
-import { getAllNotesTranslationsMap } from '@/lib/notes';
+import { getAllTranslationsMap as getAllPostTranslationsMap, getSortedPostsData } from '@/lib/posts';
+import { getAllNotesTranslationsMap, getSortedNotesData } from '@/lib/notes';
 import '../globals.css';
 import { Toaster } from '@/components/ui/toaster';
 import type { Metadata } from 'next';
@@ -37,6 +37,28 @@ export default function LocaleLayout({
   const postTranslationsMap = getAllPostTranslationsMap();
   const noteTranslationsMap = getAllNotesTranslationsMap();
   const translationsMap = {...postTranslationsMap, ...noteTranslationsMap};
+
+  const posts = getSortedPostsData(params.locale);
+  const notes = getSortedNotesData(params.locale);
+  const linkPrefix = params.locale === i18n.defaultLocale ? '' : `/${params.locale}`;
+
+  const searchablePosts = posts.map(post => ({
+    slug: post.slug,
+    title: post.frontmatter.title,
+    description: post.frontmatter.description,
+    type: 'blog' as const,
+    href: `${linkPrefix}/blog/${post.slug}`,
+  }));
+
+  const searchableNotes = notes.map(note => ({
+    slug: note.slug,
+    title: note.frontmatter.title,
+    description: note.frontmatter.description,
+    type: 'note' as const,
+    href: `${linkPrefix}/notes/${note.slug}`,
+  }));
+
+  const searchableData = [...searchablePosts, ...searchableNotes];
   
   return (
     <html lang={params.locale} className="scroll-smooth" suppressHydrationWarning>
@@ -52,7 +74,7 @@ export default function LocaleLayout({
             enableSystem
             disableTransitionOnChange
         >
-            <Header translationsMap={translationsMap} />
+            <Header translationsMap={translationsMap} searchableData={searchableData} />
             <main>{children}</main>
             <Footer />
             <Toaster />
