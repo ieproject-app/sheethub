@@ -3,6 +3,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import React from 'react';
 import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from '@/components/ui/table';
+import { cn } from '@/lib/utils';
 
 // This component handles how `<img>` tags are rendered via MDX.
 const CustomImage = (props: any) => (
@@ -44,6 +45,16 @@ const MdxOl = ({ children }: { children?: React.ReactNode }) => <ol className="m
 const MdxLi = ({ children }: { children?: React.ReactNode }) => <li>{children}</li>;
 const MdxBlockquote = ({ children }: { children?: React.ReactNode }) => <blockquote className="mt-6 border-l-2 border-primary/20 pl-6 italic text-muted-foreground">{children}</blockquote>;
 
+const MdxPre = ({ className, ...props }: React.HTMLAttributes<HTMLPreElement>) => (
+    <pre
+        className={cn(
+            "rounded-lg p-6 my-6 overflow-x-auto",
+            className
+        )}
+        {...props}
+    />
+);
+
 export const mdxComponents: MDXComponents = {
     h1: MdxH1,
     h2: MdxH2,
@@ -62,4 +73,5 @@ export const mdxComponents: MDXComponents = {
     tr: TableRow,
     th: TableHead,
     td: TableCell,
+    pre: MdxPre,
 }
