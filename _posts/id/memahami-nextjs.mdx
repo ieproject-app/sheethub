@@ -1,67 +1,87 @@
 ---
-title: "Memahami Next.js: Sebuah Tinjauan Mendalam"
-date: "2024-05-01"
-description: "Melihat secara komprehensif konsep inti Next.js, dari Server Components hingga App Router."
-heroImage: "understanding-nextjs"
-translationKey: "post-1"
+title: 'Memahami Next.js: Panduan Mendalam untuk Pemula'
+date: '2024-05-01'
+description: 'Jelajahi konsep inti Next.js, dari Server Components hingga Client Components dan segala sesuatu di antaranya.'
+heroImage: 'understanding-nextjs'
+translationKey: 'post-1'
 featured: true
 ---
+Ini adalah contoh postingan blog untuk mendemonstrasikan kekuatan MDX lokal dengan Next.js. Anda dapat menulis konten menggunakan Markdown dan menyematkan komponen React yang interaktif.
 
-Next.js telah merevolusi pengembangan React dengan menyediakan kerangka kerja yang kuat dengan fitur-fitur seperti Server-Side Rendering (SSR), Static Site Generation (SSG), dan sekarang, App Router dengan React Server Components (RSC).
+## Apa itu Server Components?
+Server Components adalah fitur baru di Next.js yang memungkinkan Anda menulis komponen UI yang berjalan secara eksklusif di server. Hal ini dapat menghasilkan peningkatan kinerja yang signifikan dengan mengurangi jumlah JavaScript yang dikirim ke klien.
 
-## App Router
+> Catatan: Server Components dapat langsung mengakses sumber daya sisi server seperti basis data atau sistem file tanpa perlu membuat rute API terpisah. Ini sangat menyederhanakan logika pengambilan data.
 
-App Router, yang diperkenalkan di Next.js 13, adalah sebuah perubahan paradigma. Ini memungkinkan Anda membangun aplikasi menggunakan sistem routing berbasis file di dalam direktori `app`. Setiap folder mewakili segmen rute.
-
-> **Catatan:** App Router menggunakan Server Components secara default, yang merupakan keuntungan performa yang besar. Ini berarti lebih sedikit JavaScript yang dikirim ke klien, menghasilkan pemuatan halaman awal yang lebih cepat.
-
-Berikut adalah contoh kode yang panjang untuk menunjukkan bagaimana seharusnya blok kode terlihat dan berfungsi. Blok ini seharusnya memiliki latar belakang yang konsisten dan dapat digulir secara horizontal di layar yang lebih kecil jika kontennya meluap.
-
+Berikut adalah contoh panjang seperti apa Server Component itu, yang mengambil data secara langsung:
 ```tsx
-// src/app/layout.tsx
-import { Inter } from 'next/font/google';
-import './globals.css';
-import { ThemeProvider } from '@/components/theme-provider';
-import { Analytics } from '@vercel/analytics/react';
+// src/app/page.tsx
+import { db } from '@/lib/db';
  
-const inter = Inter({ subsets: ['latin'] });
+// Ini adalah Server Component
+async function HomePage() {
+  const posts = await db.post.findMany();
  
-export const metadata = {
-  title: 'My Awesome App',
-  description: 'Dibuat oleh create next app, ini adalah contoh baris kode yang sangat panjang yang seharusnya menyebabkan wadah dapat digulir secara horizontal daripada membungkus atau meluap dengan buruk.',
-};
- 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" suppressHydrationWarning>
-      <body className={inter.className}>
-        <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
-          {children}
-          <Analytics />
-        </ThemeProvider>
-      </body>
-    </html>
+    <main>
+      <h1>Blog Saya</h1>
+      <ul>
+        {posts.map((post) => (
+          <li key={post.id}>
+            <a href={`/posts/${post.slug}`}>{post.title}</a>
+          </li>
+        ))}
+      </ul>
+    </main>
   );
 }
+
+export default HomePage;
 ```
 
-## Client vs. Server Components
+## Kapan menggunakan Client Components?
+Client Components adalah komponen yang sudah Anda kenal dari aplikasi React tradisional. Mereka dirender di klien dan dapat menggunakan state, efek, dan API khusus browser. Anda memilih untuk menggunakannya dengan menggunakan direktif `'use client'` di bagian atas file.
 
-Dengan App Router, Anda dapat secara eksplisit mendefinisikan komponen sebagai Client atau Server Components.
+- Mereka dapat menggunakan `useState` dan `useEffect`.
+- Mereka memiliki akses ke API browser seperti `window` atau `localStorage`.
+- Mereka ideal untuk elemen UI yang interaktif.
 
-- **Server Components** berjalan secara eksklusif di server. Mereka dapat langsung mengakses sumber daya backend seperti database dan sistem file.
-- **Client Components** bersifat interaktif dan berjalan di klien. Anda memilih untuk menggunakannya dengan menambahkan direktif `'use client'` di bagian atas file Anda.
+> Ingatlah bahwa Anda hanya boleh menggunakan Client Components saat Anda benar-benar membutuhkannya. Mendorong sebanyak mungkin logika ke server adalah cara Next.js.
 
-> **Peringatan:** Hati-hati saat mengambil data sensitif. Server Components adalah tempat yang bagus untuk ini, tetapi jangan pernah mengekspos kunci rahasia atau token ke Client Components.
+## Demonstrasi Gambar
 
-## Galeri Gambar
-
-Berikut adalah beberapa contoh gambar yang ditampilkan satu per satu.
+Berikut adalah contoh gambar yang dirender dari file MDX. Gambar ini didefinisikan dalam file `placeholder-images.json` dan dirender melalui komponen khusus.
 
 ![Representasi abstrak arsitektur Next.js](https://images.unsplash.com/photo-1565106430482-8f6e74349ca1?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw2fHxjb2RlJTIwYWJzdHJhY3R8ZW58MHx8fHwxNzcxMDI0ODk1fDA&ixlib=rb-4.1.0&q=80&w=1080)
 
-![Visualisasi sistem desain yang cerah dan bersih](https://images.unsplash.com/photo-1576595580361-90a855b84b20?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw4fHxkZXNpZ24lMjBzeXN0ZW18ZW58MHx8fHwxNzcxMDYwODc4fDA&ixlib=rb-4.1.0&q=80&w=1080)
+Ini adalah cara yang ampuh untuk mengelola aset visual Anda secara terstruktur.
 
-![Gambar Placeholder 3](https://picsum.photos/seed/gallery3/800/400)
+## Peragaan MDX Lengkap
 
-Ini menunjukkan cara sederhana untuk menampilkan gambar tanpa komponen carousel yang rumit.
+Untuk menjadikan artikel dummy ini benar-benar "contekan", berikut adalah contoh semua elemen Markdown standar lainnya yang bisa Anda gunakan.
+
+### Format Teks & Garis
+
+Anda bisa menggunakan **teks tebal**, *teks miring*, dan bahkan ~~teks yang dicoret~~. Gunakan garis pemisah horizontal untuk memisahkan konten, seperti ini:
+
+---
+
+### Daftar Berurutan untuk Langkah-langkah
+
+Terkadang, Anda perlu membuat daftar langkah-langkah secara berurutan.
+
+1.  **Langkah pertama:** Kumpulkan kebutuhan Anda.
+2.  **Langkah kedua:** Tulis kodenya.
+3.  **Langkah ketiga:** Deploy ke produksi.
+
+### Tabel Data
+
+Tabel sangat penting untuk menampilkan data terstruktur. Berikut adalah perbandingan sederhana:
+
+| Fitur             | Server Component | Client Component |
+| ----------------- | :--------------: | :--------------: |
+| Berjalan di Server|        ✅        |        ❌        |
+| Interaktif (State)|        ❌        |        ✅        |
+| Akses Database    |        ✅        |        ❌        |
+
+Ini mencakup semua blok bangunan dasar untuk menulis konten yang kaya!
