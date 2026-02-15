@@ -6,8 +6,7 @@ import { mdxComponents } from '@/components/mdx-components';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
 import type { Metadata } from 'next';
 import remarkGfm from 'remark-gfm';
-import rehypePrettyCode from 'rehype-pretty-code';
-import type { Options } from 'rehype-pretty-code';
+import rehypeShiki from '@shikijs/rehype';
 
 export async function generateStaticParams() {
   const locales = getAllLocales();
@@ -39,25 +38,6 @@ export default async function PostPage({ params }: { params: { slug: string, loc
   }
 
   const heroImage = PlaceHolderImages.find(p => p.id === post.frontmatter.heroImage);
-
-  const prettyCodeOptions: Partial<Options> = {
-    theme: 'github-dark',
-    onVisitLine(node) {
-      // Prevent lines from collapsing in `display: grid` mode, and allow empty
-      // lines to be copy/pasted
-      if (node.children.length === 0) {
-        node.children = [{type: 'text', value: ' '}];
-      }
-    },
-    onVisitHighlightedLine(node) {
-      // Each line node by default has `class="line"`.
-      node.properties.className.push('highlighted');
-    },
-    onVisitHighlightedWord(node) {
-      // Each word node has no className by default.
-      node.properties.className = ['word'];
-    },
-  };
 
   return (
     <main className="w-full">
@@ -94,7 +74,7 @@ export default async function PostPage({ params }: { params: { slug: string, loc
             options={{
               mdxOptions: {
                 remarkPlugins: [remarkGfm],
-                rehypePlugins: [[rehypePrettyCode, prettyCodeOptions]],
+                rehypePlugins: [[rehypeShiki, { theme: 'github-dark' }]],
               },
             }}
           />
