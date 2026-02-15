@@ -139,7 +139,7 @@ export function Header({ translationsMap, searchableData }: { translationsMap: T
   return (
     <header ref={headerRef} className={cn(
         "fixed top-4 left-4 right-4 md:left-1/2 md:-translate-x-1/2 md:right-auto z-50 transition-all duration-300 ease-in-out",
-        isSearchOpen ? 'md:max-w-md' : 'md:w-auto',
+        isSearchOpen ? 'w-full max-w-lg' : 'md:w-auto',
         isVisible ? "opacity-100 translate-y-0" : "opacity-0 -translate-y-16"
     )}>
         <nav className={cn(
@@ -274,7 +274,7 @@ export function Header({ translationsMap, searchableData }: { translationsMap: T
 
         {/* Search Results */}
         {isSearchOpen && (
-          <div className="w-full md:w-auto mx-auto mt-2 md:max-w-sm lg:max-w-md">
+          <div className="w-full mt-2">
             <div className="bg-background rounded-lg border shadow-lg max-h-[400px] overflow-hidden">
                 {query.length > 1 ? (
                     results.length > 0 ? (
