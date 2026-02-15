@@ -18,20 +18,10 @@ export default function Home({ params: { locale } }: { params: { locale: string 
 
   return (
     <div className="w-full">
-      <header className="text-center pt-24 pb-12 sm:pt-32 sm:pb-16 px-4">
-        <h1 className="font-headline text-5xl md:text-6xl font-extrabold tracking-tighter text-primary">
-          {locale === 'id' ? 'Blog Teknologi Modern' : 'SnipGeek'}
-        </h1>
-        <p className="mt-4 text-lg text-muted-foreground max-w-xl mx-auto">
-          {locale === 'id' ? 'Blog teknologi minimalis modern untuk para geek, didukung oleh MDX lokal.' : 'A modern minimalist tech blog for geeks, powered by local MDX.'}
-        </p>
-      </header>
-
       {/* Featured Posts Section */}
       {featuredPosts.length > 0 && (
-        <section className="mb-20 sm:mb-28">
+        <section className="pt-24 sm:pt-32 mb-20 sm:mb-28">
           <div className="container max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <h2 className="text-3xl font-bold font-headline tracking-tighter text-primary mb-10 text-center">{locale === 'id' ? 'Unggulan' : 'Featured Posts'}</h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
               {featuredPosts.map((post, index) => {
                 const heroImage = PlaceHolderImages.find(p => p.id === post.frontmatter.heroImage);
