@@ -144,7 +144,8 @@ export function Header({ translationsMap, searchableData }: { translationsMap: T
     )}>
         <nav className={cn(
             "relative mx-auto bg-primary/90 backdrop-blur-sm text-primary-foreground shadow-lg ring-1 ring-black/5 flex items-center justify-between h-12 transition-all duration-300 ease-in-out px-2",
-            isSearchOpen ? 'w-full rounded-full' : 'w-full md:w-auto',
+            isSearchOpen && 'md:w-full',
+            isSearchOpen ? 'rounded-full' : 'w-full md:w-auto',
             isMenuOpen ? 'rounded-t-2xl rounded-b-none' : 'rounded-full'
         )}>
             {/* Normal view container */}
@@ -274,7 +275,7 @@ export function Header({ translationsMap, searchableData }: { translationsMap: T
 
         {/* Search Results */}
         {isSearchOpen && (
-          <div className="absolute top-full left-0 right-0 z-30 mt-2 md:w-full">
+          <div className="absolute top-full left-0 right-0 z-30 mt-2">
             <div className="bg-background rounded-lg border shadow-lg max-h-[400px] overflow-hidden">
                 {query.length > 1 ? (
                     results.length > 0 ? (
@@ -289,11 +290,13 @@ export function Header({ translationsMap, searchableData }: { translationsMap: T
                                             onClick={handleResultClick} 
                                             className="block p-3 rounded-md hover:bg-accent transition-colors"
                                         >
-                                            <div className="flex items-center justify-between gap-2">
-                                                <span className="font-medium text-sm text-primary truncate flex-1 min-w-0">{item.title}</span>
-                                                <Badge variant="outline" className="capitalize text-xs shrink-0">{item.type}</Badge>
+                                            <div className="overflow-hidden">
+                                                <div className="flex items-center justify-between gap-2">
+                                                    <span className="font-medium text-sm text-primary truncate flex-1 min-w-0">{item.title}</span>
+                                                    <Badge variant="outline" className="capitalize text-xs shrink-0">{item.type}</Badge>
+                                                </div>
+                                                <p className="text-xs text-muted-foreground mt-1 line-clamp-2">{item.description}</p>
                                             </div>
-                                            <p className="text-xs text-muted-foreground mt-1 line-clamp-2">{item.description}</p>
                                         </Link>
                                     </li>
                                     ))}
