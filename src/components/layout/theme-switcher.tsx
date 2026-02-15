@@ -39,7 +39,7 @@ export function ThemeSwitcher() {
           className={cn(
             'relative z-10 w-9 h-6 flex items-center justify-center rounded-full transition-colors',
             theme === option.theme
-              ? 'text-accent-foreground'
+              ? 'text-primary'
               : 'text-muted-foreground hover:text-foreground'
           )}
           aria-label={`Switch to ${option.theme} mode`}
