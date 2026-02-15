@@ -274,7 +274,7 @@ export function Header({ translationsMap, searchableData }: { translationsMap: T
 
         {/* Search Results */}
         {isSearchOpen && (
-          <div className="w-full mt-2">
+          <div className="absolute top-full left-0 right-0 z-30 mt-2 md:w-full">
             <div className="bg-background rounded-lg border shadow-lg max-h-[400px] overflow-hidden">
                 {query.length > 1 ? (
                     results.length > 0 ? (
@@ -289,9 +289,9 @@ export function Header({ translationsMap, searchableData }: { translationsMap: T
                                             onClick={handleResultClick} 
                                             className="block p-3 rounded-md hover:bg-accent transition-colors"
                                         >
-                                            <div className="flex items-center justify-between">
-                                                <span className="font-medium text-sm text-primary truncate">{item.title}</span>
-                                                <Badge variant="outline" className="capitalize text-xs ml-2 shrink-0">{item.type}</Badge>
+                                            <div className="flex items-center justify-between gap-2">
+                                                <span className="font-medium text-sm text-primary truncate flex-1 min-w-0">{item.title}</span>
+                                                <Badge variant="outline" className="capitalize text-xs shrink-0">{item.type}</Badge>
                                             </div>
                                             <p className="text-xs text-muted-foreground mt-1 line-clamp-2">{item.description}</p>
                                         </Link>
