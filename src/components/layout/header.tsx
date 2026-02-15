@@ -213,7 +213,7 @@ export function Header({ translationsMap, searchableData }: { translationsMap: T
                     <Button 
                         variant="ghost" 
                         size="icon" 
-                        className="rounded-full relative z-20 h-9 w-9"
+                        className={cn("rounded-full relative z-20 h-9 w-9", isSearchOpen && "opacity-0 pointer-events-none")}
                         onClick={handleSearchToggle}
                         aria-label={"Open search"}
                     >
@@ -292,7 +292,7 @@ export function Header({ translationsMap, searchableData }: { translationsMap: T
                                         >
                                             <div className="overflow-hidden">
                                                 <div className="flex items-center justify-between gap-2">
-                                                    <span className="font-medium text-sm text-primary truncate flex-1 min-w-0">{item.title}</span>
+                                                    <span className="font-medium text-sm text-primary line-clamp-2 flex-1 min-w-0">{item.title}</span>
                                                     <Badge variant="outline" className="capitalize text-xs shrink-0">{item.type}</Badge>
                                                 </div>
                                                 <p className="text-xs text-muted-foreground mt-1 line-clamp-2">{item.description}</p>
