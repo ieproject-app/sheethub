@@ -15,13 +15,24 @@ export const mdxComponents: MDXComponents = {
       return <a {...props} />;
     },
     ul: ({ children }) => <ul className="my-6 ml-6 list-disc [&>li]:mt-2">{children}</ul>,
-    ol: ({ children }) => <ol className="my-6 ml-6 list-decimal [&>li]:mt-2">{children}</ol>,
+    ol: ({ children }) => <ol className="my-6 ml-6 list-decimal [&>li]:mt-2">{children}ol>,
     li: ({ children }) => <li>{children}</li>,
     blockquote: ({ children }) => <blockquote className="mt-6 border-l-2 border-primary/20 pl-6 italic text-muted-foreground">{children}</blockquote>,
     pre: (props: React.HTMLAttributes<HTMLPreElement>) => (
       <pre className="font-code my-6 rounded-lg overflow-x-auto" {...props} />
     ),
-    code: ({ children }) => <code className="font-code relative rounded bg-muted px-[0.4rem] py-[0.2rem] font-mono text-sm font-semibold">{children}</code>,
+    code: (props: React.HTMLAttributes<HTMLElement>) => {
+      // Check if this is a code block processed by rehype-pretty-code
+      const isCodeBlock = props.className?.includes('language-');
+      
+      // If it's a code block, let the plugin's styles apply without interference.
+      if (isCodeBlock) {
+        return <code {...props} />;
+      }
+      
+      // Otherwise, it's an inline code snippet, so apply our custom styling.
+      return <code className="font-code relative rounded bg-muted px-[0.4rem] py-[0.2rem] font-mono text-sm font-semibold" {...props} />;
+    },
     Image: (props: any) => (
         <div className="my-8">
             <Image
