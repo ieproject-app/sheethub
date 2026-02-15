@@ -1,13 +1,17 @@
 ---
 title: 'Fixing The Case of the Stubborn Code Block Styles'
-date: '2024-05-23'
-description: 'A quick note on how we solved a tricky CSS issue with code block styling in our MDX setup.'
-translationKey: 'fixing-code-block'
+date: '2026-02-15'
+description: 'A quick walkthrough of how we debugged and fixed a tricky CSS issue with code syntax highlighting.'
+translationKey: 'code-block-styling-fix'
 ---
 
-Today, we ran into an interesting little problem: our code blocks looked plain and had no internal padding, making the code stick to the edges. It wasn't a good look.
+We encountered an interesting CSS issue where our code blocks, which are styled using the wonderful Shiki library, were not getting the correct padding or rounded corners. The text inside was uncomfortably close to the edges, and the sharp corners just didn't fit our sites aesthetic.
 
-We tried applying global styles using `@apply` in `globals.css`:
+This is a classic case of CSS specificity wars, or sometimes just a simple oversight in how components are structured and styled in a modern framework like Next.js.
+
+### The Initial Attempt: Global CSS
+
+Our first thought was to apply a global style in `src/app/globals.css`. This is usually the go-to for general styling.
 
 ```css
 pre.shiki {
@@ -15,13 +19,19 @@ pre.shiki {
 }
 ```
 
-Theoretically, this should have worked. However, it seemed like these styles weren't being applied, likely due to some specificity conflict or build-time optimization that we couldn't immediately pinpoint.
+Theoretically, this should have worked. We were targeting all `<pre>` elements with the class `shiki`. However, for some reason, the styles were not being applied.
 
-The more robust solution was to handle it directly at the component level. We edited `src/components/mdx-components.tsx` to explicitly define how a `<pre>` tag should be rendered.
+### The Winning Solution: Direct Component Rendering
 
-We created a custom component for it:
+After the global approach failed, we decided to take more direct control. In a component-based framework, the most reliable way to style something is often to control its rendering directly.
+
+We modified `src/components/mdx-components.tsx`. This file tells our application how to render Markdown elements. By defining a custom component for the `<pre>` tag, we could forcefully apply the styles we wanted using Tailwind classes.
 
 ```tsx
+// src/components/mdx-components.tsx
+
+// ... other components
+
 const MdxPre = ({ className, ...props }: React.HTMLAttributes<HTMLPreElement>) => (
     <pre
         className={cn(
@@ -31,17 +41,11 @@ const MdxPre = ({ className, ...props }: React.HTMLAttributes<HTMLPreElement>) =
         {...props}
     />
 );
-```
 
-And then registered it:
-
-```tsx
 export const mdxComponents: MDXComponents = {
-    // ... other components
-    pre: MdxPre,
+  // ... other components
+  pre: MdxPre,
 }
 ```
 
-By doing this, we tell MDX, "Hey, every time you see a `<pre>` block, use this exact React component." This bypasses any CSS specificity issues and directly applies the Tailwind classes we want.
-
-Problem solved! The code blocks now have proper padding and rounded corners, just as they should.
+By explicitly mapping the `<pre>` element to our `MdxPre` component, we guarantee that every code block rendered from MDX will have the correct padding, rounded corners, and overflow behavior. Problem solved!

@@ -1,16 +1,36 @@
 ---
-title: 'Memperbaiki Gaya Blok Kode yang Membandel'
-date: '2024-05-23'
-description: 'Catatan singkat tentang bagaimana kami memperbaiki masalah gaya blok kode.'
+title: 'Memperbaiki Gaya Blok Kode yang Bandel'
+date: '2026-02-15'
+description: 'Langkah singkat tentang bagaimana kami men-debug dan memperbaiki masalah CSS yang rumit pada syntax highlighting kode.'
 translationKey: 'code-block-styling-fix'
 ---
 
-Setelah beberapa kali mencoba, kami akhirnya menemukan solusi untuk masalah gaya pada blok kode yang tidak konsisten.
+Kami menghadapi masalah CSS yang menarik di mana blok kode kami, yang diberi gaya menggunakan pustaka Shiki, tidak mendapatkan `padding` atau sudut membulat yang benar. Teks di dalamnya jadi terlalu mepet ke tepi, dan sudut yang tajam tidak sesuai dengan estetika situs kami.
 
-Masalahnya adalah selektor CSS yang terlalu spesifik atau konflik dengan gaya lain. Solusinya adalah dengan secara eksplisit mendefinisikan komponen untuk elemen `<pre>` di `mdx-components.tsx` dan menerapkan kelas Tailwind langsung di sana.
+Ini adalah kasus klasik "perang" spesifisitas CSS, atau terkadang hanya kelalaian sederhana dalam cara komponen disusun dan diberi gaya dalam kerangka kerja modern seperti Next.js.
+
+### Usaha Awal: CSS Global
+
+Pikiran pertama kami adalah menerapkan gaya global di `src/app/globals.css`. Ini biasanya merupakan pendekatan utama untuk penataan gaya umum.
+
+```css
+pre.shiki {
+  @apply rounded-lg p-6 my-6 overflow-x-auto;
+}
+```
+
+Secara teori, ini seharusnya berhasil. Kami menargetkan semua elemen `<pre>` dengan kelas `shiki`. Namun, entah mengapa, gaya tersebut tidak diterapkan.
+
+### Solusi Akhir: Merender Komponen Secara Langsung
+
+Setelah pendekatan global gagal, kami memutuskan untuk mengambil kendali yang lebih langsung. Dalam kerangka kerja berbasis komponen, cara paling andal untuk menata sesuatu sering kali adalah dengan mengontrol proses renderingnya secara langsung.
+
+Kami memodifikasi `src/components/mdx-components.tsx`. File ini memberi tahu aplikasi kami cara merender elemen Markdown. Dengan mendefinisikan komponen khusus untuk tag `<pre>`, kami dapat secara paksa menerapkan gaya yang kami inginkan menggunakan kelas Tailwind.
 
 ```tsx
 // src/components/mdx-components.tsx
+
+// ... komponen lain
 
 const MdxPre = ({ className, ...props }: React.HTMLAttributes<HTMLPreElement>) => (
     <pre
@@ -23,9 +43,9 @@ const MdxPre = ({ className, ...props }: React.HTMLAttributes<HTMLPreElement>) =
 );
 
 export const mdxComponents: MDXComponents = {
-    // ... other components
-    pre: MdxPre,
+  // ... komponen lain
+  pre: MdxPre,
 }
 ```
 
-Pendekatan ini memastikan bahwa semua blok kode akan selalu memiliki sudut membulat dan *padding* yang benar, tidak peduli apa pun.
+Dengan memetakan elemen `<pre>` secara eksplisit ke komponen `MdxPre` kami, kami menjamin bahwa setiap blok kode yang dirender dari MDX akan memiliki `padding`, sudut membulat, dan perilaku `overflow` yang benar. Masalah terpecahkan!
