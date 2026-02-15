@@ -66,26 +66,35 @@ export default function Home({ params: { locale } }: { params: { locale: string 
       {otherPosts.length > 0 && (
         <section className="container max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 pb-12 sm:pb-16">
           <h2 className="text-3xl font-bold font-headline tracking-tighter text-primary mb-8 text-center">{locale === 'id' ? 'Semua Postingan' : 'All Posts'}</h2>
-          <div className="space-y-8">
-            {otherPosts.map(({ slug, frontmatter }) => (
-              <Link key={slug} href={`${linkPrefix}/blog/${slug}`} className="block group" aria-label={`Read more about ${frontmatter.title}`}>
-                <article className="p-6 rounded-xl border bg-card text-card-foreground shadow-sm hover:shadow-lg transition-shadow duration-300 hover:border-accent">
-                  <h3 className="font-headline text-2xl font-bold tracking-tight text-primary">
-                    {frontmatter.title}
-                  </h3>
-                  <p className="text-muted-foreground mt-1 mb-3 text-sm">
-                    {new Date(frontmatter.date).toLocaleDateString(locale, {
-                      year: 'numeric',
-                      month: 'long',
-                      day: 'numeric',
-                    })}
-                  </p>
-                  <p className="leading-relaxed text-muted-foreground">
-                    {frontmatter.description}
-                  </p>
-                </article>
-              </Link>
-            ))}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            {otherPosts.slice(0, 4).map((post) => {
+                const heroImage = PlaceHolderImages.find(p => p.id === post.frontmatter.heroImage);
+                return (
+                    <Link key={post.slug} href={`${linkPrefix}/blog/${post.slug}`} className="block group" aria-label={`Read more about ${post.frontmatter.title}`}>
+                        <article className="flex flex-col h-full bg-card text-card-foreground rounded-xl border shadow-sm hover:shadow-lg transition-shadow duration-300 overflow-hidden">
+                            <div className="p-6 flex-grow">
+                                <h3 className="font-headline text-xl font-bold tracking-tight text-primary group-hover:text-accent transition-colors">
+                                    {post.frontmatter.title}
+                                </h3>
+                                <p className="leading-relaxed text-muted-foreground mt-2 text-sm">
+                                    {post.frontmatter.description}
+                                </p>
+                            </div>
+                            {heroImage && (
+                                <div className="relative w-full aspect-video">
+                                    <Image
+                                        src={heroImage.imageUrl}
+                                        alt={post.frontmatter.title}
+                                        fill
+                                        className="object-cover transition-transform duration-500 group-hover:scale-105"
+                                        data-ai-hint={heroImage.imageHint}
+                                    />
+                                </div>
+                            )}
+                        </article>
+                    </Link>
+                )
+            })}
           </div>
         </section>
       )}

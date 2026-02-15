@@ -3,15 +3,8 @@
 import { usePathname, useParams } from 'next/navigation'
 import Link from 'next/link'
 import { i18n } from '@/i18n-config'
-import { Button } from '@/components/ui/button'
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu'
-import { Globe } from 'lucide-react'
 import { type TranslationsMap } from '@/lib/posts'
+import { cn } from '@/lib/utils'
 
 export function LanguageSwitcher({ translationsMap }: { translationsMap: TranslationsMap }) {
   const pathName = usePathname()
@@ -58,30 +51,27 @@ export function LanguageSwitcher({ translationsMap }: { translationsMap: Transla
     return `/${newLocale}${pathWithoutLocale === '/' ? '' : pathWithoutLocale}`;
   }
 
-  const isActive = (locale: string) => currentLocale === locale;
-
-  const getLocaleName = (locale: string) => {
-    if (locale === 'en') return 'English';
-    if (locale === 'id') return 'Indonesia';
-    return locale.toUpperCase();
-  }
-
   return (
-    <DropdownMenu>
-        <DropdownMenuTrigger asChild>
-            <Button variant="ghost" size="icon" className="rounded-full text-primary-foreground/70 hover:text-primary-foreground" aria-label="Switch language">
-                <Globe className="h-5 w-5" />
-            </Button>
-        </DropdownMenuTrigger>
-        <DropdownMenuContent align="end">
-            {i18n.locales.map((locale) => (
-                <DropdownMenuItem key={locale} disabled={isActive(locale)} asChild>
-                    <Link href={redirectedPathName(locale)}>
-                        {getLocaleName(locale)}
-                    </Link>
-                </DropdownMenuItem>
-            ))}
-        </DropdownMenuContent>
-    </DropdownMenu>
+    <div className="relative flex items-center bg-primary/70 rounded-full p-1 text-sm">
+        <div 
+            className={cn(
+                "absolute h-6 w-9 bg-primary-foreground/20 rounded-full transition-transform duration-300 ease-in-out",
+                currentLocale === 'en' ? 'translate-x-0' : 'translate-x-full'
+            )}
+        />
+        {i18n.locales.map(locale => (
+            <Link 
+                key={locale} 
+                href={redirectedPathName(locale)} 
+                className={cn(
+                    "relative z-10 w-9 h-6 flex items-center justify-center font-semibold transition-colors",
+                    currentLocale === locale ? "text-primary-foreground" : "text-primary-foreground/60 hover:text-primary-foreground"
+                )}
+                aria-current={currentLocale === locale ? 'page' : undefined}
+            >
+                {locale.toUpperCase()}
+            </Link>
+        ))}
+    </div>
   )
 }

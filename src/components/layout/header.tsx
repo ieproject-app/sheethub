@@ -5,9 +5,26 @@ import Link from 'next/link';
 import { cn } from '@/lib/utils';
 import { LanguageSwitcher } from './language-switcher';
 import { TranslationsMap } from '@/lib/posts';
-import { Search, X } from 'lucide-react';
+import { Search, X, MoreHorizontal } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
+
+const menuItems = [
+    { name: 'Blog', href: '/blog' },
+    { name: 'Projects', href: '/projects' },
+    { name: 'About', href: '/about' },
+];
+
+const moreMenuItems = [
+    { name: 'Archive', href: '/archive' },
+    { name: 'Contact', href: '/contact' },
+];
 
 export function Header({ translationsMap }: { translationsMap: TranslationsMap }) {
   const [isVisible, setIsVisible] = useState(true);
@@ -19,8 +36,8 @@ export function Header({ translationsMap }: { translationsMap: TranslationsMap }
   // Scroll visibility logic
   useEffect(() => {
     const handleScroll = () => {
+      if (isSearchOpen) return; // Don't hide header if search is open
       const currentScrollY = window.scrollY;
-      // Hide on scroll down, show on scroll up or at top
       if (currentScrollY < lastScrollY.current || currentScrollY < 10) {
         setIsVisible(true);
       } else if (currentScrollY > 100 && currentScrollY > lastScrollY.current) {
@@ -31,12 +48,12 @@ export function Header({ translationsMap }: { translationsMap: TranslationsMap }
 
     window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
+  }, [isSearchOpen]);
 
   // Focus input when search opens
   useEffect(() => {
     if (isSearchOpen) {
-      setTimeout(() => searchInputRef.current?.focus(), 100); // Timeout for transition
+      setTimeout(() => searchInputRef.current?.focus(), 100);
     }
   }, [isSearchOpen]);
   
@@ -66,24 +83,55 @@ export function Header({ translationsMap }: { translationsMap: TranslationsMap }
         isVisible ? "opacity-100 translate-y-0" : "opacity-0 -translate-y-16"
     )}>
         <nav className={cn(
-            "bg-primary/90 backdrop-blur-sm text-primary-foreground rounded-full shadow-lg ring-1 ring-black/5 flex items-center justify-end h-12 transition-[width] duration-300 ease-in-out",
+            "bg-primary/90 backdrop-blur-sm text-primary-foreground rounded-full shadow-lg ring-1 ring-black/5 flex items-center justify-end h-12 transition-all duration-500 ease-in-out px-2",
             isSearchOpen ? 'w-80' : 'w-auto'
         )}>
-
-            {/* Logo & Lang Switcher */}
+            {/* Normal view container */}
             <div className={cn(
-                "flex items-center transition-all duration-300 ease-in-out",
+                "flex items-center gap-2 transition-all duration-300 ease-in-out",
                 isSearchOpen ? 'w-0 opacity-0 -translate-x-10' : 'w-auto opacity-100 translate-x-0'
             )}>
                 <Link 
                     href="/" 
-                    className="font-headline text-2xl font-bold tracking-tighter ml-4 mr-2 whitespace-nowrap"
+                    className="font-headline text-2xl font-bold tracking-tighter ml-2 whitespace-nowrap"
                     aria-hidden={isSearchOpen}
                     tabIndex={isSearchOpen ? -1 : 0}
                 >
                     SG
                 </Link>
                 <LanguageSwitcher translationsMap={translationsMap} />
+
+                <div className="h-6 w-px bg-primary-foreground/20" />
+
+                {menuItems.map(item => (
+                    <Link
+                        key={item.name}
+                        href={item.href}
+                        className="px-3 py-1 text-sm font-medium rounded-full hover:bg-primary-foreground/10 transition-colors"
+                        aria-hidden={isSearchOpen}
+                        tabIndex={isSearchOpen ? -1 : 0}
+                    >
+                        {item.name}
+                    </Link>
+                ))}
+
+                <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                        <Button variant="ghost" size="icon" className="h-8 w-8 rounded-full text-primary-foreground/70 hover:text-primary-foreground">
+                            <MoreHorizontal className="h-5 w-5" />
+                        </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent align="end">
+                        {moreMenuItems.map((item) => (
+                            <DropdownMenuItem key={item.name} asChild>
+                                <Link href={item.href}>
+                                    {item.name}
+                                </Link>
+                            </DropdownMenuItem>
+                        ))}
+                    </DropdownMenuContent>
+                </DropdownMenu>
+
             </div>
             
             {/* Search Input */}
@@ -102,11 +150,11 @@ export function Header({ translationsMap }: { translationsMap: TranslationsMap }
             </div>
 
             {/* Search/Close Button */}
-            <div className="px-1">
+            <div className="pl-1">
                 <Button 
                     variant="ghost" 
                     size="icon" 
-                    className="rounded-full relative z-20"
+                    className="rounded-full relative z-20 h-9 w-9"
                     onClick={() => setIsSearchOpen(prev => !prev)}
                     aria-label={isSearchOpen ? "Close search" : "Open search"}
                 >
