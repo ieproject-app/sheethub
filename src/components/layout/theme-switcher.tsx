@@ -16,17 +16,6 @@ export function ThemeSwitcher() {
   // We need to use a state to avoid hydration mismatch, as theme is not available on the server
   const [mounted, setMounted] = useState(false);
   useEffect(() => setMounted(true), []);
-
-  const handleThemeChange = (newTheme: string) => {
-    setTheme(newTheme);
-    if (newTheme === 'system') {
-      // When user selects 'system', we clear the timestamp to let the expiry logic work.
-      localStorage.removeItem('theme-choice-timestamp');
-    } else {
-      // When user makes a choice, store the timestamp.
-      localStorage.setItem('theme-choice-timestamp', Date.now().toString());
-    }
-  };
   
   if (!mounted) {
     // Render a placeholder or nothing until the component is mounted
@@ -46,7 +35,7 @@ export function ThemeSwitcher() {
       {themeOptions.map((option) => (
         <button
           key={option.theme}
-          onClick={() => handleThemeChange(option.theme)}
+          onClick={() => setTheme(option.theme)}
           className={cn(
             'relative z-10 w-9 h-6 flex items-center justify-center rounded-full transition-colors',
             theme === option.theme
