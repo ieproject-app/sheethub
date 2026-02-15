@@ -1,6 +1,7 @@
 import type { MDXComponents } from 'next-mdx-remote/rsc/types'
 import Image from 'next/image'
 import Link from 'next/link'
+import React from 'react';
 
 // This component handles how `<img>` tags are rendered via MDX.
 const CustomImage = (props: any) => (
@@ -21,7 +22,15 @@ const MdxH1 = ({ children }: { children?: React.ReactNode }) => <h1 className="f
 const MdxH2 = ({ children }: { children?: React.ReactNode }) => <h2 className="font-headline mt-10 mb-5 border-b pb-2 text-3xl font-bold tracking-tighter text-primary">{children}</h2>;
 const MdxH3 = ({ children }: { children?: React.ReactNode }) => <h3 className="font-headline mt-8 mb-4 text-2xl font-bold tracking-tighter text-primary">{children}</h3>;
 const MdxH4 = ({ children }: { children?: React.ReactNode }) => <h4 className="font-headline mt-6 mb-3 text-xl font-bold tracking-tighter text-primary">{children}</h4>;
-const MdxP = ({ children }: { children?: React.ReactNode }) => <p className="leading-7 my-6">{children}</p>;
+const MdxP = ({ children }: { children?: React.ReactNode }) => {
+    // When MDX encounters an image on a line by itself, it wraps it in a <p> tag.
+    // This leads to invalid HTML (<p><div>...</div></p>) because our CustomImage renders a div.
+    // To fix this, we check if the child is an image and, if so, we render it without the wrapping <p>.
+    if (React.isValidElement(children) && children.type === CustomImage) {
+        return <>{children}</>;
+    }
+    return <p className="leading-7 my-6">{children}</p>;
+};
 const MdxA = (props: React.AnchorHTMLAttributes<HTMLAnchorElement>) => {
   if (props.href) {
     // Handle internal and external links differently if needed
