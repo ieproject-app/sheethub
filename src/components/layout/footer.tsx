@@ -3,6 +3,7 @@ import Link from 'next/link';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { i18n } from '@/i18n-config';
+import { cn } from '@/lib/utils';
 
 const footerNavItems = [
   { id: 'footer-about', title: 'About', href: '/about' },
@@ -23,28 +24,37 @@ export function Footer({ locale }: { locale: string }) {
             {/* Section 1: Visual Link Gallery */}
             <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6">
-                    {footerNavItems.map((item) => {
+                    {footerNavItems.map((item, index) => {
                         const image = PlaceHolderImages.find(p => p.id === item.id);
                         return (
-                            <Link key={item.id} href={`${linkPrefix}${item.href}`} className="block group">
-                                <article className="relative w-full aspect-square rounded-xl overflow-hidden shadow-lg transform transition-transform duration-300 ease-in-out hover:-translate-y-2">
-                                    {image && (
-                                        <Image
-                                            src={image.imageUrl}
-                                            alt={item.title}
-                                            fill
-                                            className="object-cover transition-transform duration-500 group-hover:scale-110"
-                                            data-ai-hint={image.imageHint}
-                                        />
-                                    )}
-                                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent" />
-                                    <div className="absolute bottom-0 left-0 p-4 text-white">
-                                        <h3 className="font-headline text-lg font-bold">
-                                            {item.title}
-                                        </h3>
-                                    </div>
-                                </article>
-                            </Link>
+                            <div
+                                key={item.id}
+                                className={cn(
+                                    "transform transition-all duration-300 ease-in-out hover:scale-105 hover:-translate-y-2",
+                                    (index === 0 || index === 2) && "rotate-2",
+                                    (index === 1 || index === 3) && "-rotate-2"
+                                )}
+                            >
+                                <Link href={`${linkPrefix}${item.href}`} className="block group">
+                                    <article className="relative w-full aspect-[4/3] rounded-xl overflow-hidden shadow-lg">
+                                        {image && (
+                                            <Image
+                                                src={image.imageUrl}
+                                                alt={item.title}
+                                                fill
+                                                className="object-cover transition-transform duration-500 group-hover:scale-110"
+                                                data-ai-hint={image.imageHint}
+                                            />
+                                        )}
+                                        <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent" />
+                                        <div className="absolute bottom-0 left-0 p-4 text-white">
+                                            <h3 className="font-headline text-lg font-bold">
+                                                {item.title}
+                                            </h3>
+                                        </div>
+                                    </article>
+                                </Link>
+                            </div>
                         );
                     })}
                 </div>
