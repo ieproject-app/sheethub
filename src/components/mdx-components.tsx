@@ -37,22 +37,35 @@ const CustomPre = (props: any) => {
   return <pre className="my-6" {...props} />;
 }
 
+// Defining components outside the main object to avoid parser issues.
+const MdxH1 = ({ children }: { children?: React.ReactNode }) => <h1 className="font-headline mt-12 mb-6 text-4xl font-bold tracking-tighter text-primary">{children}</h1>;
+const MdxH2 = ({ children }: { children?: React.ReactNode }) => <h2 className="font-headline mt-10 mb-5 border-b pb-2 text-3xl font-bold tracking-tighter text-primary">{children}</h2>;
+const MdxH3 = ({ children }: { children?: React.ReactNode }) => <h3 className="font-headline mt-8 mb-4 text-2xl font-bold tracking-tighter text-primary">{children}</h3>;
+const MdxH4 = ({ children }: { children?: React.ReactNode }) => <h4 className="font-headline mt-6 mb-3 text-xl font-bold tracking-tighter text-primary">{children}</h4>;
+const MdxP = ({ children }: { children?: React.ReactNode }) => <p className="leading-7 my-6">{children}</p>;
+const MdxA = (props: React.AnchorHTMLAttributes<HTMLAnchorElement>) => {
+  if (props.href) {
+    return <Link href={props.href} className="font-medium text-accent-foreground underline hover:no-underline">{props.children}</Link>;
+  }
+  return <a {...props} />;
+};
+const MdxUl = ({ children }: { children?: React.ReactNode }) => <ul className="my-6 ml-6 list-disc [&>li]:mt-2">{children}</ul>;
+const MdxOl = ({ children }: { children?: React.ReactNode }) => <ol className="my-6 ml-6 list-decimal [&>li]:mt-2">{children}</ol>;
+const MdxLi = ({ children }: { children?: React.ReactNode }) => <li>{children}</li>;
+const MdxBlockquote = ({ children }: { children?: React.ReactNode }) => <blockquote className="mt-6 border-l-2 border-primary/20 pl-6 italic text-muted-foreground">{children}</blockquote>;
+
+
 export const mdxComponents: MDXComponents = {
-    h1: ({ children }) => <h1 className="font-headline mt-12 mb-6 text-4xl font-bold tracking-tighter text-primary">{children}</h1>,
-    h2: ({ children }) => <h2 className="font-headline mt-10 mb-5 border-b pb-2 text-3xl font-bold tracking-tighter text-primary">{children}</h2>,
-    h3: ({ children }) => <h3 className="font-headline mt-8 mb-4 text-2xl font-bold tracking-tighter text-primary">{children}</h3>,
-    h4: ({ children }) => <h4 className="font-headline mt-6 mb-3 text-xl font-bold tracking-tighter text-primary">{children}</h4>,
-    p: ({ children }) => <p className="leading-7 my-6">{children}</p>,
-    a: (props: React.AnchorHTMLAttributes<HTMLAnchorElement>) => {
-      if (props.href) {
-        return <Link href={props.href} className="font-medium text-accent-foreground underline hover:no-underline">{props.children}</Link>;
-      }
-      return <a {...props} />;
-    },
-    ul: ({ children }) => <ul className="my-6 ml-6 list-disc [&>li]:mt-2">{children}</ul>,
-    ol: ({ children }) => <ol className="my-6 ml-6 list-decimal [&>li]:mt-2">{children}ol>,
-    li: ({ children }) => <li>{children}</li>,
-    blockquote: ({ children }) => <blockquote className="mt-6 border-l-2 border-primary/20 pl-6 italic text-muted-foreground">{children}</blockquote>,
+    h1: MdxH1,
+    h2: MdxH2,
+    h3: MdxH3,
+    h4: MdxH4,
+    p: MdxP,
+    a: MdxA,
+    ul: MdxUl,
+    ol: MdxOl,
+    li: MdxLi,
+    blockquote: MdxBlockquote,
     pre: CustomPre,
     code: CustomCode,
     Image: CustomImage,
