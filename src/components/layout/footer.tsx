@@ -17,7 +17,7 @@ export function Footer({ locale }: { locale: string }) {
 
     const authorName = "SnipGeek";
     const authorBio = "A passionate developer exploring the web and sharing findings along the way.";
-    const authorAvatar = "https://github.com/shadcn.png"; // Placeholder avatar
+    const authorAvatar = "/images/profile/avatar.png"; // Placeholder for local profile picture
 
     return (
         <footer className="w-full bg-background pt-20 sm:pt-32">
