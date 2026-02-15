@@ -4,11 +4,12 @@ import Link from 'next/link'
 
 // This component handles how `<img>` tags are rendered via MDX.
 const CustomImage = (props: any) => (
-    <div className="my-8">
+    <div className="relative my-8 aspect-video overflow-hidden rounded-lg shadow-md">
         <Image
-            className="rounded-lg shadow-md"
-            sizes="100vw"
-            style={{ width: '100%', height: 'auto' }}
+            fill
+            sizes="(max-width: 768px) 100vw, 768px"
+            className="object-cover"
+            alt={props.alt || 'Blog post image'}
             {...props}
         />
     </div>
@@ -32,7 +33,7 @@ const MdxUl = ({ children }: { children?: React.ReactNode }) => <ul className="m
 const MdxOl = ({ children }: { children?: React.ReactNode }) => <ol className="my-6 ml-6 list-decimal [&>li]:mt-2">{children}</ol>;
 const MdxLi = ({ children }: { children?: React.ReactNode }) => <li>{children}</li>;
 const MdxBlockquote = ({ children }: { children?: React.ReactNode }) => <blockquote className="mt-6 border-l-2 border-primary/20 pl-6 italic text-muted-foreground">{children}</blockquote>;
-const MdxPre = (props: React.HTMLAttributes<HTMLPreElement>) => <pre className="font-code bg-muted text-card-foreground p-4 rounded-lg overflow-x-auto my-6" {...props} />;
+const CustomPre = ({ children }: { children?: React.ReactNode }) => <pre className="font-code bg-muted text-card-foreground p-4 rounded-lg overflow-x-auto my-6">{children}</pre>;
 
 
 export const mdxComponents: MDXComponents = {
@@ -46,6 +47,6 @@ export const mdxComponents: MDXComponents = {
     ol: MdxOl,
     li: MdxLi,
     blockquote: MdxBlockquote,
-    pre: MdxPre,
+    pre: CustomPre,
     img: CustomImage,
 }
