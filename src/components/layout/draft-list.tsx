@@ -44,7 +44,7 @@ export function DraftList({ draftPosts, draftNotes, dictionary }: DraftListProps
   }
 
   return (
-    <div className="fixed bottom-6 right-6 z-50">
+    <div className="fixed bottom-20 right-6 z-50">
       <Sheet>
         <SheetTrigger asChild>
           <Button size="icon" className="rounded-full h-10 w-10 shadow-lg" variant="secondary">
