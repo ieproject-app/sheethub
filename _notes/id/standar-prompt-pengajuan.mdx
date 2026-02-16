@@ -1,0 +1,63 @@
+---
+title: Standar Format Prompt untuk Pengajuan Perubahan
+description: Panduan untuk mengajukan permintaan perubahan agar lebih efektif dan efisien, meminimalkan kesalahan.
+date: 2024-07-25
+translationKey: prompt-standard
+published: true
+---
+
+Untuk memastikan setiap permintaan Anda dapat saya proses dengan akurat dan cepat, mari kita gunakan format standar ini. Ini akan membantu saya memahami setiap detail dan menghindari kesalahan atau kelalaian.
+
+### 1. **Tujuan Utama**
+*Jelaskan secara singkat hasil akhir yang Anda inginkan.*
+
+**Contoh:** "Saya ingin menambahkan halaman profil pengguna yang baru."
+
+---
+
+### 2. **Jenis Perubahan**
+*Pilih salah satu: Fitur Baru / Perbaikan Bug / Perubahan Konten / Perubahan Gaya (Styling).*
+
+**Contoh:** "Fitur Baru"
+
+---
+
+### 3. **Deskripsi Detail**
+
+*Ini adalah bagian terpenting. Berikan detail sebanyak mungkin.*
+
+**Jika FITUR BARU atau PERUBAHAN GAYA:**
+- **Deskripsi Fungsionalitas:** Bagaimana fitur ini seharusnya bekerja? Apa yang terjadi saat pengguna mengklik sesuatu?
+- **Deskripsi Visual:** Seperti apa tampilannya? Di mana letaknya? Warna, ukuran, ikon apa yang harus digunakan?
+- **File Terkait (jika tahu):** File mana yang menurut Anda perlu diubah? (Contoh: `src/components/layout/header.tsx`)
+
+**Jika PERBAIKAN BUG:**
+- **Langkah Reproduksi:** Jelaskan langkah-langkah yang harus saya lakukan untuk melihat bug tersebut.
+- **Perilaku Seharusnya:** Apa yang seharusnya terjadi jika tidak ada bug?
+- **Perilaku Aktual (Bug):** Apa yang sebenarnya terjadi? (Sertakan gambar jika memungkinkan).
+
+**Jika PERUBAHAN KONTEN (Artikel/Catatan Baru):**
+- **Judul Artikel:**
+- **Tanggal Terbit:** (Contoh: 2026-02-16)
+- **Status Publikasi:** `published: true` (agar langsung muncul) atau `false`.
+- **Bahasa:** Apakah perlu multi-bahasa? Jika ya, sediakan konten untuk setiap bahasa.
+- **Isi Konten:** Tuliskan seluruh isi artikel di sini.
+- **Penanda Khusus:** Beri tahu saya di mana harus meletakkan penanda untuk gambar, seperti: `{/* Letakkan screenshot header di sini */}`
+
+---
+
+### 4. **Contoh Pengajuan Lengkap (untuk Bug Header Kita)**
+
+Berikut adalah contoh bagaimana Anda bisa mengajukan perbaikan bug `line-clamp` yang baru saja kita selesaikan, menggunakan format ini.
+
+*   **Tujuan Utama:** Memperbaiki tampilan judul artikel di hasil pencarian agar tidak terpotong aneh.
+*   **Jenis Perubahan:** Perbaikan Bug.
+*   **Deskripsi Detail:**
+    *   **Langkah Reproduksi:**
+        1. Buka situs di tampilan mobile.
+        2. Klik ikon pencarian.
+        3. Ketik "header".
+        4. Lihat hasil pencarian yang muncul.
+    *   **Perilaku Seharusnya:** Jika judul artikel terlalu panjang, teksnya harus turun ke baris kedua. Jika masih terlalu panjang, baru dipotong dengan elipsis (...).
+    *   **Perilaku Aktual (Bug):** Judul yang panjang dipaksa tetap satu baris dan langsung dipotong, sehingga tidak terbaca lengkap dan terlihat jelek. (Disertai gambar yang Anda kirimkan).
+    *   **File Terkait:** `src/components/layout/header.tsx`
