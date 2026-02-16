@@ -4,7 +4,6 @@ import { usePathname } from 'next/navigation';
 import { Facebook, Linkedin, Send } from 'lucide-react';
 import { XLogo } from '@/components/icons/x-logo';
 import { useState, useEffect } from 'react';
-import { WhatsAppLogo } from '@/components/icons/whatsapp-logo';
 
 interface ShareButtonsProps {
   title: string;
@@ -35,7 +34,6 @@ export function ShareButtons({ title, imageUrl }: ShareButtonsProps) {
     facebook: `https://www.facebook.com/sharer/sharer.php?u=${encodedUrl}`,
     linkedin: `https://www.linkedin.com/shareArticle?mini=true&url=${encodedUrl}&title=${encodedTitle}`,
     telegram: `https://t.me/share/url?url=${encodedUrl}&text=${encodedTitle}`,
-    whatsapp: `https://api.whatsapp.com/send?text=${encodedTitle}%20${encodedUrl}`,
   };
 
   return (
@@ -78,16 +76,6 @@ export function ShareButtons({ title, imageUrl }: ShareButtonsProps) {
           aria-label="Share on Telegram"
       >
           <Send className="h-5 w-5" />
-      </a>
-       <div className="w-px bg-border" />
-      <a 
-        href={shareLinks.whatsapp} 
-        target="_blank" 
-        rel="noopener noreferrer" 
-        className="flex flex-1 items-center justify-center p-4 text-muted-foreground transition-colors duration-300 ease-in-out hover:bg-accent hover:text-primary"
-        aria-label="Share on WhatsApp"
-      >
-        <WhatsAppLogo className="h-5 w-5" />
       </a>
     </div>
   );
