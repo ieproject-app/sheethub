@@ -43,37 +43,28 @@ export default async function NotesPage({ params: { locale } }: { params: { loca
               return (
                 <li key={note.slug} className="relative group">
                     <Link href={`${linkPrefix}/notes/${note.slug}`} className="block border bg-card rounded-lg p-6 shadow-sm transition-shadow hover:shadow-lg hover:border-primary">
-                        <article>
-                            <div className="flex items-start gap-4 sm:gap-6 mb-4">
-                                <div className="flex-shrink-0 bg-primary text-primary-foreground rounded-lg w-20 text-center p-2">
-                                    <p className="text-3xl font-bold">{formatDatePart(noteDate, { day: 'numeric' })}</p>
-                                    <p className="text-sm font-semibold uppercase">{formatDatePart(noteDate, { month: 'short' })}</p>
-                                    <p className="text-xs">{formatDatePart(noteDate, { year: 'numeric' })}</p>
-                                </div>
-                                <div className="flex-1">
-                                    <h2 className="font-headline text-2xl font-bold tracking-tight text-primary group-hover:text-accent transition-colors">
-                                    {note.frontmatter.title}
-                                    </h2>
-                                    <p className="text-muted-foreground text-sm mt-2 line-clamp-3">
-                                        {note.frontmatter.description}
-                                    </p>
-                                </div>
+                        <article className="flex items-start gap-4 sm:gap-6">
+                            <div className="flex-shrink-0 bg-primary text-primary-foreground rounded-lg w-20 text-center p-2">
+                                <p className="text-3xl font-bold">{formatDatePart(noteDate, { day: 'numeric' })}</p>
+                                <p className="text-sm font-semibold uppercase">{formatDatePart(noteDate, { month: 'short' })}</p>
+                                <p className="text-xs">{formatDatePart(noteDate, { year: 'numeric' })}</p>
                             </div>
-                            <div className="mt-4 border-t pt-4 flex items-center justify-between text-sm">
-                                <div className="flex items-center gap-2">
-                                    <Avatar className="h-6 w-6">
-                                        <AvatarImage src="/images/profile/profile.png" alt={authorName} />
-                                        <AvatarFallback>{authorName.split(' ').map(n => n[0]).join('')}</AvatarFallback>
-                                    </Avatar>
-                                    <span className="text-muted-foreground font-medium">{authorName}</span>
+                            <div className="flex-1">
+                                <h2 className="font-headline text-2xl font-bold tracking-tight text-primary group-hover:text-accent transition-colors">
+                                {note.frontmatter.title}
+                                </h2>
+                                <div className="text-sm text-muted-foreground mt-2 flex items-center gap-2">
+                                    <span>{authorName}</span>
+                                    {note.frontmatter.tags && note.frontmatter.tags.length > 0 && (
+                                        <>
+                                            <span>•</span>
+                                            <span className="font-medium">{note.frontmatter.tags[0]}</span>
+                                        </>
+                                    )}
                                 </div>
-                                {note.frontmatter.tags && note.frontmatter.tags.length > 0 && (
-                                    <div className="flex flex-wrap gap-2">
-                                        {note.frontmatter.tags.slice(0, 3).map(tag => (
-                                            <Badge key={tag} variant="secondary">{tag}</Badge>
-                                        ))}
-                                    </div>
-                                )}
+                                <p className="text-muted-foreground text-sm mt-3 line-clamp-2">
+                                    {note.frontmatter.description}
+                                </p>
                             </div>
                         </article>
                     </Link>
