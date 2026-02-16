@@ -11,6 +11,7 @@ import { AddToReadingListButton } from '@/components/layout/add-to-reading-list-
 import { i18n } from '@/i18n-config';
 import { getDictionary } from '@/lib/get-dictionary';
 import { Badge } from '@/components/ui/badge';
+import { PostComments } from '@/components/blog/post-comments';
 
 export async function generateStaticParams() {
   const locales = getAllLocales();
@@ -144,6 +145,10 @@ export default async function PostPage({ params }: { params: { slug: string, loc
             }}
           />
         </div>
+        
+        {/* Disqus Comments Section */}
+        <PostComments article={{ slug: post.slug, title: post.frontmatter.title }} />
+
       </article>
     </main>
   );
