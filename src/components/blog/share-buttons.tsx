@@ -1,9 +1,10 @@
 'use client';
 
 import { usePathname } from 'next/navigation';
-import { Facebook, Linkedin, Pinterest } from 'lucide-react';
+import { Facebook, Linkedin } from 'lucide-react';
 import { XLogo } from '@/components/icons/x-logo';
 import { useState, useEffect } from 'react';
+import { PinterestLogo } from '@/components/icons/pinterest-logo';
 
 interface ShareButtonsProps {
   title: string;
@@ -78,7 +79,7 @@ export function ShareButtons({ title, imageUrl }: ShareButtonsProps) {
                 className="p-4 text-muted-foreground transition-colors hover:text-primary"
                 aria-label="Share on Pinterest"
             >
-                <Pinterest className="h-5 w-5" />
+                <PinterestLogo className="h-5 w-5" />
             </a>
         </>
       )}
