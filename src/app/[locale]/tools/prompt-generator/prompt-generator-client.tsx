@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
@@ -25,8 +25,7 @@ export function PromptGeneratorClient({ dictionary }: PromptGeneratorProps) {
   const [publishDate, setPublishDate] = useState<Date | undefined>(new Date());
   const [isPublished, setIsPublished] = useState(true);
   const [isFeatured, setIsFeatured] = useState(false);
-  const [heroImage, setHeroImage] = useState('https://placehold.co/1200x630/e2e8f0/64748b?text=Hero+Image');
-  const [imageAlt, setImageAlt] = useState('');
+  const [images, setImages] = useState('');
   const [tags, setTags] = useState('');
   const [needsTranslation, setNeedsTranslation] = useState(true);
 
@@ -36,27 +35,52 @@ export function PromptGeneratorClient({ dictionary }: PromptGeneratorProps) {
 
   useEffect(() => {
     const buildPrompt = () => {
-      let prompt = `Tolong buat dan terbitkan artikel blog baru untuk saya berdasarkan detail berikut.\n\n`;
-      prompt += `**Detail Frontmatter:**\n`;
-      prompt += `- Judul: ${title ? `"${title}"` : 'Tolong buatkan judul SEO-friendly berdasarkan konten.'}\n`;
-      prompt += `- Tanggal Terbit: ${publishDate ? publishDate.toISOString() : new Date().toISOString()}\n`;
-      prompt += `- Status: published: ${isPublished}, featured: ${isFeatured}\n`;
-      prompt += `- heroImage: "${heroImage}"\n`;
-      prompt += `- imageAlt: "${imageAlt}"\n`;
+      let prompt = `${dictionary.promptBase}\n\n`;
+      prompt += `**${dictionary.frontmatterDetails}:**\n`;
+      prompt += `- ${dictionary.titleLabel}: ${title ? `"${title}"` : dictionary.titlePlaceholder}\n`;
+      prompt += `- ${dictionary.dateLabel}: ${publishDate ? publishDate.toISOString() : new Date().toISOString()}\n`;
+      prompt += `- ${dictionary.statusLabel}: published: ${isPublished}, featured: ${isFeatured}\n`;
+
+      const imageLines = images.split('\n').filter(line => line.trim() !== '');
+      const heroImageLine = imageLines.length > 0 ? imageLines[0] : '';
+      const [heroImagePath, heroImageAlt] = heroImageLine.split('|').map(s => s.trim());
+
+      if (heroImagePath) {
+        prompt += `- heroImage: "${heroImagePath}"\n`;
+        prompt += `- imageAlt: "${heroImageAlt || 'Please create a descriptive alt text based on the image path.'}"\n`;
+      } else {
+        prompt += `- heroImage: "https://placehold.co/1200x630/e2e8f0/64748b?text=Hero+Image"\n`;
+        prompt += `- imageAlt: "Please create a descriptive alt text."\n`;
+      }
+      
       if (tags) {
         const tagArray = tags.split(',').map(t => `"${t.trim()}"`).join(', ');
         prompt += `- tags: [${tagArray}]\n`;
+      } else {
+        prompt += `- tags: Please generate relevant tags based on the content.\n`;
       }
-      prompt += `- Buatkan Terjemahan: ${needsTranslation ? 'Ya (Inggris & Indonesia), pastikan translationKey sama.' : 'Tidak.'}\n\n`;
+      prompt += `- ${dictionary.translationLabel}: ${needsTranslation ? dictionary.translationYes : dictionary.translationNo}\n\n`;
+
+      if (imageLines.length > 1) {
+          prompt += `**${dictionary.supportingImagesLabel}:**\n`;
+          imageLines.slice(1).forEach((line, index) => {
+              const [imgPath, imgAlt] = line.split('|').map(s => s.trim());
+              prompt += `- Image ${index + 1} Path: "${imgPath}"\n`;
+              prompt += `- Image ${index + 1} Alt: "${imgAlt || `Please create alt text for supporting image ${index + 1}`}"\n`;
+          });
+          prompt += `\n`;
+      }
+
       prompt += `---\n\n`;
-      prompt += `**Konten/Draf Utama:**\n\n`;
+      prompt += `**${dictionary.draftContentLabel}:**\n\n`;
       prompt += draft;
+      prompt += `\n\n---\n**${dictionary.finalInstruction}**`;
       
       setGeneratedPrompt(prompt);
     };
 
     buildPrompt();
-  }, [draft, title, publishDate, isPublished, isFeatured, heroImage, imageAlt, tags, needsTranslation]);
+  }, [draft, title, publishDate, isPublished, isFeatured, images, tags, needsTranslation, dictionary]);
 
   const handleCopy = () => {
     navigator.clipboard.writeText(generatedPrompt);
@@ -83,6 +107,22 @@ export function PromptGeneratorClient({ dictionary }: PromptGeneratorProps) {
             onChange={(e) => setDraft(e.target.value)}
             className="min-h-[200px]"
           />
+        </CardContent>
+      </Card>
+
+       <Card>
+        <CardHeader>
+          <CardTitle>{dictionary.imagesTitle}</CardTitle>
+        </CardHeader>
+        <CardContent>
+            <Label htmlFor="images" className="text-sm text-muted-foreground">{dictionary.imagesDescription}</Label>
+            <Textarea
+                id="images"
+                placeholder={dictionary.imagesPlaceholder}
+                value={images}
+                onChange={(e) => setImages(e.target.value)}
+                className="min-h-[120px] font-mono text-xs mt-2"
+            />
         </CardContent>
       </Card>
       
@@ -138,20 +178,9 @@ export function PromptGeneratorClient({ dictionary }: PromptGeneratorProps) {
           </div>
           
           <div className="grid gap-2">
-            <Label htmlFor="heroImage">{dictionary.heroImageLabel}</Label>
-            <Input id="heroImage" value={heroImage} onChange={(e) => setHeroImage(e.target.value)} />
-            <p className="text-sm text-muted-foreground">{dictionary.heroImageDescription}</p>
-          </div>
-          
-          <div className="grid gap-2">
-            <Label htmlFor="imageAlt">{dictionary.imageAltLabel}</Label>
-            <Input id="imageAlt" value={imageAlt} onChange={(e) => setImageAlt(e.target.value)} />
-            <p className="text-sm text-muted-foreground">{dictionary.imageAltDescription}</p>
-          </div>
-          
-          <div className="grid gap-2">
             <Label htmlFor="tags">{dictionary.tagsLabel}</Label>
             <Input id="tags" placeholder={dictionary.tagsPlaceholder} value={tags} onChange={(e) => setTags(e.target.value)} />
+            <p className="text-sm text-muted-foreground">{dictionary.tagsDescription}</p>
           </div>
 
           <div className="grid gap-2">
