@@ -5,6 +5,7 @@ import Image from 'next/image';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
 import { cn } from '@/lib/utils';
 import { AddToReadingListButton } from '@/components/layout/add-to-reading-list-button';
+import { Flame } from 'lucide-react';
 
 export async function generateStaticParams() {
   return i18n.locales.map((locale) => ({ locale }));
@@ -44,11 +45,14 @@ export default function Home({ params: { locale } }: { params: { locale: string 
                   >
                     <Link href={`${linkPrefix}/blog/${post.slug}`} className="block group" aria-label={`Read more about ${post.frontmatter.title}`}>
                       <article className="relative w-full aspect-[4/3] rounded-xl overflow-hidden shadow-2xl">
-                        <AddToReadingListButton 
-                            item={item}
-                            showText={false}
-                            className="absolute top-3 right-3 z-20 text-white bg-black/30 hover:bg-black/50 hover:text-white"
-                        />
+                        <div className="absolute top-3 right-3 z-20 flex items-center gap-2">
+                            <Flame className="h-5 w-5 text-orange-400 fill-orange-400" />
+                            <AddToReadingListButton 
+                                item={item}
+                                showText={false}
+                                className="text-white bg-black/30 hover:bg-black/50 hover:text-white"
+                            />
+                        </div>
                         {heroImage && (
                           <Image
                             src={heroImage.imageUrl}
@@ -79,7 +83,7 @@ export default function Home({ params: { locale } }: { params: { locale: string 
       {otherPosts.length > 0 && (
         <section className="container max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 pb-12 sm:pb-16">
           <h2 className="text-3xl font-bold font-headline tracking-tighter text-primary mb-8 text-center">{locale === 'id' ? 'Semua Postingan' : 'All Posts'}</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-12">
             {otherPosts.slice(0, 4).map((post) => {
                 const heroImage = PlaceHolderImages.find(p => p.id === post.frontmatter.heroImage);
                 const item = {
@@ -91,34 +95,30 @@ export default function Home({ params: { locale } }: { params: { locale: string 
                 };
                 return (
                     <Link key={post.slug} href={`${linkPrefix}/blog/${post.slug}`} className="block group" aria-label={`Read more about ${post.frontmatter.title}`}>
-                        <article className="flex flex-col h-full bg-card text-card-foreground rounded-xl border shadow-sm hover:shadow-lg transition-shadow duration-300 overflow-hidden">
-                            <div className="p-6 flex-grow">
-                                <div className="flex justify-between items-start gap-4">
-                                    <h3 className="font-headline text-xl font-bold tracking-tight text-primary group-hover:text-accent transition-colors flex-1">
-                                        {post.frontmatter.title}
-                                    </h3>
-                                    <AddToReadingListButton 
-                                        item={item}
-                                        showText={false}
-                                        className="text-muted-foreground hover:text-primary shrink-0"
-                                    />
-                                </div>
-                                <p className="leading-relaxed text-muted-foreground mt-2 text-sm">
-                                    {post.frontmatter.description}
-                                </p>
-                            </div>
+                        <div className="relative w-full aspect-video overflow-hidden rounded-lg mb-4">
                             {heroImage && (
-                                <div className="relative w-full aspect-video">
-                                    <Image
-                                        src={heroImage.imageUrl}
-                                        alt={post.frontmatter.title}
-                                        fill
-                                        className="object-cover transition-transform duration-500 group-hover:scale-105"
-                                        data-ai-hint={heroImage.imageHint}
-                                    />
-                                </div>
+                                <Image
+                                    src={heroImage.imageUrl}
+                                    alt={post.frontmatter.title}
+                                    fill
+                                    className="object-cover transition-transform duration-500 group-hover:scale-105"
+                                    data-ai-hint={heroImage.imageHint}
+                                />
                             )}
-                        </article>
+                             <AddToReadingListButton 
+                                item={item}
+                                showText={false}
+                                className="absolute top-3 right-3 z-10 text-white bg-black/30 hover:bg-black/50 hover:text-white opacity-0 group-hover:opacity-100 transition-opacity"
+                            />
+                        </div>
+
+                        {post.frontmatter.category && <p className="text-sm text-muted-foreground mb-1">{post.frontmatter.category}</p>}
+                        <h3 className="font-headline text-xl font-bold tracking-tight text-primary group-hover:text-accent transition-colors">
+                            {post.frontmatter.title}
+                        </h3>
+                        <p className="leading-relaxed text-muted-foreground mt-2 text-sm line-clamp-3">
+                            {post.frontmatter.description}
+                        </p>
                     </Link>
                 )
             })}
