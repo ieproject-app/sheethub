@@ -20,9 +20,9 @@
     },
     {
       "id": "footer-contact",
-      "description": "An old rotary phone on a desk",
-      "imageUrl": "https://images.unsplash.com/photo-1520923642038-b42e545c9675?q=80&w=1170&auto=format&fit=crop",
-      "imageHint": "phone contact"
+      "description": "A person typing on a laptop, representing contact via email.",
+      "imageUrl": "https://images.unsplash.com/photo-1586766946342-b6b6d57313a9?q=80&w=1160&auto=format&fit=crop",
+      "imageHint": "laptop contact"
     }
   ]
 }
