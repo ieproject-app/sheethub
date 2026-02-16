@@ -1,54 +1,11 @@
 ---
-title: "Building a Feature-Rich Pill Header in Next.js"
-date: "2026-02-16"
-description: "A deep dive into the process of creating a dynamic, responsive pill-shaped header with search and localization, and the bugs we squashed along the way."
-translationKey: "pill-header-build"
+title: 'Building a Pill-Shaped Header with Tailwind CSS'
+date: '2024-03-20'
+description: 'A step-by-step tutorial on how to create a responsive, floating pill-shaped navigation header using Tailwind CSS and React.'
 published: true
+translationKey: 'pill-header-2024'
+tags: ['Tailwind CSS', 'React', 'CSS', 'Web Design']
+authorId: 'iwan-efendi'
 ---
 
-Building a UI component that is both aesthetically pleasing and highly functional can be a rewarding challenge. In this note, we'll walk through the journey of creating the pill-shaped header for this site, a component that packs a surprising amount of functionality into a compact space.
-
-### The Initial Vision
-
-The goal was a minimalist yet powerful header that would float near the top of the page, providing access to navigation, language switching, and a powerful search without being intrusive. The "pill" shape was chosen for its modern and friendly aesthetic.
-
-### Core Features Implemented
-
-1.  **Dynamic Sizing & Positioning**: The header cleverly transitions from a compact, centered pill on desktop to a full-width bar on mobile, ensuring optimal use of screen real estate.
-2.  **Integrated Search**: A click on the search icon smoothly transforms the entire header into a search bar. The results appear in a clean, scrollable list directly below.
-3.  **Seamless Language Switching**: The language switcher is elegantly integrated into the pill, allowing users to switch between `EN` and `ID` with a single click. The component intelligently redirects the user to the translated version of the current page if it exists.
-4.  **"Growable" Menu**: Instead of a standard dropdown, the menu for additional items appears to "grow" directly from the bottom of the pill, creating a more integrated and fluid user experience.
-
-### The Bug Squashing Journey
-
-No development process is without its hurdles. Here are some of the interesting bugs we encountered and how we fixed them.
-
-#### 1. The Responsive Sizing Headache
-
-Initially, getting the header to resize correctly between mobile and desktop was tricky. We ran into issues with conflicting Tailwind CSS classes (`w-full`, `max-w-lg`, `left-4`, `right-4`), causing the header to overflow on mobile screens.
-
-**The Fix**: We simplified the logic, ensuring `w-full` was only applied on medium screens and up (`md:w-full`), while mobile relied solely on `left-4` and `right-4` for responsive width.
-
-{/* Placeholder for Header Sizing Bug Screenshot */}
-
-#### 2. The Mysterious Double 'X' Button
-
-On mobile, a bizarre bug caused two close ('X') buttons to appear when the search bar was open.
-
-**The Fix**: This was a conditional rendering glitch. The solution was to add more explicit and robust CSS rules to ensure that when the search was active (`isSearchOpen`), all other interactive elements like the menu toggle were forcefully hidden (`opacity-0` and `pointer-events-none`).
-
-{/* Placeholder for Double X Button Bug Screenshot */}
-
-#### 3. The Great Padding & Truncation Saga
-
-This was the most persistent bug. Text in the search results list would either get cut off, push other elements out of the way, or run right up against the edge of the container, especially on mobile where a scrollbar would appear.
-
-**The Fix**: This required a multi-step solution:
-*   **Problem 1 (Scrollbar overlap):** We modified the base `ScrollArea` component itself to add a permanent padding on the right side of its internal viewport. This guarantees there's always space for the overlay scrollbar on mobile.
-*   **Problem 2 (Title truncation):** The long article titles were being forced into a single line and cut off with `...` (`truncate` class). We replaced `truncate` with `line-clamp-2`, allowing titles to wrap to a second line before being cut off, dramatically improving readability.
-
-{/* Placeholder for Search Result Display Bug Screenshot */}
-
-### Conclusion
-
-This pill header is a testament to iterative development. Through a cycle of implementation, testing, and bug fixing, we arrived at a component that is clean, powerful, and a pleasure to use.
+Article content will be added here.
