@@ -1,8 +1,9 @@
 'use client';
 
-import { FileText, DraftingCompass } from 'lucide-react';
+import { DraftingCompass } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import type { Post } from '@/lib/posts';
 import type { Note } from '@/lib/notes';
 import type { Dictionary } from '@/lib/get-dictionary';
@@ -38,42 +39,47 @@ export function DraftList({ draftPosts, draftNotes, dictionary }: DraftListProps
             )}
           </Button>
         </SheetTrigger>
-        <SheetContent side="right" className="w-[350px] sm:w-[400px]">
+        <SheetContent side="right" className="w-[350px] sm:w-[400px] flex flex-col">
           <SheetHeader>
-            <SheetTitle>{dictionary.drafts.title} ({totalDrafts})</SheetTitle>
+            <SheetTitle>{dictionary.drafts.title}</SheetTitle>
           </SheetHeader>
-          <div className="py-4 space-y-6 h-full overflow-y-auto pr-4">
-            <div>
-              <h3 className="font-semibold mb-2">{dictionary.navigation.blog} ({draftPosts.length})</h3>
-              {draftPosts.length > 0 ? (
-                <ul className="space-y-2">
-                  {draftPosts.map(post => (
-                    <li key={post.slug} className="text-sm p-3 border rounded-lg bg-muted/50">
-                      <p className="font-medium text-primary">{post.frontmatter.title}</p>
-                      <p className="text-xs text-muted-foreground mt-1 font-mono">slug: {post.slug}</p>
-                    </li>
-                  ))}
-                </ul>
-              ) : (
-                <p className="text-sm text-muted-foreground p-3 border rounded-lg border-dashed">{dictionary.drafts.noDrafts}</p>
-              )}
+          <Tabs defaultValue="blog" className="py-4 flex-1 flex flex-col min-h-0">
+            <TabsList className="grid w-full grid-cols-2">
+              <TabsTrigger value="blog">{dictionary.navigation.blog} ({draftPosts.length})</TabsTrigger>
+              <TabsTrigger value="notes">{dictionary.navigation.notes} ({draftNotes.length})</TabsTrigger>
+            </TabsList>
+            
+            <div className="flex-1 overflow-y-auto mt-4 pr-2">
+              <TabsContent value="blog" className="mt-0">
+                {draftPosts.length > 0 ? (
+                  <ul className="space-y-2">
+                    {draftPosts.map(post => (
+                      <li key={post.slug} className="text-sm p-3 border rounded-lg bg-muted/50">
+                        <p className="font-medium text-primary break-words">{post.frontmatter.title}</p>
+                        <p className="text-xs text-muted-foreground mt-1 font-mono break-all">{post.slug}.mdx</p>
+                      </li>
+                    ))}
+                  </ul>
+                ) : (
+                    <p className="text-sm text-muted-foreground p-3 border rounded-lg border-dashed text-center">{dictionary.drafts.noDrafts}</p>
+                )}
+              </TabsContent>
+              <TabsContent value="notes" className="mt-0">
+                {draftNotes.length > 0 ? (
+                  <ul className="space-y-2">
+                    {draftNotes.map(note => (
+                      <li key={note.slug} className="text-sm p-3 border rounded-lg bg-muted/50">
+                        <p className="font-medium text-primary break-words">{note.frontmatter.title}</p>
+                        <p className="text-xs text-muted-foreground mt-1 font-mono break-all">{note.slug}.mdx</p>
+                      </li>
+                    ))}
+                  </ul>
+                ) : (
+                    <p className="text-sm text-muted-foreground p-3 border rounded-lg border-dashed text-center">{dictionary.drafts.noDrafts}</p>
+                )}
+              </TabsContent>
             </div>
-            <div>
-              <h3 className="font-semibold mb-2">{dictionary.navigation.notes} ({draftNotes.length})</h3>
-              {draftNotes.length > 0 ? (
-                <ul className="space-y-2">
-                  {draftNotes.map(note => (
-                    <li key={note.slug} className="text-sm p-3 border rounded-lg bg-muted/50">
-                      <p className="font-medium text-primary">{note.frontmatter.title}</p>
-                      <p className="text-xs text-muted-foreground mt-1 font-mono">slug: {note.slug}</p>
-                    </li>
-                  ))}
-                </ul>
-              ) : (
-                 <p className="text-sm text-muted-foreground p-3 border rounded-lg border-dashed">{dictionary.drafts.noDrafts}</p>
-              )}
-            </div>
-          </div>
+          </Tabs>
         </SheetContent>
       </Sheet>
     </div>
