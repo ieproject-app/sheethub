@@ -44,8 +44,8 @@ export default async function NotesPage({ params: { locale } }: { params: { loca
               return (
                 <li key={note.slug} className="relative group border bg-card rounded-lg p-6 shadow-sm transition-shadow hover:shadow-lg hover:border-primary">
                     <Link href={`${linkPrefix}/notes/${note.slug}`} className="block">
-                        <article className="flex items-start gap-4 sm:gap-6">
-                            <div className="flex-shrink-0 bg-primary text-primary-foreground rounded-lg w-20 text-center p-2">
+                        <article className="flex gap-4 sm:gap-6">
+                            <div className="flex w-20 flex-shrink-0 flex-col items-center justify-center rounded-lg bg-primary p-2 text-center text-primary-foreground">
                                 <p className="text-3xl font-bold">{formatDatePart(noteDate, { day: 'numeric' })}</p>
                                 <p className="text-sm font-semibold uppercase">{formatDatePart(noteDate, { month: 'short' })}</p>
                                 <p className="text-xs">{formatDatePart(noteDate, { year: 'numeric' })}</p>
