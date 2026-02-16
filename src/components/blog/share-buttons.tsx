@@ -4,6 +4,7 @@ import { usePathname } from 'next/navigation';
 import { Facebook, Linkedin, Send } from 'lucide-react';
 import { XLogo } from '@/components/icons/x-logo';
 import { useState, useEffect } from 'react';
+import { WhatsAppLogo } from '@/components/icons/whatsapp-logo';
 
 interface ShareButtonsProps {
   title: string;
@@ -34,15 +35,16 @@ export function ShareButtons({ title, imageUrl }: ShareButtonsProps) {
     facebook: `https://www.facebook.com/sharer/sharer.php?u=${encodedUrl}`,
     linkedin: `https://www.linkedin.com/shareArticle?mini=true&url=${encodedUrl}&title=${encodedTitle}`,
     telegram: `https://t.me/share/url?url=${encodedUrl}&text=${encodedTitle}`,
+    whatsapp: `https://api.whatsapp.com/send?text=${encodedTitle}%20${encodedUrl}`,
   };
 
   return (
-    <div className="flex rounded-lg border bg-card">
+    <div className="flex rounded-2xl border bg-card overflow-hidden">
       <a 
         href={shareLinks.twitter} 
         target="_blank" 
         rel="noopener noreferrer" 
-        className="flex flex-1 items-center justify-center p-4 text-muted-foreground transition-colors hover:bg-accent hover:text-primary"
+        className="flex flex-1 items-center justify-center p-4 text-muted-foreground transition-colors duration-300 ease-in-out hover:bg-accent hover:text-primary"
         aria-label="Share on X"
       >
         <XLogo className="h-5 w-5" />
@@ -52,7 +54,7 @@ export function ShareButtons({ title, imageUrl }: ShareButtonsProps) {
         href={shareLinks.facebook} 
         target="_blank" 
         rel="noopener noreferrer" 
-        className="flex flex-1 items-center justify-center p-4 text-muted-foreground transition-colors hover:bg-accent hover:text-primary"
+        className="flex flex-1 items-center justify-center p-4 text-muted-foreground transition-colors duration-300 ease-in-out hover:bg-accent hover:text-primary"
         aria-label="Share on Facebook"
       >
         <Facebook className="h-5 w-5" />
@@ -62,7 +64,7 @@ export function ShareButtons({ title, imageUrl }: ShareButtonsProps) {
         href={shareLinks.linkedin} 
         target="_blank" 
         rel="noopener noreferrer" 
-        className="flex flex-1 items-center justify-center p-4 text-muted-foreground transition-colors hover:bg-accent hover:text-primary"
+        className="flex flex-1 items-center justify-center p-4 text-muted-foreground transition-colors duration-300 ease-in-out hover:bg-accent hover:text-primary"
         aria-label="Share on LinkedIn"
       >
         <Linkedin className="h-5 w-5" />
@@ -72,10 +74,20 @@ export function ShareButtons({ title, imageUrl }: ShareButtonsProps) {
           href={shareLinks.telegram} 
           target="_blank" 
           rel="noopener noreferrer" 
-          className="flex flex-1 items-center justify-center p-4 text-muted-foreground transition-colors hover:bg-accent hover:text-primary"
+          className="flex flex-1 items-center justify-center p-4 text-muted-foreground transition-colors duration-300 ease-in-out hover:bg-accent hover:text-primary"
           aria-label="Share on Telegram"
       >
           <Send className="h-5 w-5" />
+      </a>
+       <div className="w-px bg-border" />
+      <a 
+        href={shareLinks.whatsapp} 
+        target="_blank" 
+        rel="noopener noreferrer" 
+        className="flex flex-1 items-center justify-center p-4 text-muted-foreground transition-colors duration-300 ease-in-out hover:bg-accent hover:text-primary"
+        aria-label="Share on WhatsApp"
+      >
+        <WhatsAppLogo className="h-5 w-5" />
       </a>
     </div>
   );
