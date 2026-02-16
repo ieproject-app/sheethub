@@ -1,12 +1,14 @@
 'use client';
 
-import { DraftingCompass } from 'lucide-react';
+import { useState } from 'react';
+import { DraftingCompass, Copy, Check } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import type { Post } from '@/lib/posts';
 import type { Note } from '@/lib/notes';
 import type { Dictionary } from '@/lib/get-dictionary';
+import { useToast } from '@/hooks/use-toast';
 
 type DraftListProps = {
   draftPosts: Post<any>[];
@@ -15,9 +17,25 @@ type DraftListProps = {
 };
 
 export function DraftList({ draftPosts, draftNotes, dictionary }: DraftListProps) {
+  const [copiedSlug, setCopiedSlug] = useState<string | null>(null);
+  const { toast } = useToast();
+
   if (process.env.NODE_ENV === 'production') {
     return null;
   }
+
+  const handleCopy = (slug: string, type: 'post' | 'note') => {
+    const textToCopy = `${slug}.mdx`;
+    navigator.clipboard.writeText(textToCopy);
+    setCopiedSlug(`${type}-${slug}`);
+    toast({
+      title: 'Copied to clipboard!',
+      description: `"${textToCopy}" has been copied.`,
+    });
+    setTimeout(() => {
+      setCopiedSlug(null);
+    }, 2000);
+  };
 
   const totalDrafts = draftPosts.length + draftNotes.length;
 
@@ -26,7 +44,7 @@ export function DraftList({ draftPosts, draftNotes, dictionary }: DraftListProps
   }
 
   return (
-    <div className="fixed bottom-20 right-6 z-50">
+    <div className="fixed bottom-6 right-6 z-50">
       <Sheet>
         <SheetTrigger asChild>
           <Button size="icon" className="rounded-full h-10 w-10 shadow-lg" variant="secondary">
@@ -56,7 +74,22 @@ export function DraftList({ draftPosts, draftNotes, dictionary }: DraftListProps
                     {draftPosts.map(post => (
                       <li key={post.slug} className="text-sm p-3 border rounded-lg bg-muted/50">
                         <p className="font-medium text-primary break-words">{post.frontmatter.title}</p>
-                        <p className="text-xs text-muted-foreground mt-1 font-mono break-all">{post.slug}.mdx</p>
+                        <div className="flex items-center justify-between gap-2 mt-1">
+                          <p className="text-xs text-muted-foreground font-mono break-all">{post.slug}.mdx</p>
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            className="h-7 w-7 shrink-0"
+                            onClick={() => handleCopy(post.slug, 'post')}
+                            aria-label="Copy filename"
+                          >
+                            {copiedSlug === `post-${post.slug}` ? (
+                              <Check className="h-4 w-4 text-green-500" />
+                            ) : (
+                              <Copy className="h-4 w-4" />
+                            )}
+                          </Button>
+                        </div>
                       </li>
                     ))}
                   </ul>
@@ -70,7 +103,22 @@ export function DraftList({ draftPosts, draftNotes, dictionary }: DraftListProps
                     {draftNotes.map(note => (
                       <li key={note.slug} className="text-sm p-3 border rounded-lg bg-muted/50">
                         <p className="font-medium text-primary break-words">{note.frontmatter.title}</p>
-                        <p className="text-xs text-muted-foreground mt-1 font-mono break-all">{note.slug}.mdx</p>
+                        <div className="flex items-center justify-between gap-2 mt-1">
+                          <p className="text-xs text-muted-foreground font-mono break-all">{note.slug}.mdx</p>
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            className="h-7 w-7 shrink-0"
+                            onClick={() => handleCopy(note.slug, 'note')}
+                             aria-label="Copy filename"
+                          >
+                            {copiedSlug === `note-${note.slug}` ? (
+                              <Check className="h-4 w-4 text-green-500" />
+                            ) : (
+                              <Copy className="h-4 w-4" />
+                            )}
+                          </Button>
+                        </div>
                       </li>
                     ))}
                   </ul>

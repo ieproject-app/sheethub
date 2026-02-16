@@ -22,8 +22,28 @@
     },
     "tools": {
         "title": "Alat",
-        "description": "Kumpulan alat dan sumber daya.",
-        "wip": "Halaman ini sedang dalam tahap pembuatan."
+        "description": "Kumpulan alat bantu untuk alur kerja saya.",
+        "wip": "Halaman ini sedang dalam tahap pembuatan.",
+        "internal": "Internal",
+        "open_tool": "Buka Alat",
+        "tool_list": {
+            "number_to_words": {
+                "title": "Generator Terbilang",
+                "description": "Mengubah angka menjadi bentuk tulisan dalam Bahasa Indonesia."
+            },
+            "random_name": {
+                "title": "Pemilih Nama Acak",
+                "description": "Pilih nama secara acak dari sebuah daftar, cocok untuk undian."
+            },
+            "employee_history": {
+                "title": "Riwayat Karyawan",
+                "description": "Catatan pribadi untuk melacak riwayat kerja dan kinerja karyawan."
+            },
+            "number_generator": {
+                "title": "Generator Nomor",
+                "description": "Menghasilkan nomor urut unik untuk keperluan pelacakan internal."
+            }
+        }
     },
     "archive": {
         "title": "Arsip",

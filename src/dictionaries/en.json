@@ -22,8 +22,28 @@
     },
     "tools": {
         "title": "Tools",
-        "description": "A collection of tools and resources.",
-        "wip": "This page is under construction."
+        "description": "A collection of helper tools for my workflow.",
+        "wip": "This page is under construction.",
+        "internal": "Internal",
+        "open_tool": "Open Tool",
+        "tool_list": {
+            "number_to_words": {
+                "title": "Number to Words Generator",
+                "description": "Convert numbers into their written-out form in Indonesian."
+            },
+            "random_name": {
+                "title": "Random Name Picker",
+                "description": "Randomly select a name from a list, perfect for giveaways."
+            },
+            "employee_history": {
+                "title": "Employee History",
+                "description": "A private log for tracking employee work history and performance."
+            },
+            "number_generator": {
+                "title": "Number Generator",
+                "description": "Generate unique sequential numbers for internal tracking purposes."
+            }
+        }
     },
     "archive": {
         "title": "Archive",
