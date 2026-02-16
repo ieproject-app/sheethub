@@ -61,6 +61,10 @@
         "noResults": "Tidak ada hasil yang ditemukan untuk",
         "resultsFound": "hasil ditemukan"
     },
+    "post": {
+        "share": "Bagikan",
+        "shareOn": "Bagikan di"
+    },
     "readingList": {
         "add": "Simpan ke Daftar",
         "remove": "Hapus dari Daftar",

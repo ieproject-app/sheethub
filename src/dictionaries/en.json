@@ -61,6 +61,10 @@
         "noResults": "No results found for",
         "resultsFound": "results found"
     },
+    "post": {
+        "share": "Share",
+        "shareOn": "Share on"
+    },
     "readingList": {
         "add": "Save to List",
         "remove": "Remove from List",
