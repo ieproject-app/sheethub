@@ -1,63 +1,51 @@
 ---
-title: Standar Format Prompt untuk Pengajuan Perubahan
-description: Panduan untuk mengajukan permintaan perubahan agar lebih efektif dan efisien, meminimalkan kesalahan.
-date: 2024-07-25
-translationKey: prompt-standard
+title: "Standar Format Pengajuan Fitur & Perbaikan"
+date: '2026-02-16'
+description: "Sebuah templat standar untuk mengajukan permintaan fitur atau laporan bug agar kolaborasi kita lebih efisien dan tidak ada detail yang terlewat."
+translationKey: "prompt-standard"
 published: true
 ---
 
-Untuk memastikan setiap permintaan Anda dapat saya proses dengan akurat dan cepat, mari kita gunakan format standar ini. Ini akan membantu saya memahami setiap detail dan menghindari kesalahan atau kelalaian.
+Untuk memastikan setiap permintaan pengembangan atau perbaikan bug berjalan lancar dan efisien, mari kita gunakan format standar ini. Ini membantu saya untuk memahami kebutuhan Anda sepenuhnya dan menghindari kesalahan atau kelupaan detail penting.
 
-### 1. **Tujuan Utama**
-*Jelaskan secara singkat hasil akhir yang Anda inginkan.*
+### 1. Untuk Permintaan Fitur Baru
 
-**Contoh:** "Saya ingin menambahkan halaman profil pengguna yang baru."
+Gunakan format ini saat Anda menginginkan penambahan fungsionalitas baru.
 
----
+{/*
+```
+**Tujuan Fitur:**
+[Jelaskan secara singkat apa tujuan akhir dari fitur ini. Contoh: "Saya ingin pengguna bisa menyimpan artikel untuk dibaca nanti."]
 
-### 2. **Jenis Perubahan**
-*Pilih salah satu: Fitur Baru / Perbaikan Bug / Perubahan Konten / Perubahan Gaya (Styling).*
+**Analisis & Konsep (Alur Pengguna):**
+[Jelaskan bagaimana Anda membayangkan pengguna berinteraksi dengan fitur ini, langkah demi langkah. Contoh: "1. Di halaman artikel, ada tombol 'Simpan'. 2. Setelah diklik, artikel masuk ke daftar. 3. Di header, ada ikon untuk melihat daftar yang tersimpan."]
 
-**Contoh:** "Fitur Baru"
+**Aspek Visual & Penempatan:**
+[Deskripsikan di mana saja komponen UI untuk fitur ini harus muncul. Jika memungkinkan, sebutkan komponen dari ShadCN atau pustaka lain yang sudah ada. Contoh: "Tombol 'Simpan' ada di bawah judul artikel. Untuk daftar, gunakan komponen 'Sheet' dari ShadCN yang muncul dari kanan saat ikon di header diklik."]
 
----
+**Pertimbangan Teknis (Jika Ada):**
+[Jika Anda punya preferensi teknis, sebutkan di sini. Jika tidak, kosongkan saja. Contoh: "Untuk penyimpanan data, kita gunakan localStorage di browser saja, tidak perlu database."]
+```
+*/}
 
-### 3. **Deskripsi Detail**
+### 2. Untuk Laporan Bug atau Perbaikan Visual
 
-*Ini adalah bagian terpenting. Berikan detail sebanyak mungkin.*
+Gunakan format ini saat Anda menemukan sesuatu yang tidak berfungsi atau terlihat seperti yang seharusnya.
 
-**Jika FITUR BARU atau PERUBAHAN GAYA:**
-- **Deskripsi Fungsionalitas:** Bagaimana fitur ini seharusnya bekerja? Apa yang terjadi saat pengguna mengklik sesuatu?
-- **Deskripsi Visual:** Seperti apa tampilannya? Di mana letaknya? Warna, ukuran, ikon apa yang harus digunakan?
-- **File Terkait (jika tahu):** File mana yang menurut Anda perlu diubah? (Contoh: `src/components/layout/header.tsx`)
+{/*
+```
+**Deskripsi Masalah:**
+[Jelaskan masalah yang Anda lihat sejelas mungkin. Contoh: "Judul artikel di hasil pencarian terlalu panjang dan keluar dari kotaknya."]
 
-**Jika PERBAIKAN BUG:**
-- **Langkah Reproduksi:** Jelaskan langkah-langkah yang harus saya lakukan untuk melihat bug tersebut.
-- **Perilaku Seharusnya:** Apa yang seharusnya terjadi jika tidak ada bug?
-- **Perilaku Aktual (Bug):** Apa yang sebenarnya terjadi? (Sertakan gambar jika memungkinkan).
+**Lokasi Masalah:**
+[Sebutkan halaman atau komponen spesifik di mana masalah ini terjadi. Contoh: "Ini terjadi di dalam kotak hasil pencarian yang muncul dari header."]
 
-**Jika PERUBAHAN KONTEN (Artikel/Catatan Baru):**
-- **Judul Artikel:**
-- **Tanggal Terbit:** (Contoh: 2026-02-16)
-- **Status Publikasi:** `published: true` (agar langsung muncul) atau `false`.
-- **Bahasa:** Apakah perlu multi-bahasa? Jika ya, sediakan konten untuk setiap bahasa.
-- **Isi Konten:** Tuliskan seluruh isi artikel di sini.
-- **Penanda Khusus:** Beri tahu saya di mana harus meletakkan penanda untuk gambar, seperti: `{/* Letakkan screenshot header di sini */}`
+**Perilaku yang Diharapkan:**
+[Jelaskan bagaimana seharusnya tampilan atau fungsionalitas yang benar. Contoh: "Seharusnya, judul yang panjang bisa turun menjadi dua baris, dan jika masih terlalu panjang, baru dipotong dengan '...'.]
 
----
+**Lampiran (Sangat Direkomendasikan):**
+[Sertakan tangkapan layar (screenshot) atau video singkat. Ini sangat mempercepat proses identifikasi dan perbaikan masalah.]
+```
+*/}
 
-### 4. **Contoh Pengajuan Lengkap (untuk Bug Header Kita)**
-
-Berikut adalah contoh bagaimana Anda bisa mengajukan perbaikan bug `line-clamp` yang baru saja kita selesaikan, menggunakan format ini.
-
-*   **Tujuan Utama:** Memperbaiki tampilan judul artikel di hasil pencarian agar tidak terpotong aneh.
-*   **Jenis Perubahan:** Perbaikan Bug.
-*   **Deskripsi Detail:**
-    *   **Langkah Reproduksi:**
-        1. Buka situs di tampilan mobile.
-        2. Klik ikon pencarian.
-        3. Ketik "header".
-        4. Lihat hasil pencarian yang muncul.
-    *   **Perilaku Seharusnya:** Jika judul artikel terlalu panjang, teksnya harus turun ke baris kedua. Jika masih terlalu panjang, baru dipotong dengan elipsis (...).
-    *   **Perilaku Aktual (Bug):** Judul yang panjang dipaksa tetap satu baris dan langsung dipotong, sehingga tidak terbaca lengkap dan terlihat jelek. (Disertai gambar yang Anda kirimkan).
-    *   **File Terkait:** `src/components/layout/header.tsx`
+Dengan mengikuti format ini, kita dapat memastikan semua detail tersampaikan dengan baik dan proses pengembangan berjalan lebih mulus. Terima kasih atas kerja samanya!

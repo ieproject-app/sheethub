@@ -1,63 +1,51 @@
 ---
-title: Standard Format for Change Request Prompts
-description: A guide for submitting change requests more effectively and efficiently, minimizing errors.
-date: 2024-07-25
-translationKey: prompt-standard
+title: "Standard Format for Feature Requests & Fixes"
+date: '2026-02-16'
+description: "A standard template for submitting feature requests or bug reports to make our collaboration more efficient and ensure no details are missed."
+translationKey: "prompt-standard"
 published: true
 ---
 
-To ensure I can process your requests accurately and quickly, let's use this standard format. This will help me understand every detail and avoid mistakes or oversights.
+To ensure every development request or bug fix proceeds smoothly and efficiently, let's use this standard format. This helps me to fully understand your needs and avoid mistakes or overlooking important details.
 
-### 1. **Main Goal**
-*Briefly describe the final outcome you want.*
+### 1. For New Feature Requests
 
-**Example:** "I want to add a new user profile page."
+Use this format when you want to add new functionality.
 
----
+{/*
+```
+**Feature Goal:**
+[Briefly explain the ultimate goal of this feature. Example: "I want users to be able to save articles to read later."]
 
-### 2. **Type of Change**
-*Choose one: New Feature / Bug Fix / Content Change / Style Change.*
+**Analysis & Concept (User Flow):**
+[Describe how you envision a user interacting with this feature, step by step. Example: "1. On an article page, there is a 'Save' button. 2. After clicking, the article is added to a list. 3. In the header, there's an icon to view the saved list."]
 
-**Example:** "New Feature"
+**Visuals & Placement:**
+[Describe where the UI components for this feature should appear. If possible, mention components from ShadCN or other existing libraries. Example: "The 'Save' button is under the article title. For the list, use the 'Sheet' component from ShadCN that slides in from the right when the header icon is clicked."]
 
----
+**Technical Considerations (If Any):**
+[If you have any technical preferences, mention them here. Otherwise, just leave it blank. Example: "For data storage, let's just use localStorage in the browser, no database needed."]
+```
+*/}
 
-### 3. **Detailed Description**
+### 2. For Bug Reports or Visual Fixes
 
-*This is the most important part. Provide as much detail as possible.*
+Use this format when you find something that isn't working or looking as it should.
 
-**For a NEW FEATURE or STYLE CHANGE:**
-- **Functional Description:** How should this feature work? What happens when a user clicks something?
-- **Visual Description:** What should it look like? Where is it located? What colors, sizes, or icons should be used?
-- **Relevant Files (if you know):** Which files do you think need to be changed? (e.g., `src/components/layout/header.tsx`)
+{/*
+```
+**Problem Description:**
+[Describe the issue you're seeing as clearly as possible. Example: "The article title in the search results is too long and overflows its box."]
 
-**For a BUG FIX:**
-- **Reproduction Steps:** Describe the steps I need to take to see the bug.
-- **Expected Behavior:** What should happen if there were no bug?
-- **Actual Behavior (Bug):** What is actually happening? (Include a screenshot if possible).
+**Problem Location:**
+[Specify the page or specific component where this issue occurs. Example: "This happens inside the search results pop-up from the header."]
 
-**For a CONTENT CHANGE (New Article/Note):**
-- **Article Title:**
-- **Publication Date:** (e.g., 2026-02-16)
-- **Publication Status:** `published: true` (to make it appear immediately) or `false`.
-- **Language:** Does it need to be multi-lingual? If so, provide the content for each language.
-- **Content Body:** Write the entire article content here.
-- **Special Markers:** Tell me where to place markers for images, like: `{/* Place header screenshot here */}`
+**Expected Behavior:**
+[Describe what the correct appearance or functionality should be. Example: "A long title should wrap to a second line, and only if it's still too long should it be truncated with '...'.]
 
----
+**Attachments (Highly Recommended):**
+[Include screenshots or a short video. This greatly speeds up the process of identifying and fixing the issue.]
+```
+*/}
 
-### 4. **Complete Request Example (for our Header Bug)**
-
-Here’s an example of how you could have submitted the `line-clamp` bug fix we just solved, using this format.
-
-*   **Main Goal:** Fix the appearance of article titles in the search results so they don't get cut off awkwardly.
-*   **Type of Change:** Bug Fix.
-*   **Detailed Description:**
-    *   **Reproduction Steps:**
-        1. Open the site in mobile view.
-        2. Click the search icon.
-        3. Type "header".
-        4. Look at the search results that appear.
-    *   **Expected Behavior:** If an article title is too long, the text should wrap to a second line. If it's still too long, then it should be truncated with an ellipsis (...).
-    *   **Actual Behavior (Bug):** Long titles are forced into a single line and then truncated, making them unreadable and look bad. (Accompanied by the image you sent).
-    *   **Relevant Files:** `src/components/layout/header.tsx`
+By following this format, we can ensure all details are communicated well and the development process runs more smoothly. Thank you for your cooperation!
