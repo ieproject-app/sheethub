@@ -114,6 +114,8 @@
         "articleTitleLabel": "Content Title (Optional)",
         "articleTitleDescription": "Leave blank if you want the AI to create an SEO-friendly title.",
         "publishDateLabel": "Publish Date",
+        "publishDatePlaceholder": "YYYY-MM-DD",
+        "publishDateDescription": "Feel free to use a flexible format like 'tomorrow' or 'next Monday'.",
         "statusLabel": "Status",
         "publishSwitchLabel": "Publish Immediately",
         "featuredSwitchLabel": "Mark as Featured",

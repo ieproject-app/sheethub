@@ -20,7 +20,7 @@ export function PromptGeneratorClient({ dictionary }: PromptGeneratorProps) {
   const [contentType, setContentType] = useState<'blog' | 'note'>('blog');
   const [draft, setDraft] = useState('');
   const [title, setTitle] = useState('');
-  const [publishDate, setPublishDate] = useState<string>(new Date().toISOString().split('T')[0]);
+  const [publishDate, setPublishDate] = useState<string>('');
   const [isPublished, setIsPublished] = useState(true);
   const [isFeatured, setIsFeatured] = useState(false);
   const [images, setImages] = useState('');
@@ -188,10 +188,10 @@ export function PromptGeneratorClient({ dictionary }: PromptGeneratorProps) {
                 type="text"
                 value={publishDate}
                 onChange={(e) => setPublishDate(e.target.value)}
-                placeholder="YYYY-MM-DD"
+                placeholder={dictionary.publishDatePlaceholder || 'YYYY-MM-DD'}
                 className="w-full sm:w-[280px]"
             />
-            <p className="text-sm text-muted-foreground">Enter date in YYYY-MM-DD format.</p>
+            <p className="text-sm text-muted-foreground">{dictionary.publishDateDescription}</p>
           </div>
           
           <div className="grid gap-2">

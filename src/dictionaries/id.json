@@ -114,6 +114,8 @@
         "articleTitleLabel": "Judul Konten (Opsional)",
         "articleTitleDescription": "Kosongkan jika Anda ingin AI membuatkan judul yang SEO-friendly.",
         "publishDateLabel": "Tanggal Terbit",
+        "publishDatePlaceholder": "DD-MM-YYYY",
+        "publishDateDescription": "Anda juga bisa menggunakan format fleksibel seperti 'besok' atau 'Senin depan'.",
         "statusLabel": "Status",
         "publishSwitchLabel": "Terbitkan Langsung",
         "featuredSwitchLabel": "Tandai sebagai Unggulan",
