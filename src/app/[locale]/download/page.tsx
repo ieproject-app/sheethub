@@ -2,6 +2,7 @@ import { getDictionary } from '@/lib/get-dictionary';
 import { i18n } from '@/i18n-config';
 import type { Metadata } from 'next';
 import { DownloadClient } from './download-client';
+import { Suspense } from 'react';
 
 // This is crucial for SEO
 export const metadata: Metadata = {
@@ -19,6 +20,8 @@ export async function generateStaticParams() {
 export default async function DownloadPage({ params: { locale } }: { params: { locale: string } }) {
   const dictionary = await getDictionary(locale);
   return (
-    <DownloadClient dictionary={dictionary.downloadGate} />
+    <Suspense>
+      <DownloadClient dictionary={dictionary.downloadGate} />
+    </Suspense>
   );
 }
