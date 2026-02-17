@@ -1,8 +1,8 @@
 'use client';
 
-import { Button } from '@/components/ui/button';
+import { Button, buttonVariants } from '@/components/ui/button';
 import { Download } from 'lucide-react';
-import Link from 'next/link';
+import { cn } from '@/lib/utils';
 
 interface DownloadButtonProps {
   href: string;
@@ -18,12 +18,14 @@ export function DownloadButton({ href, children }: DownloadButtonProps) {
 
   return (
     <div className="my-6">
-        <Button asChild size="lg">
-            <Link href={downloadGateUrl} rel="noopener nofollow">
-                <Download className="mr-2 h-5 w-5" />
-                {children}
-            </Link>
-        </Button>
+        <a 
+          href={downloadGateUrl} 
+          rel="noopener nofollow"
+          className={cn(buttonVariants({ size: "lg" }))}
+        >
+            <Download className="mr-2 h-5 w-5" />
+            {children}
+        </a>
     </div>
   );
 }
