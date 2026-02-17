@@ -160,41 +160,42 @@ export async function RelatedPosts({ type, locale, currentSlug, currentTags, cur
     };
 
     return (
-        <Card key={note.slug} className="group relative bg-card/50 border border-l-4 border-l-primary">
-            <CardContent className="flex items-stretch gap-6 p-6">
-                <Link href={`${linkPrefix}/notes/${note.slug}`} aria-label={note.frontmatter.title} className="block shrink-0">
-                    <div className="flex h-full w-20 flex-col items-center justify-center rounded-lg bg-primary p-2 text-center text-primary-foreground transition-transform group-hover:scale-105">
-                        <p className="text-3xl font-bold">{formatDatePart(noteDate, { day: 'numeric' })}</p>
-                        <p className="text-sm font-semibold uppercase">{formatDatePart(noteDate, { month: 'short' })}</p>
-                        <p className="text-xs">{formatDatePart(noteDate, { year: 'numeric' })}</p>
-                    </div>
-                </Link>
-                
-                <div className="flex min-w-0 flex-1 flex-col">
-                    <Link href={`${linkPrefix}/notes/${note.slug}`} aria-label={note.frontmatter.title} className="flex-1">
-                        <h2 className="font-headline text-2xl font-bold tracking-tight text-primary transition-colors">
-                            {note.frontmatter.title}
-                        </h2>
-                        <p className="text-muted-foreground mt-2 line-clamp-3">
-                            {note.frontmatter.description}
-                        </p>
-                    </Link>
-                </div>
-            </CardContent>
+      <Card key={note.slug} className="group relative flex flex-col overflow-hidden rounded-lg border bg-card/50 shadow-sm transition-all hover:shadow-lg">
+        {/* Date Ribbon */}
+        <div className="flex items-center justify-between bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground">
+          <div>
+            <span className="text-xl font-bold">{formatDatePart(noteDate, { day: 'numeric' })}</span>
+            <span className="ml-2 uppercase tracking-wider">{formatDatePart(noteDate, { month: 'short' })}</span>
+          </div>
+          <span>{formatDatePart(noteDate, { year: 'numeric' })}</span>
+        </div>
 
-            <CardFooter className="flex items-center justify-between gap-4 border-t px-6 py-4">
-                <div className="flex flex-wrap gap-1">
-                    {note.frontmatter.tags && note.frontmatter.tags.map(tag => (
-                        <Badge key={tag} variant="secondary">{tag}</Badge>
-                    ))}
-                </div>
-                <AddToReadingListButton 
-                    item={item}
-                    showText={false}
-                    dictionary={dictionary.readingList}
-                    className="text-muted-foreground hover:text-primary z-10 opacity-0 group-hover:opacity-100 transition-opacity shrink-0"
-                />
-            </CardFooter>
+        {/* Main Content */}
+        <div className="flex flex-1 flex-col p-6">
+          <Link href={`${linkPrefix}/notes/${note.slug}`} aria-label={note.frontmatter.title} className="flex-1">
+            <h2 className="font-headline text-2xl font-bold tracking-tight text-primary transition-colors group-hover:text-accent">
+                {note.frontmatter.title}
+            </h2>
+            <p className="mt-2 text-muted-foreground line-clamp-3">
+                {note.frontmatter.description}
+            </p>
+          </Link>
+        </div>
+        
+        {/* Footer with Tags and Action */}
+        <CardFooter className="flex items-center justify-between gap-4 border-t px-6 py-4">
+            <div className="flex flex-wrap gap-1">
+                {note.frontmatter.tags && note.frontmatter.tags.map(tag => (
+                    <Badge key={tag} variant="secondary">{tag}</Badge>
+                ))}
+            </div>
+            <AddToReadingListButton 
+                item={item}
+                showText={false}
+                dictionary={dictionary.readingList}
+                className="text-muted-foreground hover:text-primary z-10 opacity-0 group-hover:opacity-100 transition-opacity shrink-0"
+            />
+        </CardFooter>
       </Card>
     );
   }
@@ -209,7 +210,7 @@ export async function RelatedPosts({ type, locale, currentSlug, currentTags, cur
             {relatedContent.map(item => renderBlogPostCard(item as Post<PostFrontmatter>))}
         </div>
       ) : (
-        <div className="space-y-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             {relatedContent.map(item => renderNoteCard(item as Note<NoteFrontmatter>))}
         </div>
       )}
