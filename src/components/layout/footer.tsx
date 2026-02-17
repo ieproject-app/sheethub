@@ -78,7 +78,7 @@ export function Footer({ dictionary, translationsMap }: { dictionary: Dictionary
                         <LanguageSwitcher translationsMap={translationsMap} />
                         <ThemeSwitcher />
                     </div>
-                    <p>&copy; {new Date().getFullYear()} {authorName}. All Rights Reserved.</p>
+                    <p>&copy; {new Date().getFullYear()} SnipGeek. All Rights Reserved.</p>
                 </div>
             </div>
         </footer>
