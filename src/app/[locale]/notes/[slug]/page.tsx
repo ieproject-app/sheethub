@@ -42,7 +42,7 @@ export async function generateMetadata({ params }: { params: { slug: string, loc
         title: note.frontmatter.title,
         description: note.frontmatter.description,
         url: path,
-        siteName: 'Iwan Efendi',
+        siteName: 'SnipGeek',
         locale: params.locale,
         type: 'article',
         publishedTime: note.frontmatter.date,

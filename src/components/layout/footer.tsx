@@ -17,7 +17,7 @@ export function Footer({ dictionary, translationsMap }: { dictionary: Dictionary
       { id: 'footer-contact', title: dictionary.navigation.contact, href: '/contact' },
     ];
 
-    const authorName = "SnipGeek";
+    const authorName = "Iwan Efendi";
     const authorAvatar = "/images/profile/profile.png";
 
     return (

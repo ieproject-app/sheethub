@@ -26,7 +26,7 @@ export async function generateStaticParams() {
 
 export default async function AboutPage({ params: { locale } }: { params: { locale: string } }) {
   const { content, frontmatter } = await getPageContent('about', locale);
-  const authorName = "SnipGeek";
+  const authorName = "Iwan Efendi";
   const authorAvatar = "/images/profile/profile.png";
   
   return (
@@ -35,7 +35,7 @@ export default async function AboutPage({ params: { locale } }: { params: { loca
         <header className="mb-12 text-center">
             <Avatar className="w-24 h-24 mx-auto mb-6">
                 <AvatarImage src={authorAvatar} alt={authorName} />
-                <AvatarFallback>SG</AvatarFallback>
+                <AvatarFallback>IE</AvatarFallback>
             </Avatar>
             <h1 className="font-headline text-5xl md:text-6xl font-extrabold tracking-tighter text-primary mb-3">
                 {frontmatter.title}

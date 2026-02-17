@@ -59,7 +59,7 @@ export async function generateMetadata({ params }: { params: { slug: string, loc
         title: post.frontmatter.title,
         description: post.frontmatter.description,
         url: path,
-        siteName: 'Iwan Efendi',
+        siteName: 'SnipGeek',
         images: heroImageUrl ? [
             {
                 url: heroImageUrl,
