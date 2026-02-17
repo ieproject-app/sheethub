@@ -37,7 +37,7 @@ export function ShareButtons({ title, imageUrl }: ShareButtonsProps) {
   };
 
   return (
-    <div className="flex rounded-xl border bg-card overflow-hidden">
+    <div className="flex rounded-xl border bg-card/50 overflow-hidden">
       <a 
         href={shareLinks.twitter} 
         target="_blank" 
