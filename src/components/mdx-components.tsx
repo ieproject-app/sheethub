@@ -13,16 +13,17 @@ const CustomImage = (props: any) => {
         return null;
     }
 
+    // The content container is max-w-3xl (768px). We'll use this for width calculation
+    // and maintain a 16:9 aspect ratio. The `w-full` and `h-auto` classes will
+    // make the image responsive within its container.
     return (
-        <div className="relative my-8 aspect-video overflow-hidden rounded-lg shadow-md">
-            <Image
-                fill
-                sizes="(max-width: 768px) 100vw, 768px"
-                className="object-cover"
-                alt={props.alt || 'Blog post image'}
-                {...props}
-            />
-        </div>
+        <Image
+            width={768}
+            height={432}
+            className="my-8 h-auto w-full rounded-lg shadow-md"
+            alt={props.alt || 'Blog post image'}
+            {...props}
+        />
     );
 };
 
@@ -32,29 +33,9 @@ const MdxH1 = ({ children }: { children?: React.ReactNode }) => <h1 className="f
 const MdxH2 = ({ children }: { children?: React.ReactNode }) => <h2 className="font-headline mt-10 mb-5 text-3xl font-bold tracking-tighter text-primary">{children}</h2>;
 const MdxH3 = ({ children }: { children?: React.ReactNode }) => <h3 className="font-headline mt-8 mb-4 text-2xl font-bold tracking-tighter text-primary">{children}</h3>;
 const MdxH4 = ({ children }: { children?: React.ReactNode }) => <h4 className="font-headline mt-6 mb-3 text-xl font-bold tracking-tighter text-primary">{children}</h4>;
-const MdxP = ({ children }: { children?: React.ReactNode }) => {
-    // This logic prevents a hydration error where a <div> (from CustomImage)
-    // would be a descendant of a <p>, which is invalid HTML.
-    
-    // Filter out meaningless whitespace/newline text nodes from children
-    const significantChildren = React.Children.toArray(children).filter(child => {
-        return React.isValidElement(child) || (typeof child === 'string' && child.trim() !== '');
-    });
-
-    // Check if the only significant child is a single image component
-    const isSingleImage =
-        significantChildren.length === 1 &&
-        React.isValidElement(significantChildren[0]) &&
-        (significantChildren[0].props as any).mdxType === 'img';
-
-    // If it is, render the children directly without a <p> wrapper to avoid nesting a <div> in a <p>.
-    if (isSingleImage) {
-        return <>{children}</>;
-    }
-
-    // Otherwise, render a normal paragraph
-    return <p className="leading-7 my-6">{children}</p>;
-};
+// Because CustomImage now renders a valid `<img>` tag, we no longer need complex logic here.
+// An `<img>` can legally be a child of a `<p>`.
+const MdxP = ({ children }: { children?: React.ReactNode }) => <p className="leading-7 my-6">{children}</p>;
 const MdxA = (props: React.AnchorHTMLAttributes<HTMLAnchorElement>) => {
   if (props.href) {
     // Handle internal and external links differently if needed
