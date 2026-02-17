@@ -33,10 +33,10 @@ const MdxH2 = ({ children }: { children?: React.ReactNode }) => <h2 className="f
 const MdxH3 = ({ children }: { children?: React.ReactNode }) => <h3 className="font-headline mt-8 mb-4 text-2xl font-bold tracking-tighter text-primary">{children}</h3>;
 const MdxH4 = ({ children }: { children?: React.ReactNode }) => <h4 className="font-headline mt-6 mb-3 text-xl font-bold tracking-tighter text-primary">{children}</h4>;
 const MdxP = ({ children }: { children?: React.ReactNode }) => {
-    // When MDX encounters an image on a line by itself, it wraps it in a <p> tag.
-    // This leads to invalid HTML (<p><div>...</div></p>) because our CustomImage renders a div.
-    // To fix this, we check if the child is an image and, if so, we render it without the wrapping <p>.
-    if (React.isValidElement(children) && (children.type === CustomImage || (children.props as any).mdxType === 'img')) {
+    // When MDX wraps a lone image in a <p> tag, it creates invalid HTML because our
+    // CustomImage component renders a <div>. This check prevents that by not rendering
+    // the <p> wrapper around images.
+    if (React.isValidElement(children) && (children.props as any)?.mdxType === 'img') {
         return <>{children}</>;
     }
     return <p className="leading-7 my-6">{children}</p>;
