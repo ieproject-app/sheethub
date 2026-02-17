@@ -97,15 +97,13 @@
         "noDrafts": "No drafts in this category."
     },
     "downloadGate": {
-        "title": "You are leaving this site",
-        "description": "You are being redirected to an external download link.",
-        "redirectingIn": "Redirecting in {countdown} seconds...",
-        "redirectingNow": "Redirecting now...",
+        "title": "Preparing Your Download",
+        "description": "You are being redirected to an external site. {siteName} is not responsible for the content of third-party sites. Download at your own risk.",
+        "fileNameLabel": "File:",
+        "fileSizeLabel": "Size:",
         "continueButton": "Continue to Download",
-        "invalidUrl": {
-            "title": "Invalid URL",
-            "description": "The download link is invalid or has been tampered with."
-        }
+        "redirecting": "or wait for automatic redirection in {countdown}s...",
+        "disclaimerTitle": "Disclaimer"
     },
     "promptGenerator": {
         "title": "AI Content Prompt Generator",
@@ -114,13 +112,13 @@
         "contentTypeBlog": "Blog Article",
         "contentTypeNote": "Note",
         "draftTitle": "Content Draft / Main Points",
-        "draftPlaceholder": "Paste your full content draft here. To specify a download button location, use a placeholder like [DOWNLOAD_BUTTON_1], [DOWNLOAD_BUTTON_2], etc.",
+        "draftPlaceholder": "Paste your full content draft here. To specify a download button location, use a placeholder like [DOWNLOAD_1], [DOWNLOAD_2], etc.",
         "downloadLinks": {
-            "title": "Download Links (Optional)",
-            "description": "List the links for the placeholders you used in the draft. Use the format: Link Text | https://external-url.com",
-            "placeholder": "Windows 11 ISO | https://example.com/win11.iso\nLatest Rufus | https://rufus.ie/downloads/",
-            "promptTitle": "Download Links",
-            "promptInstruction": "Please replace the [DOWNLOAD_BUTTON_X] placeholders in the draft with <DownloadButton> components using the corresponding links below:"
+            "title": "Download Buttons",
+            "description": "Map the placeholders in your draft to a Download ID from the central library. Format: [PLACEHOLDER] | download-id",
+            "placeholder": "[DOWNLOAD_1] | windows-11-iso-24h2\n[DOWNLOAD_2] | rufus-installer",
+            "promptTitle": "Download Buttons",
+            "promptInstruction": "Please replace the [DOWNLOAD_X] placeholders in the draft with <DownloadButton> components using the corresponding IDs below:"
         },
         "imagesTitle": "Image Details",
         "imagesDescription": "The first line is ALWAYS for the hero image, separated by a `|` for the alt text. Each subsequent line is for a supporting image.",
@@ -128,9 +126,12 @@
         "imagesTitleNote": "Supporting Images (Optional)",
         "imagesDescriptionNote": "Insert path and alt text for images to be embedded within the note's content, one per line, separated by a `|`. Notes do not have a hero image.",
         "imagesPlaceholderNote": "/images/notes/some-image.webp | Alt text for the image",
-        "metadataTitle": "Metadata Details",
-        "articleTitleLabel": "Content Title (Optional)",
-        "articleTitleDescription": "An English title is recommended. For best SEO, aim for 50-60 characters. The URL slug will be generated from this. Leave blank for an AI-generated title.",
+        "metadataTitle": "Metadata & Linking",
+        "articleTitleLabel": "Content Title",
+        "articleTitleDescription": "An English title is recommended. For best SEO, aim for 50-60 characters.",
+        "slugLabel": "URL Slug (English, Kebab-case)",
+        "slugPlaceholder": "how-to-install-rufus",
+        "slugDescription": "This is the unique URL part. It must be in English and the SAME for all language versions.",
         "publishDateLabel": "Publish Date",
         "publishDatePlaceholder": "YYYY-MM-DD",
         "publishDateDescription": "Feel free to use a flexible format like 'tomorrow' or 'next Monday'.",
@@ -140,17 +141,15 @@
         "tagsLabel": "Tags (comma-separated)",
         "tagsPlaceholder": "Hardware, RAM, Windows",
         "tagsDescription": "Leave blank if you want the AI to generate relevant tags.",
-        "languageTitle": "Language & Linking",
-        "translationSwitchLabel": "Also create translated version? (EN/ID)",
         "translationKeyLabel": "Translation Key",
-        "translationKeyPlaceholder": "catatan-artikel-baru-saya",
-        "translationKeyDescription": "A unique ID in Indonesian to link translated articles. MUST be the same for both versions.",
+        "translationKeyPlaceholder": "unique-linking-key",
+        "translationKeyDescription": "A unique ID to link translated articles. MUST be the same for both versions.",
         "generatedPromptTitle": "Generated Prompt (Copy the text below)",
         "copyButton": "Copy Prompt",
         "copiedButton": "Copied!",
         "copySuccessDescription": "Prompt is ready to be pasted in the chat.",
-        "promptBaseBlog": "Please create and publish a new blog article for me based on the following details.",
-        "promptBaseNote": "Please create and publish a new Note for me based on the following details.",
+        "promptBaseBlog": "Please create and publish a new blog article for me based on the following details. The English version must use the slug specified, and the Indonesian version must also use the EXACT SAME SLUG.",
+        "promptBaseNote": "Please create and publish a new Note for me based on the following details. The English version must use the slug specified, and the Indonesian version must also use the EXACT SAME SLUG.",
         "frontmatterDetails": "Frontmatter Details",
         "titleLabel": "Title",
         "titlePlaceholder": "Please create an SEO-friendly title based on the content.",
@@ -158,8 +157,6 @@
         "supportingImagesLabel": "Supporting Images (in order)",
         "supportingImagesLabelNote": "Images to insert in content",
         "draftContentLabel": "Main Content/Draft",
-        "finalInstruction": "Additional Instruction: The slug must be in English and kebab-case. After completion, always confirm the `translationKey` you used so I can find the files easily."
+        "finalInstruction": "Additional Instruction: After completion, always confirm the `translationKey` and the English `slug` you used so I can find the files easily."
     }
 }
-
-    

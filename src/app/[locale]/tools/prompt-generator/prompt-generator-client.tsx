@@ -11,7 +11,6 @@ import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Copy, Check } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import type { Dictionary } from '@/lib/get-dictionary';
-import { cn } from '@/lib/utils';
 
 type PromptGeneratorProps = {
   dictionary: Dictionary['promptGenerator'];
@@ -20,14 +19,14 @@ type PromptGeneratorProps = {
 export function PromptGeneratorClient({ dictionary }: PromptGeneratorProps) {
   const [contentType, setContentType] = useState<'blog' | 'note'>('blog');
   const [draft, setDraft] = useState('');
-  const [downloadLinks, setDownloadLinks] = useState('');
+  const [downloadMappings, setDownloadMappings] = useState('');
   const [title, setTitle] = useState('');
+  const [slug, setSlug] = useState('');
   const [publishDate, setPublishDate] = useState<string>('');
   const [isPublished, setIsPublished] = useState(true);
   const [isFeatured, setIsFeatured] = useState(false);
   const [images, setImages] = useState('');
   const [tags, setTags] = useState('');
-  const [needsTranslation, setNeedsTranslation] = useState(true);
   const [translationKey, setTranslationKey] = useState('');
 
   const [generatedPrompt, setGeneratedPrompt] = useState('');
@@ -45,6 +44,8 @@ export function PromptGeneratorClient({ dictionary }: PromptGeneratorProps) {
       prompt += `**${dictionary.frontmatterDetails}:**\n`;
       prompt += `- ${dictionary.contentTypeLabel}: ${isBlog ? dictionary.contentTypeBlog : dictionary.contentTypeNote}\n`;
       prompt += `- ${dictionary.titleLabel}: ${title ? `"${title}"` : dictionary.titlePlaceholder}\n`;
+      prompt += `- slug: "${slug}"\n`;
+      prompt += `- translationKey: "${translationKey}"\n`;
       prompt += `- ${dictionary.dateLabel}: ${publishDate || new Date().toISOString().split('T')[0]}\n`;
       
       let frontmatterStatus = `published: ${isPublished}`;
@@ -52,10 +53,6 @@ export function PromptGeneratorClient({ dictionary }: PromptGeneratorProps) {
         frontmatterStatus += `, featured: ${isFeatured}`;
       }
       prompt += `- ${dictionary.statusLabel}: ${frontmatterStatus}\n`;
-
-      if (needsTranslation) {
-        prompt += `- translationKey: "${translationKey || 'Tolong buatkan kunci terjemahan unik dalam Bahasa Indonesia'}"\n`;
-      }
 
       const imageLines = images.split('\n').filter(line => line.trim() !== '');
 
@@ -101,15 +98,15 @@ export function PromptGeneratorClient({ dictionary }: PromptGeneratorProps) {
         prompt += `\n`;
       }
 
-      if (downloadLinks) {
+      if (downloadMappings) {
           prompt += `\n**${dictionary.downloadLinks.promptTitle}:**\n`;
           prompt += `${dictionary.downloadLinks.promptInstruction}\n`;
           
-          const links = downloadLinks.split('\n').filter(line => line.trim() !== '');
-          links.forEach((link, index) => {
-              const [text, url] = link.split('|').map(s => s.trim());
-              if (text && url) {
-                  prompt += `- Placeholder [DOWNLOAD_BUTTON_${index + 1}] -> Text: "${text}", URL: "${url}"\n`;
+          const mappings = downloadMappings.split('\n').filter(line => line.trim() !== '');
+          mappings.forEach((line) => {
+              const [placeholder, downloadId] = line.split('|').map(s => s.trim());
+              if (placeholder && downloadId) {
+                  prompt += `- Placeholder ${placeholder} -> ID: "${downloadId}"\n`;
               }
           });
           prompt += `\n`;
@@ -124,7 +121,7 @@ export function PromptGeneratorClient({ dictionary }: PromptGeneratorProps) {
     };
 
     buildPrompt();
-  }, [draft, title, publishDate, isPublished, isFeatured, images, tags, needsTranslation, translationKey, dictionary, contentType, downloadLinks]);
+  }, [draft, title, slug, publishDate, isPublished, isFeatured, images, tags, translationKey, dictionary, contentType, downloadMappings]);
 
   const handleCopy = () => {
     navigator.clipboard.writeText(generatedPrompt);
@@ -179,14 +176,14 @@ export function PromptGeneratorClient({ dictionary }: PromptGeneratorProps) {
             <CardTitle>{dictionary.downloadLinks.title}</CardTitle>
         </CardHeader>
         <CardContent>
-            <Label htmlFor="download-links" className="text-sm text-muted-foreground">
+            <Label htmlFor="download-mappings" className="text-sm text-muted-foreground">
                 {dictionary.downloadLinks.description}
             </Label>
             <Textarea
-                id="download-links"
+                id="download-mappings"
                 placeholder={dictionary.downloadLinks.placeholder}
-                value={downloadLinks}
-                onChange={(e) => setDownloadLinks(e.target.value)}
+                value={downloadMappings}
+                onChange={(e) => setDownloadMappings(e.target.value)}
                 className="min-h-[120px] font-mono text-xs mt-2"
             />
         </CardContent>
@@ -219,6 +216,23 @@ export function PromptGeneratorClient({ dictionary }: PromptGeneratorProps) {
             <Label htmlFor="title">{dictionary.articleTitleLabel}</Label>
             <Input id="title" value={title} onChange={(e) => setTitle(e.target.value)} />
             <p className="text-sm text-muted-foreground">{dictionary.articleTitleDescription}</p>
+          </div>
+
+          <div className="grid gap-2">
+            <Label htmlFor="slug">{dictionary.slugLabel}</Label>
+            <Input id="slug" placeholder={dictionary.slugPlaceholder} value={slug} onChange={(e) => setSlug(e.target.value)} />
+            <p className="text-sm text-muted-foreground">{dictionary.slugDescription}</p>
+          </div>
+
+           <div className="grid gap-2">
+            <Label htmlFor="translationKey">{dictionary.translationKeyLabel}</Label>
+            <Input 
+                id="translationKey" 
+                placeholder={dictionary.translationKeyPlaceholder}
+                value={translationKey}
+                onChange={(e) => setTranslationKey(e.target.value)} 
+            />
+            <p className="text-sm text-muted-foreground">{dictionary.translationKeyDescription}</p>
           </div>
 
           <div className="grid gap-2">
@@ -257,29 +271,6 @@ export function PromptGeneratorClient({ dictionary }: PromptGeneratorProps) {
           </div>
         </CardContent>
       </Card>
-      
-       <Card>
-        <CardHeader>
-          <CardTitle>{dictionary.languageTitle}</CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-6">
-            <div className="flex items-center space-x-2">
-                <Switch id="translation" checked={needsTranslation} onCheckedChange={setNeedsTranslation} />
-                <Label htmlFor="translation">{dictionary.translationSwitchLabel}</Label>
-            </div>
-            <div className={cn("grid gap-2", !needsTranslation && "opacity-50")}>
-                <Label htmlFor="translationKey">{dictionary.translationKeyLabel}</Label>
-                <Input 
-                    id="translationKey" 
-                    placeholder={dictionary.translationKeyPlaceholder}
-                    value={translationKey}
-                    onChange={(e) => setTranslationKey(e.target.value)} 
-                    disabled={!needsTranslation}
-                />
-                <p className="text-sm text-muted-foreground">{dictionary.translationKeyDescription}</p>
-            </div>
-        </CardContent>
-      </Card>
 
       <Card>
         <CardHeader className="flex flex-row items-center justify-between">
@@ -300,5 +291,3 @@ export function PromptGeneratorClient({ dictionary }: PromptGeneratorProps) {
     </div>
   );
 }
-
-    

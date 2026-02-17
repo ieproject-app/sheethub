@@ -5,39 +5,45 @@ import type { DownloadInfo } from '@/lib/data-downloads';
 import { Button } from '@/components/ui/button';
 import { FileDown, Loader2, AlertTriangle } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import type { Dictionary } from '@/lib/get-dictionary';
 
 const COUNTDOWN_SECONDS = 5;
 
 interface DownloadClientProps {
   downloadInfo: DownloadInfo;
+  dictionary: Dictionary['downloadGate'];
+  siteName: string;
 }
 
-export function DownloadClient({ downloadInfo }: DownloadClientProps) {
+export function DownloadClient({ downloadInfo, dictionary, siteName }: DownloadClientProps) {
   const [countdown, setCountdown] = useState(COUNTDOWN_SECONDS);
-  const [isReady, setIsReady] = useState(false);
+  const [isRedirecting, setIsRedirecting] = useState(false);
 
   useEffect(() => {
-    if (countdown > 0) {
-      const timer = setTimeout(() => setCountdown(countdown - 1), 1000);
-      return () => clearTimeout(timer);
-    } else {
-      setIsReady(true);
-      // Automatically start download when ready
-      window.location.href = downloadInfo.externalUrl;
-    }
+    const timer = setTimeout(() => {
+        if (countdown > 1) {
+            setCountdown(prev => prev - 1);
+        } else {
+            setIsRedirecting(true);
+            window.location.href = downloadInfo.externalUrl;
+        }
+    }, 1000);
+
+    return () => clearTimeout(timer);
   }, [countdown, downloadInfo.externalUrl]);
 
-  const handleDownload = () => {
+  const handleDownloadClick = () => {
+    setIsRedirecting(true);
     window.location.href = downloadInfo.externalUrl;
   };
 
   return (
-    <div className="w-full min-h-screen flex items-center justify-center bg-background">
-        <main className="max-w-lg w-full mx-auto px-4 sm:px-6 lg:px-8">
+    <div className="w-full min-h-screen flex items-center justify-center bg-background px-4">
+        <main className="max-w-lg w-full mx-auto">
             <Card className="text-center shadow-lg">
                 <CardHeader>
                     <CardTitle className="text-2xl font-headline">
-                        Preparing Your Download
+                        {dictionary.title}
                     </CardTitle>
                 </CardHeader>
                 <CardContent className="flex flex-col items-center text-center space-y-6">
@@ -49,7 +55,7 @@ export function DownloadClient({ downloadInfo }: DownloadClientProps) {
                         </h2>
                         {downloadInfo.fileSize && (
                             <p className="mt-1 text-sm text-muted-foreground">
-                                File Size: {downloadInfo.fileSize}
+                                {dictionary.fileSizeLabel} {downloadInfo.fileSize}
                             </p>
                         )}
                     </div>
@@ -58,29 +64,31 @@ export function DownloadClient({ downloadInfo }: DownloadClientProps) {
                         <div className="flex items-start gap-3">
                             <AlertTriangle className="h-5 w-5 flex-shrink-0 text-amber-500 mt-0.5" />
                             <div>
-                                <h4 className="font-semibold text-foreground">Disclaimer:</h4>
+                                <h4 className="font-semibold text-foreground">{dictionary.disclaimerTitle}</h4>
                                 <p className="mt-1 text-sm text-muted-foreground">
-                                    You are being redirected to an external site. SnipGeek is not responsible for the content of third-party sites.
+                                    {dictionary.description.replace('{siteName}', siteName)}
                                 </p>
                             </div>
                         </div>
                     </div>
                     
-                    <Button 
-                        onClick={handleDownload} 
-                        disabled={!isReady}
-                        size="lg"
-                        className="w-full max-w-sm"
-                    >
-                        {isReady ? (
-                            'Continue to Download'
-                        ) : (
-                            <>
+                    <div className="w-full max-w-sm flex flex-col items-center gap-2">
+                        <Button 
+                            onClick={handleDownloadClick} 
+                            disabled={isRedirecting}
+                            size="lg"
+                            className="w-full"
+                        >
+                            {isRedirecting ? (
                                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                                Redirecting in {countdown}...
-                            </>
-                        )}
-                    </Button>
+                            ) : (
+                                dictionary.continueButton
+                            )}
+                        </Button>
+                        <p className="text-xs text-muted-foreground">
+                            {dictionary.redirecting.replace('{countdown}', countdown.toString())}
+                        </p>
+                    </div>
                 </CardContent>
             </Card>
         </main>

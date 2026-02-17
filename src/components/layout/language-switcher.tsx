@@ -73,10 +73,10 @@ export function LanguageSwitcher({ translationsMap }: { translationsMap: Transla
   }
 
   return (
-    <div className="relative flex items-center bg-primary/70 rounded-full p-1 text-sm">
+    <div className="relative flex items-center bg-muted rounded-full p-1 text-sm">
         <div 
             className={cn(
-                "absolute h-6 w-9 bg-primary-foreground/20 rounded-full transition-transform duration-300 ease-in-out",
+                "absolute h-6 w-9 bg-background shadow-sm rounded-full transition-transform duration-300 ease-in-out",
                 currentLocale === 'en' ? 'translate-x-0' : 'translate-x-full'
             )}
         />
@@ -86,7 +86,7 @@ export function LanguageSwitcher({ translationsMap }: { translationsMap: Transla
                 href={redirectedPathName(locale)} 
                 className={cn(
                     "relative z-10 w-9 h-6 flex items-center justify-center font-semibold transition-colors",
-                    currentLocale === locale ? "text-primary-foreground" : "text-primary-foreground/60 hover:text-primary-foreground"
+                    currentLocale === locale ? "text-primary" : "text-muted-foreground hover:text-foreground"
                 )}
                 aria-current={currentLocale === locale ? 'page' : undefined}
                 onClick={() => handleLocaleChange(locale as Locale)}
