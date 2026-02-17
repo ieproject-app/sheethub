@@ -114,13 +114,13 @@
         "contentTypeBlog": "Blog Article",
         "contentTypeNote": "Note",
         "draftTitle": "Content Draft / Main Points",
-        "draftPlaceholder": "Paste your full content draft or the main points you want me to expand upon here...",
+        "draftPlaceholder": "Paste your full content draft here. To specify a download button location, use a placeholder like [DOWNLOAD_BUTTON_1], [DOWNLOAD_BUTTON_2], etc.",
         "downloadLinks": {
             "title": "Download Links (Optional)",
-            "description": "Provide download links to be included in the article, one per line. Use the format: Link Text | https://external-url.com",
-            "placeholder": "Download Driver v1.2.3 | https://example.com/driver.zip\nDownload Manual | https://example.com/manual.pdf",
+            "description": "List the links for the placeholders you used in the draft. Use the format: Link Text | https://external-url.com",
+            "placeholder": "Windows 11 ISO | https://example.com/win11.iso\nLatest Rufus | https://rufus.ie/downloads/",
             "promptTitle": "Download Links",
-            "promptInstruction": "Please insert download buttons for the following links at the end of the article, using the <DownloadButton> component:"
+            "promptInstruction": "Please replace the [DOWNLOAD_BUTTON_X] placeholders in the draft with <DownloadButton> components using the corresponding links below:"
         },
         "imagesTitle": "Image Details",
         "imagesDescription": "The first line is ALWAYS for the hero image, separated by a `|` for the alt text. Each subsequent line is for a supporting image.",
@@ -161,3 +161,5 @@
         "finalInstruction": "Additional Instruction: The slug must be in English and kebab-case. After completion, always confirm the `translationKey` you used so I can find the files easily."
     }
 }
+
+    

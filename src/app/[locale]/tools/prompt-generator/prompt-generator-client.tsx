@@ -106,10 +106,10 @@ export function PromptGeneratorClient({ dictionary }: PromptGeneratorProps) {
           prompt += `${dictionary.downloadLinks.promptInstruction}\n`;
           
           const links = downloadLinks.split('\n').filter(line => line.trim() !== '');
-          links.forEach(link => {
+          links.forEach((link, index) => {
               const [text, url] = link.split('|').map(s => s.trim());
               if (text && url) {
-                  prompt += `- Text: "${text}", URL: "${url}"\n`;
+                  prompt += `- Placeholder [DOWNLOAD_BUTTON_${index + 1}] -> Text: "${text}", URL: "${url}"\n`;
               }
           });
           prompt += `\n`;
@@ -300,3 +300,5 @@ export function PromptGeneratorClient({ dictionary }: PromptGeneratorProps) {
     </div>
   );
 }
+
+    

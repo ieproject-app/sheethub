@@ -114,13 +114,13 @@
         "contentTypeBlog": "Artikel Blog",
         "contentTypeNote": "Catatan (Note)",
         "draftTitle": "Draf Konten / Poin Utama",
-        "draftPlaceholder": "Tempelkan draf konten lengkap Anda atau poin-poin utama yang ingin saya kembangkan di sini...",
+        "draftPlaceholder": "Tempelkan draf konten lengkap Anda di sini. Untuk menentukan lokasi tombol unduhan, gunakan placeholder seperti [DOWNLOAD_BUTTON_1], [DOWNLOAD_BUTTON_2], dll.",
         "downloadLinks": {
             "title": "Tautan Unduhan (Opsional)",
-            "description": "Sediakan tautan unduhan untuk disertakan dalam artikel, satu per baris. Gunakan format: Teks Tautan | https://url-eksternal.com",
-            "placeholder": "Unduh Driver v1.2.3 | https://example.com/driver.zip\nUnduh Manual | https://example.com/manual.pdf",
+            "description": "Daftarkan tautan untuk placeholder yang Anda gunakan di draf. Gunakan format: Teks Tautan | https://url-eksternal.com",
+            "placeholder": "ISO Windows 11 | https://example.com/win11.iso\nRufus Terbaru | https://rufus.ie/downloads/",
             "promptTitle": "Tautan Unduhan",
-            "promptInstruction": "Tolong sisipkan tombol unduhan untuk tautan berikut di akhir artikel, menggunakan komponen <DownloadButton>:"
+            "promptInstruction": "Tolong ganti placeholder [DOWNLOAD_BUTTON_X] di dalam draf dengan komponen <DownloadButton> menggunakan tautan yang sesuai di bawah ini:"
         },
         "imagesTitle": "Detail Gambar",
         "imagesDescription": "Baris pertama adalah **selalu** untuk gambar utama (hero image), dipisahkan oleh `|` untuk teks alt. Setiap baris berikutnya adalah untuk gambar pendukung.",
@@ -161,3 +161,5 @@
         "finalInstruction": "Instruksi Tambahan: Slug harus dalam Bahasa Inggris dan format kebab-case. Setelah selesai, selalu konfirmasikan `translationKey` yang Anda gunakan agar saya bisa menemukan filenya dengan mudah."
     }
 }
+
+    
