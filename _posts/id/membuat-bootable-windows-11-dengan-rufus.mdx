@@ -1,0 +1,100 @@
+---
+title: "Panduan Lengkap Membuat Bootable Windows 11 dengan Rufus Terbaru"
+date: 2026-02-19
+updated: 2026-02-19
+description: "Pelajari cara membuat USB bootable Windows 11 menggunakan Rufus dengan panduan langkah-demi-langkah, termasuk melewati persyaratan TPM 2.0 dan Secure Boot."
+heroImage: "/images/_posts/rufus/pasang-rufus-terbaru.webp"
+imageAlt: "Tampilan antarmuka Rufus untuk membuat bootable USB Windows 11"
+translationKey: "pasang-rufus-terbaru"
+published: true
+featured: false
+tags:
+- Windows 11
+- Rufus
+- Bootable USB
+- Instalasi Windows
+- Tutorial
+category: "Sistem Operasi"
+---
+
+Melakukan instalasi bersih (clean install) Windows 11 adalah langkah ideal untuk mendapatkan sistem yang stabil, ringan, dan bebas dari aplikasi bawaan (bloatware) yang tidak diperlukan. Metode paling efektif untuk melakukannya adalah menggunakan media instalasi USB bootable.
+
+![Sebuah USB flash drive yang siap digunakan.](/images/_posts/rufus/rufus-banner.webp)
+
+Salah satu utilitas yang paling andal dan populer untuk tugas ini adalah **Rufus**—sebuah aplikasi ringan, cepat, dan sangat fleksibel, termasuk kemampuannya untuk menyesuaikan persyaratan instalasi seperti TPM 2.0 dan Secure Boot.
+
+Panduan ini akan menjelaskan seluruh proses secara sistematis, mulai dari tahap persiapan hingga USB bootable siap digunakan untuk instalasi.
+
+---
+
+## 1. Tahap Persiapan
+
+Sebelum memulai, pastikan beberapa komponen berikut telah tersedia:
+
+### 1. USB Flash Drive
+Gunakan flash drive dengan kapasitas minimal **8 GB**. Pastikan perangkat dalam kondisi baik dan tidak ada data penting di dalamnya.
+
+### 2. File ISO Windows 11
+Siapkan file installer Windows 11 dalam format `.iso`. Jika belum punya, Anda bisa mengunduhnya melalui tautan di bawah ini.
+
+<DownloadButton href="https://software.download.prss.microsoft.com/dbazure/Win11_25H2_English_x64.iso?t=bdadfcf5-a000-4b64-9dc0-068425181996&amp;P1=1771326814&amp;P2=601&amp;P3=2&amp;P4=z1BE%2fxc51oPiF9jr6McKw6wjnS3qwnPD4oR4tf8cLtvY9FgKVUZ6htGqpR9%2bCOmzEeUW%2bfz6dN4bEvz%2fqBdF%2f2eqcoantEPYpSB7DtJMZ5lW316INI7DvaTb4jklS3IKOQy960p7%2bu8W81HsMWXn8CjuxNLmR3ytDZBPrJYjRbQZT5dkzXUS4h%2bsXdHeTUFRv%2bT60Yu7KorOavxQJMCtiASqnMrZuqFeDRdd2jOISm6mTwWDz4B7ON4v1cWWy%2fKFw2EoT1%2bjAt0OFa%2fymFBk43UBoC1cuXaBVKJLPIvkBIEIj0renIzzNYvUEu%2btcKAUGf2fTWFGQ6qXKIhuKEBrEg%3d%3d">Unduh ISO Windows 11 (via Gerbang Unduhan SnipGeek)</DownloadButton>
+
+### 3. Aplikasi Rufus
+Gunakan versi terbaru Rufus untuk kompatibilitas dan fitur terbaik.
+
+<DownloadButton href="https://rufus.ie/downloads/">Unduh Rufus (via Gerbang Unduhan SnipGeek)</DownloadButton>
+
+### 4. Cadangkan Data Penting
+> ⚠️ **Peringatan**
+> Proses ini akan **memformat** flash drive sepenuhnya. Semua data di dalamnya akan terhapus permanen. Pastikan Anda sudah memindahkan data penting dari flash drive sebelum melanjutkan.
+
+---
+
+## 2. Proses Pembuatan Bootable Windows 11
+
+Setelah semua persiapan selesai, ikuti langkah-langkah berikut.
+
+### Langkah 1 — Jalankan Rufus dan Pilih Perangkat
+Buka aplikasi Rufus. Hubungkan flash drive ke komputer, dan perangkat akan otomatis terdeteksi pada bagian **Device**.
+
+![Tampilan awal Rufus dengan flash drive terdeteksi](/images/_posts/rufus/rufus-4.9_1.png)
+
+Pastikan perangkat yang dipilih sudah benar sebelum melanjutkan.
+
+### Langkah 2 — Pilih File ISO Windows 11
+Pada bagian **Boot selection**, klik **SELECT**, lalu arahkan ke file ISO Windows 11 yang telah Anda unduh sebelumnya.
+
+![Memilih file ISO Windows 11 di Rufus](/images/_posts/rufus/rufus-4.9_2.png)
+
+Setelah file dipilih, Rufus akan mengatur beberapa parameter lain secara otomatis.
+
+### Langkah 3 — Verifikasi Skema Partisi
+Untuk instalasi pada sistem modern, pastikan konfigurasi berikut yang digunakan:
+- **Partition scheme:** GPT
+- **Target system:** UEFI (non-CSM)
+
+### Langkah 4 — Mulai Proses
+Klik tombol **START** untuk memulai pembuatan media bootable.
+
+### Langkah 5 — Konfigurasi Windows User Experience
+Setelah menekan START, sebuah jendela konfigurasi tambahan akan muncul. Di sini Anda dapat melewati beberapa persyaratan instalasi Windows 11.
+
+Centang opsi **Remove requirement for 4GB+ RAM, Secure Boot and TPM 2.0** jika komputer Anda tidak memenuhi spesifikasi tersebut.
+
+![Jendela kustomisasi Windows di Rufus](/images/_posts/rufus/rufus-4.9_3.png)
+
+Klik **OK** untuk melanjutkan. Rufus akan memberikan peringatan terakhir bahwa semua data pada flash drive akan dihapus. Klik OK lagi untuk konfirmasi.
+
+### Langkah 6 — Tunggu Hingga Selesai
+Rufus akan mulai menyalin file-file instalasi ke flash drive. Proses ini biasanya membutuhkan beberapa menit.
+
+![Proses pembuatan bootable USB selesai dengan status READY](/images/_posts/rufus/rufus-4.9_4.png)
+
+Ketika bar status sudah penuh dan menampilkan tulisan **READY**, itu artinya flash drive bootable Anda telah siap digunakan.
+
+---
+
+## Penutup
+Media instalasi Windows 11 Anda kini siap digunakan untuk melakukan instalasi bersih pada perangkat berbasis UEFI. Dengan konfigurasi yang tepat di Rufus, proses instalasi menjadi lebih efisien dan bebas dari kendala persyaratan sistem.
+
+![Tampilan akhir Rufus setelah proses selesai](/images/_posts/rufus/rufus-4.9_5.png)
