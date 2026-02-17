@@ -1,0 +1,97 @@
+---
+title: "Dissecting the Floating Pill Header: A Feature Breakdown with Next.js & Tailwind"
+date: "2026-02-17"
+description: "A deep dive into how the multi-functional, responsive floating pill header on this site was built using Next.js hooks and Tailwind CSS."
+translationKey: "catatan-bagaimana-saya-membuat-header-pil"
+published: true
+tags: ['Next.js', 'Tailwind CSS', 'React', 'Frontend', 'Web Development', 'UI/UX']
+---
+
+If you've navigated this site, you've likely interacted with the floating "pill" header at the top of the page. It's designed to be minimal yet powerful, housing navigation, search, and a reading list in a compact, responsive component. In this note, we'll break down exactly how it works, piece by piece.
+
+### Core Technologies
+
+The magic behind this header isn't one single library, but a combination of modern frontend tools working in harmony:
+
+-   **React & Next.js:** For the component structure and hooks (`useState`, `useEffect`, `useRef`).
+-   **Tailwind CSS:** For all styling, enabling rapid, utility-first design. The `group` and `data-[state]` variants are particularly crucial here.
+-   **`clsx`:** A tiny utility for constructing `className` strings conditionally.
+-   **Lucide React:** For clean, consistent icons.
+
+### Step 1: The Basic Structure & Floating Position
+
+The foundation is a `<header>` element with `position: fixed`. Key Tailwind classes make it work:
+
+-   `fixed top-4 left-4 right-4`: Positions the header near the top of the viewport.
+-   `md:left-1/2 md:-translate-x-1/2`: On medium screens and up, it centers itself horizontally.
+-   `z-50`: Ensures it stays above other content.
+-   `bg-primary/90 backdrop-blur-sm`: Creates that semi-transparent, glassy effect.
+-   `rounded-full`: This gives it the "pill" shape.
+-   `transition-all duration-300`: Makes all changes (like visibility) smooth.
+
+### Step 2: The Component's Brain - State Management
+
+The entire functionality hinges on a single, crucial `useState` variable:
+
+```tsx
+type ActiveView = 'none' | 'search' | 'menu' | 'readingList';
+const [activeView, setActiveView] = useState<ActiveView>('none');
+```
+
+This state variable acts like a traffic controller. The value of `activeView` determines what the user sees:
+-   `'none'`: The default, compact view.
+-   `'search'`: The header expands, the search input appears, and search results are shown below.
+-   `'menu'`: The dropdown for navigation links opens.
+-   `'readingList'`: The panel with saved articles appears.
+
+Conditional classes are applied everywhere based on this state. For example, the main navigation links are hidden when `isSearchOpen` (which is just `activeView === 'search'`) is true.
+
+### Step 3: The Dynamic Search Experience
+
+When the search icon is clicked, `setActiveView('search')` is called. This triggers several changes:
+
+1.  **Width Transition:** The header's container smoothly animates to a wider `max-w-lg`.
+2.  **Input Visibility:** The search `<Input />` component, which was previously hidden, becomes visible. An `absolute` positioned container with `opacity-0` transitions to `opacity-100`.
+3.  **Auto-Focus:** A `useEffect` hook watches for `isSearchOpen` to become true and immediately focuses the input field using `searchInputRef.current?.focus()`. This is a small but critical UX improvement.
+4.  **Real-time Filtering:** As the user types, the `query` state is updated. Another `useEffect` hook listens to changes in `query` and filters the `searchableData` array, storing the results in a `results` state.
+5.  **Displaying Results:** The results are rendered in a separate container positioned absolutely below the header, which only becomes visible when `isSearchOpen` is true and there are results to show.
+
+### Step 4: Smart Visibility on Scroll
+
+A header that's always visible can be distracting. To solve this, the header cleverly hides itself when you scroll down and reappears when you scroll up. This is achieved with a `useEffect` hook that tracks the window's scroll position.
+
+```tsx
+const lastScrollY = useRef(0);
+const [isVisible, setIsVisible] = useState(true);
+
+useEffect(() => {
+  const handleScroll = () => {
+    const currentScrollY = window.scrollY;
+    // Show if scrolling up or near the top
+    if (currentScrollY < lastScrollY.current || currentScrollY < 10) {
+      setIsVisible(true);
+    } 
+    // Hide if scrolling down and past a certain point
+    else if (currentScrollY > 100 && currentScrollY > lastScrollY.current) {
+      setIsVisible(false);
+    }
+    lastScrollY.current = currentScrollY;
+  };
+
+  window.addEventListener('scroll', handleScroll, { passive: true });
+  return () => window.removeEventListener('scroll', handleScroll);
+}, []);
+```
+
+The `isVisible` state then adds or removes classes that control the header's `opacity` and `transform` properties, creating a smooth hide-and-show effect.
+
+### Step 5: The Finer Details (UX & Accessibility)
+
+Several small touches complete the experience:
+-   **Escape Key:** An event listener is added to the document to listen for the `Escape` key, which sets `activeView` back to `'none'`, closing any open panel.
+-   **Click Outside:** A similar listener detects clicks outside the header component to close it.
+-   **ARIA Labels:** Buttons use `aria-label` to provide context for screen readers.
+
+### Conclusion
+
+The floating pill header is a perfect example of how combining simple React hooks, the power of utility-first CSS with Tailwind, and a clear state management strategy can create a complex, elegant, and highly functional UI component. By breaking it down into smaller, manageable pieces, we can build sophisticated features that feel intuitive to the user.

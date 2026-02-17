@@ -1,0 +1,97 @@
+---
+title: "Membongkar Header Pil Mengambang: Bedah Fitur dengan Next.js dan Tailwind"
+date: "2026-02-17"
+description: "Penjelasan mendalam tentang bagaimana header pil multifungsi yang responsif di situs ini dibuat menggunakan Next.js hooks dan Tailwind CSS."
+translationKey: "catatan-bagaimana-saya-membuat-header-pil"
+published: true
+tags: ['Next.js', 'Tailwind CSS', 'React', 'Frontend', 'Pengembangan Web', 'UI/UX']
+---
+
+Jika Anda telah menjelajahi situs ini, kemungkinan besar Anda telah berinteraksi dengan header "pil" yang mengambang di bagian atas halaman. Header ini dirancang agar minimalis namun kuat, menampung navigasi, pencarian, dan daftar baca dalam satu komponen yang ringkas dan responsif. Dalam catatan ini, kita akan membedah secara rinci cara kerjanya, bagian demi bagian.
+
+### Teknologi Inti
+
+Keajaiban di balik header ini bukanlah satu library tunggal, melainkan kombinasi dari berbagai alat frontend modern yang bekerja secara harmonis:
+
+-   **React & Next.js:** Untuk struktur komponen dan hooks (`useState`, `useEffect`, `useRef`).
+-   **Tailwind CSS:** Untuk semua styling, memungkinkan desain *utility-first* yang cepat. Varian `group` dan `data-[state]` sangat krusial di sini.
+-   **`clsx`:** Utilitas kecil untuk membangun string `className` secara kondisional.
+-   **Lucide React:** Untuk ikon yang bersih dan konsisten.
+
+### Langkah 1: Struktur Dasar & Posisi Mengambang
+
+Fondasinya adalah elemen `<header>` dengan `position: fixed`. Kelas-kelas utama dari Tailwind membuatnya berfungsi:
+
+-   `fixed top-4 left-4 right-4`: Memposisikan header di dekat bagian atas viewport.
+-   `md:left-1/2 md:-translate-x-1/2`: Pada layar ukuran medium ke atas, ia akan berada di tengah secara horizontal.
+-   `z-50`: Memastikan header selalu berada di atas konten lain.
+-   `bg-primary/90 backdrop-blur-sm`: Menciptakan efek kaca semi-transparan.
+-   `rounded-full`: Inilah yang memberinya bentuk "pil".
+-   `transition-all duration-300`: Membuat semua perubahan (seperti visibilitas) menjadi mulus.
+
+### Langkah 2: Otak Komponen - Manajemen State
+
+Seluruh fungsionalitas bergantung pada satu variabel `useState` yang sangat penting:
+
+```tsx
+type ActiveView = 'none' | 'search' | 'menu' | 'readingList';
+const [activeView, setActiveView] = useState<ActiveView>('none');
+```
+
+Variabel state ini bertindak seperti pengatur lalu lintas. Nilai dari `activeView` menentukan apa yang dilihat pengguna:
+-   `'none'`: Tampilan default yang ringkas.
+-   `'search'`: Header melebar, input pencarian muncul, dan hasil pencarian ditampilkan di bawahnya.
+-   `'menu'`: Dropdown untuk link navigasi terbuka.
+-   `'readingList'`: Panel dengan artikel yang disimpan muncul.
+
+Kelas kondisional diterapkan di mana-mana berdasarkan state ini. Sebagai contoh, link navigasi utama disembunyikan ketika `isSearchOpen` (yang berarti `activeView === 'search'`) bernilai true.
+
+### Langkah 3: Pengalaman Pencarian Dinamis
+
+Ketika ikon pencarian diklik, `setActiveView('search')` dipanggil. Ini memicu beberapa perubahan:
+
+1.  **Transisi Lebar:** Kontainer header secara mulus beranimasi menjadi lebih lebar dengan `max-w-lg`.
+2.  **Visibilitas Input:** Komponen `<Input />` pencarian, yang sebelumnya tersembunyi, menjadi terlihat. Sebuah kontainer dengan `position: absolute` dan `opacity-0` bertransisi menjadi `opacity-100`.
+3.  **Fokus Otomatis:** Sebuah hook `useEffect` mengamati ketika `isSearchOpen` menjadi true dan segera memberikan fokus ke bidang input menggunakan `searchInputRef.current?.focus()`. Ini adalah peningkatan UX yang kecil namun sangat penting.
+4.  **Pemfilteran Real-time:** Saat pengguna mengetik, state `query` diperbarui. Hook `useEffect` lainnya memantau perubahan pada `query` dan memfilter array `searchableData`, lalu menyimpan hasilnya di state `results`.
+5.  **Menampilkan Hasil:** Hasilnya dirender di kontainer terpisah yang diposisikan secara absolut di bawah header, yang hanya terlihat saat `isSearchOpen` true dan ada hasil untuk ditampilkan.
+
+### Langkah 4: Visibilitas Cerdas saat Scroll
+
+Header yang selalu terlihat bisa mengganggu. Untuk mengatasinya, header ini dengan cerdas menyembunyikan dirinya saat Anda menggulir ke bawah dan muncul kembali saat Anda menggulir ke atas. Hal ini dicapai dengan hook `useEffect` yang melacak posisi scroll jendela.
+
+```tsx
+const lastScrollY = useRef(0);
+const [isVisible, setIsVisible] = useState(true);
+
+useEffect(() => {
+  const handleScroll = () => {
+    const currentScrollY = window.scrollY;
+    // Tampilkan jika menggulir ke atas atau berada di dekat puncak
+    if (currentScrollY < lastScrollY.current || currentScrollY < 10) {
+      setIsVisible(true);
+    } 
+    // Sembunyikan jika menggulir ke bawah dan melewati titik tertentu
+    else if (currentScrollY > 100 && currentScrollY > lastScrollY.current) {
+      setIsVisible(false);
+    }
+    lastScrollY.current = currentScrollY;
+  };
+
+  window.addEventListener('scroll', handleScroll, { passive: true });
+  return () => window.removeEventListener('scroll', handleScroll);
+}, []);
+```
+
+State `isVisible` kemudian menambahkan atau menghapus kelas yang mengontrol properti `opacity` dan `transform` header, menciptakan efek sembunyi-dan-tampil yang halus.
+
+### Langkah 5: Detail-Detail Kecil (UX & Aksesibilitas)
+
+Beberapa sentuhan kecil melengkapi pengalaman ini:
+-   **Tombol Escape:** Sebuah event listener ditambahkan ke dokumen untuk mendengarkan tombol `Escape`, yang akan mengatur `activeView` kembali ke `'none'`, menutup panel apa pun yang terbuka.
+-   **Klik di Luar:** Listener serupa mendeteksi klik di luar komponen header untuk menutupnya.
+-   **Label ARIA:** Tombol-tombol menggunakan `aria-label` untuk memberikan konteks bagi pembaca layar.
+
+### Kesimpulan
+
+Header pil mengambang adalah contoh sempurna tentang bagaimana menggabungkan hook React sederhana, kekuatan CSS utility-first dengan Tailwind, dan strategi manajemen state yang jelas dapat menciptakan komponen UI yang kompleks, elegan, dan sangat fungsional. Dengan memecahnya menjadi bagian-bagian yang lebih kecil dan dapat dikelola, kita dapat membangun fitur-fitur canggih yang terasa intuitif bagi pengguna.
