@@ -14,7 +14,7 @@ import { PostComments } from '@/components/blog/post-comments';
 import { PostMeta } from '@/components/blog/post-meta';
 import { ShareButtons } from '@/components/blog/share-buttons';
 import { RelatedPosts } from '@/components/blog/related-posts';
-import { TableOfContents, MobileTableOfContents } from '@/components/blog/table-of-contents';
+import { MobileTableOfContents } from '@/components/blog/table-of-contents';
 import { extractHeadings } from '@/lib/mdx-utils';
 
 export async function generateStaticParams() {
@@ -123,74 +123,62 @@ export default async function PostPage({ params }: { params: { slug: string, loc
 
   return (
     <div className="w-full">
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pt-24 pb-12 sm:pt-32 sm:pb-16">
-        <div className="flex flex-col lg:flex-row gap-12">
-            {/* Main Content Column */}
-            <article className="flex-1 max-w-3xl mx-auto lg:mx-0">
-                <header className="text-center">
-                    <h1 className="font-headline text-4xl md:text-5xl font-extrabold tracking-tighter text-primary mb-3">
-                        {post.frontmatter.title}
-                    </h1>
-                </header>
+      <main className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 pt-24 pb-12 sm:pt-32 sm:pb-16">
+        <article>
+            <header className="text-center">
+                <h1 className="font-headline text-4xl md:text-5xl font-extrabold tracking-tighter text-primary mb-3">
+                    {post.frontmatter.title}
+                </h1>
+            </header>
 
-                {heroSource && (
-                    <div className="my-8 sm:my-12">
-                        <Image
-                            src={heroSource.url}
-                            alt={imageAlt || post.frontmatter.title}
-                            width={1200}
-                            height={630}
-                            className="w-full h-auto rounded-xl shadow-lg object-cover"
-                            priority
-                            data-ai-hint={heroSource.hint}
-                        />
-                    </div>
-                )}
+            {heroSource && (
+                <div className="my-8 sm:my-12">
+                    <Image
+                        src={heroSource.url}
+                        alt={imageAlt || post.frontmatter.title}
+                        width={1200}
+                        height={630}
+                        className="w-full h-auto rounded-xl shadow-lg object-cover"
+                        priority
+                        data-ai-hint={heroSource.hint}
+                    />
+                </div>
+            )}
 
-                <PostMeta 
-                    frontmatter={post.frontmatter}
-                    item={itemForMeta}
-                    locale={params.locale}
-                    dictionary={dictionary}
+            <PostMeta 
+                frontmatter={post.frontmatter}
+                item={itemForMeta}
+                locale={params.locale}
+                dictionary={dictionary}
+            />
+
+            {/* TOC is now part of the single column flow, collapsed by default */}
+            <MobileTableOfContents headings={headings} title={dictionary.post.toc} />
+            
+            <div className="text-lg text-foreground/80">
+                <MDXRemote
+                    source={post.content}
+                    components={mdxComponents}
+                    options={{
+                        mdxOptions: {
+                            remarkPlugins: [remarkGfm],
+                            rehypePlugins: [[rehypeShiki, { theme: 'github-dark' }]],
+                        },
+                    }}
                 />
+            </div>
 
-                {/* Mobile TOC */}
-                <div className="lg:hidden">
-                    <MobileTableOfContents headings={headings} title={dictionary.post.toc} />
-                </div>
-                
-                <div className="text-lg text-foreground/80">
-                    <MDXRemote
-                        source={post.content}
-                        components={mdxComponents}
-                        options={{
-                            mdxOptions: {
-                                remarkPlugins: [remarkGfm],
-                                rehypePlugins: [[rehypeShiki, { theme: 'github-dark' }]],
-                            },
-                        }}
-                    />
-                </div>
-
-                <div className="mt-12 flex flex-col gap-4 text-center">
-                    <h3 className="text-lg font-semibold tracking-tight text-primary">{dictionary.post.shareArticle}</h3>
-                    <ShareButtons
-                        title={post.frontmatter.title}
-                        imageUrl={heroSource?.url}
-                    />
-                </div>
-                
-                <PostComments article={{ slug: post.slug, title: post.frontmatter.title }} type="blog" locale={params.locale} />
-            </article>
-
-            {/* Desktop Sidebar Column */}
-            <aside className="hidden lg:block w-64 shrink-0">
-                <div className="sticky top-24 space-y-8">
-                    <TableOfContents headings={headings} title={dictionary.post.toc} />
-                </div>
-            </aside>
-        </div>
-      </div>
+            <div className="mt-12 flex flex-col gap-4 text-center">
+                <h3 className="text-lg font-semibold tracking-tight text-primary">{dictionary.post.shareArticle}</h3>
+                <ShareButtons
+                    title={post.frontmatter.title}
+                    imageUrl={heroSource?.url}
+                />
+            </div>
+            
+            <PostComments article={{ slug: post.slug, title: post.frontmatter.title }} type="blog" locale={params.locale} />
+        </article>
+      </main>
 
       <RelatedPosts 
         type="blog"
