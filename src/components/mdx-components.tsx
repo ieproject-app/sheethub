@@ -5,6 +5,7 @@ import React from 'react';
 import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from '@/components/ui/table';
 import { cn } from '@/lib/utils';
 import { DownloadButton } from '@/components/blog/download-button';
+import { AllDownloadLinks } from '@/lib/download-links';
 
 // This component handles how `<img>` tags are rendered via MDX.
 const CustomImage = (props: any) => {
@@ -26,6 +27,27 @@ const CustomImage = (props: any) => {
             {...props}
         />
     );
+};
+
+// This component centralizes download links.
+const DownloadLink = ({ id }: { id: string }) => {
+  const linkData = AllDownloadLinks.find(link => link.id === id);
+
+  if (!linkData) {
+    // This warning will show in the server console during build if an ID is not found.
+    console.warn(`[DownloadLink Component]: The ID "${id}" was not found in download-links.json.`);
+    // Render a noticeable error in the article itself during development.
+    if (process.env.NODE_ENV === 'development') {
+      return <p className="font-bold text-destructive">[DownloadLink Error: Invalid ID &quot;{id}&quot;]</p>;
+    }
+    return null;
+  }
+
+  return (
+    <DownloadButton href={linkData.url}>
+      {linkData.text}
+    </DownloadButton>
+  );
 };
 
 // We define all the custom components outside of the main object
@@ -79,4 +101,5 @@ export const mdxComponents: MDXComponents = {
     td: TableCell,
     pre: MdxPre,
     DownloadButton,
+    DownloadLink, // Exporting the new component for use in MDX
 }
