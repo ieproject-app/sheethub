@@ -19,7 +19,7 @@
 
 @layer base {
   :root {
-    --background: 210 17% 98%; /* #F9FAFB */
+    --background: 246 100% 98%; /* #f5f3ff */
     --foreground: 225 14% 17%; /* Darker than primary for text */
     --card: 0 0% 100%;
     --card-foreground: 225 14% 17%;
@@ -54,7 +54,7 @@
     --sidebar-ring: 217.2 91.2% 59.8%;
   }
   .dark {
-    --background: 222 47% 11%;
+    --background: 0 0% 10%; /* #1a1a1a */
     --foreground: 210 40% 98%;
     --card: 222 47% 11%;
     --card-foreground: 210 40% 98%;
@@ -95,6 +95,12 @@
   }
   body {
     @apply bg-background text-foreground;
+    background-image: radial-gradient(ellipse at 15% 30%, rgba(255,220,180,0.6) 0%, transparent 45%), radial-gradient(ellipse at 85% 20%, rgba(200,180,255,0.5) 0%, transparent 45%), radial-gradient(ellipse at 60% 80%, rgba(180,220,255,0.4) 0%, transparent 40%);
+    background-attachment: fixed;
+  }
+
+  .dark body {
+    background-image: radial-gradient(ellipse at 20% 20%, rgba(120,150,80,0.25) 0%, transparent 50%), radial-gradient(ellipse at 80% 80%, rgba(60,80,60,0.15) 0%, transparent 50%);
   }
 
   /* Fade-in animation for page transitions */
