@@ -124,16 +124,16 @@ export function Header({ searchableData, dictionary }: { searchableData: Searcha
   
   const allMobileMenuItems = [...menuItems, ...moreMenuItems];
 
-  const navItemClass = "transition-colors duration-200 text-primary-foreground/70 hover:text-primary-foreground";
+  const navItemClass = "transition-all duration-300 text-primary-foreground/70 hover:text-primary-foreground";
 
   return (
     <header ref={headerRef} className={cn(
         "fixed top-4 left-4 right-4 md:left-1/2 md:-translate-x-1/2 md:right-auto z-50 transition-all duration-300 ease-in-out",
-        isSearchOpen ? 'md:w-full max-w-lg' : 'md:w-auto',
+        isSearchOpen ? 'md:w-full max-w-lg' : 'md:w-[520px]',
         isVisible ? "opacity-100 translate-y-0" : "opacity-0 -translate-y-16"
     )}>
         <nav className={cn(
-            "relative mx-auto bg-primary/90 backdrop-blur-sm text-primary-foreground shadow-lg ring-1 ring-black/5 flex items-center justify-between h-12 transition-all duration-300 ease-in-out px-2",
+            "relative mx-auto bg-primary/90 backdrop-blur-sm text-primary-foreground shadow-lg ring-1 ring-black/5 flex items-center justify-between h-12 transition-all duration-300 ease-in-out px-4",
             isSearchOpen && 'md:w-full',
             isSearchOpen ? 'rounded-full' : 'w-full md:w-auto',
             (isMenuOpen || isReadingListOpen) ? 'rounded-t-2xl rounded-b-none' : 'rounded-full'
@@ -144,13 +144,12 @@ export function Header({ searchableData, dictionary }: { searchableData: Searcha
             )}>
                 <Link 
                     href="/" 
-                    className="font-headline text-xl font-bold tracking-tighter ml-2 whitespace-nowrap"
+                    className="font-headline text-xl font-bold tracking-tighter whitespace-nowrap"
                     aria-hidden={isSearchOpen}
                     tabIndex={isSearchOpen ? -1 : 0}
                 >
                     SnipGeek
                 </Link>
-                <div className="flex-grow hidden md:block" />
             </div>
             
             <div className={cn(
@@ -176,26 +175,28 @@ export function Header({ searchableData, dictionary }: { searchableData: Searcha
                 </div>
 
                 {/* Desktop Icons */}
-                <div className="hidden md:flex items-center gap-1">
+                <div className="hidden md:flex items-center">
                     {menuItems.map(item => (
                         <Link key={item.name} href={item.href} className={cn("px-2 py-1 text-sm font-medium", navItemClass)}>
                             {item.name}
                         </Link>
                     ))}
-                    <Button variant="ghost" size="icon" className={cn("h-9 w-9 rounded-full bg-transparent hover:bg-transparent", navItemClass)} onClick={() => toggleView('menu')}>
-                        <MoreHorizontal className="h-5 w-5" />
-                    </Button>
-                    <Button variant="ghost" size="icon" className={cn("relative h-9 w-9 rounded-full bg-transparent hover:bg-transparent", navItemClass)} onClick={() => toggleView('readingList')}>
-                       <Bookmark className="h-5 w-5" />
-                       {readingListItems.length > 0 && (
-                            <span className="absolute top-1 right-1 flex h-4 min-w-4 items-center justify-center rounded-full bg-accent text-accent-foreground text-xs font-bold px-1">
-                                {readingListItems.length}
-                            </span>
-                       )}
-                    </Button>
-                    <Button variant="ghost" size="icon" className={cn("rounded-full h-9 w-9 bg-transparent hover:bg-transparent", navItemClass)} onClick={() => toggleView('search')}>
-                       <Search className="h-5 w-5" />
-                    </Button>
+                    <div className="flex items-center ml-1">
+                        <Button variant="ghost" size="icon" className={cn("h-9 w-9 rounded-full bg-transparent hover:bg-transparent", navItemClass)} onClick={() => toggleView('menu')}>
+                            <MoreHorizontal className="h-5 w-5" />
+                        </Button>
+                        <Button variant="ghost" size="icon" className={cn("relative h-9 w-9 rounded-full bg-transparent hover:bg-transparent", navItemClass)} onClick={() => toggleView('readingList')}>
+                           <Bookmark className="h-5 w-5" />
+                           {readingListItems.length > 0 && (
+                                <span className="absolute top-1 right-1 flex h-4 min-w-4 items-center justify-center rounded-full bg-accent text-accent-foreground text-xs font-bold px-1">
+                                    {readingListItems.length}
+                                </span>
+                           )}
+                        </Button>
+                        <Button variant="ghost" size="icon" className={cn("rounded-full h-9 w-9 bg-transparent hover:bg-transparent", navItemClass)} onClick={() => toggleView('search')}>
+                           <Search className="h-5 w-5" />
+                        </Button>
+                    </div>
                 </div>
             </div>
             
@@ -204,12 +205,12 @@ export function Header({ searchableData, dictionary }: { searchableData: Searcha
                 "absolute left-0 right-0 w-full h-full flex items-center transition-all duration-300 ease-in-out",
                 isSearchOpen ? "opacity-100 z-10 px-2" : "opacity-0 -z-10"
             )}>
-                <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-primary-foreground/70 pointer-events-none"/>
+                <Search className="absolute left-6 top-1/2 -translate-y-1/2 h-5 w-5 text-primary-foreground/70 pointer-events-none"/>
                 <Input 
                     ref={searchInputRef}
                     type="search" 
                     placeholder={dictionary.search.placeholder}
-                    className="w-full h-full bg-transparent border-none rounded-full pl-12 pr-12 focus-visible:ring-0 focus-visible:ring-offset-0 text-primary-foreground placeholder:text-primary-foreground/50"
+                    className="w-full h-full bg-transparent border-none rounded-full pl-14 pr-12 focus-visible:ring-0 focus-visible:ring-offset-0 text-primary-foreground placeholder:text-primary-foreground/50"
                     value={query}
                     onChange={(e) => setQuery(e.target.value)}
                 />
