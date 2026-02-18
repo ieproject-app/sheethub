@@ -99,43 +99,56 @@ export default function EmployeeHistoryClient({
   // State for Employee History
   const [searchText, setSearchText] = useState<string>('');
   const [searchGrup, setSearchGrup] = useState<string>('all');
-  const [filteredPejabat, setFilteredPejabat] = useState<Pejabat[]>(allPejabat);
-
-  // State for Document Signer Generator
-  const [docQueries, setDocQueries] = useState<DocQuery[]>([{ id: Date.now(), docType: '', docDate: '', projectValue: 0 }]);
-  const [generatedResults, setGeneratedResults] = useState<GeneratedResult>({});
+  const [filteredPejabat, setFilteredPejabat] = useState<Pejabat[]>([]);
+  const [isSearching, setIsSearching] = useState(false);
 
   const uniqueGrupJabatans = useMemo(() => 
     ['all', ...Array.from(new Set(allPejabat.map(p => p.grupJabatan)))]
   , [allPejabat]);
 
   useEffect(() => {
-    const parsedDate = tryParseDate(searchText);
-    const lowerSearchText = searchText.toLowerCase();
+    setIsSearching(true);
+    const timeoutId = setTimeout(() => {
+        const parsedDate = tryParseDate(searchText);
+        const lowerSearchText = searchText.toLowerCase().trim();
 
-    const results = allPejabat
-      .filter(p => {
-        const isGrupMatch = searchGrup === 'all' || p.grupJabatan === searchGrup;
-        if (!isGrupMatch) return false;
+        const results = allPejabat
+        .filter(p => {
+            const isGrupMatch = searchGrup === 'all' || p.grupJabatan === searchGrup;
+            if (!isGrupMatch) return false;
 
-        if (parsedDate) {
-          return p.tglMulai <= parsedDate && p.tglSelesai >= parsedDate;
-        } else if (lowerSearchText) {
-          return p.nama.toLowerCase().includes(lowerSearchText) || (p.nik && p.nik.toLowerCase().includes(lowerSearchText));
-        } else {
-          return true;
-        }
-      })
-      .sort((a, b) => {
-        const aIsActive = a.tglSelesai.getFullYear() === 9999;
-        const bIsActive = b.tglSelesai.getFullYear() === 9999;
-        if (aIsActive && !bIsActive) return -1;
-        if (!aIsActive && bIsActive) return 1;
-        return a.nama.localeCompare(b.nama);
-      });
+            if (parsedDate) {
+                return p.tglMulai <= parsedDate && p.tglSelesai >= parsedDate;
+            } else if (lowerSearchText) {
+                const searchTerms = lowerSearchText.split(' ').filter(term => term.length > 0);
+                return searchTerms.every(term => 
+                    p.nama.toLowerCase().includes(term) || 
+                    (p.nik && p.nik.toLowerCase().includes(term)) ||
+                    (p.jabatan && p.jabatan.toLowerCase().includes(term)) ||
+                    (p.grupJabatan && p.grupJabatan.toLowerCase().includes(term))
+                );
+            } else {
+                return true;
+            }
+        })
+        .sort((a, b) => {
+            const aIsActive = a.tglSelesai.getFullYear() === 9999;
+            const bIsActive = b.tglSelesai.getFullYear() === 9999;
+            if (aIsActive && !bIsActive) return -1;
+            if (!aIsActive && bIsActive) return 1;
+            return a.nama.localeCompare(b.nama);
+        });
 
-    setFilteredPejabat(results);
+        setFilteredPejabat(results);
+        setIsSearching(false);
+    }, 300);
+
+    return () => clearTimeout(timeoutId);
   }, [searchText, searchGrup, allPejabat]);
+
+  // State for Document Signer Generator
+  const [docQueries, setDocQueries] = useState<DocQuery[]>([{ id: Date.now(), docType: '', docDate: '', projectValue: 0 }]);
+  const [generatedResults, setGeneratedResults] = useState<GeneratedResult>({});
 
   const handleQueryChange = (id: number, field: keyof DocQuery, value: string | number) => {
     setDocQueries(queries => 
@@ -177,8 +190,8 @@ export default function EmployeeHistoryClient({
   return (
     <div className="space-y-12">
       {/* Search Section */}
-      <Card className="border bg-card/50 backdrop-blur-sm rounded-2xl overflow-hidden shadow-sm">
-        <CardHeader className="border-b bg-muted/30">
+      <Card className="border bg-card/50 backdrop-blur-sm rounded-2xl overflow-hidden shadow-sm border-primary/10">
+        <CardHeader className="border-b bg-muted/20">
           <div className="flex items-center gap-3">
             <div className="p-2 bg-primary/10 rounded-lg">
                 <Search className="h-5 w-5 text-primary" />
@@ -190,7 +203,7 @@ export default function EmployeeHistoryClient({
           </div>
         </CardHeader>
         <CardContent className="p-6">
-          <div className="flex flex-col sm:flex-row gap-4 mb-6">
+          <div className="flex flex-col md:flex-row gap-4 mb-6">
             <div className="flex-1 relative">
                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                 <Input 
@@ -201,7 +214,7 @@ export default function EmployeeHistoryClient({
                 />
             </div>
             <Select value={searchGrup} onValueChange={setSearchGrup}>
-                <SelectTrigger className="w-full sm:w-[200px] h-11 rounded-xl bg-background/50 border-muted">
+                <SelectTrigger className="w-full md:w-[240px] h-11 rounded-xl bg-background/50 border-muted">
                     <SelectValue placeholder={t.groupPlaceholder} />
                 </SelectTrigger>
                 <SelectContent className="rounded-xl">
@@ -217,29 +230,40 @@ export default function EmployeeHistoryClient({
                 <Table>
                 <TableHeader className="bg-muted/30">
                     <TableRow className="hover:bg-transparent">
-                        <TableHead className="font-bold py-4">{t.nameHeader}</TableHead>
-                        <TableHead className="font-bold">{t.positionHeader}</TableHead>
-                        <TableHead className="font-bold">{t.groupHeader}</TableHead>
-                        <TableHead className="font-bold">{t.nikHeader}</TableHead>
-                        <TableHead className="font-bold">{t.startDateHeader}</TableHead>
-                        <TableHead className="font-bold whitespace-nowrap">{t.endDateHeader}</TableHead>
+                        <TableHead className="sticky left-0 z-20 bg-muted/80 backdrop-blur-md font-bold py-4 pl-6 min-w-[200px] border-r">
+                            {t.nameHeader}
+                        </TableHead>
+                        <TableHead className="font-bold px-4">{t.positionHeader}</TableHead>
+                        <TableHead className="font-bold px-4">{t.groupHeader}</TableHead>
+                        <TableHead className="font-bold px-4">{t.nikHeader}</TableHead>
+                        <TableHead className="font-bold px-4">{t.startDateHeader}</TableHead>
+                        <TableHead className="font-bold px-4 whitespace-nowrap">{t.endDateHeader}</TableHead>
                     </TableRow>
                 </TableHeader>
                 <TableBody>
                     {filteredPejabat.map((p, i) => {
                     const isActive = p.tglSelesai.getFullYear() === 9999;
                     return (
-                        <TableRow key={`${p.nik}-${i}`} className={cn("transition-colors", isActive ? 'bg-primary/5 hover:bg-primary/10' : 'hover:bg-muted/50')}>
-                        <TableCell className="py-4 font-medium">{p.nama}</TableCell>
-                        <TableCell className="text-muted-foreground">{p.jabatan}</TableCell>
-                        <TableCell>
-                            <span className="px-2 py-1 rounded-full bg-muted text-[10px] font-bold tracking-wider uppercase text-muted-foreground border">
+                        <TableRow 
+                            key={`${p.nik}-${i}`} 
+                            className={cn(
+                                "transition-all duration-300 animate-in fade-in slide-in-from-left-2",
+                                isActive ? 'bg-primary/[0.03] hover:bg-primary/[0.08]' : 'hover:bg-muted/50'
+                            )}
+                            style={{ animationDelay: `${Math.min(i * 30, 600)}ms` }}
+                        >
+                        <TableCell className="sticky left-0 z-10 bg-inherit backdrop-blur-sm py-4 pl-6 font-semibold border-r min-w-[200px]">
+                            {p.nama}
+                        </TableCell>
+                        <TableCell className="text-muted-foreground px-4 text-xs md:text-sm">{p.jabatan}</TableCell>
+                        <TableCell className="px-4">
+                            <span className="px-2 py-0.5 rounded-md bg-muted text-[10px] font-bold tracking-wider uppercase text-muted-foreground border">
                                 {p.grupJabatan}
                             </span>
                         </TableCell>
-                        <TableCell className="font-code text-xs tracking-wider">{p.nik}</TableCell>
-                        <TableCell className="font-code text-xs whitespace-nowrap">{formatDate(p.tglMulai, locale)}</TableCell>
-                        <TableCell className={cn("font-code text-xs whitespace-nowrap", isActive && "text-primary font-bold")}>
+                        <TableCell className="font-code text-xs tracking-wider px-4 opacity-70">{p.nik}</TableCell>
+                        <TableCell className="font-code text-xs whitespace-nowrap px-4 opacity-70">{formatDate(p.tglMulai, locale)}</TableCell>
+                        <TableCell className={cn("font-code text-xs whitespace-nowrap px-4", isActive ? "text-primary font-bold" : "opacity-70")}>
                             {isActive ? t.present : formatDate(p.tglSelesai, locale)}
                         </TableCell>
                         </TableRow>
@@ -248,8 +272,13 @@ export default function EmployeeHistoryClient({
                 </TableBody>
                 </Table>
             </div>
-            {filteredPejabat.length === 0 && (
-                <div className="p-12 text-center text-muted-foreground bg-muted/10">
+            {isSearching && (
+                <div className="p-12 text-center text-muted-foreground bg-muted/5 animate-pulse">
+                    Searching...
+                </div>
+            )}
+            {!isSearching && filteredPejabat.length === 0 && (
+                <div className="p-12 text-center text-muted-foreground bg-muted/5 italic">
                     No matching records found.
                 </div>
             )}
@@ -258,8 +287,8 @@ export default function EmployeeHistoryClient({
       </Card>
 
       {/* Generator Section */}
-      <Card className="border bg-card/50 backdrop-blur-sm rounded-2xl overflow-hidden shadow-sm">
-        <CardHeader className="border-b bg-muted/30">
+      <Card className="border bg-card/50 backdrop-blur-sm rounded-2xl overflow-hidden shadow-sm border-primary/10">
+        <CardHeader className="border-b bg-muted/20">
           <div className="flex items-center gap-3">
             <div className="p-2 bg-primary/10 rounded-lg">
                 <FileText className="h-5 w-5 text-primary" />
@@ -273,11 +302,11 @@ export default function EmployeeHistoryClient({
         <CardContent className="p-6">
           <div className="space-y-4">
             {docQueries.map((query, index) => (
-                <div key={query.id} className="flex flex-col md:flex-row items-end gap-4 p-5 border rounded-xl bg-background/30 relative group">
+                <div key={query.id} className="flex flex-col md:flex-row items-end gap-4 p-5 border rounded-xl bg-background/30 relative group transition-all hover:border-primary/30">
                     <div className="w-full md:flex-1 space-y-2">
                         <label className="text-xs font-bold uppercase tracking-wider text-muted-foreground">{t.docTypePlaceholder}</label>
                         <Select value={query.docType} onValueChange={value => handleQueryChange(query.id, 'docType', value)}>
-                            <SelectTrigger className="h-11 rounded-xl bg-background/50"><SelectValue /></SelectTrigger>
+                            <SelectTrigger className="h-11 rounded-xl bg-background/50 focus:ring-primary/20"><SelectValue /></SelectTrigger>
                             <SelectContent className="rounded-xl">
                                 {Object.keys(docRules).map(doc => <SelectItem key={doc} value={doc}>{doc}</SelectItem>)}
                             </SelectContent>
@@ -285,12 +314,12 @@ export default function EmployeeHistoryClient({
                     </div>
                     <div className="w-full md:flex-1 space-y-2">
                         <label className="text-xs font-bold uppercase tracking-wider text-muted-foreground">{t.startDateHeader}</label>
-                        <Input type="date" value={query.docDate} onChange={e => handleQueryChange(query.id, 'docDate', e.target.value)} className="h-11 rounded-xl bg-background/50" />
+                        <Input type="date" value={query.docDate} onChange={e => handleQueryChange(query.id, 'docDate', e.target.value)} className="h-11 rounded-xl bg-background/50 focus-visible:ring-primary/20" />
                     </div>
                     {(query.docType === 'AMD PENUTUP' || query.docType === 'BAST') && (
                         <div className="w-full md:flex-1 space-y-2">
                             <label className="text-xs font-bold uppercase tracking-wider text-muted-foreground">{t.projectValuePlaceholder}</label>
-                            <Input type="number" value={query.projectValue} onChange={e => handleQueryChange(query.id, 'projectValue', parseInt(e.target.value))} className="h-11 rounded-xl bg-background/50" />
+                            <Input type="number" value={query.projectValue} onChange={e => handleQueryChange(query.id, 'projectValue', parseInt(e.target.value))} className="h-11 rounded-xl bg-background/50 focus-visible:ring-primary/20" />
                         </div>
                     )}
                     <Button 
@@ -298,7 +327,7 @@ export default function EmployeeHistoryClient({
                         size="icon" 
                         onClick={() => removeQueryRow(query.id)} 
                         disabled={docQueries.length <= 1}
-                        className="rounded-full hover:bg-destructive/10 hover:text-destructive transition-colors"
+                        className="rounded-full hover:bg-destructive/10 hover:text-destructive transition-colors shrink-0 mb-1"
                     >
                         <Trash2 className="h-4 w-4" />
                     </Button>
@@ -306,48 +335,50 @@ export default function EmployeeHistoryClient({
             ))}
           </div>
           
-          <div className="flex flex-col sm:flex-row gap-4 mt-6">
-            <Button onClick={addQueryRow} variant="outline" className="flex-1 rounded-xl h-11 border-dashed">
+          <div className="flex flex-col sm:flex-row gap-4 mt-8">
+            <Button onClick={addQueryRow} variant="outline" className="flex-1 rounded-xl h-12 border-dashed border-primary/30 hover:bg-primary/5">
                 <Plus className="mr-2 h-4 w-4" /> Add Another Document
             </Button>
-            <Button onClick={handleGenerateSigners} className="flex-1 rounded-xl h-11 shadow-lg shadow-primary/20">
+            <Button onClick={handleGenerateSigners} className="flex-1 rounded-xl h-12 shadow-lg shadow-primary/20 transition-all hover:scale-[1.02] active:scale-[0.98]">
                 <UserCheck className="mr-2 h-4 w-4" /> Generate Signers
             </Button>
           </div>
           
           {Object.keys(generatedResults).length > 0 && (
-            <div className="mt-12 space-y-8 animate-in fade-in slide-in-from-top-4 duration-500">
-              <div className="flex items-center gap-2 border-b pb-2">
-                  <UserCheck className="h-5 w-5 text-primary" />
-                  <h3 className="font-headline text-lg font-bold">Results</h3>
+            <div className="mt-16 space-y-8 animate-in fade-in slide-in-from-top-6 duration-700">
+              <div className="flex items-center gap-3 border-b border-primary/20 pb-4">
+                  <div className="p-1.5 bg-primary/10 rounded-full">
+                    <UserCheck className="h-5 w-5 text-primary" />
+                  </div>
+                  <h3 className="font-headline text-2xl font-bold tracking-tight">Generated Results</h3>
               </div>
-              <div className="grid grid-cols-1 gap-6">
+              <div className="grid grid-cols-1 gap-8">
                 {Object.entries(generatedResults).map(([key, signers]) => (
-                    <div key={key} className="space-y-4">
-                        <div className="inline-block px-3 py-1 rounded-md bg-primary text-primary-foreground text-xs font-bold tracking-tight">
+                    <div key={key} className="space-y-4 animate-in fade-in zoom-in-95 duration-500">
+                        <div className="inline-flex items-center px-4 py-1.5 rounded-full bg-primary text-primary-foreground text-sm font-bold tracking-tight shadow-md">
                             {key}
                         </div>
-                        <div className="overflow-hidden border rounded-xl bg-background/50">
+                        <div className="overflow-hidden border border-primary/10 rounded-2xl bg-background/40 backdrop-blur-sm shadow-sm">
                             <Table>
-                                <TableHeader className="bg-muted/50">
+                                <TableHeader className="bg-muted/30">
                                     <TableRow className="hover:bg-transparent">
-                                        <TableHead className="font-bold py-3">{t.groupHeader}</TableHead>
+                                        <TableHead className="font-bold py-4 pl-6 w-[120px]">{t.groupHeader}</TableHead>
                                         <TableHead className="font-bold">{t.nameHeader}</TableHead>
                                         <TableHead className="font-bold">{t.positionHeader}</TableHead>
                                     </TableRow>
                                 </TableHeader>
                                 <TableBody>
                                     {signers.length > 0 ? signers.map((p, i) => (
-                                    <TableRow key={`${p.nik}-${i}`} className="hover:bg-muted/30">
-                                        <TableCell>
-                                            <Badge variant="outline" className="rounded-md uppercase text-[10px] tracking-wider">{p.grupJabatan}</Badge>
+                                    <TableRow key={`${p.nik}-${i}`} className="hover:bg-primary/[0.04] transition-colors">
+                                        <TableCell className="pl-6">
+                                            <Badge variant="outline" className="rounded-md uppercase text-[10px] tracking-wider font-bold bg-background/50">{p.grupJabatan}</Badge>
                                         </TableCell>
-                                        <TableCell className="font-medium">{p.nama}</TableCell>
+                                        <TableCell className="font-semibold text-primary">{p.nama}</TableCell>
                                         <TableCell className="text-muted-foreground text-sm">{p.jabatan}</TableCell>
                                     </TableRow>
                                     )) : (
                                         <TableRow>
-                                            <TableCell colSpan={3} className="text-center py-8 text-muted-foreground italic">No signers found for this date.</TableCell>
+                                            <TableCell colSpan={3} className="text-center py-12 text-muted-foreground italic bg-muted/5">No signers found for this date.</TableCell>
                                         </TableRow>
                                     )}
                                 </TableBody>

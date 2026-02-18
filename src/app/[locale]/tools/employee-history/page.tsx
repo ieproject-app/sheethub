@@ -31,17 +31,19 @@ export default async function EmployeeHistoryPage({
 
   return (
     <div className="w-full">
-      <main className="mx-auto max-w-5xl px-4 pt-24 pb-12 sm:px-6 sm:pt-32 sm:pb-16">
-        <header className="mb-12 text-center">
+      <main className="mx-auto max-w-6xl px-4 pt-24 pb-12 sm:px-6 sm:pt-32 sm:pb-16">
+        <header className="mb-12 text-center animate-in fade-in slide-in-from-top-4 duration-700">
             <h1 className="font-headline text-5xl font-extrabold tracking-tighter text-primary md:text-6xl mb-3">
                 {pageContent.title}
             </h1>
-            <p className="mx-auto max-w-2xl text-muted-foreground">
+            <p className="mx-auto max-w-2xl text-muted-foreground text-lg italic">
                 {pageContent.description}
             </p>
         </header>
         
-        <EmployeeHistoryClient dictionary={dictionary} employeeData={employeeData} locale={locale} />
+        <div className="animate-in fade-in slide-in-from-bottom-4 duration-1000 delay-200">
+            <EmployeeHistoryClient dictionary={dictionary} employeeData={employeeData} locale={locale} />
+        </div>
       </main>
     </div>
   );
