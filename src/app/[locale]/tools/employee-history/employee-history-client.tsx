@@ -1,4 +1,3 @@
-
 'use client'
 
 import { useState, useMemo, useEffect } from 'react'
@@ -11,6 +10,7 @@ import { getDictionary } from '@/lib/get-dictionary'
 import { parse, isValid } from 'date-fns'
 import { cn } from '@/lib/utils'
 import { Search, FileText, UserCheck, Plus, Trash2 } from 'lucide-react'
+import { Badge } from '@/components/ui/badge'
 
 // --- TYPE DEFINITIONS ---
 interface Pejabat {
@@ -108,6 +108,7 @@ export default function EmployeeHistoryClient({
 
   useEffect(() => {
     setIsSearching(true);
+    // Reduced debounce to 50ms for snappier feel
     const timeoutId = setTimeout(() => {
         const parsedDate = tryParseDate(searchText);
         const lowerSearchText = searchText.toLowerCase().trim();
@@ -141,7 +142,7 @@ export default function EmployeeHistoryClient({
 
         setFilteredPejabat(results);
         setIsSearching(false);
-    }, 300);
+    }, 50);
 
     return () => clearTimeout(timeoutId);
   }, [searchText, searchGrup, allPejabat]);
@@ -230,7 +231,8 @@ export default function EmployeeHistoryClient({
                 <Table>
                 <TableHeader className="bg-muted/30">
                     <TableRow className="hover:bg-transparent">
-                        <TableHead className="sticky left-0 z-20 bg-muted/80 backdrop-blur-md font-bold py-4 pl-6 min-w-[200px] border-r">
+                        {/* Sticky Header: Removed backdrop-blur for performance */}
+                        <TableHead className="sticky left-0 z-20 bg-muted font-bold py-4 pl-6 min-w-[200px] border-r">
                             {t.nameHeader}
                         </TableHead>
                         <TableHead className="font-bold px-4">{t.positionHeader}</TableHead>
@@ -247,12 +249,14 @@ export default function EmployeeHistoryClient({
                         <TableRow 
                             key={`${p.nik}-${i}`} 
                             className={cn(
-                                "transition-all duration-300 animate-in fade-in slide-in-from-left-2",
+                                "transition-all duration-200 animate-in fade-in slide-in-from-left-1",
                                 isActive ? 'bg-primary/[0.03] hover:bg-primary/[0.08]' : 'hover:bg-muted/50'
                             )}
-                            style={{ animationDelay: `${Math.min(i * 30, 600)}ms` }}
+                            // Faster stagger: 5ms delay per row, max 100ms
+                            style={{ animationDelay: `${Math.min(i * 5, 100)}ms` }}
                         >
-                        <TableCell className="sticky left-0 z-10 bg-inherit backdrop-blur-sm py-4 pl-6 font-semibold border-r min-w-[200px]">
+                        {/* Sticky Column: Solid background (bg-background) and no blur for performance */}
+                        <TableCell className="sticky left-0 z-10 bg-background py-4 pl-6 font-semibold border-r min-w-[200px] group-hover:bg-muted/50 transition-colors">
                             {p.nama}
                         </TableCell>
                         <TableCell className="text-muted-foreground px-4 text-xs md:text-sm">{p.jabatan}</TableCell>
