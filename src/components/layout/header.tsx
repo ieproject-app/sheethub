@@ -151,7 +151,6 @@ export function Header({ translationsMap, searchableData, dictionary }: { transl
                 >
                     SnipGeek
                 </Link>
-                <div className="h-6 w-px bg-primary-foreground/20 mx-1 hidden sm:block" />
                 <div className="flex-grow hidden md:block" />
             </div>
             
