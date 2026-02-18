@@ -174,7 +174,23 @@
         "supportingImagesLabelNote": "Gambar untuk disisipkan di konten",
         "draftContentLabel": "Konten/Draf Utama",
         "finalInstruction": "Instruksi Tambahan: Setelah selesai, selalu konfirmasikan `translationKey` dan `slug` Bahasa Inggris yang Anda gunakan agar saya bisa menemukan filenya dengan mudah."
+    },
+    "employeeHistory": {
+        "searchTitle": "Cari Riwayat Pejabat",
+        "searchDescription": "Filter akan diterapkan secara otomatis saat Anda mengubah input.",
+        "searchPlaceholder": "Cari berdasarkan tanggal, nama, atau NIK...",
+        "groupPlaceholder": "Pilih Grup Jabatan",
+        "allGroups": "Semua Grup",
+        "nameHeader": "Nama",
+        "positionHeader": "Jabatan",
+        "groupHeader": "Grup Jabatan",
+        "nikHeader": "NIK",
+        "startDateHeader": "Tanggal Mulai",
+        "endDateHeader": "Tanggal Selesai",
+        "generatorTitle": "Generator Penandatangan Dokumen",
+        "generatorDescription": "Pilih jenis dan tanggal dokumen untuk melihat daftar penandatangan secara otomatis.",
+        "docTypePlaceholder": "Pilih Jenis Dokumen",
+        "projectValuePlaceholder": "Nilai Proyek (jika > 500jt)",
+        "present": "Saat ini"
     }
 }
-
-    

@@ -44,6 +44,10 @@ export default async function ToolsPage({ params: { locale } }: { params: { loca
     {
       id: 'employee_history',
       icon: <Briefcase className="h-8 w-8" />,
+      isLink: true,
+      href: `${linkPrefix}/tools/employee-history`,
+      badge: pageContent.open_tool,
+      badgeVariant: 'secondary' as const,
     },
     {
       id: 'number_generator',

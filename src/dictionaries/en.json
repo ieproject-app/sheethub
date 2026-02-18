@@ -174,7 +174,23 @@
         "supportingImagesLabelNote": "Images to insert in content",
         "draftContentLabel": "Main Content/Draft",
         "finalInstruction": "Additional Instruction: After completion, always confirm the `translationKey` and the English `slug` you used so I can find the files easily."
+    },
+    "employeeHistory": {
+        "searchTitle": "Search Employee History",
+        "searchDescription": "Filters are applied automatically as you type or make a selection.",
+        "searchPlaceholder": "Search by date, name, or NIK...",
+        "groupPlaceholder": "Select Job Group",
+        "allGroups": "All Groups",
+        "nameHeader": "Name",
+        "positionHeader": "Position",
+        "groupHeader": "Job Group",
+        "nikHeader": "NIK",
+        "startDateHeader": "Start Date",
+        "endDateHeader": "End Date",
+        "generatorTitle": "Document Signer Generator",
+        "generatorDescription": "Select a document type and date to automatically see the required signers.",
+        "docTypePlaceholder": "Select Document Type",
+        "projectValuePlaceholder": "Project Value (if > 500M)",
+        "present": "Present"
     }
 }
-
-    
