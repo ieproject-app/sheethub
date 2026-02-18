@@ -108,7 +108,6 @@ export default function EmployeeHistoryClient({
 
   useEffect(() => {
     setIsSearching(true);
-    // Reduced debounce to 50ms for snappier feel
     const timeoutId = setTimeout(() => {
         const parsedDate = tryParseDate(searchText);
         const lowerSearchText = searchText.toLowerCase().trim();
@@ -191,7 +190,7 @@ export default function EmployeeHistoryClient({
   return (
     <div className="space-y-12">
       {/* Search Section */}
-      <Card className="border bg-card/50 backdrop-blur-sm rounded-2xl overflow-hidden shadow-sm border-primary/10">
+      <Card className="border bg-card/50 rounded-2xl overflow-hidden shadow-sm border-primary/10">
         <CardHeader className="border-b bg-muted/20">
           <div className="flex items-center gap-3">
             <div className="p-2 bg-primary/10 rounded-lg">
@@ -231,7 +230,6 @@ export default function EmployeeHistoryClient({
                 <Table>
                 <TableHeader className="bg-muted/30">
                     <TableRow className="hover:bg-transparent">
-                        {/* Sticky Header: Removed backdrop-blur for performance */}
                         <TableHead className="sticky left-0 z-20 bg-muted font-bold py-4 pl-6 min-w-[200px] border-r">
                             {t.nameHeader}
                         </TableHead>
@@ -249,13 +247,10 @@ export default function EmployeeHistoryClient({
                         <TableRow 
                             key={`${p.nik}-${i}`} 
                             className={cn(
-                                "transition-all duration-200 animate-in fade-in slide-in-from-left-1",
+                                "transition-all duration-200",
                                 isActive ? 'bg-primary/[0.03] hover:bg-primary/[0.08]' : 'hover:bg-muted/50'
                             )}
-                            // Faster stagger: 5ms delay per row, max 100ms
-                            style={{ animationDelay: `${Math.min(i * 5, 100)}ms` }}
                         >
-                        {/* Sticky Column: Solid background (bg-background) and no blur for performance */}
                         <TableCell className="sticky left-0 z-10 bg-background py-4 pl-6 font-semibold border-r min-w-[200px] group-hover:bg-muted/50 transition-colors">
                             {p.nama}
                         </TableCell>
@@ -277,7 +272,7 @@ export default function EmployeeHistoryClient({
                 </Table>
             </div>
             {isSearching && (
-                <div className="p-12 text-center text-muted-foreground bg-muted/5 animate-pulse">
+                <div className="p-12 text-center text-muted-foreground bg-muted/5">
                     Searching...
                 </div>
             )}
@@ -291,7 +286,7 @@ export default function EmployeeHistoryClient({
       </Card>
 
       {/* Generator Section */}
-      <Card className="border bg-card/50 backdrop-blur-sm rounded-2xl overflow-hidden shadow-sm border-primary/10">
+      <Card className="border bg-card/50 rounded-2xl overflow-hidden shadow-sm border-primary/10">
         <CardHeader className="border-b bg-muted/20">
           <div className="flex items-center gap-3">
             <div className="p-2 bg-primary/10 rounded-lg">
@@ -349,7 +344,7 @@ export default function EmployeeHistoryClient({
           </div>
           
           {Object.keys(generatedResults).length > 0 && (
-            <div className="mt-16 space-y-8 animate-in fade-in slide-in-from-top-6 duration-700">
+            <div className="mt-16 space-y-8">
               <div className="flex items-center gap-3 border-b border-primary/20 pb-4">
                   <div className="p-1.5 bg-primary/10 rounded-full">
                     <UserCheck className="h-5 w-5 text-primary" />
@@ -358,7 +353,7 @@ export default function EmployeeHistoryClient({
               </div>
               <div className="grid grid-cols-1 gap-8">
                 {Object.entries(generatedResults).map(([key, signers]) => (
-                    <div key={key} className="space-y-4 animate-in fade-in zoom-in-95 duration-500">
+                    <div key={key} className="space-y-4">
                         <div className="inline-flex items-center px-4 py-1.5 rounded-full bg-primary text-primary-foreground text-sm font-bold tracking-tight shadow-md">
                             {key}
                         </div>
