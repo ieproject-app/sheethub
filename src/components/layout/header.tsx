@@ -1,11 +1,8 @@
-
 'use client';
 
 import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import { cn } from '@/lib/utils';
-import { LanguageSwitcher } from './language-switcher';
-import { TranslationsMap } from '@/lib/posts';
 import { Search, X, Menu, Bookmark, Trash2, MoreHorizontal } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -25,7 +22,7 @@ type SearchableItem = {
 
 type ActiveView = 'none' | 'search' | 'menu' | 'readingList';
 
-export function Header({ translationsMap, searchableData, dictionary }: { translationsMap: TranslationsMap, searchableData: SearchableItem[], dictionary: Dictionary }) {
+export function Header({ searchableData, dictionary }: { translationsMap: any, searchableData: SearchableItem[], dictionary: Dictionary }) {
   const [isVisible, setIsVisible] = useState(true);
   const [activeView, setActiveView] = useState<ActiveView>('none');
   const [query, setQuery] = useState('');
@@ -127,6 +124,8 @@ export function Header({ translationsMap, searchableData, dictionary }: { transl
   
   const allMobileMenuItems = [...menuItems, ...moreMenuItems];
 
+  const navItemClass = "transition-colors duration-200 text-primary-foreground/70 hover:text-primary-foreground";
+
   return (
     <header ref={headerRef} className={cn(
         "fixed top-4 left-4 right-4 md:left-1/2 md:-translate-x-1/2 md:right-auto z-50 transition-all duration-300 ease-in-out",
@@ -160,10 +159,10 @@ export function Header({ translationsMap, searchableData, dictionary }: { transl
             )}>
                 {/* Mobile Icons */}
                 <div className={cn("flex md:hidden items-center", isSearchOpen && "opacity-0 pointer-events-none")}>
-                    <Button variant="ghost" size="icon" className="rounded-full h-9 w-9" onClick={() => toggleView('search')}>
+                    <Button variant="ghost" size="icon" className={cn("rounded-full h-9 w-9 bg-transparent hover:bg-transparent", navItemClass)} onClick={() => toggleView('search')}>
                        <Search className="h-5 w-5" />
                     </Button>
-                    <Button variant="ghost" size="icon" className="relative rounded-full h-9 w-9" onClick={() => toggleView('readingList')}>
+                    <Button variant="ghost" size="icon" className={cn("relative rounded-full h-9 w-9 bg-transparent hover:bg-transparent", navItemClass)} onClick={() => toggleView('readingList')}>
                        <Bookmark className="h-5 w-5" />
                        {readingListItems.length > 0 && (
                             <span className="absolute top-1 right-1 flex h-4 min-w-4 items-center justify-center rounded-full bg-accent text-accent-foreground text-xs font-bold px-1">
@@ -171,7 +170,7 @@ export function Header({ translationsMap, searchableData, dictionary }: { transl
                             </span>
                        )}
                     </Button>
-                    <Button variant="ghost" size="icon" className="h-9 w-9 rounded-full" onClick={() => toggleView('menu')}>
+                    <Button variant="ghost" size="icon" className={cn("h-9 w-9 rounded-full bg-transparent hover:bg-transparent", navItemClass)} onClick={() => toggleView('menu')}>
                         <Menu className="h-5 w-5" />
                     </Button>
                 </div>
@@ -179,14 +178,14 @@ export function Header({ translationsMap, searchableData, dictionary }: { transl
                 {/* Desktop Icons */}
                 <div className="hidden md:flex items-center gap-2">
                     {menuItems.map(item => (
-                        <Link key={item.name} href={item.href} className="px-3 py-1 text-sm font-medium rounded-full hover:bg-primary-foreground/10 transition-colors">
+                        <Link key={item.name} href={item.href} className={cn("px-3 py-1 text-sm font-medium", navItemClass)}>
                             {item.name}
                         </Link>
                     ))}
-                    <Button variant="ghost" size="icon" className="h-9 w-9 rounded-full" onClick={() => toggleView('menu')}>
+                    <Button variant="ghost" size="icon" className={cn("h-9 w-9 rounded-full bg-transparent hover:bg-transparent", navItemClass)} onClick={() => toggleView('menu')}>
                         <MoreHorizontal className="h-5 w-5" />
                     </Button>
-                    <Button variant="ghost" size="icon" className="relative h-9 w-9 rounded-full" onClick={() => toggleView('readingList')}>
+                    <Button variant="ghost" size="icon" className={cn("relative h-9 w-9 rounded-full bg-transparent hover:bg-transparent", navItemClass)} onClick={() => toggleView('readingList')}>
                        <Bookmark className="h-5 w-5" />
                        {readingListItems.length > 0 && (
                             <span className="absolute top-1 right-1 flex h-4 min-w-4 items-center justify-center rounded-full bg-accent text-accent-foreground text-xs font-bold px-1">
@@ -194,7 +193,7 @@ export function Header({ translationsMap, searchableData, dictionary }: { transl
                             </span>
                        )}
                     </Button>
-                    <Button variant="ghost" size="icon" className="rounded-full h-9 w-9" onClick={() => toggleView('search')}>
+                    <Button variant="ghost" size="icon" className={cn("rounded-full h-9 w-9 bg-transparent hover:bg-transparent", navItemClass)} onClick={() => toggleView('search')}>
                        <Search className="h-5 w-5" />
                     </Button>
                 </div>
@@ -214,7 +213,7 @@ export function Header({ translationsMap, searchableData, dictionary }: { transl
                     value={query}
                     onChange={(e) => setQuery(e.target.value)}
                 />
-                <Button variant="ghost" size="icon" className="rounded-full absolute right-2 z-20 h-9 w-9" onClick={() => { setActiveView('none'); setQuery(''); }}>
+                <Button variant="ghost" size="icon" className={cn("rounded-full absolute right-2 z-20 h-9 w-9 bg-transparent hover:bg-transparent", navItemClass)} onClick={() => { setActiveView('none'); setQuery(''); }}>
                    <X className="h-5 w-5" />
                 </Button>
             </div>
@@ -227,17 +226,16 @@ export function Header({ translationsMap, searchableData, dictionary }: { transl
             isMenuOpen ? "opacity-100 scale-y-100" : "opacity-0 scale-y-95 pointer-events-none"
         )}>
             <div className="p-2">
-                {/* Mobile shows all, Desktop only shows 'moreMenuItems' */}
                 <div className="md:hidden">
                     {allMobileMenuItems.map((item) => (
-                        <Link key={item.name} href={item.href} className="block px-4 py-3 text-base text-primary-foreground rounded-lg hover:bg-primary-foreground/10 transition-colors" onClick={() => setActiveView('none')}>
+                        <Link key={item.name} href={item.href} className={cn("block px-4 py-3 text-base rounded-lg", navItemClass)} onClick={() => setActiveView('none')}>
                             {item.name}
                         </Link>
                     ))}
                 </div>
                 <div className="hidden md:block">
                     {moreMenuItems.map((item) => (
-                        <Link key={item.name} href={item.href} className="block px-4 py-3 text-base text-primary-foreground rounded-lg hover:bg-primary-foreground/10 transition-colors" onClick={() => setActiveView('none')}>
+                        <Link key={item.name} href={item.href} className={cn("block px-4 py-3 text-base rounded-lg", navItemClass)} onClick={() => setActiveView('none')}>
                             {item.name}
                         </Link>
                     ))}
