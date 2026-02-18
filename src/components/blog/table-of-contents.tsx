@@ -1,4 +1,3 @@
-
 'use client';
 
 import { useEffect, useState } from 'react';
@@ -39,8 +38,10 @@ export function TableOfContents({ headings, title }: TableOfContentsProps) {
   return (
     <nav className="space-y-4">
       <div className="flex items-center gap-2 text-primary font-headline font-bold uppercase tracking-wider text-sm">
-        <ListIcon className="h-4 w-4" />
-        {title}
+        <span className="flex items-center gap-2">
+            <ListIcon className="h-4 w-4" />
+            {title}
+        </span>
       </div>
       <ul className="space-y-2 text-sm">
         {headings.map((heading) => (
@@ -56,12 +57,6 @@ export function TableOfContents({ headings, title }: TableOfContentsProps) {
           >
             <a
               href={`#${heading.id}`}
-              onClick={(e) => {
-                e.preventDefault();
-                document.getElementById(heading.id)?.scrollIntoView({
-                  behavior: 'smooth',
-                });
-              }}
               className="block"
             >
               {heading.text}
@@ -104,13 +99,7 @@ export function MobileTableOfContents({ headings, title }: TableOfContentsProps)
                         >
                             <a 
                                 href={`#${heading.id}`}
-                                onClick={(e) => {
-                                    e.preventDefault();
-                                    setIsOpen(false);
-                                    document.getElementById(heading.id)?.scrollIntoView({
-                                        behavior: 'smooth',
-                                    });
-                                }}
+                                onClick={() => setIsOpen(false)}
                                 className="text-muted-foreground hover:text-accent transition-colors"
                             >
                                 {heading.text}

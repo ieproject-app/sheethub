@@ -1,4 +1,3 @@
-
 import type { MDXComponents } from 'next-mdx-remote/rsc/types'
 import Image from 'next/image'
 import Link from 'next/link'
@@ -61,10 +60,10 @@ const DownloadButton = ({ id }: { id: string }) => {
   );
 };
 
-const MdxH1 = ({ children }: { children?: React.ReactNode }) => <h1 id={generateId(children)} className="font-headline mt-12 mb-6 text-4xl font-bold tracking-tighter text-primary scroll-mt-24">{children}</h1>;
-const MdxH2 = ({ children }: { children?: React.ReactNode }) => <h2 id={generateId(children)} className="font-headline mt-10 mb-5 text-3xl font-bold tracking-tighter text-primary scroll-mt-24">{children}</h2>;
-const MdxH3 = ({ children }: { children?: React.ReactNode }) => <h3 id={generateId(children)} className="font-headline mt-8 mb-4 text-2xl font-bold tracking-tighter text-primary scroll-mt-24">{children}</h3>;
-const MdxH4 = ({ children }: { children?: React.ReactNode }) => <h4 id={generateId(children)} className="font-headline mt-6 mb-3 text-xl font-bold tracking-tighter text-primary scroll-mt-24">{children}</h4>;
+const MdxH1 = ({ children }: { children?: React.ReactNode }) => <h1 id={generateId(children)} className="font-headline mt-12 mb-6 text-4xl font-bold tracking-tighter text-primary scroll-mt-12">{children}</h1>;
+const MdxH2 = ({ children }: { children?: React.ReactNode }) => <h2 id={generateId(children)} className="font-headline mt-10 mb-5 text-3xl font-bold tracking-tighter text-primary scroll-mt-12">{children}</h2>;
+const MdxH3 = ({ children }: { children?: React.ReactNode }) => <h3 id={generateId(children)} className="font-headline mt-8 mb-4 text-2xl font-bold tracking-tighter text-primary scroll-mt-12">{children}</h3>;
+const MdxH4 = ({ children }: { children?: React.ReactNode }) => <h4 id={generateId(children)} className="font-headline mt-6 mb-3 text-xl font-bold tracking-tighter text-primary scroll-mt-12">{children}</h4>;
 const MdxP = ({ children }: { children?: React.ReactNode }) => <p className="leading-7 my-6">{children}</p>;
 const MdxA = (props: React.AnchorHTMLAttributes<HTMLAnchorElement>) => {
   if (props.href) {
