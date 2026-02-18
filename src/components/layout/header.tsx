@@ -155,8 +155,8 @@ export function Header({ searchableData, dictionary }: { searchableData: Searcha
             )}>
                 {/* Mobile Menu Icons */}
                 <div className="flex md:hidden items-center gap-0">
-                    <Button variant="ghost" size="icon" className={cn("rounded-full h-9 w-9 bg-transparent hover:bg-transparent", navItemClass)} onClick={() => toggleView('search')}>
-                       <Search className="h-5 w-5" />
+                    <Button variant="ghost" size="icon" className={cn("h-9 w-9 rounded-full bg-transparent hover:bg-transparent", navItemClass)} onClick={() => toggleView('menu')}>
+                        <Menu className="h-5 w-5" />
                     </Button>
                     <Button variant="ghost" size="icon" className={cn("relative rounded-full h-9 w-9 bg-transparent hover:bg-transparent", navItemClass)} onClick={() => toggleView('readingList')}>
                        <Bookmark className="h-5 w-5" />
@@ -166,8 +166,8 @@ export function Header({ searchableData, dictionary }: { searchableData: Searcha
                             </span>
                        )}
                     </Button>
-                    <Button variant="ghost" size="icon" className={cn("h-9 w-9 rounded-full bg-transparent hover:bg-transparent", navItemClass)} onClick={() => toggleView('menu')}>
-                        <Menu className="h-5 w-5" />
+                    <Button variant="ghost" size="icon" className={cn("rounded-full h-9 w-9 bg-transparent hover:bg-transparent", navItemClass)} onClick={() => toggleView('search')}>
+                       <Search className="h-5 w-5" />
                     </Button>
                 </div>
 
