@@ -1,4 +1,4 @@
-import type { MDXComponents } from 'next-mdx-remote/rsc/types'
+import type {MDXComponents} from 'next-mdx-remote/rsc/types'
 import Image from 'next/image'
 import Link from 'next/link'
 import React from 'react';
@@ -23,13 +23,16 @@ const CustomImage = (props: any) => {
     }
 
     return (
-        <Image
-            width={768}
-            height={432}
-            className="my-8 h-auto w-full rounded-lg shadow-md"
-            alt={props.alt || 'Blog post image'}
-            {...props}
-        />
+        <div className="relative my-8 w-full">
+            <Image
+                width={1200}
+                height={675}
+                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 70vw, 800px"
+                className="h-auto w-full rounded-lg shadow-md object-cover"
+                alt={props.alt || 'SnipGeek article image'}
+                {...props}
+            />
+        </div>
     );
 };
 
