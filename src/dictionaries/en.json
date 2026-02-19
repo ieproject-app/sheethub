@@ -1,4 +1,3 @@
-
 {
     "navigation": {
         "blog": "Blog",
@@ -136,11 +135,13 @@
         "draftTitle": "Content Draft / Main Points",
         "draftPlaceholder": "Paste your full content draft here. To specify a download button location, use a placeholder like [DOWNLOAD_1], [DOWNLOAD_2], etc.",
         "downloadLinks": {
-            "title": "Download IDs (Sequential)",
-            "description": "Enter Download IDs one per line. They will map automatically to [DOWNLOAD_1], [DOWNLOAD_2], etc.",
-            "placeholder": "windows-11-iso-24h2\nrufus-installer",
+            "title": "Download Links",
+            "description": "Map [DOWNLOAD_X] placeholders to existing IDs from our database or enter new URLs. For new URLs, the AI will recommend a kebab-case ID.",
+            "addDownload": "Add Download Item",
+            "selectId": "Select an existing ID...",
+            "urlPlaceholder": "Paste the download URL here...",
             "promptTitle": "Download Buttons",
-            "promptInstruction": "Please replace the [DOWNLOAD_X] placeholders in the draft with <DownloadButton> components using the corresponding IDs below:"
+            "promptInstruction": "Please replace the [DOWNLOAD_X] placeholders in the draft with <DownloadButton> components using the corresponding settings below:"
         },
         "imageGrid": {
             "title": "Image Grids (Sequential)",

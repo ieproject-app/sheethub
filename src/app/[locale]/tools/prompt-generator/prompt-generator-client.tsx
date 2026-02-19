@@ -1,4 +1,3 @@
-
 'use client';
 
 import { useState, useEffect } from 'react';
@@ -9,9 +8,17 @@ import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
 import { Textarea } from '@/components/ui/textarea';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
-import { Copy, Check } from 'lucide-react';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Copy, Check, Plus, Trash2, Link as LinkIcon, Hash } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import type { Dictionary } from '@/lib/get-dictionary';
+import { downloadLinks } from '@/lib/data-downloads';
+
+type DownloadItem = {
+  id: string;
+  type: 'id' | 'url';
+  value: string;
+};
 
 type PromptGeneratorProps = {
   dictionary: Dictionary['promptGenerator'];
@@ -26,7 +33,7 @@ export function PromptGeneratorClient({ dictionary }: PromptGeneratorProps) {
   const [showGrids, setShowGrids] = useState(false);
   const [showImages, setShowImages] = useState(true);
 
-  const [downloadMappings, setDownloadMappings] = useState('');
+  const [downloadItems, setDownloadItems] = useState<DownloadItem[]>([]);
   const [imageGridMappings, setImageGridMappings] = useState('');
   const [images, setImages] = useState('');
 
@@ -41,6 +48,8 @@ export function PromptGeneratorClient({ dictionary }: PromptGeneratorProps) {
   const [generatedPrompt, setGeneratedPrompt] = useState('');
   const [isCopied, setIsCopied] = useState(false);
   const { toast } = useToast();
+
+  const downloadIds = Object.keys(downloadLinks).sort();
 
   useEffect(() => {
     const buildPrompt = () => {
@@ -107,13 +116,16 @@ export function PromptGeneratorClient({ dictionary }: PromptGeneratorProps) {
         prompt += `\n`;
       }
 
-      if (showDownloads && downloadMappings) {
+      if (showDownloads && downloadItems.length > 0) {
           prompt += `\n**${dictionary.downloadLinks.promptTitle}:**\n`;
           prompt += `${dictionary.downloadLinks.promptInstruction}\n`;
           
-          const mappings = downloadMappings.split('\n').filter(line => line.trim() !== '');
-          mappings.forEach((id, index) => {
-              prompt += `- Placeholder [DOWNLOAD_${index + 1}] -> ID: "${id.trim()}"\n`;
+          downloadItems.forEach((item, index) => {
+              if (item.type === 'id') {
+                prompt += `- Placeholder [DOWNLOAD_${index + 1}] -> Use Existing ID: "${item.value}"\n`;
+              } else {
+                prompt += `- Placeholder [DOWNLOAD_${index + 1}] -> Use New URL: "${item.value}" (Please recommend a suitable kebab-case ID for this URL and use it in the component)\n`;
+              }
           });
           prompt += `\n`;
       }
@@ -143,15 +155,7 @@ export function PromptGeneratorClient({ dictionary }: PromptGeneratorProps) {
     };
 
     buildPrompt();
-  }, [draft, title, slug, publishDate, isPublished, isFeatured, images, tags, translationKey, dictionary, contentType, downloadMappings, imageGridMappings, showDownloads, showGrids, showImages]);
-
-  const handleCopy = (text: string, label: string) => {
-    navigator.clipboard.writeText(text);
-    toast({
-      title: label,
-      description: dictionary.copySuccessDescription,
-    });
-  };
+  }, [draft, title, slug, publishDate, isPublished, isFeatured, images, tags, translationKey, dictionary, contentType, downloadItems, imageGridMappings, showDownloads, showGrids, showImages]);
 
   const handleCopyMain = () => {
     navigator.clipboard.writeText(generatedPrompt);
@@ -165,19 +169,19 @@ export function PromptGeneratorClient({ dictionary }: PromptGeneratorProps) {
     }, 2000);
   };
   
-  const isBlog = contentType === 'blog';
+  const addDownloadItem = () => {
+    setDownloadItems([...downloadItems, { id: crypto.randomUUID(), type: 'id', value: '' }]);
+  };
 
-  const CopyExampleButton = ({ text, label }: { text: string; label: string }) => (
-    <Button 
-      variant="ghost" 
-      size="sm" 
-      onClick={() => handleCopy(text, label)}
-      className="h-7 px-2 text-[10px] gap-1 opacity-70 hover:opacity-100"
-    >
-      <Copy className="h-3 w-3" />
-      {dictionary.copyButton} Example
-    </Button>
-  );
+  const removeDownloadItem = (id: string) => {
+    setDownloadItems(downloadItems.filter(item => item.id !== id));
+  };
+
+  const updateDownloadItem = (id: string, updates: Partial<DownloadItem>) => {
+    setDownloadItems(downloadItems.map(item => item.id === id ? { ...item, ...updates } : item));
+  };
+
+  const isBlog = contentType === 'blog';
 
   return (
     <div className="space-y-8">
@@ -235,30 +239,67 @@ export function PromptGeneratorClient({ dictionary }: PromptGeneratorProps) {
 
       {showDownloads && (
         <Card>
-            <CardHeader className="flex flex-row items-center justify-between space-y-0">
+            <CardHeader>
                 <CardTitle>{dictionary.downloadLinks.title}</CardTitle>
-                <CopyExampleButton text={dictionary.downloadLinks.placeholder} label={dictionary.downloadLinks.title} />
             </CardHeader>
-            <CardContent>
-                <Label htmlFor="download-mappings" className="text-sm text-muted-foreground">
+            <CardContent className="space-y-4">
+                <Label className="text-sm text-muted-foreground block mb-2">
                     {dictionary.downloadLinks.description}
                 </Label>
-                <Textarea
-                    id="download-mappings"
-                    placeholder={dictionary.downloadLinks.placeholder}
-                    value={downloadMappings}
-                    onChange={(e) => setDownloadMappings(e.target.value)}
-                    className="min-h-[120px] font-mono text-xs mt-2"
-                />
+                
+                {downloadItems.map((item, index) => (
+                  <div key={item.id} className="flex flex-col sm:flex-row gap-2 items-start sm:items-center p-3 border rounded-lg bg-muted/20">
+                    <Badge variant="outline" className="shrink-0 mb-2 sm:mb-0">[DOWNLOAD_{index + 1}]</Badge>
+                    
+                    <Select value={item.type} onValueChange={(val) => updateDownloadItem(item.id, { type: val as 'id' | 'url', value: '' })}>
+                      <SelectTrigger className="w-full sm:w-[140px] h-9">
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="id">
+                          <div className="flex items-center gap-2"><Hash className="h-3 w-3"/> ID</div>
+                        </SelectItem>
+                        <SelectItem value="url">
+                          <div className="flex items-center gap-2"><LinkIcon className="h-3 w-3"/> URL</div>
+                        </SelectItem>
+                      </SelectContent>
+                    </Select>
+
+                    {item.type === 'id' ? (
+                      <Select value={item.value} onValueChange={(val) => updateDownloadItem(item.id, { value: val })}>
+                        <SelectTrigger className="flex-1 h-9">
+                          <SelectValue placeholder={dictionary.downloadLinks.selectId || "Select ID..."} />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {downloadIds.map(id => <SelectItem key={id} value={id}>{id}</SelectItem>)}
+                        </SelectContent>
+                      </Select>
+                    ) : (
+                      <Input 
+                        placeholder={dictionary.downloadLinks.urlPlaceholder || "Paste URL..."} 
+                        value={item.value} 
+                        onChange={(e) => updateDownloadItem(item.id, { value: e.target.value })}
+                        className="flex-1 h-9"
+                      />
+                    )}
+
+                    <Button variant="ghost" size="icon" onClick={() => removeDownloadItem(item.id)} className="h-9 w-9 text-muted-foreground hover:text-destructive">
+                      <Trash2 className="h-4 w-4" />
+                    </Button>
+                  </div>
+                ))}
+
+                <Button onClick={addDownloadItem} variant="outline" size="sm" className="w-full border-dashed">
+                  <Plus className="h-4 w-4 mr-2" /> {dictionary.downloadLinks.addDownload || "Add Download"}
+                </Button>
             </CardContent>
         </Card>
       )}
 
       {(showGrids && dictionary.imageGrid) && (
         <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0">
+          <CardHeader>
               <CardTitle>{dictionary.imageGrid.title}</CardTitle>
-              <CopyExampleButton text={dictionary.imageGrid.placeholder} label={dictionary.imageGrid.title} />
           </CardHeader>
           <CardContent>
               <Label htmlFor="grid-mappings" className="text-sm text-muted-foreground">
@@ -277,12 +318,8 @@ export function PromptGeneratorClient({ dictionary }: PromptGeneratorProps) {
 
       {showImages && (
        <Card>
-        <CardHeader className="flex flex-row items-center justify-between space-y-0">
+        <CardHeader>
           <CardTitle>{isBlog ? dictionary.imagesTitle : dictionary.imagesTitleNote}</CardTitle>
-          <CopyExampleButton 
-            text={isBlog ? dictionary.imagesPlaceholder : dictionary.imagesPlaceholderNote} 
-            label={isBlog ? dictionary.imagesTitle : dictionary.imagesTitleNote} 
-          />
         </CardHeader>
         <CardContent>
             <Label htmlFor="images" className="text-sm text-muted-foreground">

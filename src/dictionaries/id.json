@@ -1,4 +1,3 @@
-
 {
     "navigation": {
         "blog": "Blog",
@@ -136,11 +135,13 @@
         "draftTitle": "Draf Konten / Poin Utama",
         "draftPlaceholder": "Tempelkan draf konten lengkap Anda di sini. Untuk menentukan lokasi tombol unduhan, gunakan placeholder seperti [DOWNLOAD_1], [DOWNLOAD_2], dll.",
         "downloadLinks": {
-            "title": "ID Unduhan (Berurutan)",
-            "description": "Masukkan ID Unduhan satu per baris. Akan dipetakan otomatis ke [DOWNLOAD_1], [DOWNLOAD_2], dst.",
-            "placeholder": "windows-11-iso-24h2\nrufus-installer",
+            "title": "Tautan Unduhan",
+            "description": "Petakan placeholder [DOWNLOAD_X] ke ID yang sudah ada dari database atau masukkan URL baru. Untuk URL baru, AI akan merekomendasikan ID kebab-case.",
+            "addDownload": "Tambah Item Unduhan",
+            "selectId": "Pilih ID yang sudah ada...",
+            "urlPlaceholder": "Tempel URL unduhan di sini...",
             "promptTitle": "Tombol Unduhan",
-            "promptInstruction": "Tolong ganti placeholder [DOWNLOAD_X] di dalam draf dengan komponen <DownloadButton> menggunakan ID yang sesuai di bawah ini:"
+            "promptInstruction": "Tolong ganti placeholder [DOWNLOAD_X] di dalam draf dengan komponen <DownloadButton> menggunakan pengaturan yang sesuai di bawah ini:"
         },
         "imageGrid": {
             "title": "Grid Gambar (Berurutan)",
