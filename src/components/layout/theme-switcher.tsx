@@ -20,7 +20,9 @@ export function ThemeSwitcher() {
   }, []);
   
   if (!mounted) {
-    return <div className="h-8 w-[108px] rounded-full bg-primary/10 animate-pulse" />;
+    return (
+      <div className="flex items-center bg-primary/90 backdrop-blur-sm rounded-full p-1 h-8 w-[108px] animate-pulse" />
+    );
   }
   
   const currentThemeIndex = themeOptions.findIndex((t) => t.theme === theme);

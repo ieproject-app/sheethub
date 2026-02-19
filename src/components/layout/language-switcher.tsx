@@ -66,7 +66,9 @@ export function LanguageSwitcher({ translationsMap }: { translationsMap: Transla
   }
 
   if (!mounted) {
-    return <div className="h-8 w-[80px] rounded-full bg-primary/10 animate-pulse" />;
+    return (
+      <div className="flex items-center bg-primary/90 backdrop-blur-sm rounded-full p-1 h-8 w-[80px] animate-pulse" />
+    );
   }
 
   return (
