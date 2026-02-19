@@ -19,16 +19,16 @@ export function ThemeSwitcher() {
   
   if (!mounted) {
     // Render a placeholder or nothing until the component is mounted
-    return <div className="h-8 w-[108px] rounded-full bg-muted/50 animate-pulse" />;
+    return <div className="h-8 w-[108px] rounded-full bg-primary/10 animate-pulse" />;
   }
   
   const currentThemeIndex = themeOptions.findIndex((t) => t.theme === theme);
 
   return (
-    <div className="relative flex items-center bg-muted rounded-full p-1 text-sm">
+    <div className="relative flex items-center bg-primary/90 backdrop-blur-sm rounded-full p-1 text-sm">
       <div
         className={cn(
-          'absolute h-6 w-9 bg-background shadow-sm rounded-full transition-transform duration-300 ease-in-out'
+          'absolute h-6 w-9 bg-primary-foreground/20 shadow-sm rounded-full transition-transform duration-300 ease-in-out'
         )}
         style={{ transform: `translateX(${currentThemeIndex * 100}%)` }}
       />
@@ -39,12 +39,12 @@ export function ThemeSwitcher() {
           className={cn(
             'relative z-10 w-9 h-6 flex items-center justify-center rounded-full transition-colors',
             theme === option.theme
-              ? 'text-primary'
-              : 'text-muted-foreground hover:text-foreground'
+              ? 'text-primary-foreground'
+              : 'text-primary-foreground/50 hover:text-primary-foreground'
           )}
           aria-label={`Switch to ${option.theme} mode`}
         >
-          <option.icon className="h-4 w-4" />
+          <option.icon className="h-3.5 w-3.5" />
         </button>
       ))}
     </div>
