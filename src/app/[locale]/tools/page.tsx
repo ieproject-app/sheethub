@@ -1,3 +1,4 @@
+
 import { i18n } from '@/i18n-config';
 import type { Metadata } from 'next';
 import { getDictionary } from '@/lib/get-dictionary';
@@ -24,15 +25,7 @@ export default async function ToolsPage({ params: { locale } }: { params: { loca
   const pageContent = dictionary.tools;
   const linkPrefix = locale === i18n.defaultLocale ? '' : `/${locale}`;
 
-  const tools = [
-    {
-      id: 'ai_prompt_generator',
-      icon: <ClipboardPenLine className="h-8 w-8" />,
-      isLink: true,
-      href: `${linkPrefix}/tools/prompt-generator`,
-      badge: pageContent.new_badge,
-      badgeVariant: 'secondary' as const,
-    },
+  const publicTools = [
     {
       id: 'number_to_words',
       icon: <Calculator className="h-8 w-8" />,
@@ -40,6 +33,17 @@ export default async function ToolsPage({ params: { locale } }: { params: { loca
     {
       id: 'random_name',
       icon: <Shuffle className="h-8 w-8" />,
+    },
+  ];
+
+  const internalTools = [
+    {
+      id: 'ai_prompt_generator',
+      icon: <ClipboardPenLine className="h-8 w-8" />,
+      isLink: true,
+      href: `${linkPrefix}/tools/prompt-generator`,
+      badge: pageContent.new_badge,
+      badgeVariant: 'secondary' as const,
     },
     {
       id: 'employee_history',
@@ -55,7 +59,7 @@ export default async function ToolsPage({ params: { locale } }: { params: { loca
     },
   ];
 
-  const renderCard = (tool: (typeof tools)[0]) => {
+  const renderCard = (tool: { id: string, icon: React.ReactElement, badge?: string, badgeVariant?: any }) => {
       const toolContent = pageContent.tool_list[tool.id as keyof typeof pageContent.tool_list];
       const badgeText = tool.badge || pageContent.coming_soon;
       const badgeVariant = tool.badgeVariant || 'outline';
@@ -86,14 +90,34 @@ export default async function ToolsPage({ params: { locale } }: { params: { loca
             <p className="mx-auto max-w-2xl text-muted-foreground">{pageContent.description}</p>
         </header>
         
-        <section className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {tools.map(tool => (
-            tool.isLink ? (
-              <Link href={tool.href!} key={tool.id} className="block h-full">{renderCard(tool)}</Link>
-            ) : (
-              renderCard(tool)
-            )
-          ))}
+        {/* Public Tools Section */}
+        <section className="mb-16">
+          <div className="flex items-center gap-4 mb-8">
+             <h2 className="text-2xl font-bold font-headline text-primary shrink-0">{pageContent.public_section}</h2>
+             <div className="h-px bg-border flex-1" />
+          </div>
+          <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+            {publicTools.map(tool => renderCard(tool))}
+          </div>
+        </section>
+
+        {/* Internal Tools Section */}
+        <section>
+          <div className="flex items-center gap-4 mb-8">
+             <h2 className="text-2xl font-bold font-headline text-primary shrink-0">{pageContent.internal_section}</h2>
+             <div className="h-px bg-border flex-1" />
+          </div>
+          <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+            {internalTools.map(tool => (
+              tool.isLink ? (
+                <Link href={tool.href!} key={tool.id} className="block h-full">
+                  {renderCard(tool)}
+                </Link>
+              ) : (
+                renderCard(tool)
+              )
+            ))}
+          </div>
         </section>
       </main>
     </div>

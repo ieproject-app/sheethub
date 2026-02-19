@@ -32,6 +32,8 @@
     "tools": {
         "title": "Alat",
         "description": "Kumpulan alat bantu untuk alur kerja saya.",
+        "public_section": "Alat Publik",
+        "internal_section": "Alat Internal",
         "wip": "Halaman ini sedang dalam tahap pembuatan.",
         "internal": "Internal",
         "open_tool": "Buka Alat",
@@ -112,7 +114,7 @@
         "title": "Mempersiapkan Unduhan Anda",
         "fileSizeLabel": "Ukuran:",
         "continueButton": "Lanjutkan untuk Mengunduh",
-        "redirecting": "atau unduhan Anda akan dimulai secara otomatis..."
+        "redirecting": "atau unduhan Anda akan dimulai otomatis..."
     },
     "notFound": {
         "title": "Halaman Tidak Ditemukan",

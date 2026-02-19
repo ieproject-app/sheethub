@@ -1,3 +1,4 @@
+
 import { getDictionary } from '@/lib/get-dictionary';
 import { i18n } from '@/i18n-config';
 import type { Metadata } from 'next';
@@ -11,6 +12,10 @@ export async function generateMetadata({ params: { locale } }: { params: { local
   return {
     title,
     description,
+    robots: {
+      index: false,
+      follow: false,
+    },
   };
 }
 

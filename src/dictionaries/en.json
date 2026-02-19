@@ -32,6 +32,8 @@
     "tools": {
         "title": "Tools",
         "description": "A collection of helper tools for my workflow.",
+        "public_section": "Public Tools",
+        "internal_section": "Internal Tools",
         "wip": "This page is under construction.",
         "internal": "Internal",
         "open_tool": "Open Tool",
