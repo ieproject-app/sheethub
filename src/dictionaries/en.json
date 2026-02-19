@@ -1,3 +1,4 @@
+
 {
     "navigation": {
         "blog": "Blog",
@@ -185,6 +186,6 @@
         "supportingImagesLabel": "Supporting Images (in order)",
         "supportingImagesLabelNote": "Images to insert in content",
         "draftContentLabel": "Main Content/Draft",
-        "finalInstruction": "Additional Instruction: 1. Always confirm the `translationKey` and the English `slug` used. 2. Ensure the title is exactly 50-60 characters long. 3. If manual HTML tags are needed, ALWAYS use 'className' instead of 'class' to prevent hydration errors."
+        "finalInstruction": "Additional Instruction: 1. Confirm translationKey and English slug. 2. Title length 50-60 chars. 3. STRICT MDX ADHERENCE: Use only supported components (<DownloadButton />, <ImageGrid />, standard Markdown tables). If the draft contains incompatible HTML or styles, AUTOMATICALLY adjust them to fit these components."
     }
 }
