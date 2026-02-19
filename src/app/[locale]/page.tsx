@@ -93,8 +93,8 @@ export default async function Home({ params: { locale } }: { params: { locale: s
                     <div className="absolute inset-0 bg-gradient-to-t from-black/95 via-black/60 to-transparent" />
                     <div className="absolute bottom-0 left-0 p-6 text-white w-full">
                         <p className="text-xs font-semibold uppercase tracking-wider opacity-80 mb-1">{post.frontmatter.category}</p>
-                        {/* Increased Title Size & Boldness (Option C) */}
-                        <h3 className="font-headline text-2xl font-extrabold line-clamp-2 leading-tight">
+                        {/* Increased Title Size & Boldness (Option C) - Line clamp removed to show full title */}
+                        <h3 className="font-headline text-2xl font-extrabold leading-tight">
                             {post.frontmatter.title}
                         </h3>
                     </div>
