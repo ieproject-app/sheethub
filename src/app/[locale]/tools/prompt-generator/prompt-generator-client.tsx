@@ -12,7 +12,6 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Badge } from '@/components/ui/badge';
 import { Copy, Check, Plus, Trash2, Link as LinkIcon, Hash } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
-import type { Dictionary } from '@/lib/get-dictionary';
 import { downloadLinks } from '@/lib/data-downloads';
 
 type DownloadItem = {
@@ -21,36 +20,54 @@ type DownloadItem = {
   value: string;
 };
 
-type PromptGeneratorProps = {
-  dictionary: Dictionary['promptGenerator'];
-};
-
 export function PromptGeneratorClient({ dictionary }: { dictionary: any }) {
   const [contentType, setContentType] = useState<'blog' | 'note'>('blog');
   const [draft, setDraft] = useState('');
   
-  // Feature Toggles
+  // Feature Toggles (Persisted in localStorage)
   const [showDownloads, setShowDownloads] = useState(false);
   const [showGrids, setShowGrids] = useState(false);
   const [showImages, setShowImages] = useState(true);
 
+  // Download Items & Grid Logic
   const [downloadItems, setDownloadItems] = useState<DownloadItem[]>([]);
   const [imageGridMappings, setImageGridMappings] = useState('');
   const [images, setImages] = useState('');
 
-  const [title, setTitle] = useState('');
-  const [slug, setSlug] = useState('');
+  // Simplified Metadata
   const [publishDate, setPublishDate] = useState<string>('');
   const [isPublished, setIsPublished] = useState(true);
   const [isFeatured, setIsFeatured] = useState(false);
-  const [tags, setTags] = useState('');
-  const [translationKey, setTranslationKey] = useState('');
 
   const [generatedPrompt, setGeneratedPrompt] = useState('');
   const [isCopied, setIsCopied] = useState(false);
   const { toast } = useToast();
 
   const downloadIds = Object.keys(downloadLinks).sort();
+
+  // Load persisted features
+  useEffect(() => {
+    const savedFeatures = localStorage.getItem('snipgeek-prompt-features');
+    if (savedFeatures) {
+      try {
+        const parsed = JSON.parse(savedFeatures);
+        setShowDownloads(!!parsed.showDownloads);
+        setShowGrids(!!parsed.showGrids);
+        setShowImages(parsed.showImages !== undefined ? !!parsed.showImages : true);
+      } catch (e) {
+        console.error("Failed to load persisted features", e);
+      }
+    }
+  }, []);
+
+  // Save features on change
+  useEffect(() => {
+    localStorage.setItem('snipgeek-prompt-features', JSON.stringify({
+      showDownloads,
+      showGrids,
+      showImages
+    }));
+  }, [showDownloads, showGrids, showImages]);
 
   useEffect(() => {
     const buildPrompt = () => {
@@ -62,9 +79,9 @@ export function PromptGeneratorClient({ dictionary }: { dictionary: any }) {
 
       prompt += `**${dictionary.frontmatterDetails}:**\n`;
       prompt += `- ${dictionary.contentTypeLabel}: ${isBlog ? dictionary.contentTypeBlog : dictionary.contentTypeNote}\n`;
-      prompt += `- ${dictionary.titleLabel}: ${title ? `"${title}"` : dictionary.titlePlaceholder}\n`;
-      prompt += `- slug: "${slug}"\n`;
-      prompt += `- translationKey: "${translationKey}"\n`;
+      prompt += `- ${dictionary.titleLabel}: [AI: Please generate a high-quality, SEO-optimized title between 50-60 characters based on the content]\n`;
+      prompt += `- slug: [AI: Generate a unique kebab-case English slug. This MUST be identical for both language versions]\n`;
+      prompt += `- translationKey: [AI: Generate a unique, short kebab-case key based on the topic to link both translations]\n`;
       prompt += `- ${dictionary.dateLabel}: ${publishDate || new Date().toISOString().split('T')[0]}\n`;
       
       let frontmatterStatus = `published: ${isPublished}`;
@@ -86,13 +103,7 @@ export function PromptGeneratorClient({ dictionary }: { dictionary: any }) {
         prompt += `- imageAlt: "${finalHeroImageAlt}"\n`;
       }
       
-      if (tags) {
-        const tagArray = tags.split(',').map(t => `"${t.trim()}"`).join(', ');
-        prompt += `- tags: [${tagArray}]\n`;
-      } else {
-        prompt += `- tags: Please generate relevant tags based on the content.\n`;
-      }
-      
+      prompt += `- tags: [AI: Generate 3-5 relevant tags as an array of strings]\n`;
       prompt += `\n`;
 
       if (isBlog && showImages && imageLines.length > 1) {
@@ -156,7 +167,7 @@ export function PromptGeneratorClient({ dictionary }: { dictionary: any }) {
     };
 
     buildPrompt();
-  }, [draft, title, slug, publishDate, isPublished, isFeatured, images, tags, translationKey, dictionary, contentType, downloadItems, imageGridMappings, showDownloads, showGrids, showImages]);
+  }, [draft, publishDate, isPublished, isFeatured, images, dictionary, contentType, downloadItems, imageGridMappings, showDownloads, showGrids, showImages]);
 
   const handleCopyMain = () => {
     navigator.clipboard.writeText(generatedPrompt);
@@ -184,235 +195,198 @@ export function PromptGeneratorClient({ dictionary }: { dictionary: any }) {
 
   return (
     <div className="space-y-8">
-      <Card>
-          <CardHeader>
-              <CardTitle>{dictionary.contentTypeLabel}</CardTitle>
-          </CardHeader>
-          <CardContent>
-              <RadioGroup value={contentType} onValueChange={(value) => setContentType(value as 'blog' | 'note')} className="flex flex-col sm:flex-row gap-4">
-                  <div className="flex items-center space-x-2">
-                      <RadioGroupItem value="blog" id="r-blog" />
-                      <Label htmlFor="r-blog">{dictionary.contentTypeBlog}</Label>
-                  </div>
-                  <div className="flex items-center space-x-2">
-                      <RadioGroupItem value="note" id="r-note" />
-                      <Label htmlFor="r-note">{dictionary.contentTypeNote}</Label>
-                  </div>
-              </RadioGroup>
-          </CardContent>
-      </Card>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+        {/* Left Column: Toggles & Metadata */}
+        <div className="space-y-8">
+          <Card>
+              <CardHeader>
+                  <CardTitle className="text-lg">{dictionary.contentTypeLabel}</CardTitle>
+              </CardHeader>
+              <CardContent>
+                  <RadioGroup value={contentType} onValueChange={(value) => setContentType(value as 'blog' | 'note')} className="flex flex-col sm:flex-row gap-4">
+                      <div className="flex items-center space-x-2">
+                          <RadioGroupItem value="blog" id="r-blog" />
+                          <Label htmlFor="r-blog" className="cursor-pointer">{dictionary.contentTypeBlog}</Label>
+                      </div>
+                      <div className="flex items-center space-x-2">
+                          <RadioGroupItem value="note" id="r-note" />
+                          <Label htmlFor="r-note" className="cursor-pointer">{dictionary.contentTypeNote}</Label>
+                      </div>
+                  </RadioGroup>
+              </CardContent>
+          </Card>
 
-      <Card>
-          <CardHeader>
-              <CardTitle>{dictionary.features.title}</CardTitle>
-          </CardHeader>
-          <CardContent className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-              <div className="flex items-center space-x-2">
-                  <Switch id="f-downloads" checked={showDownloads} onCheckedChange={setShowDownloads} />
-                  <Label htmlFor="f-downloads">{dictionary.features.downloads}</Label>
-              </div>
-              <div className="flex items-center space-x-2">
-                  <Switch id="f-grids" checked={showGrids} onCheckedChange={setShowGrids} />
-                  <Label htmlFor="f-downloads">{dictionary.features.grids}</Label>
-              </div>
-              <div className="flex items-center space-x-2">
-                  <Switch id="f-images" checked={showImages} onCheckedChange={setShowImages} />
-                  <Label htmlFor="f-images">{dictionary.features.images}</Label>
-              </div>
-          </CardContent>
-      </Card>
-      
-      <Card>
-        <CardHeader>
-          <CardTitle>{dictionary.draftTitle}</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <Textarea
-            placeholder={dictionary.draftPlaceholder}
-            value={draft}
-            onChange={(e) => setDraft(e.target.value)}
-            className="min-h-[200px]"
-          />
-        </CardContent>
-      </Card>
+          <Card>
+              <CardHeader>
+                  <CardTitle className="text-lg">{dictionary.features.title}</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                  <div className="flex items-center justify-between">
+                      <Label htmlFor="f-downloads" className="cursor-pointer">{dictionary.features.downloads}</Label>
+                      <Switch id="f-downloads" checked={showDownloads} onCheckedChange={setShowDownloads} />
+                  </div>
+                  <div className="flex items-center justify-between">
+                      <Label htmlFor="f-grids" className="cursor-pointer">{dictionary.features.grids}</Label>
+                      <Switch id="f-grids" checked={showGrids} onCheckedChange={setShowGrids} />
+                  </div>
+                  <div className="flex items-center justify-between">
+                      <Label htmlFor="f-images" className="cursor-pointer">{dictionary.features.images}</Label>
+                      <Switch id="f-images" checked={showImages} onCheckedChange={setShowImages} />
+                  </div>
+              </CardContent>
+          </Card>
 
-      {showDownloads && (
-        <Card>
+          <Card>
             <CardHeader>
-                <CardTitle>{dictionary.downloadLinks.title}</CardTitle>
+              <CardTitle className="text-lg">{dictionary.metadataTitle}</CardTitle>
             </CardHeader>
-            <CardContent className="space-y-4">
-                <Label className="text-sm text-muted-foreground block mb-2">
-                    {dictionary.downloadLinks.description}
-                </Label>
-                
-                {downloadItems.map((item, index) => (
-                  <div key={item.id} className="flex flex-col sm:flex-row gap-2 items-start sm:items-center p-3 border rounded-lg bg-muted/20">
-                    <Badge variant="outline" className="shrink-0 mb-2 sm:mb-0">[DOWNLOAD_{index + 1}]</Badge>
-                    
-                    <Select value={item.type} onValueChange={(val) => updateDownloadItem(item.id, { type: val as 'id' | 'url', value: '' })}>
-                      <SelectTrigger className="w-full sm:w-[140px] h-9">
-                        <SelectValue />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="id">
-                          <div className="flex items-center gap-2"><Hash className="h-3 w-3"/> ID</div>
-                        </SelectItem>
-                        <SelectItem value="url">
-                          <div className="flex items-center gap-2"><LinkIcon className="h-3 w-3"/> URL</div>
-                        </SelectItem>
-                      </SelectContent>
-                    </Select>
-
-                    {item.type === 'id' ? (
-                      <Select value={item.value} onValueChange={(val) => updateDownloadItem(item.id, { value: val })}>
-                        <SelectTrigger className="flex-1 h-9">
-                          <SelectValue placeholder={dictionary.downloadLinks.selectId || "Select ID..."} />
-                        </SelectTrigger>
-                        <SelectContent>
-                          {downloadIds.map(id => <SelectItem key={id} value={id}>{id}</SelectItem>)}
-                        </SelectContent>
-                      </Select>
-                    ) : (
-                      <Input 
-                        placeholder={dictionary.downloadLinks.urlPlaceholder || "Paste URL..."} 
-                        value={item.value} 
-                        onChange={(e) => updateDownloadItem(item.id, { value: e.target.value })}
-                        className="flex-1 h-9"
-                      />
-                    )}
-
-                    <Button variant="ghost" size="icon" onClick={() => removeDownloadItem(item.id)} className="h-9 w-9 text-muted-foreground hover:text-destructive">
-                      <Trash2 className="h-4 w-4" />
-                    </Button>
-                  </div>
-                ))}
-
-                <Button onClick={addDownloadItem} variant="outline" size="sm" className="w-full border-dashed">
-                  <Plus className="h-4 w-4 mr-2" /> {dictionary.downloadLinks.addDownload || "Add Download"}
-                </Button>
-            </CardContent>
-        </Card>
-      )}
-
-      {(showGrids && dictionary.imageGrid) && (
-        <Card>
-          <CardHeader>
-              <CardTitle>{dictionary.imageGrid.title}</CardTitle>
-          </CardHeader>
-          <CardContent>
-              <Label htmlFor="grid-mappings" className="text-sm text-muted-foreground">
-                  {dictionary.imageGrid.description}
-              </Label>
-              <Textarea
-                  id="grid-mappings"
-                  placeholder={dictionary.imageGrid.placeholder}
-                  value={imageGridMappings}
-                  onChange={(e) => setImageGridMappings(e.target.value)}
-                  className="min-h-[120px] font-mono text-xs mt-2"
-              />
-          </CardContent>
-        </Card>
-      )}
-
-      {showImages && (
-       <Card>
-        <CardHeader>
-          <CardTitle>{contentType === 'blog' ? dictionary.imagesTitle : dictionary.imagesTitleNote}</CardTitle>
-        </CardHeader>
-        <CardContent>
-            <Label htmlFor="images" className="text-sm text-muted-foreground">
-                {contentType === 'blog' ? dictionary.imagesDescription : dictionary.imagesDescriptionNote}
-            </Label>
-            <Textarea
-                id="images"
-                placeholder={contentType === 'blog' ? dictionary.imagesPlaceholder : dictionary.imagesPlaceholderNote}
-                value={images}
-                onChange={(e) => setImages(e.target.value)}
-                className="min-h-[120px] font-mono text-xs mt-2"
-            />
-        </CardContent>
-      </Card>
-      )}
-      
-      <Card>
-        <CardHeader>
-          <CardTitle>{dictionary.metadataTitle}</CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-6">
-          <div className="grid gap-2">
-            <Label htmlFor="title">{dictionary.articleTitleLabel}</Label>
-            <Input id="title" value={title} onChange={(e) => setTitle(e.target.value)} />
-            <p className="text-sm text-muted-foreground">{dictionary.articleTitleDescription}</p>
-          </div>
-
-          <div className="grid gap-2">
-            <Label htmlFor="slug">{dictionary.slugLabel}</Label>
-            <Input id="slug" placeholder={dictionary.slugPlaceholder} value={slug} onChange={(e) => setSlug(e.target.value)} />
-            <p className="text-sm text-muted-foreground">{dictionary.slugDescription}</p>
-          </div>
-
-           <div className="grid gap-2">
-            <Label htmlFor="translationKey">{dictionary.translationKeyLabel}</Label>
-            <Input 
-                id="translationKey" 
-                placeholder={dictionary.translationKeyPlaceholder}
-                value={translationKey}
-                onChange={(e) => setTranslationKey(e.target.value)} 
-            />
-            <p className="text-sm text-muted-foreground">{dictionary.translationKeyDescription}</p>
-          </div>
-
-          <div className="grid gap-2">
-            <Label htmlFor="publishDate">{dictionary.publishDateLabel}</Label>
-            <Input
-                id="publishDate"
-                type="text"
-                value={publishDate}
-                onChange={(e) => setPublishDate(e.target.value)}
-                placeholder={dictionary.publishDatePlaceholder || 'YYYY-MM-DD'}
-                className="w-full sm:w-[280px]"
-            />
-            <p className="text-sm text-muted-foreground">{dictionary.publishDateDescription}</p>
-          </div>
-          
-          <div className="grid gap-2">
-            <Label>{dictionary.statusLabel}</Label>
-            <div className="flex flex-col sm:flex-row sm:items-center gap-4">
-                <div className="flex items-center space-x-2">
-                    <Switch id="published" checked={isPublished} onCheckedChange={setIsPublished} />
-                    <Label htmlFor="published">{dictionary.publishSwitchLabel}</Label>
-                </div>
-                {contentType === 'blog' && (
-                    <div className="flex items-center space-x-2">
-                        <Switch id="featured" checked={isFeatured} onCheckedChange={setIsFeatured} />
-                        <Label htmlFor="featured">{dictionary.featuredSwitchLabel}</Label>
+            <CardContent className="space-y-6">
+              <div className="grid gap-2">
+                <Label htmlFor="publishDate">{dictionary.publishDateLabel}</Label>
+                <Input
+                    id="publishDate"
+                    type="text"
+                    value={publishDate}
+                    onChange={(e) => setPublishDate(e.target.value)}
+                    placeholder={dictionary.publishDatePlaceholder || 'YYYY-MM-DD'}
+                />
+              </div>
+              
+              <div className="grid gap-2">
+                <Label>{dictionary.statusLabel}</Label>
+                <div className="flex flex-col gap-3">
+                    <div className="flex items-center justify-between">
+                        <Label htmlFor="published" className="text-xs font-normal cursor-pointer">{dictionary.publishSwitchLabel}</Label>
+                        <Switch id="published" checked={isPublished} onCheckedChange={setIsPublished} />
                     </div>
-                )}
-            </div>
-          </div>
-          
-          <div className="grid gap-2">
-            <Label htmlFor="tags">{dictionary.tagsLabel}</Label>
-            <Input id="tags" placeholder={dictionary.tagsPlaceholder} value={tags} onChange={(e) => setTags(e.target.value)} />
-            <p className="text-sm text-muted-foreground">{dictionary.tagsDescription}</p>
-          </div>
-        </CardContent>
-      </Card>
+                    {contentType === 'blog' && (
+                        <div className="flex items-center justify-between">
+                            <Label htmlFor="featured" className="text-xs font-normal cursor-pointer">{dictionary.featuredSwitchLabel}</Label>
+                            <Switch id="featured" checked={isFeatured} onCheckedChange={setIsFeatured} />
+                        </div>
+                    )}
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
 
-      <Card>
-        <CardHeader className="flex flex-row items-center justify-between">
-          <CardTitle>{dictionary.generatedPromptTitle}</CardTitle>
-          <Button onClick={handleCopyMain} variant="ghost" size="icon" className="h-8 w-8">
-            {isCopied ? <Check className="h-4 w-4 text-green-500" /> : <Copy className="h-4 w-4" />}
-            <span className="sr-only">{isCopied ? dictionary.copiedButton : dictionary.copyButton}</span>
+        {/* Right Column: Main Inputs */}
+        <div className="space-y-8">
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-lg">{dictionary.draftTitle}</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <Textarea
+                placeholder={dictionary.draftPlaceholder}
+                value={draft}
+                onChange={(e) => setDraft(e.target.value)}
+                className="min-h-[300px] text-sm"
+              />
+            </CardContent>
+          </Card>
+
+          {showDownloads && (
+            <Card>
+                <CardHeader>
+                    <CardTitle className="text-lg">{dictionary.downloadLinks.title}</CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                    {downloadItems.map((item, index) => (
+                      <div key={item.id} className="flex flex-col gap-2 p-3 border rounded-lg bg-muted/20">
+                        <div className="flex items-center justify-between">
+                          <Badge variant="outline" className="shrink-0">[DOWNLOAD_{index + 1}]</Badge>
+                          <Button variant="ghost" size="icon" onClick={() => removeDownloadItem(item.id)} className="h-8 w-8 text-muted-foreground hover:text-destructive">
+                            <Trash2 className="h-4 w-4" />
+                          </Button>
+                        </div>
+                        
+                        <div className="flex gap-2">
+                          <Select value={item.type} onValueChange={(val) => updateDownloadItem(item.id, { type: val as 'id' | 'url', value: '' })}>
+                            <SelectTrigger className="w-[100px] h-9">
+                              <SelectValue />
+                            </SelectTrigger>
+                            <SelectContent>
+                              <SelectItem value="id">ID</SelectItem>
+                              <SelectItem value="url">URL</SelectItem>
+                            </SelectContent>
+                          </Select>
+
+                          {item.type === 'id' ? (
+                            <Select value={item.value} onValueChange={(val) => updateDownloadItem(item.id, { value: val })}>
+                              <SelectTrigger className="flex-1 h-9">
+                                <SelectValue placeholder="..." />
+                              </SelectTrigger>
+                              <SelectContent>
+                                {downloadIds.map(id => <SelectItem key={id} value={id}>{id}</SelectItem>)}
+                              </SelectContent>
+                            </Select>
+                          ) : (
+                            <Input 
+                              placeholder="Paste URL..." 
+                              value={item.value} 
+                              onChange={(e) => updateDownloadItem(item.id, { value: e.target.value })}
+                              className="flex-1 h-9"
+                            />
+                          )}
+                        </div>
+                      </div>
+                    ))}
+                    <Button onClick={addDownloadItem} variant="outline" size="sm" className="w-full border-dashed">
+                      <Plus className="h-4 w-4 mr-2" /> {dictionary.downloadLinks.addDownload || "Add Download"}
+                    </Button>
+                </CardContent>
+            </Card>
+          )}
+
+          {(showGrids && dictionary.imageGrid) && (
+            <Card>
+              <CardHeader>
+                  <CardTitle className="text-lg">{dictionary.imageGrid.title}</CardTitle>
+              </CardHeader>
+              <CardContent>
+                  <Textarea
+                      placeholder={dictionary.imageGrid.placeholder}
+                      value={imageGridMappings}
+                      onChange={(e) => setImageGridMappings(e.target.value)}
+                      className="min-h-[100px] font-mono text-xs"
+                  />
+              </CardContent>
+            </Card>
+          )}
+
+          {showImages && (
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-lg">{contentType === 'blog' ? dictionary.imagesTitle : dictionary.imagesTitleNote}</CardTitle>
+            </CardHeader>
+            <CardContent>
+                <Textarea
+                    placeholder={contentType === 'blog' ? dictionary.imagesPlaceholder : dictionary.imagesPlaceholderNote}
+                    value={images}
+                    onChange={(e) => setImages(e.target.value)}
+                    className="min-h-[100px] font-mono text-xs"
+                />
+            </CardContent>
+          </Card>
+          )}
+        </div>
+      </div>
+
+      <Card className="border-primary/20">
+        <CardHeader className="flex flex-row items-center justify-between border-b bg-muted/30">
+          <CardTitle className="text-lg">{dictionary.generatedPromptTitle}</CardTitle>
+          <Button onClick={handleCopyMain} variant="default" size="sm" className="gap-2">
+            {isCopied ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
+            {isCopied ? dictionary.copiedButton : dictionary.copyButton}
           </Button>
         </CardHeader>
-        <CardContent>
+        <CardContent className="p-0">
           <Textarea
             readOnly
             value={generatedPrompt}
-            className="min-h-[300px] bg-muted/50 font-mono text-xs"
+            className="min-h-[400px] border-none rounded-none bg-muted/10 font-mono text-xs resize-none focus-visible:ring-0"
           />
         </CardContent>
       </Card>
