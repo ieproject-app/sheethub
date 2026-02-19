@@ -127,18 +127,6 @@ export default async function Home({ params: { locale } }: { params: { locale: s
                     {post.frontmatter.description}
                 </p>
             </Link>
-            
-            {post.frontmatter.tags && post.frontmatter.tags.length > 0 && (
-                <div className="flex flex-wrap gap-1.5 mt-3">
-                    {post.frontmatter.tags.slice(0, 3).map(tag => (
-                        <Link key={tag} href={`${linkPrefix}/tags/${tag.toLowerCase()}`}>
-                            <Badge variant="secondary" className="text-[10px] py-0 px-2 h-5 hover:bg-primary hover:text-primary-foreground transition-colors cursor-pointer">
-                                {tag}
-                            </Badge>
-                        </Link>
-                    ))}
-                </div>
-            )}
 
             <AddToReadingListButton 
                 item={item}
