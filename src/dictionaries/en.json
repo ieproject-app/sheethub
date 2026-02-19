@@ -136,16 +136,16 @@
         "draftTitle": "Content Draft / Main Points",
         "draftPlaceholder": "Paste your full content draft here. To specify a download button location, use a placeholder like [DOWNLOAD_1], [DOWNLOAD_2], etc.",
         "downloadLinks": {
-            "title": "Download Buttons",
-            "description": "Map the placeholders in your draft to a Download ID from the central library. Format: [PLACEHOLDER] | download-id",
-            "placeholder": "[DOWNLOAD_1] | windows-11-iso-24h2\n[DOWNLOAD_2] | rufus-installer",
+            "title": "Download IDs (Sequential)",
+            "description": "Enter Download IDs one per line. They will map automatically to [DOWNLOAD_1], [DOWNLOAD_2], etc.",
+            "placeholder": "windows-11-iso-24h2\nrufus-installer",
             "promptTitle": "Download Buttons",
             "promptInstruction": "Please replace the [DOWNLOAD_X] placeholders in the draft with <DownloadButton> components using the corresponding IDs below:"
         },
         "imageGrid": {
-            "title": "Image Grids",
-            "description": "Group multiple images into a responsive grid. Format: [GRID_ID] | cols | path1, path2, path3...",
-            "placeholder": "[GRID_1] | 3 | /img1.webp, /img2.webp, /img3.webp",
+            "title": "Image Grids (Sequential)",
+            "description": "Enter grid data one per line (format: cols | path1, path2...). They will map to [GRID_1], [GRID_2], etc.",
+            "placeholder": "3 | /img1.webp, /img2.webp, /img3.webp",
             "promptTitle": "Image Grids",
             "promptInstruction": "Please group the following images using the <ImageGrid> component with the specified column count:"
         },
@@ -157,7 +157,7 @@
         "imagesPlaceholderNote": "/images/notes/some-image.webp | Alt text for the image",
         "metadataTitle": "Metadata & Linking",
         "articleTitleLabel": "Content Title",
-        "articleTitleDescription": "An English title is recommended. For best SEO, aim for 50-60 characters.",
+        "articleTitleDescription": "An English title is recommended. For best SEO, MUST be between 50-60 characters.",
         "slugLabel": "URL Slug (English, Kebab-case)",
         "slugPlaceholder": "how-to-install-rufus",
         "slugDescription": "This is the unique URL part. It must be in English and the SAME for all language versions.",
@@ -181,11 +181,11 @@
         "promptBaseNote": "Please create and publish a new Note for me based on the following details. The English version must use the slug specified, and the Indonesian version must also use the EXACT SAME SLUG.",
         "frontmatterDetails": "Frontmatter Details",
         "titleLabel": "Title",
-        "titlePlaceholder": "Please create an SEO-friendly title (50-60 characters) based on the content.",
+        "titlePlaceholder": "Please create an SEO-friendly title (STRICTLY 50-60 characters) based on the content.",
         "dateLabel": "Publish Date",
         "supportingImagesLabel": "Supporting Images (in order)",
         "supportingImagesLabelNote": "Images to insert in content",
         "draftContentLabel": "Main Content/Draft",
-        "finalInstruction": "Additional Instruction: 1. Confirm translationKey and English slug. 2. Title length 50-60 chars. 3. STRICT MDX ADHERENCE: Use only supported components (<DownloadButton />, <ImageGrid />, standard Markdown tables). If the draft contains incompatible HTML or styles, AUTOMATICALLY adjust them to fit these components."
+        "finalInstruction": "Additional Instruction: 1. Confirm translationKey and English slug. 2. Title length MUST BE 50-60 chars (STRICT SEO OPTIMIZATION). 3. STRICT MDX ADHERENCE: Use only supported components (<DownloadButton />, <ImageGrid />, standard Markdown tables). If the draft contains incompatible HTML or styles, AUTOMATICALLY adjust them to fit these components. 4. React Compliance: NEVER use 'class', ALWAYS use 'className' for any custom HTML tags like <details> or <summary>."
     }
 }

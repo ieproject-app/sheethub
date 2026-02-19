@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useState, useEffect } from 'react';
@@ -11,7 +12,6 @@ import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Copy, Check } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import type { Dictionary } from '@/lib/get-dictionary';
-import { cn } from '@/lib/utils';
 
 type PromptGeneratorProps = {
   dictionary: Dictionary['promptGenerator'];
@@ -112,11 +112,8 @@ export function PromptGeneratorClient({ dictionary }: PromptGeneratorProps) {
           prompt += `${dictionary.downloadLinks.promptInstruction}\n`;
           
           const mappings = downloadMappings.split('\n').filter(line => line.trim() !== '');
-          mappings.forEach((line) => {
-              const [placeholder, downloadId] = line.split('|').map(s => s.trim());
-              if (placeholder && downloadId) {
-                  prompt += `- Placeholder ${placeholder} -> ID: "${downloadId}"\n`;
-              }
+          mappings.forEach((id, index) => {
+              prompt += `- Placeholder [DOWNLOAD_${index + 1}] -> ID: "${id.trim()}"\n`;
           });
           prompt += `\n`;
       }
@@ -126,12 +123,12 @@ export function PromptGeneratorClient({ dictionary }: PromptGeneratorProps) {
         prompt += `${dictionary.imageGrid.promptInstruction}\n`;
         
         const gridMappings = imageGridMappings.split('\n').filter(line => line.trim() !== '');
-        gridMappings.forEach((line) => {
+        gridMappings.forEach((line, index) => {
             const parts = line.split('|').map(s => s.trim());
-            if (parts.length >= 3) {
-                const [placeholder, cols, pathsStr] = parts;
+            if (parts.length >= 2) {
+                const [cols, pathsStr] = parts;
                 const paths = pathsStr.split(',').map(p => p.trim());
-                prompt += `- Placeholder ${placeholder} -> Columns: ${cols}, Paths: ${paths.join(', ')}\n`;
+                prompt += `- Placeholder [GRID_${index + 1}] -> Columns: ${cols}, Paths: ${paths.join(', ')}\n`;
             }
         });
         prompt += `\n`;
