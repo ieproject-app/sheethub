@@ -89,15 +89,14 @@ export default async function Home({ params: { locale } }: { params: { locale: s
                             data-ai-hint={heroImageHint}
                         />
                     )}
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent" />
+                    {/* Enhanced Gradient Contrast (Option A) */}
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/95 via-black/60 to-transparent" />
                     <div className="absolute bottom-0 left-0 p-6 text-white w-full">
                         <p className="text-xs font-semibold uppercase tracking-wider opacity-80 mb-1">{post.frontmatter.category}</p>
-                        <h3 className="font-headline text-xl font-bold line-clamp-2">
+                        {/* Increased Title Size & Boldness (Option C) */}
+                        <h3 className="font-headline text-2xl font-extrabold line-clamp-2 leading-tight">
                             {post.frontmatter.title}
                         </h3>
-                        <p className="text-xs opacity-70 mt-2 line-clamp-2 font-medium">
-                            {post.frontmatter.description}
-                        </p>
                     </div>
                 </article>
             </Link>
