@@ -13,16 +13,18 @@ const themeOptions = [
 
 export function ThemeSwitcher() {
   const { theme, setTheme } = useTheme();
-  // We need to use a state to avoid hydration mismatch, as theme is not available on the server
   const [mounted, setMounted] = useState(false);
-  useEffect(() => setMounted(true), []);
+  
+  useEffect(() => {
+    setMounted(true);
+  }, []);
   
   if (!mounted) {
-    // Render a placeholder or nothing until the component is mounted
     return <div className="h-8 w-[108px] rounded-full bg-primary/10 animate-pulse" />;
   }
   
   const currentThemeIndex = themeOptions.findIndex((t) => t.theme === theme);
+  const activeIndex = currentThemeIndex === -1 ? 1 : currentThemeIndex; // Default to system
 
   return (
     <div className="relative flex items-center bg-primary/90 backdrop-blur-sm rounded-full p-1 text-sm">
@@ -30,7 +32,7 @@ export function ThemeSwitcher() {
         className={cn(
           'absolute h-6 w-9 bg-primary-foreground/20 shadow-sm rounded-full transition-transform duration-300 ease-in-out'
         )}
-        style={{ transform: `translateX(${currentThemeIndex * 100}%)` }}
+        style={{ transform: `translateX(${activeIndex * 100}%)` }}
       />
       {themeOptions.map((option) => (
         <button
