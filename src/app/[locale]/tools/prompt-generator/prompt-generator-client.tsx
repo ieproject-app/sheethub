@@ -25,7 +25,7 @@ type PromptGeneratorProps = {
   dictionary: Dictionary['promptGenerator'];
 };
 
-export function PromptGeneratorClient({ dictionary }: PromptGeneratorProps) {
+export function PromptGeneratorClient({ dictionary }: { dictionary: any }) {
   const [contentType, setContentType] = useState<'blog' | 'note'>('blog');
   const [draft, setDraft] = useState('');
   
@@ -80,7 +80,7 @@ export function PromptGeneratorClient({ dictionary }: PromptGeneratorProps) {
         const [heroImagePath, heroImageAlt] = heroImageLine.split('|').map(s => s ? s.trim() : '');
 
         const finalHeroImagePath = heroImagePath || "/images/blank/blank.webp";
-        const finalHeroImageAlt = heroImageAlt || 'Please create a descriptive alt text.';
+        const finalHeroImageAlt = heroImageAlt || '[AI: PLEASE GENERATE DESCRIPTIVE SEO ALT TEXT]';
 
         prompt += `- heroImage: "${finalHeroImagePath}"\n`;
         prompt += `- imageAlt: "${finalHeroImageAlt}"\n`;
@@ -100,7 +100,7 @@ export function PromptGeneratorClient({ dictionary }: PromptGeneratorProps) {
           imageLines.slice(1).forEach((line, index) => {
               const [imgPath, imgAlt] = line.split('|').map(s => s ? s.trim() : '');
               prompt += `- Image ${index + 1} Path: "${imgPath}"\n`;
-              prompt += `- Image ${index + 1} Alt: "${imgAlt || `Please create alt text for supporting image ${index + 1}`}"\n`;
+              prompt += `- Image ${index + 1} Alt: "${imgAlt || '[AI: PLEASE GENERATE DESCRIPTIVE SEO ALT TEXT]'}"\n`;
           });
           prompt += `\n`;
       }
@@ -111,7 +111,7 @@ export function PromptGeneratorClient({ dictionary }: PromptGeneratorProps) {
             const [imgPath, imgAlt] = line.split('|').map(s => s ? s.trim() : '');
             if (imgPath) {
               prompt += `- Path: "${imgPath}"\n`;
-              prompt += `- Alt: "${imgAlt || `Please create alt text for this image`}"\n`;
+              prompt += `- Alt: "${imgAlt || '[AI: PLEASE GENERATE DESCRIPTIVE SEO ALT TEXT]'}"\n`;
             }
         });
         prompt += `\n`;
@@ -182,8 +182,6 @@ export function PromptGeneratorClient({ dictionary }: PromptGeneratorProps) {
     setDownloadItems(downloadItems.map(item => item.id === id ? { ...item, ...updates } : item));
   };
 
-  const isBlog = contentType === 'blog';
-
   return (
     <div className="space-y-8">
       <Card>
@@ -215,7 +213,7 @@ export function PromptGeneratorClient({ dictionary }: PromptGeneratorProps) {
               </div>
               <div className="flex items-center space-x-2">
                   <Switch id="f-grids" checked={showGrids} onCheckedChange={setShowGrids} />
-                  <Label htmlFor="f-grids">{dictionary.features.grids}</Label>
+                  <Label htmlFor="f-downloads">{dictionary.features.grids}</Label>
               </div>
               <div className="flex items-center space-x-2">
                   <Switch id="f-images" checked={showImages} onCheckedChange={setShowImages} />
@@ -320,15 +318,15 @@ export function PromptGeneratorClient({ dictionary }: PromptGeneratorProps) {
       {showImages && (
        <Card>
         <CardHeader>
-          <CardTitle>{isBlog ? dictionary.imagesTitle : dictionary.imagesTitleNote}</CardTitle>
+          <CardTitle>{contentType === 'blog' ? dictionary.imagesTitle : dictionary.imagesTitleNote}</CardTitle>
         </CardHeader>
         <CardContent>
             <Label htmlFor="images" className="text-sm text-muted-foreground">
-                {isBlog ? dictionary.imagesDescription : dictionary.imagesDescriptionNote}
+                {contentType === 'blog' ? dictionary.imagesDescription : dictionary.imagesDescriptionNote}
             </Label>
             <Textarea
                 id="images"
-                placeholder={isBlog ? dictionary.imagesPlaceholder : dictionary.imagesPlaceholderNote}
+                placeholder={contentType === 'blog' ? dictionary.imagesPlaceholder : dictionary.imagesPlaceholderNote}
                 value={images}
                 onChange={(e) => setImages(e.target.value)}
                 className="min-h-[120px] font-mono text-xs mt-2"
@@ -385,7 +383,7 @@ export function PromptGeneratorClient({ dictionary }: PromptGeneratorProps) {
                     <Switch id="published" checked={isPublished} onCheckedChange={setIsPublished} />
                     <Label htmlFor="published">{dictionary.publishSwitchLabel}</Label>
                 </div>
-                {isBlog && (
+                {contentType === 'blog' && (
                     <div className="flex items-center space-x-2">
                         <Switch id="featured" checked={isFeatured} onCheckedChange={setIsFeatured} />
                         <Label htmlFor="featured">{dictionary.featuredSwitchLabel}</Label>
