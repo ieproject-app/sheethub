@@ -80,15 +80,15 @@ export default async function BlogPage({ params: { locale } }: { params: { local
                     type: 'blog' as const,
                 };
                 return (
-                    <div key={post.slug} className="group relative">
+                    <div key={post.slug} className="group relative transition-all duration-300 hover:-translate-y-2">
                         <Link href={`${linkPrefix}/blog/${post.slug}`} className="block" aria-label={`Read more about ${post.frontmatter.title}`}>
-                            <div className="relative w-full aspect-video overflow-hidden rounded-lg mb-4">
+                            <div className="relative w-full aspect-video overflow-hidden rounded-lg mb-4 shadow-sm group-hover:shadow-xl transition-shadow duration-300">
                                 {heroImageSrc && (
                                     <Image
                                         src={heroImageSrc}
                                         alt={post.frontmatter.imageAlt || post.frontmatter.title}
                                         fill
-                                        className="object-cover transition-transform duration-500 group-hover:scale-105"
+                                        className="object-cover"
                                         sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 400px"
                                         data-ai-hint={heroImageHint}
                                     />
@@ -96,7 +96,7 @@ export default async function BlogPage({ params: { locale } }: { params: { local
                             </div>
 
                             {post.frontmatter.category && <p className="text-sm text-muted-foreground mb-1">{post.frontmatter.category}</p>}
-                            <h3 className="font-headline text-xl font-bold tracking-tight text-primary transition-colors">
+                            <h3 className="font-headline text-xl font-bold tracking-tight text-primary transition-colors group-hover:text-accent">
                                 {post.frontmatter.title}
                             </h3>
                             <p className="leading-relaxed text-muted-foreground mt-2 text-sm line-clamp-3">

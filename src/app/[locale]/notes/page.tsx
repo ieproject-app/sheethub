@@ -44,7 +44,7 @@ export default async function NotesPage({ params: { locale } }: { params: { loca
                 type: 'note' as const
             };
             return (
-              <Card key={note.slug} className="group relative flex flex-col overflow-hidden rounded-lg border bg-card/50 shadow-sm transition-all hover:shadow-lg">
+              <Card key={note.slug} className="group relative flex flex-col overflow-hidden rounded-lg border bg-card/50 shadow-sm transition-all hover:shadow-lg hover:-translate-y-1">
                 <div className="flex items-center justify-between bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground">
                   <div>
                     <span className="text-xl font-bold">{formatDatePart(noteDate, { day: 'numeric' })}</span>
@@ -88,5 +88,3 @@ export default async function NotesPage({ params: { locale } }: { params: { loca
     </div>
   );
 }
-
-    

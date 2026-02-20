@@ -71,7 +71,7 @@ export default async function Home({ params: { locale } }: { params: { locale: s
     if (isFeatured) {
         return (
             <Link href={`${linkPrefix}/blog/${post.slug}`} className="block group" aria-label={`Read more about ${post.frontmatter.title}`}>
-                <article className="relative w-full aspect-[4/3] rounded-xl overflow-hidden shadow-2xl">
+                <article className="relative w-full aspect-[4/3] rounded-xl overflow-hidden shadow-2xl transition-all duration-300 group-hover:shadow-[0_20px_50px_rgba(0,0,0,0.3)]">
                     <div className="absolute top-3 right-3 z-20 flex items-center gap-2">
                         <AddToReadingListButton 
                             item={item}
@@ -86,7 +86,7 @@ export default async function Home({ params: { locale } }: { params: { locale: s
                             src={heroImageSrc}
                             alt={post.frontmatter.imageAlt || post.frontmatter.title}
                             fill
-                            className="object-cover transition-transform duration-500 group-hover:scale-110"
+                            className="object-cover transition-transform duration-500"
                             sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                             priority={index < 2}
                             data-ai-hint={heroImageHint}
@@ -105,15 +105,15 @@ export default async function Home({ params: { locale } }: { params: { locale: s
     }
 
     return (
-        <div key={post.slug} className="group relative">
+        <div key={post.slug} className="group relative transition-all duration-300 hover:-translate-y-2">
             <Link href={`${linkPrefix}/blog/${post.slug}`} className="block" aria-label={`Read more about ${post.frontmatter.title}`}>
-                <div className="relative w-full aspect-video overflow-hidden rounded-lg mb-4">
+                <div className="relative w-full aspect-video overflow-hidden rounded-lg mb-4 shadow-sm group-hover:shadow-xl transition-shadow duration-300">
                     {heroImageSrc && (
                         <Image
                             src={heroImageSrc}
                             alt={post.frontmatter.imageAlt || post.frontmatter.title}
                             fill
-                            className="object-cover transition-transform duration-500 group-hover:scale-105"
+                            className="object-cover"
                             sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 400px"
                             data-ai-hint={heroImageHint}
                         />
@@ -121,7 +121,7 @@ export default async function Home({ params: { locale } }: { params: { locale: s
                 </div>
 
                 {post.frontmatter.category && <p className="text-sm text-muted-foreground mb-1">{post.frontmatter.category}</p>}
-                <h3 className="font-headline text-xl font-bold tracking-tight text-primary transition-colors">
+                <h3 className="font-headline text-xl font-bold tracking-tight text-primary transition-colors group-hover:text-accent">
                     {post.frontmatter.title}
                 </h3>
                 <p className="leading-relaxed text-muted-foreground mt-2 text-sm line-clamp-3">
@@ -151,9 +151,9 @@ export default async function Home({ params: { locale } }: { params: { locale: s
                   <div
                     key={post.slug}
                     className={cn(
-                      "transform transition-all duration-300 ease-in-out hover:scale-105 will-change-transform",
-                      (index === 0 || index === 2) && "rotate-2 -translate-y-4 hover:-translate-y-6",
-                      (index === 1 || index === 3) && "-rotate-2 z-10 hover:-translate-y-2"
+                      "transform transition-all duration-300 ease-in-out will-change-transform",
+                      (index === 0 || index === 2) && "rotate-2 -translate-y-4 hover:-translate-y-8",
+                      (index === 1 || index === 3) && "-rotate-2 z-10 hover:-translate-y-4"
                     )}
                   >
                     {renderPostCard(post, true, index)}

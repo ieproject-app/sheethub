@@ -40,19 +40,19 @@ export function Footer({ dictionary, translationsMap }: { dictionary: Dictionary
                             <div
                                 key={item.id}
                                 className={cn(
-                                    "transform transition-all duration-300 ease-in-out hover:scale-105 hover:-translate-y-2 will-change-transform",
+                                    "transform transition-all duration-300 ease-in-out hover:-translate-y-2 will-change-transform",
                                     (index === 0 || index === 2) && "rotate-2",
                                     (index === 1 || index === 3) && "-rotate-2"
                                 )}
                             >
                                 <Link href={item.href} className="block group">
-                                    <article className="relative w-full aspect-[4/3] rounded-xl overflow-hidden shadow-lg">
+                                    <article className="relative w-full aspect-[4/3] rounded-xl overflow-hidden shadow-lg transition-shadow group-hover:shadow-2xl">
                                         {image && (
                                             <Image
                                                 src={image.imageUrl}
                                                 alt={item.title}
                                                 fill
-                                                className="object-cover transition-transform duration-500 group-hover:scale-110"
+                                                className="object-cover"
                                                 sizes="(max-width: 768px) 50vw, 200px"
                                                 data-ai-hint={image.imageHint}
                                             />
