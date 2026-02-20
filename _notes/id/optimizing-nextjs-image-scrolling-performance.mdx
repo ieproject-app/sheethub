@@ -1,0 +1,44 @@
+---
+title: Cara Optimasi Scroll Next.js dan Pemuatan Gambar
+date: '2026-02-21'
+description: Pelajari cara menghilangkan lag saat scrolling di Next.js dengan mengoptimalkan pemuatan gambar dan akselerasi hardware.
+translationKey: nextjs-scrolling-optimization
+published: true
+tags:
+  - Next.js
+  - Performa
+  - Optimasi Gambar
+  - CSS
+---
+
+Kolaborasi dengan AI mempercepat pengembangan, tetapi seringkali menyebabkan satu masalah umum: media yang berat dan tidak teroptimasi yang membuat antarmuka pengguna terasa "berat" atau tersendat saat di-scroll. Dalam putaran optimasi terbaru kami, kami menangani masalah ini secara langsung.
+
+## Masalah: Mengapa Scrolling Terasa Berat?
+
+Ketika sebuah halaman berisi banyak gambar (seperti feed blog atau bagian unggulan), browser seringkali kesulitan dengan dua hal:
+1. **Bandwidth Berlebih:** Mengunduh gambar berukuran 2MB untuk kontainer 300px karena browser tidak tahu ukuran tampilan akhirnya.
+2. **Pemblokiran Main Thread:** Menghitung animasi dan transformasi CSS yang kompleks (seperti skala hover atau rotasi) murni pada CPU.
+
+## Solusi: Pendekatan Tiga Arah
+
+Kami menerapkan tiga optimasi teknis khusus untuk mengubah pengalaman scrolling:
+
+### 1. Kekuatan Atribut `sizes`
+Secara default, `next/image` dengan properti `fill` tidak tahu seberapa besar gambar tersebut di layar pengguna sampai CSS dimuat sepenuhnya. Hal ini seringkali membuat browser mengunduh gambar yang sangat besar.
+
+Kami menambahkan pemetaan `sizes` yang spesifik (misal: `(max-width: 768px) 100vw, 33vw`). Ini memberi tahu browser: "Di ponsel, gunakan lebar penuh; di desktop, gambar ini hanya memakan sepertiga layar." Ini secara signifikan mengurangi beban unduhan.
+
+### 2. Memprioritaskan Konten "Above the Fold"
+Gambar di bagian atas halaman harus siap secara instan. Kami mengidentifikasi kartu "Featured" kami dan menambahkan properti `priority`. Ini memastikan aset penting tersebut dimuat lebih dulu, meningkatkan skor Largest Contentful Paint (LCP).
+
+### 3. Akselerasi Hardware dengan `will-change`
+Untuk kartu dengan animasi hover atau rotasi masuk, kami menambahkan `will-change: transform`. Penambahan CSS kecil ini memberi petunjuk kepada browser bahwa suatu elemen akan berubah, memungkinkannya memindahkan proses rendering ke GPU daripada CPU.
+
+## Hasilnya
+
+Implementasi ini menghasilkan:
+- **Zero Layout Shift:** Kontainer dipesan dengan akurat.
+- **Respons Instan:** Animasi yang dipicu oleh scroll terasa lancar.
+- **Core Web Vitals yang Lebih Baik:** Skor LCP dan CLS yang meningkat.
+
+Mengoptimalkan performa bukan hanya tentang kecepatan; ini tentang membuat interaksi terasa alami dan responsif terhadap sentuhan atau scroll pengguna.
