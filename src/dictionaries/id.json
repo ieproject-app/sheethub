@@ -62,6 +62,24 @@
             }
         }
     },
+    "employeeHistory": {
+        "searchTitle": "Cari Riwayat Karyawan",
+        "searchDescription": "Cari berdasarkan nama, jabatan, atau grup. Anda juga bisa mengetikkan tanggal (misal: 20/05/2023) untuk melihat siapa yang aktif pada hari itu.",
+        "searchPlaceholder": "Masukkan nama atau tanggal...",
+        "groupPlaceholder": "Filter Grup",
+        "allGroups": "Semua Grup",
+        "nameHeader": "Nama",
+        "positionHeader": "Jabatan",
+        "groupHeader": "Grup",
+        "nikHeader": "NIK",
+        "startDateHeader": "Tgl Mulai",
+        "endDateHeader": "Tgl Selesai",
+        "present": "Sekarang",
+        "generatorTitle": "Generator Penandatangan Dokumen",
+        "generatorDescription": "Identifikasi penandatangan yang tepat dengan cepat untuk jenis dokumen tertentu berdasarkan tanggal target.",
+        "docTypePlaceholder": "Pilih Jenis Dokumen",
+        "projectValuePlaceholder": "Nilai Proyek (Rp)"
+    },
     "archive": {
         "title": "Arsip",
         "description": "Telusuri semua postingan dan catatan.",
