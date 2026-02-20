@@ -1,5 +1,5 @@
 
-import { getPostData, getAllPostSlugs, getAllLocales } from '@/lib/posts';
+import { getPostData, getAllPostSlugs, getAllLocales, getAllTranslationsMap as getAllPostTranslationsMap } from '@/lib/posts';
 import { notFound } from 'next/navigation';
 import { MDXRemote } from 'next-mdx-remote/rsc';
 import Image from 'next/image';
@@ -49,19 +49,37 @@ export async function generateMetadata({ params }: { params: { slug: string, loc
     }
   }
 
-  const path = `/${params.locale}/blog/${post.slug}`;
+  // Multi-language SEO Logic
+  const translationsMap = getAllPostTranslationsMap();
+  const translationKey = post.frontmatter.translationKey;
+  const languages: Record<string, string> = {};
+  
+  i18n.locales.forEach((loc) => {
+    const translation = translationsMap[translationKey]?.find(t => t.locale === loc);
+    if (translation) {
+      const prefix = loc === i18n.defaultLocale ? '' : `/${loc}`;
+      languages[loc] = `${prefix}/blog/${translation.slug}`;
+    }
+  });
+
+  const currentPrefix = params.locale === i18n.defaultLocale ? '' : `/${params.locale}`;
+  const canonicalPath = `${currentPrefix}/blog/${post.slug}`;
   const imageAlt = postImageAlt || post.frontmatter.title;
 
   return {
     title: post.frontmatter.title,
     description: post.frontmatter.description,
     alternates: {
-        canonical: path,
+        canonical: canonicalPath,
+        languages: {
+            ...languages,
+            'x-default': languages[i18n.defaultLocale] || canonicalPath
+        }
     },
     openGraph: {
         title: post.frontmatter.title,
         description: post.frontmatter.description,
-        url: path,
+        url: canonicalPath,
         siteName: 'SnipGeek',
         images: heroImageUrl ? [
             {

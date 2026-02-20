@@ -1,3 +1,4 @@
+
 import { i18n } from '@/i18n-config';
 import type { Metadata } from 'next';
 import { getDictionary } from '@/lib/get-dictionary';
@@ -6,9 +7,25 @@ import { Mail } from 'lucide-react';
 
 export async function generateMetadata({ params: { locale } }: { params: { locale: string } }): Promise<Metadata> {
   const dictionary = await getDictionary(locale);
+  const currentPrefix = locale === i18n.defaultLocale ? '' : `/${locale}`;
+  const canonicalPath = `${currentPrefix}/contact`;
+
+  const languages: Record<string, string> = {};
+  i18n.locales.forEach((loc) => {
+    const prefix = loc === i18n.defaultLocale ? '' : `/${loc}`;
+    languages[loc] = `${prefix}/contact`;
+  });
+
   return {
     title: dictionary.contact.title,
     description: dictionary.contact.description,
+    alternates: {
+        canonical: canonicalPath,
+        languages: {
+            ...languages,
+            'x-default': languages[i18n.defaultLocale] || canonicalPath
+        }
+    },
   };
 }
 

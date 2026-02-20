@@ -6,9 +6,34 @@ import { AddToReadingListButton } from '@/components/layout/add-to-reading-list-
 import { getDictionary } from '@/lib/get-dictionary';
 import Image from 'next/image';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
+import type { Metadata } from 'next';
 
 export async function generateStaticParams() {
   return i18n.locales.map((locale) => ({ locale }));
+}
+
+export async function generateMetadata({ params: { locale } }: { params: { locale: string } }): Promise<Metadata> {
+  const dictionary = await getDictionary(locale);
+  const currentPrefix = locale === i18n.defaultLocale ? '' : `/${locale}`;
+  const canonicalPath = `${currentPrefix}/blog`;
+
+  const languages: Record<string, string> = {};
+  i18n.locales.forEach((loc) => {
+    const prefix = loc === i18n.defaultLocale ? '' : `/${loc}`;
+    languages[loc] = `${prefix}/blog`;
+  });
+
+  return {
+    title: dictionary.blog.title,
+    description: dictionary.blog.description,
+    alternates: {
+        canonical: canonicalPath,
+        languages: {
+            ...languages,
+            'x-default': languages[i18n.defaultLocale] || canonicalPath
+        }
+    }
+  };
 }
 
 export default async function BlogPage({ params: { locale } }: { params: { locale: string } }) {

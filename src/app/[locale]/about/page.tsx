@@ -1,3 +1,4 @@
+
 import { i18n } from '@/i18n-config';
 import type { Metadata } from 'next';
 import { getPageContent } from '@/lib/pages';
@@ -5,15 +6,29 @@ import { MDXRemote } from 'next-mdx-remote/rsc';
 import { mdxComponents } from '@/components/mdx-components';
 import remarkGfm from 'remark-gfm';
 import rehypeShiki from '@shikijs/rehype';
-import { getDictionary } from '@/lib/get-dictionary';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 
 export async function generateMetadata({ params }: { params: { locale: string } }): Promise<Metadata> {
   const { frontmatter } = await getPageContent('about', params.locale);
+  const currentPrefix = params.locale === i18n.defaultLocale ? '' : `/${params.locale}`;
+  const canonicalPath = `${currentPrefix}/about`;
+
+  const languages: Record<string, string> = {};
+  i18n.locales.forEach((loc) => {
+    const prefix = loc === i18n.defaultLocale ? '' : `/${loc}`;
+    languages[loc] = `${prefix}/about`;
+  });
 
   return {
     title: frontmatter.title || 'About',
     description: frontmatter.description || 'Learn more about SnipGeek.',
+    alternates: {
+        canonical: canonicalPath,
+        languages: {
+            ...languages,
+            'x-default': languages[i18n.defaultLocale] || canonicalPath
+        }
+    },
     openGraph: {
         siteName: 'SnipGeek'
     }

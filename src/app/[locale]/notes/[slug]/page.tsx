@@ -1,5 +1,5 @@
 
-import { getNoteData, getAllNoteSlugs, getAllLocales } from '@/lib/notes';
+import { getNoteData, getAllNoteSlugs, getAllLocales, getAllNotesTranslationsMap } from '@/lib/notes';
 import { notFound } from 'next/navigation';
 import { MDXRemote } from 'next-mdx-remote/rsc';
 import { mdxComponents } from '@/components/mdx-components';
@@ -33,18 +33,36 @@ export async function generateMetadata({ params }: { params: { slug: string, loc
     };
   }
 
-  const path = `/${params.locale}/notes/${note.slug}`;
+  // Multi-language SEO Logic
+  const translationsMap = getAllNotesTranslationsMap();
+  const translationKey = note.frontmatter.translationKey;
+  const languages: Record<string, string> = {};
+  
+  i18n.locales.forEach((loc) => {
+    const translation = translationsMap[translationKey]?.find(t => t.locale === loc);
+    if (translation) {
+      const prefix = loc === i18n.defaultLocale ? '' : `/${loc}`;
+      languages[loc] = `${prefix}/notes/${translation.slug}`;
+    }
+  });
+
+  const currentPrefix = params.locale === i18n.defaultLocale ? '' : `/${params.locale}`;
+  const canonicalPath = `${currentPrefix}/notes/${note.slug}`;
 
   return {
     title: note.frontmatter.title,
     description: note.frontmatter.description,
     alternates: {
-        canonical: path,
+        canonical: canonicalPath,
+        languages: {
+            ...languages,
+            'x-default': languages[i18n.defaultLocale] || canonicalPath
+        }
     },
     openGraph: {
         title: note.frontmatter.title,
         description: note.frontmatter.description,
-        url: path,
+        url: canonicalPath,
         siteName: 'SnipGeek',
         locale: params.locale,
         type: 'article',
@@ -129,5 +147,3 @@ export default async function NotePage({ params }: { params: { slug: string, loc
     </div>
   );
 }
-
-    
