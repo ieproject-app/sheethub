@@ -1,0 +1,75 @@
+---
+title: "Cara Memperbaiki Log Build Gagal pada AI dengan Cepat"
+date: "2026-02-20"
+description: "Pelajari cara membaca log build secara efektif dan memberikan konteks yang tepat kepada AI saat proses build gagal di Firebase Studio."
+translationKey: "ai-build-logs-guide"
+published: true
+tags: ["Kolaborasi AI", "Firebase Studio", "Debugging", "Next.js"]
+---
+
+Bekerja sama dengan mitra AI, seperti yang saya lakukan di Firebase Studio, adalah pengalaman yang transformatif. Kecepatan pengembangan meningkat secara drastis. Namun, ada satu momen yang pasti akan dihadapi oleh setiap pengembang: notifikasi merah yang menakutkan itu. **"Build failed."**
+
+Insting pertama kita sering kali adalah kembali ke AI dan berkata, “Halo, proses build gagal. Tolong perbaiki.”
+
+Ini adalah pendekatan yang paling umum—tetapi juga yang paling tidak efektif. Memberitahu AI bahwa build gagal tanpa memberikan konteks sama saja dengan memberitahu dokter, “Saya sakit,” tanpa menjelaskan gejalanya. AI mungkin akan menebak-nebak, tetapi tebakan itu sering kali salah dan membuang-buang waktu.
+
+Artikel ini akan memandu Anda tentang cara berkomunikasi yang benar saat build gagal. Ini adalah keterampilan terpenting yang saya pelajari dari kolaborasi manusia-AI.
+
+## Mengapa Log Build Sangat Penting?
+
+Setiap kali Anda meminta AI untuk melakukan perubahan dan proses *build* berjalan, catatan detail dibuat di balik layar. Catatan ini, yang disebut **log build**, adalah jejak dari setiap langkah yang diambil untuk membangun situs Anda.
+
+Ketika proses gagal, log tidak hanya berhenti begitu saja; biasanya log tersebut meninggalkan “pesan terakhir” yang sangat penting. Pesan ini adalah petunjuk utama untuk mengidentifikasi akar penyebab masalah.
+
+## Langkah demi Langkah: Dari ‘Error’ ke ‘Solusi’
+
+Lain kali jika Anda menemukan `Build failed`, jangan panik. Ikuti langkah-langkah ini:
+
+### Langkah 1: Buka Log Build
+
+Di Firebase Studio, setelah build gagal, akan ada opsi untuk melihat detail atau log dari proses yang gagal tersebut.
+
+![Antarmuka Firebase Studio yang menampilkan tombol lihat log setelah proses build gagal](/images/_notes/logs-error/ai-confused-wrong-map-1.webp)
+
+Klik tombol tersebut untuk membuka tampilan log. Anda akan disuguhkan dengan teks dalam jumlah banyak, yang mungkin terlihat mengintimidasi pada awalnya.
+
+### Langkah 2: Gulir ke Bagian Paling Bawah
+
+Ini adalah trik yang paling penting. **99% dari waktu, informasi yang paling kritis terletak di akhir log.** Jangan mencoba membaca dari atas ke bawah. Langsung gulir ke bagian paling akhir.
+
+Di sana, Anda akan menemukan ringkasan kesalahan yang menyebabkan seluruh proses terhenti.
+
+### Langkah 3: Temukan “Pesan Kunci”
+
+Cari kata-kata atau frasa seperti `error`, `failed`, `TypeError`, `ReferenceError`, atau pesan apa pun yang secara jelas menunjukkan ada sesuatu yang salah. Sering kali, pesan ini akan menunjuk ke file atau baris kode tertentu.
+
+![Detail pesan kesalahan di log build yang menonjolkan TypeError dan lokasi file](/images/_notes/logs-error/ai-confused-wrong-map-2.webp)
+
+### Langkah 4: Salin dan Tempel Bagian yang Relevan
+
+Sekarang, alih-alih hanya memberitahu AI “build gagal,” lakukan ini:
+
+1.  **Salin** blok teks yang berisi pesan kesalahan tersebut. Anda tidak perlu menyalin seluruh log—cukup 20–30 baris terakhir di sekitar kesalahan utama.
+2.  **Tempel** blok tersebut ke dalam prompt Anda kepada AI.
+
+Contoh prompt yang jauh lebih baik:
+
+> "Halo, proses build gagal. Sepertinya ada masalah saat merender salah satu komponen. Berikut adalah bagian terakhir dari log yang saya terima. Bisakah Anda memeriksanya?"
+>
+> ```
+> ✓ Collecting page data...
+> - Generating static pages (5/5)
+>
+> Error: Failed to compile.
+> See more info here: https://nextjs.org/docs/messages/failed-to-compile
+>
+> TypeError: Cannot read properties of undefined (reading 'map')
+>   at FeaturedPostCard (/src/components/featured-post-card.tsx:15:25)
+>   at ...
+> ```
+
+## Kesimpulan: Proses Iterasi yang Sehat
+
+Memahami bahwa `Build failed` adalah bagian normal dari proses pengembangan—terutama pada tahap awal saat situs masih belum stabil—adalah kunci pertama. Kunci kedua adalah belajar bagaimana memberikan umpan balik yang tepat.
+
+Dengan menyertakan log yang relevan, Anda mengubah peran AI dari seorang “penebak” menjadi “rekan debugging yang berpengetahuan luas.” Ini secara dramatis mempercepat penyelesaian masalah dan membuat kolaborasi Anda jauh lebih produktif.
