@@ -1,4 +1,3 @@
-
 import Image from 'next/image';
 import Link from 'next/link';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
@@ -11,6 +10,7 @@ import { LanguageSwitcher } from './language-switcher';
 import type { TranslationsMap } from '@/lib/posts';
 import { Facebook, Youtube, Instagram } from 'lucide-react';
 import { TikTokLogo } from '@/components/icons/tiktok-logo';
+import { GooeyFooterBackground } from './gooey-footer-background';
 
 export function Footer({ dictionary, translationsMap }: { dictionary: Dictionary, translationsMap: TranslationsMap }) {
     const footerNavItems = [
@@ -31,8 +31,11 @@ export function Footer({ dictionary, translationsMap }: { dictionary: Dictionary
     ];
 
     return (
-        <footer className="w-full bg-background pt-20 sm:pt-32">
-            <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+        <footer className="relative w-full bg-background pt-20 sm:pt-32 overflow-hidden">
+            {/* Gooey Liquid Background Effect */}
+            <GooeyFooterBackground />
+
+            <div className="relative z-10 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6">
                     {footerNavItems.map((item, index) => {
                         const image = PlaceHolderImages.find(p => p.id === item.id);
@@ -71,8 +74,8 @@ export function Footer({ dictionary, translationsMap }: { dictionary: Dictionary
                 </div>
             </div>
 
-            <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 mt-16 sm:mt-24 text-center">
-                <Avatar className="w-20 h-20 mx-auto mb-4">
+            <div className="relative z-10 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 mt-16 sm:mt-24 text-center">
+                <Avatar className="w-20 h-20 mx-auto mb-4 border-2 border-background shadow-md">
                     <AvatarImage src={authorAvatar} alt={authorName} />
                     <AvatarFallback>{authorName.split(' ').map(n => n[0]).join('')}</AvatarFallback>
                 </Avatar>
@@ -86,7 +89,7 @@ export function Footer({ dictionary, translationsMap }: { dictionary: Dictionary
                             href={social.href} 
                             target="_blank" 
                             rel="noopener noreferrer"
-                            className="p-2 rounded-full border bg-card/50 text-muted-foreground hover:text-primary hover:border-primary transition-all duration-300"
+                            className="p-2 rounded-full border bg-card/50 text-muted-foreground hover:text-primary hover:border-primary transition-all duration-300 backdrop-blur-sm"
                             aria-label={social.label}
                         >
                             {social.icon}
@@ -95,7 +98,7 @@ export function Footer({ dictionary, translationsMap }: { dictionary: Dictionary
                 </div>
             </div>
 
-            <div className="mt-16 sm:mt-24 py-8 border-t">
+            <div className="relative z-10 mt-16 sm:mt-24 py-8 border-t bg-background/50 backdrop-blur-md">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col justify-center items-center gap-4 text-sm text-muted-foreground">
                     <div className="flex items-center gap-4">
                         <LanguageSwitcher translationsMap={translationsMap} />
