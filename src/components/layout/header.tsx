@@ -148,13 +148,9 @@ export function Header({ searchableData, dictionary }: { searchableData: Searcha
                     href="/" 
                     className="flex items-center h-full group"
                 >
-                    <span className="h-full w-14 flex items-center justify-center bg-accent text-primary font-headline font-black text-lg transition-all duration-300 group-hover:w-16 rounded-l-full shrink-0 z-10">
-                        SG
-                    </span>
+                    <span className="h-full w-14 flex items-center justify-center bg-accent text-primary font-headline font-black text-lg transition-all duration-300 group-hover:w-16 rounded-l-full shrink-0 z-10">SG</span>
                     <span className="overflow-hidden max-w-0 opacity-0 group-hover:max-w-40 group-hover:opacity-100 transition-all duration-500 ease-in-out inline-block">
-                        <span className="font-headline text-xl font-bold tracking-tighter whitespace-nowrap text-primary-foreground pl-3 pr-4 block transform -translate-x-4 group-hover:translate-x-0 transition-transform duration-500 ease-in-out">
-                            SnipGeek
-                        </span>
+                        <span className="font-headline text-xl font-bold tracking-tighter whitespace-nowrap text-primary-foreground pl-3 pr-4 block transform -translate-x-4 group-hover:translate-x-0 transition-transform duration-500 ease-in-out">SnipGeek</span>
                     </span>
                 </Link>
             </div>
