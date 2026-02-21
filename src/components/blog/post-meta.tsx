@@ -15,9 +15,10 @@ interface PostMetaProps {
   dictionary: Dictionary;
   readingTime?: number;
   isOverlay?: boolean;
+  isCentered?: boolean;
 }
 
-export function PostMeta({ frontmatter, item, locale, dictionary, readingTime, isOverlay = false }: PostMetaProps) {
+export function PostMeta({ frontmatter, item, locale, dictionary, readingTime, isOverlay = false, isCentered = false }: PostMetaProps) {
   const authorName = "Iwan Efendi";
   const displayDate = frontmatter.updated || frontmatter.date;
   const linkPrefix = locale === i18n.defaultLocale ? '' : `/${locale}`;
@@ -72,7 +73,10 @@ export function PostMeta({ frontmatter, item, locale, dictionary, readingTime, i
 
   // Standalone Minimalist Style (Default)
   return (
-    <div className="flex flex-wrap items-center justify-between gap-4 py-4 mb-8 border-b border-primary/5">
+    <div className={cn(
+        "flex flex-wrap items-center gap-4 py-4 mb-8 border-b border-primary/5",
+        isCentered ? "justify-center" : "justify-between"
+    )}>
       <div className="flex items-center gap-3 text-sm font-medium text-muted-foreground">
         <span className="text-primary font-bold">{authorName}</span>
         <span className="opacity-30">•</span>
@@ -84,13 +88,17 @@ export function PostMeta({ frontmatter, item, locale, dictionary, readingTime, i
           </>
         )}
       </div>
+      
+      {isCentered && <span className="opacity-30 hidden sm:inline">•</span>}
+
       <div className="flex items-center gap-2">
         {frontmatter.tags && frontmatter.tags.slice(0, 2).map(tag => (
           <Link key={tag} href={`${linkPrefix}/tags/${tag.toLowerCase()}`}>
             <span className="text-xs font-bold text-accent/80 hover:text-accent">#{tag}</span>
           </Link>
         ))}
-        <div className="w-px h-4 bg-border mx-2" />
+        {!isCentered && <div className="w-px h-4 bg-border mx-2" />}
+        {isCentered && frontmatter.tags && frontmatter.tags.length > 0 && <span className="opacity-30 mx-1">•</span>}
         <AddToReadingListButton 
           item={item}
           dictionary={dictionary.readingList}

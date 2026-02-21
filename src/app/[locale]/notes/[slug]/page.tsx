@@ -1,3 +1,4 @@
+
 import { getNoteData, getAllNoteSlugs, getAllLocales, getAllNotesTranslationsMap } from '@/lib/notes';
 import { notFound } from 'next/navigation';
 import { MDXRemote } from 'next-mdx-remote/rsc';
@@ -117,6 +118,7 @@ export default async function NotePage({ params }: { params: Promise<{ slug: str
                 dictionary={dictionary}
                 readingTime={readingTime}
                 isOverlay={false}
+                isCentered={true}
             />
 
             <TableOfContents headings={headings} title={dictionary.post.toc} />
