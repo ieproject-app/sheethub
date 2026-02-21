@@ -27,7 +27,7 @@ export default async function NotesPage({ params: { locale } }: { params: { loca
 
   return (
     <div className="w-full">
-      <main className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 pt-24 pb-12 sm:pt-32 sm:pb-16">
+      <main className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 pt-24 pb-12 sm:pt-32 sm:pb-16">
         <header className="mb-16 text-center">
             <h1 className="font-headline text-5xl md:text-6xl font-extrabold tracking-tighter text-primary mb-3">
                 {dictionary.notes.title}
@@ -69,7 +69,7 @@ export default async function NotesPage({ params: { locale } }: { params: { loca
                     <h2 className="font-headline text-2xl font-bold tracking-tight text-primary transition-colors group-hover/link:text-accent mb-2">
                         {note.frontmatter.title}
                     </h2>
-                    <p className="text-sm text-muted-foreground line-clamp-3">
+                    <p className="text-sm text-muted-foreground line-clamp-2">
                         {note.frontmatter.description}
                     </p>
                   </Link>
@@ -77,15 +77,15 @@ export default async function NotesPage({ params: { locale } }: { params: { loca
                 
                 <CardFooter className="px-6 py-4 border-t bg-muted/5">
                     <div className="flex flex-wrap gap-1">
-                        {note.frontmatter.tags && note.frontmatter.tags.slice(0, 3).map(tag => (
+                        {note.frontmatter.tags && note.frontmatter.tags.slice(0, 2).map(tag => (
                             <Link key={tag} href={`${linkPrefix}/tags/${tag.toLowerCase()}`}>
                                 <Badge variant="outline" className="text-[10px] font-medium bg-background/50 hover:bg-primary hover:text-primary-foreground transition-colors cursor-pointer">
                                     {tag}
                                 </Badge>
                             </Link>
                         ))}
-                        {note.frontmatter.tags && note.frontmatter.tags.length > 3 && (
-                            <span className="text-[10px] text-muted-foreground self-center">+{note.frontmatter.tags.length - 3}</span>
+                        {note.frontmatter.tags && note.frontmatter.tags.length > 2 && (
+                            <span className="text-[10px] text-muted-foreground self-center">+{note.frontmatter.tags.length - 2}</span>
                         )}
                     </div>
                 </CardFooter>
