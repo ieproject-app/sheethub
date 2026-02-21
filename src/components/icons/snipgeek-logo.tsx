@@ -1,8 +1,8 @@
 import React from 'react';
 
 /**
- * SnipGeekLogo - A modern, slanted negative-space SVG logo.
- * Designed to be used in headers, footers, and as a potential favicon source.
+ * SnipGeekLogo - A modern, clean negative-space SVG logo.
+ * Designed to be used for favicon, icons, and branding assets.
  */
 export const SnipGeekLogo = ({ className, ...props }: React.SVGProps<SVGSVGElement>) => (
   <svg
@@ -25,9 +25,6 @@ export const SnipGeekLogo = ({ className, ...props }: React.SVGProps<SVGSVGEleme
             fontFamily: 'var(--font-space-grotesk), sans-serif',
             fontWeight: 900,
             fontSize: '52px',
-            fontStyle: 'italic',
-            transform: 'skewX(-5deg)', // Adding extra dynamic slant
-            transformOrigin: 'center'
           }}
         >
           SG

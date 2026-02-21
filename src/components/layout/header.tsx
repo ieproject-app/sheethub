@@ -11,7 +11,6 @@ import { Badge } from '@/components/ui/badge';
 import { usePathname } from 'next/navigation';
 import { useReadingList } from '@/hooks/use-reading-list';
 import type { Dictionary } from '@/lib/get-dictionary';
-import { SnipGeekLogo } from '@/components/icons/snipgeek-logo';
 
 type SearchableItem = {
   slug: string;
@@ -144,9 +143,9 @@ export function Header({ searchableData, dictionary }: { searchableData: Searcha
                     href="/" 
                     className="flex items-center h-full group"
                 >
-                    {/* Brand Head - SVG Logo as the left end of the pill */}
-                    <div className="h-full w-14 flex items-center justify-center transition-all duration-300 group-hover:w-16 rounded-l-full overflow-hidden text-accent">
-                        <SnipGeekLogo className="w-full h-full" />
+                    {/* Brand Head - Text-based Logo (Reverted) */}
+                    <div className="h-full w-14 flex items-center justify-center bg-accent text-primary font-headline font-black text-lg transition-all duration-300 group-hover:w-16 rounded-l-full">
+                        SG
                     </div>
                     <span className="font-headline text-xl font-bold tracking-tighter whitespace-nowrap text-primary-foreground pl-3 pr-2">
                         SnipGeek
