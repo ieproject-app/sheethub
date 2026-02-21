@@ -8,7 +8,8 @@ import { getDictionary } from '@/lib/get-dictionary';
 import { AddToReadingListButton } from '@/components/layout/add-to-reading-list-button';
 import { Badge } from '@/components/ui/badge';
 import { i18n } from '@/i18n-config';
-import { Card, CardContent, CardFooter } from '@/components/ui/card';
+import { Card, CardContent, CardFooter, CardHeader } from '@/components/ui/card';
+import { StickyNote } from 'lucide-react';
 
 type RelatedPostsProps = {
   type: 'blog' | 'note';
@@ -106,7 +107,7 @@ export async function RelatedPosts({ type, locale, currentSlug, currentTags, cur
     };
     
     return (
-        <div key={post.slug} className="group relative transition-all duration-300 hover:-translate-y-2">
+        <div key={post.slug} className="group relative transition-all duration-300 hover:-translate-y-2 will-change-transform">
             <Link href={`${linkPrefix}/blog/${post.slug}`} className="block" aria-label={`Read more about ${post.frontmatter.title}`}>
                 <div className="relative w-full aspect-video overflow-hidden rounded-lg mb-4 shadow-sm group-hover:shadow-xl transition-shadow duration-300">
                     {heroImageSrc && (
@@ -141,8 +142,8 @@ export async function RelatedPosts({ type, locale, currentSlug, currentTags, cur
 
   const renderNoteCard = (note: Note<NoteFrontmatter>) => {
     const noteDate = new Date(note.frontmatter.date);
-    const formatDatePart = (date: Date, options: Intl.DateTimeFormatOptions) => {
-        return new Intl.DateTimeFormat(locale, options).format(date);
+    const formatDate = (date: Date) => {
+        return new Intl.DateTimeFormat(locale, { day: 'numeric', month: 'short', year: 'numeric' }).format(date);
     };
     const item = {
         slug: note.slug,
@@ -153,35 +154,10 @@ export async function RelatedPosts({ type, locale, currentSlug, currentTags, cur
     };
 
     return (
-      <Card key={note.slug} className="group relative flex flex-col overflow-hidden rounded-lg border bg-card/50 shadow-sm transition-all hover:shadow-lg hover:-translate-y-1">
-        <div className="flex items-center justify-between bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground">
-          <div>
-            <span className="text-xl font-bold">{formatDatePart(noteDate, { day: 'numeric' })}</span>
-            <span className="ml-2 uppercase tracking-wider">{formatDatePart(noteDate, { month: 'short' })}</span>
-          </div>
-          <span>{formatDatePart(noteDate, { year: 'numeric' })}</span>
-        </div>
-
-        <div className="flex flex-1 flex-col p-6">
-          <Link href={`${linkPrefix}/notes/${note.slug}`} aria-label={note.frontmatter.title} className="flex-1">
-            <h2 className="font-headline text-2xl font-bold tracking-tight text-primary transition-colors group-hover:text-accent">
-                {note.frontmatter.title}
-            </h2>
-            <p className="mt-2 text-muted-foreground line-clamp-3">
-                {note.frontmatter.description}
-            </p>
-          </Link>
-        </div>
-        
-        <CardFooter className="flex items-center justify-between gap-4 border-t px-6 py-4">
-            <div className="flex flex-wrap gap-1">
-                {note.frontmatter.tags && note.frontmatter.tags.map(tag => (
-                    <Link key={tag} href={`${linkPrefix}/tags/${tag.toLowerCase()}`}>
-                      <Badge variant="secondary" className="hover:bg-primary hover:text-primary-foreground transition-colors cursor-pointer">
-                        {tag}
-                      </Badge>
-                    </Link>
-                ))}
+      <Card key={note.slug} className="group relative flex flex-col overflow-hidden rounded-xl border bg-card/50 shadow-sm transition-all hover:shadow-lg hover:-translate-y-2 will-change-transform h-full">
+        <CardHeader className="p-6 pb-0 flex-row justify-between items-start space-y-0">
+            <div className="p-2 bg-muted/50 rounded-lg group-hover:bg-primary/10 transition-colors">
+                <StickyNote className="h-5 w-5 text-muted-foreground group-hover:text-primary transition-colors" />
             </div>
             <AddToReadingListButton 
                 item={item}
@@ -189,6 +165,33 @@ export async function RelatedPosts({ type, locale, currentSlug, currentTags, cur
                 dictionary={dictionary.readingList}
                 className="text-muted-foreground hover:text-primary z-10 opacity-0 group-hover:opacity-100 transition-opacity shrink-0"
             />
+        </CardHeader>
+
+        <CardContent className="p-6 pt-4 flex-1">
+          <Link href={`${linkPrefix}/notes/${note.slug}`} aria-label={note.frontmatter.title} className="block group/link">
+            <time className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground mb-2 block">
+                {formatDate(noteDate)}
+            </time>
+            <h3 className="font-headline text-lg font-bold tracking-tight text-primary transition-colors group-hover/link:text-accent line-clamp-2 mb-2">
+                {note.frontmatter.title}
+            </h3>
+            <p className="text-sm text-muted-foreground line-clamp-2">
+                {note.frontmatter.description}
+            </p>
+          </Link>
+        </CardContent>
+        
+        <CardFooter className="px-6 py-4 border-t bg-muted/5">
+            <div className="flex flex-wrap gap-1">
+                {note.frontmatter.tags && note.frontmatter.tags.slice(0, 2).map(tag => (
+                    <Badge key={tag} variant="outline" className="text-[10px] font-medium bg-background/50">
+                        {tag}
+                    </Badge>
+                ))}
+                {note.frontmatter.tags && note.frontmatter.tags.length > 2 && (
+                    <span className="text-[10px] text-muted-foreground self-center">+{note.frontmatter.tags.length - 2}</span>
+                )}
+            </div>
         </CardFooter>
       </Card>
     );
@@ -196,18 +199,15 @@ export async function RelatedPosts({ type, locale, currentSlug, currentTags, cur
 
   return (
     <section className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-24 border-t mt-16">
-      <h2 className="text-3xl font-bold font-headline tracking-tighter text-primary mb-8 text-center">
+      <h2 className="text-3xl font-bold font-headline tracking-tighter text-primary mb-12 text-center">
         {dictionary.post.relatedContent}
       </h2>
-      {type === 'blog' ? (
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {relatedContent.map(item => renderBlogPostCard(item as Post<PostFrontmatter>))}
-        </div>
-      ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            {relatedContent.map(item => renderNoteCard(item as Note<NoteFrontmatter>))}
-        </div>
-      )}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+        {type === 'blog' 
+            ? relatedContent.map(item => renderBlogPostCard(item as Post<PostFrontmatter>))
+            : relatedContent.map(item => renderNoteCard(item as Note<NoteFrontmatter>))
+        }
+      </div>
     </section>
   );
 }
