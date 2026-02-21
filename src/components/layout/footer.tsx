@@ -30,7 +30,7 @@ export function Footer({ dictionary, translationsMap }: { dictionary: Dictionary
     ];
 
     return (
-        <footer className="relative w-full mt-32 border-t bg-muted/30">
+        <footer className="relative w-full mt-32">
             {/* Top Navigation Section - Links Cards */}
             <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6">
@@ -72,7 +72,7 @@ export function Footer({ dictionary, translationsMap }: { dictionary: Dictionary
             </div>
 
             {/* Sub-Footer Section - Adaptive Color Base */}
-            <div className="relative w-full pt-12 pb-12">
+            <div className="relative w-full pt-12 pb-12 bg-muted/30 border-t border-primary/5">
                 <div className="relative z-10 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
                     {/* Profile Section - Overlapping with margin top negative */}
                     <div className="text-center mb-16 -mt-24">
