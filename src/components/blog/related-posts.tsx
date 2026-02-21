@@ -172,12 +172,9 @@ export async function RelatedPosts({ type, locale, currentSlug, currentTags, cur
             <time className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground mb-2 block">
                 {formatDate(noteDate)}
             </time>
-            <h3 className="font-headline text-lg font-bold tracking-tight text-primary transition-colors group-hover/link:text-accent line-clamp-2 mb-2">
+            <h3 className="font-headline text-lg font-bold tracking-tight text-primary transition-colors group-hover/link:text-accent mb-2">
                 {note.frontmatter.title}
             </h3>
-            <p className="text-sm text-muted-foreground line-clamp-2">
-                {note.frontmatter.description}
-            </p>
           </Link>
         </CardContent>
         
