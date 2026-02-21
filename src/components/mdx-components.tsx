@@ -37,7 +37,7 @@ const CustomImage = ({ class: _class, className, parentName, ...props }: any) =>
     );
 };
 
-const DownloadButton = ({ id }: { id: string }) => {
+export const DownloadButton = ({ id }: { id: string }) => {
   const linkData = downloadLinks[id];
 
   if (!linkData) {
@@ -64,7 +64,7 @@ const DownloadButton = ({ id }: { id: string }) => {
   );
 };
 
-const ImageGrid = ({ children, columns = 2, class: _class, className, parentName, ...props }: any) => {
+export const ImageGrid = ({ children, columns = 2, class: _class, className, parentName, ...props }: any) => {
     const gridCols = {
       1: 'grid-cols-1',
       2: 'grid-cols-1 sm:grid-cols-2',
