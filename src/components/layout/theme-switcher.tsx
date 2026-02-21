@@ -24,16 +24,16 @@ export function ThemeSwitcher() {
 
   return (
     <div 
-      className="relative flex items-center bg-muted rounded-full p-1 text-sm min-h-[28px] min-w-[90px] shadow-inner"
+      className="relative flex items-center bg-black/20 rounded-full p-1 text-sm min-h-[28px] min-w-[90px] shadow-inner"
       suppressHydrationWarning
     >
       {!mounted ? (
-        <div className="w-full h-full animate-pulse bg-muted-foreground/10 rounded-full" />
+        <div className="w-full h-full animate-pulse bg-white/10 rounded-full" />
       ) : (
         <>
           <div
             className={cn(
-              'absolute h-5 w-7 bg-background shadow-sm rounded-full transition-transform duration-300 ease-in-out'
+              'absolute h-5 w-7 bg-accent shadow-sm rounded-full transition-transform duration-300 ease-in-out'
             )}
             style={{ transform: `translateX(${activeIndex * 100}%)` }}
           />
@@ -45,7 +45,7 @@ export function ThemeSwitcher() {
                 'relative z-10 w-7 h-5 flex items-center justify-center rounded-full transition-colors',
                 theme === option.theme
                   ? 'text-primary'
-                  : 'text-muted-foreground hover:text-foreground'
+                  : 'text-primary-foreground/60 hover:text-primary-foreground'
               )}
               aria-label={`Switch to ${option.theme} mode`}
             >

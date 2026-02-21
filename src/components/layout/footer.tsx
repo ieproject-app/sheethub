@@ -92,7 +92,7 @@ export function Footer({ dictionary, translationsMap }: { dictionary: Dictionary
                                     href={social.href} 
                                     target="_blank" 
                                     rel="noopener noreferrer"
-                                    className="p-3 rounded-full border border-border bg-background text-muted-foreground hover:text-primary hover:border-primary hover:scale-110 transition-all duration-300 shadow-sm"
+                                    className="p-3 rounded-full bg-primary/90 text-primary-foreground hover:bg-accent hover:text-primary hover:scale-110 transition-all duration-300 shadow-md"
                                     aria-label={social.label}
                                 >
                                     {social.icon}
@@ -104,9 +104,10 @@ export function Footer({ dictionary, translationsMap }: { dictionary: Dictionary
                     {/* Footer Bottom: Switchers and Copyright */}
                     <div className="flex flex-col justify-center items-center gap-6 text-sm text-muted-foreground/60 border-t pt-12">
                         <div className="flex items-center gap-4">
-                            {/* Switchers with primary context for visibility */}
-                            <div className="bg-primary/10 rounded-full p-1 flex items-center gap-2">
+                            {/* Switchers inside Header-styled Pill */}
+                            <div className="bg-primary/90 backdrop-blur-sm rounded-full p-1.5 flex items-center gap-2 shadow-xl border border-white/5">
                                 <LanguageSwitcher translationsMap={translationsMap} />
+                                <div className="w-px h-4 bg-primary-foreground/20" />
                                 <ThemeSwitcher />
                             </div>
                         </div>

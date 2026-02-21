@@ -65,19 +65,18 @@ export function LanguageSwitcher({ translationsMap }: { translationsMap: Transla
     return `/${newLocale}${pathWithoutLocale}`;
   }
 
-  // Use a context-aware color scheme that works in both modes
   return (
     <div 
-      className="relative flex items-center bg-muted rounded-full p-1 text-[10px] min-h-[28px] min-w-[70px] shadow-inner"
+      className="relative flex items-center bg-black/20 rounded-full p-1 text-[10px] min-h-[28px] min-w-[70px] shadow-inner"
       suppressHydrationWarning
     >
         {!mounted ? (
-          <div className="w-full h-full animate-pulse bg-muted-foreground/10 rounded-full" />
+          <div className="w-full h-full animate-pulse bg-white/10 rounded-full" />
         ) : (
           <>
             <div 
                 className={cn(
-                    "absolute h-5 w-8 bg-background shadow-sm rounded-full transition-transform duration-300 ease-in-out",
+                    "absolute h-5 w-8 bg-accent shadow-sm rounded-full transition-transform duration-300 ease-in-out",
                     currentLocale === 'en' ? 'translate-x-0' : 'translate-x-full'
                 )}
             />
@@ -87,7 +86,7 @@ export function LanguageSwitcher({ translationsMap }: { translationsMap: Transla
                     href={redirectedPathName(locale)} 
                     className={cn(
                         "relative z-10 w-8 h-5 flex items-center justify-center font-bold transition-colors",
-                        currentLocale === locale ? "text-primary" : "text-muted-foreground hover:text-foreground"
+                        currentLocale === locale ? "text-primary" : "text-primary-foreground/60 hover:text-primary-foreground"
                     )}
                     aria-current={currentLocale === locale ? 'page' : undefined}
                     onClick={() => handleLocaleChange(locale as Locale)}
