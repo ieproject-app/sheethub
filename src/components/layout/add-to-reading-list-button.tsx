@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useReadingList, type ReadingListItem } from '@/hooks/use-reading-list';
@@ -51,7 +52,7 @@ export function AddToReadingListButton({ item, dictionary, showText = true, clas
         className={cn(
           'h-4 w-4 transition-colors',
           showText && 'mr-2',
-          isSaved && 'fill-primary text-primary'
+          isSaved && 'fill-current'
         )}
       />
       {showText && buttonText}
