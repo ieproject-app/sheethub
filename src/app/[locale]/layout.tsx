@@ -84,9 +84,9 @@ export default async function LocaleLayout({
   }));
 
   const searchableData = [...searchablePosts, ...searchableNotes];
-  const dictionary = await getDictionary(params.locale);
-  const draftPosts = getDraftPostsData('id');
-  const draftNotes = getDraftNotesData('id');
+  const dictionary = await getDictionary(params.locale as any);
+  const draftPosts = getDraftPostsData(params.locale);
+  const draftNotes = getDraftNotesData(params.locale);
   
   return (
     <html lang={params.locale} className={cn(inter.variable, spaceGrotesk.variable, sourceCodePro.variable, "scroll-smooth")} suppressHydrationWarning>
