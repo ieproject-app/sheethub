@@ -124,7 +124,6 @@ export function Header({ searchableData, dictionary }: { searchableData: Searcha
   
   const allMobileMenuItems = [...menuItems, ...moreMenuItems];
 
-  // Brightness-only hover effect (no background)
   const navItemClass = "transition-all duration-300 text-primary-foreground/70 hover:text-primary-foreground";
 
   return (
@@ -133,7 +132,6 @@ export function Header({ searchableData, dictionary }: { searchableData: Searcha
         isSearchOpen ? 'md:w-[560px]' : 'md:w-[480px]',
         isVisible ? "opacity-100 translate-y-0" : "opacity-0 -translate-y-16"
     )}>
-        {/* Main Pill Bar - Always rounded-full */}
         <nav className={cn(
             "relative mx-auto bg-primary/90 backdrop-blur-sm text-primary-foreground shadow-lg ring-1 ring-black/5 flex items-center justify-between h-12 transition-all duration-300 ease-in-out px-4 rounded-full"
         )}>
@@ -145,9 +143,18 @@ export function Header({ searchableData, dictionary }: { searchableData: Searcha
                     href="/" 
                     className="flex items-center gap-2.5 group"
                 >
-                    {/* Squircle Tech Icon (Rencana 2) */}
-                    <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-primary border border-accent/30 text-accent font-code font-bold text-sm shadow-md transition-all duration-300 group-hover:-translate-y-0.5 group-hover:shadow-accent/20 group-hover:border-accent">
-                        SG
+                    {/* Split Pill Icon (Rencana 3) */}
+                    <div className="relative w-8 h-8 rounded-lg overflow-hidden border border-accent/20 shadow-md transition-all duration-300 group-hover:-translate-y-0.5 group-hover:shadow-accent/20 group-hover:border-accent flex items-center justify-center font-headline font-black text-[10px] tracking-tighter">
+                        {/* Background Halves */}
+                        <div className="absolute inset-0 flex">
+                            <div className="w-1/2 h-full bg-primary" />
+                            <div className="w-1/2 h-full bg-accent" />
+                        </div>
+                        {/* Inverted Letters */}
+                        <div className="relative flex items-center justify-center w-full h-full">
+                            <span className="text-accent w-1/2 text-center">S</span>
+                            <span className="text-primary w-1/2 text-center">G</span>
+                        </div>
                     </div>
                     <span className="font-headline text-xl font-bold tracking-tighter whitespace-nowrap text-primary-foreground">
                         SnipGeek
@@ -159,7 +166,6 @@ export function Header({ searchableData, dictionary }: { searchableData: Searcha
                 "flex items-center gap-1 transition-opacity duration-300",
                 isSearchOpen ? "opacity-0 pointer-events-none" : "opacity-100"
             )}>
-                {/* Mobile Menu Icons */}
                 <div className="flex md:hidden items-center gap-0">
                     <Button variant="ghost" size="icon" className={cn("h-9 w-9 rounded-full bg-transparent hover:bg-transparent", navItemClass)} onClick={() => toggleView('menu')}>
                         <Menu className="h-5 w-5" />
@@ -177,7 +183,6 @@ export function Header({ searchableData, dictionary }: { searchableData: Searcha
                     </Button>
                 </div>
 
-                {/* Desktop Menu Icons */}
                 <div className="hidden md:flex items-center gap-1">
                     {menuItems.map(item => (
                         <Link key={item.name} href={item.href} className={cn("px-2 py-1 text-sm font-medium", navItemClass)}>
@@ -203,7 +208,6 @@ export function Header({ searchableData, dictionary }: { searchableData: Searcha
                 </div>
             </div>
             
-            {/* Search Input Overlay */}
             <div className={cn(
                 "absolute inset-0 w-full h-full flex items-center transition-all duration-300 ease-in-out",
                 isSearchOpen ? "opacity-100 z-10 px-2" : "opacity-0 -z-10 pointer-events-none"
@@ -223,7 +227,6 @@ export function Header({ searchableData, dictionary }: { searchableData: Searcha
             </div>
         </nav>
 
-        {/* Floating Dropdown Menu Card */}
         <div className={cn(
             "absolute top-full left-0 right-0 z-40 mt-2 bg-primary/90 backdrop-blur-sm shadow-xl ring-1 ring-black/5 rounded-2xl overflow-hidden transition-all duration-300 ease-in-out",
             "transform-origin-top",
@@ -247,7 +250,6 @@ export function Header({ searchableData, dictionary }: { searchableData: Searcha
             </div>
         </div>
 
-        {/* Floating Search Results & Reading List Overlay Card */}
         <div className="absolute top-full left-0 right-0 z-30 mt-2">
           {isSearchOpen && (
             <div className="bg-background rounded-2xl border shadow-xl max-h-[400px] overflow-hidden">
