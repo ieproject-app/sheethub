@@ -32,7 +32,7 @@ export function Footer({ dictionary, translationsMap }: { dictionary: Dictionary
 
     return (
         <footer className="relative w-full mt-32 overflow-visible">
-            {/* Main Footer Section - Light/Transparent background */}
+            {/* Main Footer Section - Merges with background */}
             <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6">
                     {footerNavItems.map((item, index) => {
@@ -96,9 +96,9 @@ export function Footer({ dictionary, translationsMap }: { dictionary: Dictionary
                 </div>
             </div>
 
-            {/* Sub-Footer Section - The pool of liquid */}
+            {/* Sub-Footer Section - The solid liquid base */}
             <div className="relative w-full bg-primary text-primary-foreground pt-12 pb-8">
-                {/* Gooey Liquid Effect rises from here */}
+                {/* Gooey Liquid Effect sits right on top of this block */}
                 <GooeyFooterBackground />
 
                 <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col justify-center items-center gap-4 text-sm text-primary-foreground/50">
