@@ -143,8 +143,8 @@ export function Header({ searchableData, dictionary }: { searchableData: Searcha
                     href="/" 
                     className="flex items-center gap-2.5 group"
                 >
-                    {/* Split Pill Icon (Rencana 3) */}
-                    <div className="relative w-8 h-8 rounded-lg overflow-hidden border border-accent/20 shadow-md transition-all duration-300 group-hover:-translate-y-0.5 group-hover:shadow-accent/20 group-hover:border-accent flex items-center justify-center font-headline font-black text-[10px] tracking-tighter">
+                    {/* Split Pill Icon (Full Rounded) */}
+                    <div className="relative w-8 h-8 rounded-full overflow-hidden border border-accent/20 shadow-md transition-all duration-300 group-hover:-translate-y-0.5 group-hover:shadow-accent/20 group-hover:border-accent flex items-center justify-center font-headline font-black text-[10px] tracking-tighter">
                         {/* Background Halves */}
                         <div className="absolute inset-0 flex">
                             <div className="w-1/2 h-full bg-primary" />
