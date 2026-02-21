@@ -33,8 +33,6 @@
     --muted-foreground: 225 10% 45%;
     --accent: 200 94% 73%; /* #7DD3FC */
     --accent-foreground: 225 14% 27%;
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 0 0% 98%;
     --border: 0 0% 89.8%;
     --input: 0 0% 89.8%;
     --ring: 200 94% 73%;
@@ -115,5 +113,18 @@
     to {
       opacity: 1;
     }
+  }
+
+  /* Heartbeat / Pulse notification for bookmark icon */
+  .animate-heartbeat {
+    animation: heartbeat 1.5s ease-in-out infinite;
+  }
+
+  @keyframes heartbeat {
+    0% { transform: scale(1); }
+    14% { transform: scale(1.1); }
+    28% { transform: scale(1); }
+    42% { transform: scale(1.1); }
+    70% { transform: scale(1); }
   }
 }

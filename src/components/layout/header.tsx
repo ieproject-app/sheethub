@@ -33,6 +33,8 @@ export function Header({ searchableData, dictionary }: { searchableData: Searcha
   const headerRef = useRef<HTMLElement>(null);
   const pathname = usePathname();
   const [mounted, setMounted] = useState(false);
+  const [isPulsing, setIsPulsing] = useState(false);
+  const prevCount = useRef(readingListItems.length);
 
   const isSearchOpen = activeView === 'search';
   const isMenuOpen = activeView === 'menu';
@@ -41,6 +43,17 @@ export function Header({ searchableData, dictionary }: { searchableData: Searcha
   useEffect(() => {
     setMounted(true);
   }, []);
+
+  // Notification logic: if items increase, show header and pulse
+  useEffect(() => {
+    if (mounted && readingListItems.length > prevCount.current) {
+      setIsVisible(true);
+      setIsPulsing(true);
+      const timer = setTimeout(() => setIsPulsing(false), 2000);
+      return () => clearTimeout(timer);
+    }
+    prevCount.current = readingListItems.length;
+  }, [readingListItems.length, mounted]);
 
   useEffect(() => {
     setActiveView('none');
@@ -155,10 +168,13 @@ export function Header({ searchableData, dictionary }: { searchableData: Searcha
                     <Button variant="ghost" size="icon" className={cn("h-9 w-9 rounded-full bg-transparent hover:bg-transparent", navItemClass)} onClick={() => toggleView('menu')}>
                         <Menu className="h-5 w-5" />
                     </Button>
-                    <Button variant="ghost" size="icon" className={cn("relative rounded-full h-9 w-9 bg-transparent hover:bg-transparent", navItemClass)} onClick={() => toggleView('readingList')}>
-                       <Bookmark className="h-5 w-5" />
+                    <Button variant="ghost" size="icon" className={cn("relative rounded-full h-9 w-9 bg-transparent hover:bg-transparent transition-all", isPulsing && "scale-110 bg-accent/20", navItemClass)} onClick={() => toggleView('readingList')}>
+                       <Bookmark className={cn("h-5 w-5", isPulsing && "animate-heartbeat text-accent fill-accent")} />
                        {mounted && readingListItems.length > 0 && (
-                            <span className="absolute -top-1 -right-1 flex h-4 min-w-4 items-center justify-center rounded-full bg-accent text-accent-foreground text-xs font-bold px-1">
+                            <span className={cn(
+                                "absolute -top-1 -right-1 flex h-4 min-w-4 items-center justify-center rounded-full bg-accent text-accent-foreground text-xs font-bold px-1 transition-all duration-300",
+                                isPulsing && "scale-125 ring-4 ring-accent/30"
+                            )}>
                                 {readingListItems.length}
                             </span>
                        )}
@@ -178,10 +194,13 @@ export function Header({ searchableData, dictionary }: { searchableData: Searcha
                         <Button variant="ghost" size="icon" className={cn("h-9 w-9 rounded-full bg-transparent hover:bg-transparent", navItemClass)} onClick={() => toggleView('menu')}>
                             <MoreHorizontal className="h-5 w-5" />
                         </Button>
-                        <Button variant="ghost" size="icon" className={cn("relative h-9 w-9 rounded-full bg-transparent hover:bg-transparent", navItemClass)} onClick={() => toggleView('readingList')}>
-                           <Bookmark className="h-5 w-5" />
+                        <Button variant="ghost" size="icon" className={cn("relative h-9 w-9 rounded-full bg-transparent hover:bg-transparent transition-all", isPulsing && "scale-110 bg-accent/20", navItemClass)} onClick={() => toggleView('readingList')}>
+                           <Bookmark className={cn("h-5 w-5", isPulsing && "animate-heartbeat text-accent fill-accent")} />
                            {mounted && readingListItems.length > 0 && (
-                                <span className="absolute -top-1 -right-1 flex h-4 min-w-4 items-center justify-center rounded-full bg-accent text-accent-foreground text-xs font-bold px-1">
+                                <span className={cn(
+                                    "absolute -top-1 -right-1 flex h-4 min-w-4 items-center justify-center rounded-full bg-accent text-accent-foreground text-xs font-bold px-1 transition-all duration-300",
+                                    isPulsing && "scale-125 ring-4 ring-accent/30"
+                                )}>
                                     {readingListItems.length}
                                 </span>
                            )}

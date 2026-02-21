@@ -4,7 +4,6 @@ import { useReadingList, type ReadingListItem } from '@/hooks/use-reading-list';
 import { Button } from '@/components/ui/button';
 import { Bookmark } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { useToast } from '@/hooks/use-toast';
 import type { Dictionary } from '@/lib/get-dictionary';
 
 interface AddToReadingListButtonProps {
@@ -16,7 +15,6 @@ interface AddToReadingListButtonProps {
 
 export function AddToReadingListButton({ item, dictionary, showText = true, className }: AddToReadingListButtonProps) {
   const { addItem, removeItem, isItemSaved } = useReadingList();
-  const { toast } = useToast();
   
   const isSaved = isItemSaved(item.slug);
 
@@ -26,16 +24,8 @@ export function AddToReadingListButton({ item, dictionary, showText = true, clas
     
     if (isSaved) {
       removeItem(item.slug);
-      toast({
-        title: dictionary.removed.title,
-        description: `"${item.title}" ${dictionary.removed.description}`,
-      });
     } else {
       addItem(item);
-      toast({
-        title: dictionary.added.title,
-        description: `"${item.title}" ${dictionary.added.description}`,
-      });
     }
   };
 
