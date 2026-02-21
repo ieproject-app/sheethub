@@ -5,8 +5,8 @@ import { i18n } from '@/i18n-config';
 import { AddToReadingListButton } from '@/components/layout/add-to-reading-list-button';
 import { getDictionary } from '@/lib/get-dictionary';
 import { Badge } from '@/components/ui/badge';
-import { Card, CardFooter } from '@/components/ui/card';
-import { cn } from '@/lib/utils';
+import { Card, CardContent, CardFooter, CardHeader } from '@/components/ui/card';
+import { StickyNote } from 'lucide-react';
 
 export async function generateStaticParams() {
   return i18n.locales.map((locale) => ({ locale }));
@@ -17,13 +17,17 @@ export default async function NotesPage({ params: { locale } }: { params: { loca
   const linkPrefix = locale === i18n.defaultLocale ? '' : `/${locale}`;
   const dictionary = await getDictionary(locale);
 
-  const formatDatePart = (date: Date, options: Intl.DateTimeFormatOptions) => {
-    return new Intl.DateTimeFormat(locale, options).format(date);
+  const formatDate = (date: Date) => {
+    return new Intl.DateTimeFormat(locale, { 
+        day: 'numeric', 
+        month: 'short', 
+        year: 'numeric' 
+    }).format(date);
   };
 
   return (
     <div className="w-full">
-      <main className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 pt-24 pb-12 sm:pt-32 sm:pb-16">
+      <main className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 pt-24 pb-12 sm:pt-32 sm:pb-16">
         <header className="mb-16 text-center">
             <h1 className="font-headline text-5xl md:text-6xl font-extrabold tracking-tighter text-primary mb-3">
                 {dictionary.notes.title}
@@ -33,7 +37,7 @@ export default async function NotesPage({ params: { locale } }: { params: { loca
             </p>
         </header>
 
-        <section className="space-y-8">
+        <section className="grid grid-cols-1 md:grid-cols-2 gap-6 lg:gap-8">
           {allNotesData.map((note) => {
             const noteDate = new Date(note.frontmatter.date);
             const item = {
@@ -44,35 +48,10 @@ export default async function NotesPage({ params: { locale } }: { params: { loca
                 type: 'note' as const
             };
             return (
-              <Card key={note.slug} className="group relative flex flex-col overflow-hidden rounded-lg border bg-card/50 shadow-sm transition-all hover:shadow-lg hover:-translate-y-1">
-                <div className="flex items-center justify-between bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground">
-                  <div>
-                    <span className="text-xl font-bold">{formatDatePart(noteDate, { day: 'numeric' })}</span>
-                    <span className="ml-2 uppercase tracking-wider">{formatDatePart(noteDate, { month: 'short' })}</span>
-                  </div>
-                  <span>{formatDatePart(noteDate, { year: 'numeric' })}</span>
-                </div>
-
-                <div className="flex flex-1 flex-col p-6">
-                  <Link href={`${linkPrefix}/notes/${note.slug}`} aria-label={note.frontmatter.title} className="flex-1">
-                    <h2 className="font-headline text-2xl font-bold tracking-tight text-primary transition-colors group-hover:text-accent">
-                        {note.frontmatter.title}
-                    </h2>
-                    <p className="mt-2 text-muted-foreground line-clamp-3">
-                        {note.frontmatter.description}
-                    </p>
-                  </Link>
-                </div>
-                
-                <CardFooter className="flex items-center justify-between gap-4 border-t px-6 py-4">
-                    <div className="flex flex-wrap gap-1">
-                        {note.frontmatter.tags && note.frontmatter.tags.map(tag => (
-                            <Link key={tag} href={`${linkPrefix}/tags/${tag.toLowerCase()}`}>
-                              <Badge variant="secondary" className="hover:bg-primary hover:text-primary-foreground transition-colors cursor-pointer">
-                                {tag}
-                              </Badge>
-                            </Link>
-                        ))}
+              <Card key={note.slug} className="group relative flex flex-col overflow-hidden rounded-xl border bg-card/50 shadow-sm transition-all hover:shadow-lg hover:-translate-y-1 will-change-transform h-full">
+                <CardHeader className="p-6 pb-0 flex-row justify-between items-start space-y-0">
+                    <div className="p-2 bg-muted/50 rounded-lg group-hover:bg-primary/10 transition-colors">
+                        <StickyNote className="h-5 w-5 text-muted-foreground group-hover:text-primary transition-colors" />
                     </div>
                     <AddToReadingListButton 
                         item={item}
@@ -80,6 +59,35 @@ export default async function NotesPage({ params: { locale } }: { params: { loca
                         dictionary={dictionary.readingList}
                         className="text-muted-foreground hover:text-primary z-10 opacity-0 group-hover:opacity-100 transition-opacity shrink-0"
                     />
+                </CardHeader>
+
+                <CardContent className="p-6 pt-4 flex-1">
+                  <Link href={`${linkPrefix}/notes/${note.slug}`} aria-label={note.frontmatter.title} className="block group/link">
+                    <time className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground mb-2 block">
+                        {formatDate(noteDate)}
+                    </time>
+                    <h2 className="font-headline text-2xl font-bold tracking-tight text-primary transition-colors group-hover/link:text-accent mb-2">
+                        {note.frontmatter.title}
+                    </h2>
+                    <p className="text-sm text-muted-foreground line-clamp-3">
+                        {note.frontmatter.description}
+                    </p>
+                  </Link>
+                </CardContent>
+                
+                <CardFooter className="px-6 py-4 border-t bg-muted/5">
+                    <div className="flex flex-wrap gap-1">
+                        {note.frontmatter.tags && note.frontmatter.tags.slice(0, 3).map(tag => (
+                            <Link key={tag} href={`${linkPrefix}/tags/${tag.toLowerCase()}`}>
+                                <Badge variant="outline" className="text-[10px] font-medium bg-background/50 hover:bg-primary hover:text-primary-foreground transition-colors cursor-pointer">
+                                    {tag}
+                                </Badge>
+                            </Link>
+                        ))}
+                        {note.frontmatter.tags && note.frontmatter.tags.length > 3 && (
+                            <span className="text-[10px] text-muted-foreground self-center">+{note.frontmatter.tags.length - 3}</span>
+                        )}
+                    </div>
                 </CardFooter>
               </Card>
             )})}
