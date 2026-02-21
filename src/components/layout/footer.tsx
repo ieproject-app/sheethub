@@ -75,7 +75,7 @@ export function Footer({ dictionary, translationsMap }: { dictionary: Dictionary
             <div className="relative w-full bg-primary text-primary-foreground pt-12 pb-12">
                 <div className="relative z-10 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
                     {/* Profile Section - Overlapping with margin top negative */}
-                    <div className="text-center mb-16 -mt-12">
+                    <div className="text-center mb-16 -mt-24">
                         <Avatar className="w-24 h-24 mx-auto mb-6 border-4 border-primary shadow-2xl bg-primary">
                             <AvatarImage src={authorAvatar} alt={authorName} />
                             <AvatarFallback className="bg-muted text-primary">{authorName.split(' ').map(n => n[0]).join('')}</AvatarFallback>
