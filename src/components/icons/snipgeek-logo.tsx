@@ -1,33 +1,39 @@
 import React from 'react';
 
 /**
- * SnipGeekLogo - Komponen logo SVG dengan struktur Solid.
- * Menggunakan fill="white" untuk teks agar terbaca jelas sebagai favicon
- * dan fill="currentColor" untuk background agar fleksibel mengikuti tema.
+ * SnipGeekLogo - Komponen logo SVG fleksibel.
+ * @param showBackground - Jika true, akan merender kotak background (cocok untuk favicon).
+ *                         Jika false, hanya merender huruf SG (cocok untuk Header integrated).
  */
-export const SnipGeekLogo = ({ className, ...props }: React.SVGProps<SVGSVGElement>) => (
+export const SnipGeekLogo = ({ 
+  className, 
+  showBackground = true, 
+  ...props 
+}: React.SVGProps<SVGSVGElement> & { showBackground?: boolean }) => (
   <svg
     viewBox="0 0 100 100"
     xmlns="http://www.w3.org/2000/svg"
     className={className}
     {...props}
   >
-    {/* Background kotak dengan sudut membulat */}
-    <rect
-      width="100"
-      height="100"
-      rx="22"
-      ry="22"
-      fill="currentColor"
-    />
+    {/* Background kotak hanya muncul jika showBackground true */}
+    {showBackground && (
+      <rect
+        width="100"
+        height="100"
+        rx="22"
+        ry="22"
+        fill="currentColor"
+      />
+    )}
     
-    {/* Teks Solid Putih - Memastikan keterbacaan tinggi di favicon & header */}
+    {/* Teks SG - Menggunakan fill="white" jika ada background, atau "currentColor" jika integrated */}
     <text
       x="50%"
       y="50%"
       dominantBaseline="central"
       textAnchor="middle"
-      fill="white"
+      fill={showBackground ? "white" : "currentColor"}
       style={{
         fontFamily: 'var(--font-space-grotesk), sans-serif',
         fontWeight: 900,
