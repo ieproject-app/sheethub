@@ -174,14 +174,20 @@ export function Header({ searchableData, dictionary }: { searchableData: Searcha
         <nav className={cn(
             "relative mx-auto bg-primary/90 backdrop-blur-sm text-primary-foreground shadow-lg ring-1 ring-black/5 flex items-center justify-between h-12 transition-all duration-300 ease-in-out pr-4 rounded-full overflow-hidden"
         )}>
-            {/* Status Notification Pill - Stable container to prevent hydration index mismatch */}
+            {/* Status Notification Pill - Improved with smooth transition and Elegant Dark theme */}
             <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-50">
-              {mounted && message && (
-                <div className="bg-accent text-accent-foreground px-4 py-1 rounded-full text-[10px] font-black uppercase tracking-tighter shadow-xl flex items-center gap-2 animate-in fade-in slide-in-from-top-4 duration-300">
-                    <div className="h-1.5 w-1.5 rounded-full bg-accent-foreground animate-pulse" />
-                    {message}
-                </div>
-              )}
+              <div className={cn(
+                "px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-tighter shadow-2xl flex items-center gap-2 transition-all duration-500 ease-[cubic-bezier(0.23,1,0.32,1)]",
+                (mounted && message) 
+                  ? "opacity-100 translate-y-0 scale-100 bg-primary text-primary-foreground ring-1 ring-white/10" 
+                  : "opacity-0 -translate-y-4 scale-90 bg-primary/40 text-transparent"
+              )}>
+                  <div className={cn(
+                    "h-1.5 w-1.5 rounded-full animate-pulse transition-colors duration-500",
+                    message ? "bg-accent" : "bg-transparent"
+                  )} />
+                  {message || "Status"}
+              </div>
             </div>
 
             <div className={cn(
