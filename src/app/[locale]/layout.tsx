@@ -12,26 +12,9 @@ import { NotificationProvider } from '@/hooks/use-notification';
 import { BackToTop } from '@/components/layout/back-to-top';
 import { getDictionary } from '@/lib/get-dictionary';
 import { DraftList } from '@/components/layout/draft-list';
-import { Inter, Space_Grotesk, Source_Code_Pro } from 'next/font/google';
+import { GeistSans } from 'geist/font/sans';
+import { GeistMono } from 'geist/font/mono';
 import { cn } from '@/lib/utils';
-
-const inter = Inter({
-  subsets: ['latin'],
-  display: 'swap',
-  variable: '--font-inter',
-});
-
-const spaceGrotesk = Space_Grotesk({
-  subsets: ['latin'],
-  display: 'swap',
-  variable: '--font-space-grotesk',
-});
-
-const sourceCodePro = Source_Code_Pro({
-  subsets: ['latin'],
-  display: 'swap',
-  variable: '--font-source-code-pro',
-});
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://snipgeek.com'),
@@ -93,7 +76,7 @@ export default async function LocaleLayout({
   const draftNotes = getDraftNotesData(locale);
   
   return (
-    <html lang={locale} className={cn(inter.variable, spaceGrotesk.variable, sourceCodePro.variable, "scroll-smooth")} suppressHydrationWarning>
+    <html lang={locale} className={cn(GeistSans.variable, GeistMono.variable, "scroll-smooth")} suppressHydrationWarning>
       <head />
       <body className="font-body antialiased fade-in-on-load">
         <ThemeProvider

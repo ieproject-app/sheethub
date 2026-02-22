@@ -1,27 +1,14 @@
+
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import './globals.css';
-import { Inter, Space_Grotesk } from 'next/font/google';
+import { GeistSans } from 'geist/font/sans';
 import { cn } from '@/lib/utils';
 import { Search, Home, BookOpen, PenTool } from 'lucide-react';
 
-const inter = Inter({
-  subsets: ['latin'],
-  display: 'swap',
-  variable: '--font-inter',
-  weight: ['400', '500', '700'],
-});
-
-const spaceGrotesk = Space_Grotesk({
-  subsets: ['latin'],
-  display: 'swap',
-  variable: '--font-space-grotesk',
-  weight: ['400', '500', '700'],
-});
-
 export default function NotFound() {
   return (
-    <html lang="en" className={cn(inter.variable, spaceGrotesk.variable)}>
+    <html lang="en" className={cn(GeistSans.variable)}>
       <head>
         <title>404 - Page Not Found | SnipGeek</title>
         <meta name="description" content="Sorry, the page you're looking for doesn't exist. Find tutorials, notes, and tech tools at SnipGeek." />

@@ -12,9 +12,9 @@ export default {
   theme: {
     extend: {
       fontFamily: {
-        body: ['var(--font-inter)', 'system-ui', '-apple-system', 'sans-serif'],
-        headline: ['var(--font-space-grotesk)', 'system-ui', 'sans-serif'],
-        code: ['var(--font-source-code-pro)', 'ui-monospace', 'monospace'],
+        body: ['var(--font-geist-sans)', 'system-ui', '-apple-system', 'sans-serif'],
+        headline: ['var(--font-geist-sans)', 'system-ui', 'sans-serif'],
+        code: ['var(--font-geist-mono)', 'ui-monospace', 'monospace'],
       },
       colors: {
         background: 'hsl(var(--background))',
