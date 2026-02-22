@@ -178,11 +178,11 @@
             "promptInstruction": "Tolong ganti placeholder [DOWNLOAD_X] di dalam draf dengan komponen <DownloadButton> menggunakan pengaturan yang sesuai di bawah ini:"
         },
         "imageGrid": {
-            "title": "Grid Gambar (Berurutan)",
-            "description": "Masukkan data grid satu per baris (format: kolom | path1, path2...). Akan dipetakan ke [GRID_1], [GRID_2], dst.",
-            "placeholder": "3 | /img1.webp, /img2.webp, /img3.webp",
+            "title": "Grid Gambar (Otomatis)",
+            "description": "Masukkan daftar path gambar (pisahkan dengan koma) per baris. AI akan otomatis menentukan jumlah kolom terbaik untuk [GRID_1], [GRID_2], dst.",
+            "placeholder": "/img1.webp, /img2.webp, /img3.webp",
             "promptTitle": "Grid Gambar",
-            "promptInstruction": "Tolong grupkan gambar-gambar berikut menggunakan komponen <ImageGrid> dengan jumlah kolom yang ditentukan:"
+            "promptInstruction": "Tolong grupkan gambar-gambar berikut menggunakan komponen <ImageGrid>. Hitung dan tentukan jumlah kolom (1-4) yang paling sesuai berdasarkan jumlah gambar yang disediakan:"
         },
         "imagesTitle": "Detail Gambar",
         "imagesDescription": "Baris pertama adalah **selalu** untuk gambar utama (hero image), dipisahkan oleh `|` untuk teks alt. Setiap baris berikutnya adalah untuk gambar pendukung.",

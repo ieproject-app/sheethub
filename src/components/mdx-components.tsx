@@ -1,3 +1,4 @@
+
 import type {MDXComponents} from 'next-mdx-remote/rsc/types'
 import Image from 'next/image'
 import Link from 'next/link'
@@ -5,9 +6,10 @@ import React from 'react';
 import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from '@/components/ui/table';
 import { cn } from '@/lib/utils';
 import { buttonVariants } from '@/components/ui/button';
-import { Download, Cloud, Github, Type, Cpu, Settings, FileText } from 'lucide-react';
+import { Download, Cloud, Github, Type, Cpu, Settings, FileText, Maximize2 } from 'lucide-react';
 import { WindowsStoreLogo } from '@/components/icons/windows-store-logo';
 import { downloadLinks } from '@/lib/data-downloads';
+import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog';
 
 // Helper to generate IDs for TOC
 const generateId = (children: any) => {
@@ -31,19 +33,59 @@ const getPlatformIcon = (platform?: string, className?: string) => {
   }
 }
 
-const CustomImage = ({ class: _class, className, parentName, ...props }: any) => {
+/**
+ * ZoomableImage - Wrapper component to make images clickable and expandable.
+ */
+const ZoomableImage = ({ src, alt, width, height, className, priority, ...props }: any) => {
+    return (
+        <Dialog>
+            <DialogTrigger asChild>
+                <div className="group relative cursor-zoom-in overflow-hidden rounded-lg shadow-md transition-all hover:shadow-xl">
+                    <Image
+                        src={src}
+                        alt={alt || 'SnipGeek Image'}
+                        width={width || 1200}
+                        height={height || 675}
+                        className={cn("h-auto w-full transition-transform duration-500 group-hover:scale-[1.02]", className)}
+                        priority={priority}
+                        {...props}
+                    />
+                    <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors flex items-center justify-center">
+                        <Maximize2 className="text-white opacity-0 group-hover:opacity-100 transition-opacity h-8 w-8 drop-shadow-lg" />
+                    </div>
+                </div>
+            </DialogTrigger>
+            <DialogContent className="max-w-[95vw] max-h-[95vh] p-0 border-none bg-transparent overflow-hidden flex items-center justify-center">
+                <div className="relative w-full h-full flex items-center justify-center">
+                    <img 
+                        src={src} 
+                        alt={alt} 
+                        className="max-w-full max-h-[90vh] object-contain rounded-lg shadow-2xl"
+                    />
+                </div>
+            </DialogContent>
+        </Dialog>
+    );
+};
+
+const CustomImage = ({ class: _class, className, parentName, priority, ...props }: any) => {
     if (!props.src || typeof props.src !== 'string' || props.src.trim() === '') {
         return null;
     }
 
+    // Clean src if it starts with public/
+    let src = props.src;
+    if (src.startsWith('public/')) {
+        src = src.replace('public/', '/');
+    }
+
     return (
         <span className="block relative my-8 w-full">
-            <Image
-                width={1200}
-                height={675}
-                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 70vw, 800px"
-                className={cn("h-auto w-full rounded-lg shadow-md object-cover", _class, className)}
-                alt={props.alt || 'SnipGeek article image'}
+            <ZoomableImage
+                src={src}
+                alt={props.alt}
+                className={cn(_class, className)}
+                priority={priority}
                 {...props}
             />
         </span>

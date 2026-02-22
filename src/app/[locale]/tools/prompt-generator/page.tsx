@@ -5,7 +5,7 @@ import type { Metadata } from 'next';
 import { PromptGeneratorClient } from './prompt-generator-client';
 
 export async function generateMetadata({ params: { locale } }: { params: { locale: string } }): Promise<Metadata> {
-  const dictionary = await getDictionary(locale);
+  const dictionary = await getDictionary(locale as any);
   const title = dictionary.promptGenerator.title;
   const description = dictionary.promptGenerator.description;
   
@@ -24,12 +24,13 @@ export async function generateStaticParams() {
 }
 
 export default async function PromptGeneratorPage({ params: { locale } }: { params: { locale: string } }) {
-  const dictionary = await getDictionary(locale);
+  const { locale: lang } = await Promise.resolve(params);
+  const dictionary = await getDictionary(lang as any);
   const pageContent = dictionary.promptGenerator;
   
   return (
     <div className="w-full">
-      <main className="mx-auto max-w-4xl px-4 pt-24 pb-12 sm:px-6 sm:pt-32 sm:pb-16">
+      <main className="mx-auto max-w-6xl px-4 pt-24 pb-12 sm:px-6 sm:pt-32 sm:pb-16">
         <header className="mb-12 text-center">
             <h1 className="font-headline text-5xl font-extrabold tracking-tighter text-primary md:text-6xl mb-3">
                 {pageContent.title}
