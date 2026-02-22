@@ -37,7 +37,7 @@ export const SnipGeekLogo = ({
       style={{
         fontFamily: 'var(--font-space-grotesk), sans-serif',
         fontWeight: 900,
-        fontSize: '52px',
+        fontSize: '64px', // Diperbesar dari 52px
       }}
     >
       SG
