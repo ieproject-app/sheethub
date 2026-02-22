@@ -1,4 +1,3 @@
-
 'use client';
 
 import { useTheme } from 'next-themes';
@@ -29,7 +28,7 @@ export function ThemeSwitcher({ dictionary }: { dictionary: Dictionary }) {
   const handleThemeChange = (newTheme: string) => {
     setTheme(newTheme);
     const key = `theme${newTheme.charAt(0).toUpperCase() + newTheme.slice(1)}`;
-    const msg = (dictionary.notifications as any)?.[key];
+    const msg = (dictionary?.notifications as any)?.[key];
     if (msg) notify(msg);
   };
 

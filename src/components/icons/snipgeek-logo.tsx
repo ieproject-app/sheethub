@@ -1,8 +1,9 @@
 import React from 'react';
 
 /**
- * SnipGeekLogo - Komponen logo SVG dengan sudut membulat (soft corners).
- * Dirancang untuk identitas visual yang modern dan ramah.
+ * SnipGeekLogo - Komponen logo SVG dengan struktur Solid.
+ * Menggunakan fill="white" untuk teks agar terbaca jelas sebagai favicon
+ * dan fill="currentColor" untuk background agar fleksibel mengikuti tema.
  */
 export const SnipGeekLogo = ({ className, ...props }: React.SVGProps<SVGSVGElement>) => (
   <svg
@@ -11,35 +12,30 @@ export const SnipGeekLogo = ({ className, ...props }: React.SVGProps<SVGSVGEleme
     className={className}
     {...props}
   >
-    <defs>
-      <mask id="sg-mask-component">
-        <rect width="100" height="100" fill="white" />
-        <text
-          x="50%"
-          y="50%"
-          dominantBaseline="central"
-          textAnchor="middle"
-          fill="black"
-          style={{
-            fontFamily: 'var(--font-space-grotesk), sans-serif',
-            fontWeight: 900,
-            fontSize: '52px',
-          }}
-        >
-          SG
-        </text>
-      </mask>
-    </defs>
-    
-    {/* Background dengan sudut membulat (rx="22") agar tidak runcing */}
+    {/* Background kotak dengan sudut membulat */}
     <rect
       width="100"
       height="100"
       rx="22"
       ry="22"
       fill="currentColor"
-      mask="url(#sg-mask-component)"
     />
+    
+    {/* Teks Solid Putih - Memastikan keterbacaan tinggi di favicon & header */}
+    <text
+      x="50%"
+      y="50%"
+      dominantBaseline="central"
+      textAnchor="middle"
+      fill="white"
+      style={{
+        fontFamily: 'var(--font-space-grotesk), sans-serif',
+        fontWeight: 900,
+        fontSize: '52px',
+      }}
+    >
+      SG
+    </text>
   </svg>
 );
 
