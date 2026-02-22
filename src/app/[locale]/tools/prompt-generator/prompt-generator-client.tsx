@@ -31,7 +31,7 @@ export function PromptGeneratorClient({ dictionary }: { dictionary: any }) {
   const [showGrids, setShowGrids] = useState(false);
   const [showImages, setShowImages] = useState(true);
 
-  // UI State
+  // UI State for "Lihat Selengkapnya"
   const [isDraftExpanded, setIsDraftExpanded] = useState(false);
   const [isImagesExpanded, setIsImagesExpanded] = useState(false);
 
@@ -248,7 +248,7 @@ export function PromptGeneratorClient({ dictionary }: { dictionary: any }) {
           </Card>
         </div>
 
-        {/* Right Column: Main Inputs (8/12) */}
+        {/* Right Column: Main Inputs (7/12) */}
         <div className="lg:col-span-7 space-y-8">
           <Card className="bg-card/50 border-primary/5 h-full flex flex-col">
             <CardHeader className="flex flex-row items-center justify-between">
