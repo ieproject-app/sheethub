@@ -25,11 +25,13 @@ import {
   Calendar, 
   CheckCircle2,
   Settings2,
-  Image as LucideImage
+  Image as LucideImage,
+  Layers
 } from 'lucide-react';
 import { downloadLinks } from '@/lib/data-downloads';
 import { useNotification } from '@/hooks/use-notification';
 import { cn } from '@/lib/utils';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 
 type DownloadItem = {
   id: string;
@@ -48,7 +50,6 @@ export function PromptGeneratorClient({ dictionary }: { dictionary: any }) {
 
   // UI State for Expansion
   const [isDraftExpanded, setIsDraftExpanded] = useState(false);
-  const [isImagesExpanded, setIsImagesExpanded] = useState(false);
 
   // Data Inputs
   const [downloadItems, setDownloadItems] = useState<DownloadItem[]>([]);
@@ -188,103 +189,106 @@ export function PromptGeneratorClient({ dictionary }: { dictionary: any }) {
   return (
     <div className="space-y-12">
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-        {/* Left Column: Sidebar (4/12) - Sticky on Desktop */}
+        
+        {/* Sidebar: Toolbar & Metadata (4/12) */}
         <div className="lg:col-span-4 space-y-6 lg:sticky lg:top-24">
           
-          {/* Content Type Selection */}
-          <Card className="bg-card/50 border-primary/10 overflow-hidden">
+          {/* Minimalist Toolbar - Icons Only */}
+          <Card className="bg-card/50 border-primary/10 overflow-hidden shadow-sm">
               <CardHeader className="bg-muted/20 py-3 border-b">
-                  <CardTitle className="text-sm font-bold flex items-center gap-2">
-                    <FileText className="h-4 w-4" /> {dictionary.contentTypeLabel}
+                  <CardTitle className="text-xs font-bold flex items-center gap-2 uppercase tracking-widest text-muted-foreground">
+                    <Layers className="h-3 w-3" /> Toolbar
                   </CardTitle>
               </CardHeader>
-              <CardContent className="p-2">
-                  <div className="grid grid-cols-2 gap-2">
-                      <Button 
-                        variant={contentType === 'blog' ? 'default' : 'ghost'} 
-                        onClick={() => setContentType('blog')}
-                        className="h-14 rounded-xl flex flex-col gap-1 transition-all"
-                      >
-                        <FileText className="h-5 w-5" />
-                        <span className="text-[10px] font-bold uppercase">{dictionary.contentTypeBlog}</span>
-                      </Button>
-                      <Button 
-                        variant={contentType === 'note' ? 'default' : 'ghost'} 
-                        onClick={() => setContentType('note')}
-                        className="h-14 rounded-xl flex flex-col gap-1 transition-all"
-                      >
-                        <StickyNote className="h-5 w-5" />
-                        <span className="text-[10px] font-bold uppercase">{dictionary.contentTypeNote}</span>
-                      </Button>
+              <CardContent className="p-4 space-y-6">
+                  {/* Content Type Toggles */}
+                  <div className="flex justify-center gap-2 p-1 bg-muted/30 rounded-xl">
+                      <TooltipProvider>
+                        <Tooltip>
+                          <TooltipTrigger asChild>
+                            <Button 
+                              variant={contentType === 'blog' ? 'default' : 'ghost'} 
+                              onClick={() => setContentType('blog')}
+                              className="flex-1 h-12 rounded-lg transition-all"
+                            >
+                              <FileText className="h-5 w-5" />
+                            </Button>
+                          </TooltipTrigger>
+                          <TooltipContent><p>{dictionary.contentTypeBlog}</p></TooltipContent>
+                        </Tooltip>
+                      </TooltipProvider>
+
+                      <TooltipProvider>
+                        <Tooltip>
+                          <TooltipTrigger asChild>
+                            <Button 
+                              variant={contentType === 'note' ? 'default' : 'ghost'} 
+                              onClick={() => setContentType('note')}
+                              className="flex-1 h-12 rounded-lg transition-all"
+                            >
+                              <StickyNote className="h-5 w-5" />
+                            </Button>
+                          </TooltipTrigger>
+                          <TooltipContent><p>{dictionary.contentTypeNote}</p></TooltipContent>
+                        </Tooltip>
+                      </TooltipProvider>
+                  </div>
+
+                  {/* Feature Toggles - Large Icons */}
+                  <div className="grid grid-cols-3 gap-2">
+                      <TooltipProvider>
+                        <Tooltip>
+                          <TooltipTrigger asChild>
+                            <Button 
+                              variant={showDownloads ? 'secondary' : 'outline'} 
+                              onClick={() => setShowDownloads(!showDownloads)}
+                              className={cn("h-14 rounded-xl border-dashed border-primary/20", showDownloads && "bg-primary/10 text-primary border-primary/40")}
+                            >
+                              <Download className="h-6 w-6" />
+                            </Button>
+                          </TooltipTrigger>
+                          <TooltipContent><p>{dictionary.features.downloads}</p></TooltipContent>
+                        </Tooltip>
+                      </TooltipProvider>
+
+                      <TooltipProvider>
+                        <Tooltip>
+                          <TooltipTrigger asChild>
+                            <Button 
+                              variant={showGrids ? 'secondary' : 'outline'} 
+                              onClick={() => setShowGrids(!showGrids)}
+                              className={cn("h-14 rounded-xl border-dashed border-primary/20", showGrids && "bg-primary/10 text-primary border-primary/40")}
+                            >
+                              <Grid3X3 className="h-6 w-6" />
+                            </Button>
+                          </TooltipTrigger>
+                          <TooltipContent><p>{dictionary.features.grids}</p></TooltipContent>
+                        </Tooltip>
+                      </TooltipProvider>
+
+                      <TooltipProvider>
+                        <Tooltip>
+                          <TooltipTrigger asChild>
+                            <Button 
+                              variant={showImages ? 'secondary' : 'outline'} 
+                              onClick={() => setShowImages(!showImages)}
+                              className={cn("h-14 rounded-xl border-dashed border-primary/20", showImages && "bg-primary/10 text-primary border-primary/40")}
+                            >
+                              <LucideImage className="h-6 w-6" />
+                            </Button>
+                          </TooltipTrigger>
+                          <TooltipContent><p>{dictionary.features.images}</p></TooltipContent>
+                        </Tooltip>
+                      </TooltipProvider>
                   </div>
               </CardContent>
           </Card>
-
-          {/* Feature Toggles Card - Compact with Icons */}
-          <Card className="bg-card/50 border-primary/10">
-              <CardHeader className="bg-muted/20 py-3 border-b">
-                  <CardTitle className="text-sm font-bold flex items-center gap-2">
-                    <Settings2 className="h-4 w-4" /> {dictionary.features.title}
-                  </CardTitle>
-              </CardHeader>
-              <CardContent className="p-4 grid grid-cols-1 gap-4">
-                  <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-3">
-                        <div className="p-2 rounded-lg bg-primary/10"><Download className="h-4 w-4 text-primary" /></div>
-                        <Label htmlFor="f-downloads" className="cursor-pointer text-xs font-bold uppercase tracking-tight">{dictionary.features.downloads}</Label>
-                      </div>
-                      <Switch id="f-downloads" checked={showDownloads} onCheckedChange={setShowDownloads} />
-                  </div>
-                  <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-3">
-                        <div className="p-2 rounded-lg bg-primary/10"><Grid3X3 className="h-4 w-4 text-primary" /></div>
-                        <Label htmlFor="f-grids" className="cursor-pointer text-xs font-bold uppercase tracking-tight">{dictionary.features.grids}</Label>
-                      </div>
-                      <Switch id="f-grids" checked={showGrids} onCheckedChange={setShowGrids} />
-                  </div>
-                  <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-3">
-                        <div className="p-2 rounded-lg bg-primary/10"><ImageIcon className="h-4 w-4 text-primary" /></div>
-                        <Label htmlFor="f-images" className="cursor-pointer text-xs font-bold uppercase tracking-tight">{dictionary.features.images}</Label>
-                      </div>
-                      <Switch id="f-images" checked={showImages} onCheckedChange={setShowImages} />
-                  </div>
-              </CardContent>
-          </Card>
-
-          {/* Supporting Images - Now in Sidebar as requested */}
-          {showImages && (
-            <Card className="bg-card/50 border-primary/10 overflow-hidden">
-              <CardHeader className="bg-muted/20 py-3 border-b flex flex-row items-center justify-between">
-                <CardTitle className="text-sm font-bold flex items-center gap-2">
-                  <LucideImage className="h-4 w-4" /> {contentType === 'blog' ? dictionary.imagesTitle : dictionary.imagesTitleNote}
-                </CardTitle>
-                <Button variant="ghost" size="sm" onClick={() => setIsImagesExpanded(!isImagesExpanded)} className="h-6 w-6 p-0">
-                  {isImagesExpanded ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
-                </Button>
-              </CardHeader>
-              <CardContent className="p-4">
-                  <Textarea
-                      placeholder={contentType === 'blog' ? dictionary.imagesPlaceholder : dictionary.imagesPlaceholderNote}
-                      value={images}
-                      onChange={(e) => setImages(e.target.value)}
-                      className={cn(
-                          "font-mono text-[11px] bg-background/50 rounded-xl p-3 transition-all duration-300 min-h-[120px]",
-                          isImagesExpanded && "min-h-[300px]"
-                      )}
-                  />
-                  <p className="mt-2 text-[9px] text-muted-foreground uppercase font-bold tracking-widest leading-tight">
-                      {contentType === 'blog' ? dictionary.imagesDescription : dictionary.imagesDescriptionNote}
-                  </p>
-              </CardContent>
-            </Card>
-          )}
 
           {/* Metadata Card - Compact */}
-          <Card className="bg-card/50 border-primary/10">
+          <Card className="bg-card/50 border-primary/10 shadow-sm">
             <CardHeader className="bg-muted/20 py-3 border-b">
-              <CardTitle className="text-sm font-bold flex items-center gap-2">
-                <Calendar className="h-4 w-4" /> {dictionary.metadataTitle}
+              <CardTitle className="text-xs font-bold flex items-center gap-2 uppercase tracking-widest text-muted-foreground">
+                <Calendar className="h-3 w-3" /> Metadata
               </CardTitle>
             </CardHeader>
             <CardContent className="p-4 space-y-4">
@@ -321,9 +325,11 @@ export function PromptGeneratorClient({ dictionary }: { dictionary: any }) {
           </Card>
         </div>
 
-        {/* Right Column: Main Draft Area (8/12) */}
+        {/* Main Content Area (8/12) */}
         <div className="lg:col-span-8 space-y-8">
-          <Card className="bg-card/50 border-primary/5 min-h-[500px] flex flex-col overflow-hidden">
+          
+          {/* Draft Area */}
+          <Card className="bg-card/50 border-primary/10 min-h-[400px] flex flex-col overflow-hidden shadow-md">
             <CardHeader className="flex flex-row items-center justify-between border-b bg-muted/10 px-6 py-4">
               <CardTitle className="text-lg font-headline flex items-center gap-3">
                 <div className="p-2 bg-primary/10 rounded-lg"><FileText className="h-5 w-5 text-primary" /></div>
@@ -333,25 +339,46 @@ export function PromptGeneratorClient({ dictionary }: { dictionary: any }) {
                 {isDraftExpanded ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
               </Button>
             </CardHeader>
-            <CardContent className="flex-1 p-0">
+            <CardContent className="flex-1 p-0 flex flex-col">
               <Textarea
                 placeholder={dictionary.draftPlaceholder}
                 value={draft}
                 onChange={(e) => setDraft(e.target.value)}
                 className={cn(
-                    "w-full border-none rounded-none bg-transparent font-mono text-sm p-6 resize-none focus-visible:ring-0 leading-relaxed transition-all duration-300",
-                    isDraftExpanded ? "min-h-[800px]" : "min-h-[400px]"
+                    "w-full border-none rounded-none bg-transparent font-mono text-sm p-6 resize-none focus-visible:ring-0 leading-relaxed transition-all duration-300 flex-1",
+                    isDraftExpanded ? "min-h-[800px]" : "min-h-[300px]"
                 )}
               />
             </CardContent>
           </Card>
 
-          {/* Conditional Mapping Sections (Downloads & Grids) */}
+          {/* Feature Configuration Areas - Appear below content */}
+          {showImages && (
+            <Card className="bg-card/50 border-primary/10 overflow-hidden shadow-sm animate-in fade-in slide-in-from-top-4 duration-300">
+              <CardHeader className="bg-muted/20 py-3 border-b flex flex-row items-center justify-between">
+                <CardTitle className="text-sm font-bold flex items-center gap-2">
+                  <LucideImage className="h-4 w-4 text-primary" /> {contentType === 'blog' ? dictionary.imagesTitle : dictionary.imagesTitleNote}
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="p-6">
+                  <Textarea
+                      placeholder={contentType === 'blog' ? dictionary.imagesPlaceholder : dictionary.imagesPlaceholderNote}
+                      value={images}
+                      onChange={(e) => setImages(e.target.value)}
+                      className="font-mono text-[13px] bg-background/50 rounded-xl p-4 min-h-[150px] leading-relaxed"
+                  />
+                  <p className="mt-3 text-[10px] text-muted-foreground uppercase font-bold tracking-widest pl-1 leading-tight">
+                      {contentType === 'blog' ? dictionary.imagesDescription : dictionary.imagesDescriptionNote}
+                  </p>
+              </CardContent>
+            </Card>
+          )}
+
           {showDownloads && (
-            <Card className="bg-card/50 border-primary/10">
+            <Card className="bg-card/50 border-primary/10 shadow-sm animate-in fade-in slide-in-from-top-4 duration-300">
                 <CardHeader className="border-b bg-muted/10 px-6 py-4">
                     <CardTitle className="text-sm font-bold flex items-center gap-2">
-                      <Download className="h-4 w-4" /> {dictionary.downloadLinks.title}
+                      <Download className="h-4 w-4 text-primary" /> {dictionary.downloadLinks.title}
                     </CardTitle>
                 </CardHeader>
                 <CardContent className="p-6 space-y-4">
@@ -405,10 +432,10 @@ export function PromptGeneratorClient({ dictionary }: { dictionary: any }) {
           )}
 
           {showGrids && (
-            <Card className="bg-card/50 border-primary/10">
+            <Card className="bg-card/50 border-primary/10 shadow-sm animate-in fade-in slide-in-from-top-4 duration-300">
               <CardHeader className="border-b bg-muted/10 px-6 py-4">
                   <CardTitle className="text-sm font-bold flex items-center gap-2">
-                    <Grid3X3 className="h-4 w-4" /> {dictionary.imageGrid.title}
+                    <Grid3X3 className="h-4 w-4 text-primary" /> {dictionary.imageGrid.title}
                   </CardTitle>
               </CardHeader>
               <CardContent className="p-6">
@@ -416,7 +443,7 @@ export function PromptGeneratorClient({ dictionary }: { dictionary: any }) {
                       placeholder={dictionary.imageGrid.placeholder}
                       value={imageGridMappings}
                       onChange={(e) => setImageGridMappings(e.target.value)}
-                      className="min-h-[100px] font-mono text-xs bg-background/50 rounded-xl p-4"
+                      className="min-h-[120px] font-mono text-sm bg-background/50 rounded-xl p-4 leading-relaxed"
                   />
                   <p className="mt-3 text-[10px] text-muted-foreground uppercase font-bold tracking-widest pl-1">
                     {dictionary.imageGrid.description || "Paste image paths per line. Columns will be calculated automatically."}
