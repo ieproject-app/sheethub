@@ -7,42 +7,44 @@ import React from 'react';
  */
 export const SnipGeekLogo = ({ 
   className, 
-  showBackground, 
+  showBackground = false, 
   ...props 
-}: React.SVGProps<SVGSVGElement> & { showBackground?: boolean }) => (
-  <svg
-    viewBox="0 0 100 100"
-    xmlns="http://www.w3.org/2000/svg"
-    className={className}
-    {...props}
-  >
-    {/* Background kotak hanya muncul jika showBackground true */}
-    {showBackground === true && (
-      <rect
-        width="100"
-        height="100"
-        rx="22"
-        ry="22"
-        fill="currentColor"
-      />
-    )}
-    
-    {/* Teks SG - Menggunakan fill="white" jika ada background, atau "currentColor" jika integrated */}
-    <text
-      x="50%"
-      y="50%"
-      dominantBaseline="central"
-      textAnchor="middle"
-      fill={showBackground === true ? "white" : "currentColor"}
-      style={{
-        fontFamily: 'var(--font-space-grotesk), sans-serif',
-        fontWeight: 900,
-        fontSize: '64px', // Diperbesar dari 52px
-      }}
+}: React.SVGProps<SVGSVGElement> & { showBackground?: boolean }) => {
+  return (
+    <svg
+      viewBox="0 0 100 100"
+      xmlns="http://www.w3.org/2000/svg"
+      className={className}
+      {...props}
     >
-      SG
-    </text>
-  </svg>
-);
+      {/* Background kotak hanya muncul jika showBackground true */}
+      {showBackground && (
+        <rect
+          width="100"
+          height="100"
+          rx="22"
+          ry="22"
+          fill="currentColor"
+        />
+      )}
+      
+      {/* Teks SG - Menggunakan fill="white" jika ada background, atau "currentColor" jika integrated */}
+      <text
+        x="50%"
+        y="50%"
+        dominantBaseline="central"
+        textAnchor="middle"
+        fill={showBackground ? "white" : "currentColor"}
+        style={{
+          fontFamily: 'var(--font-space-grotesk), sans-serif',
+          fontWeight: 900,
+          fontSize: '64px',
+        }}
+      >
+        SG
+      </text>
+    </svg>
+  );
+};
 
 SnipGeekLogo.displayName = "SnipGeekLogo";
