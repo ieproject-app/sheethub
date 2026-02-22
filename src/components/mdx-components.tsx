@@ -1,4 +1,3 @@
-
 import type {MDXComponents} from 'next-mdx-remote/rsc/types'
 import Image from 'next/image'
 import Link from 'next/link'
@@ -6,7 +5,8 @@ import React from 'react';
 import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from '@/components/ui/table';
 import { cn } from '@/lib/utils';
 import { buttonVariants } from '@/components/ui/button';
-import { Download } from 'lucide-react';
+import { Download, Cloud, Github, Type, Cpu, Settings, FileText } from 'lucide-react';
+import { WindowsStoreLogo } from '@/components/icons/windows-store-logo';
 import { downloadLinks } from '@/lib/data-downloads';
 
 // Helper to generate IDs for TOC
@@ -17,6 +17,19 @@ const generateId = (children: any) => {
       .replace(/[^\w\s-]/g, '')
       .replace(/\s+/g, '-');
 };
+
+const getPlatformIcon = (platform?: string, className?: string) => {
+  switch (platform) {
+    case 'windows': return <WindowsStoreLogo className={className} />;
+    case 'gdrive': return <Cloud className={className} />;
+    case 'github': return <Github className={className} />;
+    case 'font': return <Type className={className} />;
+    case 'driver': return <Settings className={className} />;
+    case 'software': return <Cpu className={className} />;
+    case 'doc': return <FileText className={className} />;
+    default: return <Download className={className} />;
+  }
+}
 
 const CustomImage = ({ class: _class, className, parentName, ...props }: any) => {
     if (!props.src || typeof props.src !== 'string' || props.src.trim() === '') {
@@ -57,7 +70,7 @@ export const DownloadButton = ({ id }: { id: string }) => {
           rel="noopener nofollow"
           className={cn(buttonVariants({ size: "lg" }))}
         >
-            <Download className="mr-2 h-5 w-5" />
+            {getPlatformIcon(linkData.platform, "mr-2 h-5 w-5")}
             {linkData.fileName}
         </Link>
     </span>

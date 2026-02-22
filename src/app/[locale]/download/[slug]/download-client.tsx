@@ -3,7 +3,8 @@
 import { useEffect, useState } from 'react';
 import type { DownloadInfo } from '@/lib/data-downloads';
 import { Button } from '@/components/ui/button';
-import { FileDown, Loader2 } from 'lucide-react';
+import { Download, Cloud, Github, Type, Cpu, Settings, FileText, Loader2 } from 'lucide-react';
+import { WindowsStoreLogo } from '@/components/icons/windows-store-logo';
 import type { Dictionary } from '@/lib/get-dictionary';
 
 const COUNTDOWN_SECONDS = 5;
@@ -11,6 +12,19 @@ const COUNTDOWN_SECONDS = 5;
 interface DownloadClientProps {
   downloadInfo: DownloadInfo;
   dictionary: Dictionary['downloadGate'];
+}
+
+const getPlatformIcon = (platform?: string, className?: string) => {
+  switch (platform) {
+    case 'windows': return <WindowsStoreLogo className={className} />;
+    case 'gdrive': return <Cloud className={className} />;
+    case 'github': return <Github className={className} />;
+    case 'font': return <Type className={className} />;
+    case 'driver': return <Settings className={className} />;
+    case 'software': return <Cpu className={className} />;
+    case 'doc': return <FileText className={className} />;
+    default: return <Download className={className} />;
+  }
 }
 
 export function DownloadClient({ downloadInfo, dictionary }: DownloadClientProps) {
@@ -35,7 +49,9 @@ export function DownloadClient({ downloadInfo, dictionary }: DownloadClientProps
   return (
     <div className="w-full">
       <main className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 pt-24 pb-12 sm:pt-32 sm:pb-16 text-center">
-        <FileDown className="h-20 w-20 text-primary mx-auto mb-6" strokeWidth={1.5}/>
+        <div className="text-primary mx-auto mb-6">
+            {getPlatformIcon(downloadInfo.platform, "h-20 w-20 mx-auto")}
+        </div>
         
         <header className="mb-12">
             <h1 className="font-headline text-4xl md:text-5xl font-extrabold tracking-tighter text-primary mb-3">
