@@ -24,9 +24,9 @@ import {
   ImageIcon, 
   Calendar, 
   CheckCircle2,
-  Settings2,
   Image as LucideImage,
-  Layers
+  Layers,
+  Zap
 } from 'lucide-react';
 import { downloadLinks } from '@/lib/data-downloads';
 import { useNotification } from '@/hooks/use-notification';
@@ -187,275 +187,259 @@ export function PromptGeneratorClient({ dictionary }: { dictionary: any }) {
   };
 
   return (
-    <div className="space-y-12">
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-        
-        {/* Sidebar: Toolbar & Metadata (4/12) */}
-        <div className="lg:col-span-4 space-y-6 lg:sticky lg:top-24">
+    <div className="space-y-8 max-w-6xl mx-auto">
+      
+      {/* 1. Header Control Bar - Horizontal Desktop, Stacked Mobile */}
+      <Card className="bg-card/50 border-primary/10 shadow-sm overflow-hidden">
+        <div className="p-4 md:p-6 flex flex-col md:flex-row items-center justify-between gap-6">
           
-          {/* Minimalist Toolbar - Icons Only */}
-          <Card className="bg-card/50 border-primary/10 overflow-hidden shadow-sm">
-              <CardHeader className="bg-muted/20 py-3 border-b">
-                  <CardTitle className="text-xs font-bold flex items-center gap-2 uppercase tracking-widest text-muted-foreground">
-                    <Layers className="h-3 w-3" /> Toolbar
-                  </CardTitle>
-              </CardHeader>
-              <CardContent className="p-4 space-y-6">
-                  {/* Content Type Toggles */}
-                  <div className="flex justify-center gap-2 p-1 bg-muted/30 rounded-xl">
-                      <TooltipProvider>
-                        <Tooltip>
-                          <TooltipTrigger asChild>
-                            <Button 
-                              variant={contentType === 'blog' ? 'default' : 'ghost'} 
-                              onClick={() => setContentType('blog')}
-                              className="flex-1 h-12 rounded-lg transition-all"
-                            >
-                              <FileText className="h-5 w-5" />
-                            </Button>
-                          </TooltipTrigger>
-                          <TooltipContent><p>{dictionary.contentTypeBlog}</p></TooltipContent>
-                        </Tooltip>
-                      </TooltipProvider>
+          {/* Group A: Content Type */}
+          <div className="flex items-center gap-3">
+            <div className="p-2 bg-primary/5 rounded-lg border border-primary/10 hidden sm:block">
+              <Zap className="h-4 w-4 text-primary" />
+            </div>
+            <div className="flex bg-muted/30 p-1 rounded-xl border">
+              <TooltipProvider>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <Button 
+                      variant={contentType === 'blog' ? 'default' : 'ghost'} 
+                      onClick={() => setContentType('blog')}
+                      className="h-10 px-4 rounded-lg transition-all gap-2"
+                    >
+                      <FileText className="h-4 w-4" />
+                      <span className="text-xs font-bold uppercase tracking-tight hidden sm:inline">{dictionary.contentTypeBlog}</span>
+                    </Button>
+                  </TooltipTrigger>
+                  <TooltipContent><p>{dictionary.contentTypeBlog}</p></TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
 
-                      <TooltipProvider>
-                        <Tooltip>
-                          <TooltipTrigger asChild>
-                            <Button 
-                              variant={contentType === 'note' ? 'default' : 'ghost'} 
-                              onClick={() => setContentType('note')}
-                              className="flex-1 h-12 rounded-lg transition-all"
-                            >
-                              <StickyNote className="h-5 w-5" />
-                            </Button>
-                          </TooltipTrigger>
-                          <TooltipContent><p>{dictionary.contentTypeNote}</p></TooltipContent>
-                        </Tooltip>
-                      </TooltipProvider>
-                  </div>
+              <TooltipProvider>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <Button 
+                      variant={contentType === 'note' ? 'default' : 'ghost'} 
+                      onClick={() => setContentType('note')}
+                      className="h-10 px-4 rounded-lg transition-all gap-2"
+                    >
+                      <StickyNote className="h-4 w-4" />
+                      <span className="text-xs font-bold uppercase tracking-tight hidden sm:inline">{dictionary.contentTypeNote}</span>
+                    </Button>
+                  </TooltipTrigger>
+                  <TooltipContent><p>{dictionary.contentTypeNote}</p></TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
+            </div>
+          </div>
 
-                  {/* Feature Toggles - Large Icons */}
-                  <div className="grid grid-cols-3 gap-2">
-                      <TooltipProvider>
-                        <Tooltip>
-                          <TooltipTrigger asChild>
-                            <Button 
-                              variant={showDownloads ? 'secondary' : 'outline'} 
-                              onClick={() => setShowDownloads(!showDownloads)}
-                              className={cn("h-14 rounded-xl border-dashed border-primary/20", showDownloads && "bg-primary/10 text-primary border-primary/40")}
-                            >
-                              <Download className="h-6 w-6" />
-                            </Button>
-                          </TooltipTrigger>
-                          <TooltipContent><p>{dictionary.features.downloads}</p></TooltipContent>
-                        </Tooltip>
-                      </TooltipProvider>
+          {/* Group B: Feature Toggles */}
+          <div className="flex items-center gap-2">
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Button 
+                    variant={showDownloads ? 'secondary' : 'outline'} 
+                    onClick={() => setShowDownloads(!showDownloads)}
+                    className={cn("h-11 w-11 sm:w-auto sm:px-4 rounded-xl border-dashed transition-all", showDownloads && "bg-primary/10 text-primary border-primary/40")}
+                  >
+                    <Download className="h-5 w-5" />
+                    <span className="ml-2 text-[10px] font-bold uppercase hidden lg:inline">{dictionary.features.downloads}</span>
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent><p>{dictionary.features.downloads}</p></TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
 
-                      <TooltipProvider>
-                        <Tooltip>
-                          <TooltipTrigger asChild>
-                            <Button 
-                              variant={showGrids ? 'secondary' : 'outline'} 
-                              onClick={() => setShowGrids(!showGrids)}
-                              className={cn("h-14 rounded-xl border-dashed border-primary/20", showGrids && "bg-primary/10 text-primary border-primary/40")}
-                            >
-                              <Grid3X3 className="h-6 w-6" />
-                            </Button>
-                          </TooltipTrigger>
-                          <TooltipContent><p>{dictionary.features.grids}</p></TooltipContent>
-                        </Tooltip>
-                      </TooltipProvider>
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Button 
+                    variant={showGrids ? 'secondary' : 'outline'} 
+                    onClick={() => setShowGrids(!showGrids)}
+                    className={cn("h-11 w-11 sm:w-auto sm:px-4 rounded-xl border-dashed transition-all", showGrids && "bg-primary/10 text-primary border-primary/40")}
+                  >
+                    <Grid3X3 className="h-5 w-5" />
+                    <span className="ml-2 text-[10px] font-bold uppercase hidden lg:inline">{dictionary.features.grids}</span>
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent><p>{dictionary.features.grids}</p></TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
 
-                      <TooltipProvider>
-                        <Tooltip>
-                          <TooltipTrigger asChild>
-                            <Button 
-                              variant={showImages ? 'secondary' : 'outline'} 
-                              onClick={() => setShowImages(!showImages)}
-                              className={cn("h-14 rounded-xl border-dashed border-primary/20", showImages && "bg-primary/10 text-primary border-primary/40")}
-                            >
-                              <LucideImage className="h-6 w-6" />
-                            </Button>
-                          </TooltipTrigger>
-                          <TooltipContent><p>{dictionary.features.images}</p></TooltipContent>
-                        </Tooltip>
-                      </TooltipProvider>
-                  </div>
-              </CardContent>
-          </Card>
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Button 
+                    variant={showImages ? 'secondary' : 'outline'} 
+                    onClick={() => setShowImages(!showImages)}
+                    className={cn("h-11 w-11 sm:w-auto sm:px-4 rounded-xl border-dashed transition-all", showImages && "bg-primary/10 text-primary border-primary/40")}
+                  >
+                    <LucideImage className="h-5 w-5" />
+                    <span className="ml-2 text-[10px] font-bold uppercase hidden lg:inline">{dictionary.features.images}</span>
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent><p>{dictionary.features.images}</p></TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
+          </div>
 
-          {/* Metadata Card - Compact */}
-          <Card className="bg-card/50 border-primary/10 shadow-sm">
-            <CardHeader className="bg-muted/20 py-3 border-b">
-              <CardTitle className="text-xs font-bold flex items-center gap-2 uppercase tracking-widest text-muted-foreground">
-                <Calendar className="h-3 w-3" /> Metadata
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="p-4 space-y-4">
-              <div className="grid gap-2">
-                <Label htmlFor="publishDate" className="text-[10px] font-bold uppercase text-muted-foreground">{dictionary.publishDateLabel}</Label>
-                <Input
-                    id="publishDate"
-                    value={publishDate}
-                    onChange={(e) => setPublishDate(e.target.value)}
-                    placeholder={dictionary.publishDatePlaceholder || 'YYYY-MM-DD'}
-                    className="bg-background/50 h-9 rounded-lg text-sm"
-                />
+          {/* Group C: Metadata Mini-Form */}
+          <div className="flex flex-wrap items-center justify-center gap-4 border-t md:border-t-0 md:border-l border-primary/10 pt-4 md:pt-0 md:pl-6">
+            <div className="flex items-center gap-2">
+              <Calendar className="h-4 w-4 text-muted-foreground" />
+              <Input
+                  value={publishDate}
+                  onChange={(e) => setPublishDate(e.target.value)}
+                  placeholder="YYYY-MM-DD"
+                  className="bg-background/50 h-9 w-32 rounded-lg text-xs"
+              />
+            </div>
+            
+            <div className="flex items-center gap-4">
+              <div className="flex items-center gap-2">
+                <CheckCircle2 className="h-4 w-4 text-muted-foreground" />
+                <Label htmlFor="published" className="text-[10px] font-bold uppercase cursor-pointer hidden sm:inline">{dictionary.publishSwitchLabel}</Label>
+                <Switch id="published" checked={isPublished} onCheckedChange={setIsPublished} className="scale-75" />
               </div>
               
-              <div className="grid gap-2 pt-2 border-t border-primary/5">
-                <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-2">
-                      <CheckCircle2 className="h-3 w-3 text-muted-foreground" />
-                      <Label htmlFor="published" className="text-[10px] font-bold uppercase cursor-pointer">{dictionary.publishSwitchLabel}</Label>
-                    </div>
-                    <Switch id="published" checked={isPublished} onCheckedChange={setIsPublished} />
+              {contentType === 'blog' && (
+                <div className="flex items-center gap-2">
+                  <Plus className="h-4 w-4 text-muted-foreground" />
+                  <Label htmlFor="featured" className="text-[10px] font-bold uppercase cursor-pointer hidden sm:inline">{dictionary.featuredSwitchLabel}</Label>
+                  <Switch id="featured" checked={isFeatured} onCheckedChange={setIsFeatured} className="scale-75" />
                 </div>
-                {contentType === 'blog' && (
-                    <div className="flex items-center justify-between">
-                        <div className="flex items-center gap-2">
-                          <Plus className="h-3 w-3 text-muted-foreground" />
-                          <Label htmlFor="featured" className="text-[10px] font-bold uppercase cursor-pointer">{dictionary.featuredSwitchLabel}</Label>
-                        </div>
-                        <Switch id="featured" checked={isFeatured} onCheckedChange={setIsFeatured} />
-                    </div>
-                )}
-              </div>
-            </CardContent>
-          </Card>
+              )}
+            </div>
+          </div>
         </div>
+      </Card>
 
-        {/* Main Content Area (8/12) */}
-        <div className="lg:col-span-8 space-y-8">
-          
-          {/* Draft Area */}
-          <Card className="bg-card/50 border-primary/10 min-h-[400px] flex flex-col overflow-hidden shadow-md">
-            <CardHeader className="flex flex-row items-center justify-between border-b bg-muted/10 px-6 py-4">
-              <CardTitle className="text-lg font-headline flex items-center gap-3">
-                <div className="p-2 bg-primary/10 rounded-lg"><FileText className="h-5 w-5 text-primary" /></div>
-                {dictionary.draftTitle}
+      {/* 2. Main Draft Area - Full Width Focus */}
+      <Card className="bg-card/50 border-primary/10 flex flex-col overflow-hidden shadow-md">
+        <CardHeader className="flex flex-row items-center justify-between border-b bg-muted/10 px-6 py-4">
+          <CardTitle className="text-lg font-headline flex items-center gap-3">
+            <div className="p-2 bg-primary/10 rounded-lg"><FileText className="h-5 w-5 text-primary" /></div>
+            {dictionary.draftTitle}
+          </CardTitle>
+          <Button variant="ghost" size="sm" onClick={() => setIsDraftExpanded(!isDraftExpanded)} className="h-8 w-8 rounded-full">
+            {isDraftExpanded ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
+          </Button>
+        </CardHeader>
+        <CardContent className="p-0">
+          <Textarea
+            placeholder={dictionary.draftPlaceholder}
+            value={draft}
+            onChange={(e) => setDraft(e.target.value)}
+            className={cn(
+                "w-full border-none rounded-none bg-transparent font-mono text-sm p-6 md:p-8 resize-none focus-visible:ring-0 leading-relaxed transition-all duration-500",
+                isDraftExpanded ? "min-h-[800px]" : "min-h-[400px]"
+            )}
+          />
+        </CardContent>
+      </Card>
+
+      {/* 3. Dynamic Technical Sections - Grid 1 or 2 col */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+        {showImages && (
+          <Card className="bg-card/50 border-primary/10 overflow-hidden shadow-sm animate-in fade-in slide-in-from-top-4 duration-300 md:col-span-2">
+            <CardHeader className="bg-muted/20 py-3 border-b">
+              <CardTitle className="text-sm font-bold flex items-center gap-2">
+                <LucideImage className="h-4 w-4 text-primary" /> {contentType === 'blog' ? dictionary.imagesTitle : dictionary.imagesTitleNote}
               </CardTitle>
-              <Button variant="ghost" size="sm" onClick={() => setIsDraftExpanded(!isDraftExpanded)} className="h-8 w-8 rounded-full">
-                {isDraftExpanded ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
-              </Button>
             </CardHeader>
-            <CardContent className="flex-1 p-0 flex flex-col">
-              <Textarea
-                placeholder={dictionary.draftPlaceholder}
-                value={draft}
-                onChange={(e) => setDraft(e.target.value)}
-                className={cn(
-                    "w-full border-none rounded-none bg-transparent font-mono text-sm p-6 resize-none focus-visible:ring-0 leading-relaxed transition-all duration-300 flex-1",
-                    isDraftExpanded ? "min-h-[800px]" : "min-h-[300px]"
-                )}
-              />
+            <CardContent className="p-6">
+                <Textarea
+                    placeholder={contentType === 'blog' ? dictionary.imagesPlaceholder : dictionary.imagesPlaceholderNote}
+                    value={images}
+                    onChange={(e) => setImages(e.target.value)}
+                    className="font-mono text-[13px] bg-background/50 rounded-xl p-4 min-h-[120px] leading-relaxed"
+                />
+                <p className="mt-3 text-[10px] text-muted-foreground uppercase font-bold tracking-widest pl-1 leading-tight">
+                    {contentType === 'blog' ? dictionary.imagesDescription : dictionary.imagesDescriptionNote}
+                </p>
             </CardContent>
           </Card>
+        )}
 
-          {/* Feature Configuration Areas - Appear below content */}
-          {showImages && (
-            <Card className="bg-card/50 border-primary/10 overflow-hidden shadow-sm animate-in fade-in slide-in-from-top-4 duration-300">
-              <CardHeader className="bg-muted/20 py-3 border-b flex flex-row items-center justify-between">
-                <CardTitle className="text-sm font-bold flex items-center gap-2">
-                  <LucideImage className="h-4 w-4 text-primary" /> {contentType === 'blog' ? dictionary.imagesTitle : dictionary.imagesTitleNote}
-                </CardTitle>
+        {showDownloads && (
+          <Card className="bg-card/50 border-primary/10 shadow-sm animate-in fade-in slide-in-from-top-4 duration-300 flex flex-col">
+              <CardHeader className="border-b bg-muted/10 px-6 py-4">
+                  <CardTitle className="text-sm font-bold flex items-center gap-2">
+                    <Download className="h-4 w-4 text-primary" /> {dictionary.downloadLinks.title}
+                  </CardTitle>
               </CardHeader>
-              <CardContent className="p-6">
-                  <Textarea
-                      placeholder={contentType === 'blog' ? dictionary.imagesPlaceholder : dictionary.imagesPlaceholderNote}
-                      value={images}
-                      onChange={(e) => setImages(e.target.value)}
-                      className="font-mono text-[13px] bg-background/50 rounded-xl p-4 min-h-[150px] leading-relaxed"
-                  />
-                  <p className="mt-3 text-[10px] text-muted-foreground uppercase font-bold tracking-widest pl-1 leading-tight">
-                      {contentType === 'blog' ? dictionary.imagesDescription : dictionary.imagesDescriptionNote}
-                  </p>
-              </CardContent>
-            </Card>
-          )}
-
-          {showDownloads && (
-            <Card className="bg-card/50 border-primary/10 shadow-sm animate-in fade-in slide-in-from-top-4 duration-300">
-                <CardHeader className="border-b bg-muted/10 px-6 py-4">
-                    <CardTitle className="text-sm font-bold flex items-center gap-2">
-                      <Download className="h-4 w-4 text-primary" /> {dictionary.downloadLinks.title}
-                    </CardTitle>
-                </CardHeader>
-                <CardContent className="p-6 space-y-4">
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                        {downloadItems.map((item, index) => (
-                        <div key={item.id} className="flex flex-col gap-2 p-4 border rounded-xl bg-background/30 relative group transition-all hover:bg-background/50">
-                            <div className="flex items-center justify-between">
-                            <Badge variant="secondary" className="text-[10px] font-bold px-2 py-0.5 rounded-md">[DOWNLOAD_{index + 1}]</Badge>
-                            <Button variant="ghost" size="icon" onClick={() => removeDownloadItem(item.id)} className="h-7 w-7 text-muted-foreground hover:text-destructive opacity-0 group-hover:opacity-100 transition-opacity">
-                                <Trash2 className="h-4 w-4" />
-                            </Button>
-                            </div>
-                            
-                            <div className="flex gap-2">
-                            <Select value={item.type} onValueChange={(val) => updateDownloadItem(item.id, { type: val as 'id' | 'url', value: '' })}>
-                                <SelectTrigger className="w-[90px] h-9 text-xs rounded-lg">
+              <CardContent className="p-6 space-y-4 flex-1">
+                  <div className="space-y-3">
+                      {downloadItems.map((item, index) => (
+                      <div key={item.id} className="flex items-center gap-2 p-3 border rounded-xl bg-background/30 relative group transition-all hover:bg-background/50">
+                          <Badge variant="secondary" className="text-[10px] font-bold px-2 py-0.5 rounded-md shrink-0">[D_{index + 1}]</Badge>
+                          
+                          <Select value={item.type} onValueChange={(val) => updateDownloadItem(item.id, { type: val as 'id' | 'url', value: '' })}>
+                              <SelectTrigger className="w-[80px] h-8 text-[10px] rounded-lg">
                                 <SelectValue />
-                                </SelectTrigger>
-                                <SelectContent>
+                              </SelectTrigger>
+                              <SelectContent>
                                 <SelectItem value="id">ID</SelectItem>
                                 <SelectItem value="url">URL</SelectItem>
-                                </SelectContent>
-                            </Select>
+                              </SelectContent>
+                          </Select>
 
-                            {item.type === 'id' ? (
-                                <Select value={item.value} onValueChange={(val) => updateDownloadItem(item.id, { value: val })}>
-                                <SelectTrigger className="flex-1 h-9 text-xs rounded-lg">
-                                    <SelectValue placeholder="..." />
-                                </SelectTrigger>
-                                <SelectContent>
-                                    {downloadIds.map(id => <SelectItem key={id} value={id}>{id}</SelectItem>)}
-                                </SelectContent>
-                                </Select>
-                            ) : (
-                                <Input 
+                          {item.type === 'id' ? (
+                              <Select value={item.value} onValueChange={(val) => updateDownloadItem(item.id, { value: val })}>
+                              <SelectTrigger className="flex-1 h-8 text-[10px] rounded-lg">
+                                  <SelectValue placeholder="..." />
+                              </SelectTrigger>
+                              <SelectContent>
+                                  {downloadIds.map(id => <SelectItem key={id} value={id}>{id}</SelectItem>)}
+                              </SelectContent>
+                              </Select>
+                          ) : (
+                              <Input 
                                 placeholder="URL..." 
                                 value={item.value} 
                                 onChange={(e) => updateDownloadItem(item.id, { value: e.target.value })}
-                                className="flex-1 h-9 text-xs bg-background/50 rounded-lg"
-                                />
-                            )}
-                            </div>
-                        </div>
-                        ))}
-                    </div>
-                    <Button onClick={addDownloadItem} variant="outline" size="sm" className="w-full h-11 border-dashed rounded-xl bg-background/20 hover:bg-primary/5">
-                      <Plus className="h-4 w-4 mr-2" /> {dictionary.downloadLinks.addDownload || "Add Download Item"}
-                    </Button>
-                </CardContent>
-            </Card>
-          )}
+                                className="flex-1 h-8 text-[10px] bg-background/50 rounded-lg"
+                              />
+                          )}
 
-          {showGrids && (
-            <Card className="bg-card/50 border-primary/10 shadow-sm animate-in fade-in slide-in-from-top-4 duration-300">
-              <CardHeader className="border-b bg-muted/10 px-6 py-4">
-                  <CardTitle className="text-sm font-bold flex items-center gap-2">
-                    <Grid3X3 className="h-4 w-4 text-primary" /> {dictionary.imageGrid.title}
-                  </CardTitle>
-              </CardHeader>
-              <CardContent className="p-6">
-                  <Textarea
-                      placeholder={dictionary.imageGrid.placeholder}
-                      value={imageGridMappings}
-                      onChange={(e) => setImageGridMappings(e.target.value)}
-                      className="min-h-[120px] font-mono text-sm bg-background/50 rounded-xl p-4 leading-relaxed"
-                  />
-                  <p className="mt-3 text-[10px] text-muted-foreground uppercase font-bold tracking-widest pl-1">
-                    {dictionary.imageGrid.description || "Paste image paths per line. Columns will be calculated automatically."}
-                  </p>
+                          <Button variant="ghost" size="icon" onClick={() => removeDownloadItem(item.id)} className="h-8 w-8 text-muted-foreground hover:text-destructive shrink-0">
+                              <Trash2 className="h-4 w-4" />
+                          </Button>
+                      </div>
+                      ))}
+                  </div>
+                  <Button onClick={addDownloadItem} variant="outline" size="sm" className="w-full h-10 border-dashed rounded-xl bg-background/20 hover:bg-primary/5">
+                    <Plus className="h-4 w-4 mr-2" /> {dictionary.downloadLinks.addDownload || "Add Download"}
+                  </Button>
               </CardContent>
-            </Card>
-          )}
-        </div>
+          </Card>
+        )}
+
+        {showGrids && (
+          <Card className="bg-card/50 border-primary/10 shadow-sm animate-in fade-in slide-in-from-top-4 duration-300">
+            <CardHeader className="border-b bg-muted/10 px-6 py-4">
+                <CardTitle className="text-sm font-bold flex items-center gap-2">
+                  <Grid3X3 className="h-4 w-4 text-primary" /> {dictionary.imageGrid.title}
+                </CardTitle>
+            </CardHeader>
+            <CardContent className="p-6">
+                <Textarea
+                    placeholder={dictionary.imageGrid.placeholder}
+                    value={imageGridMappings}
+                    onChange={(e) => setImageGridMappings(e.target.value)}
+                    className="min-h-[120px] font-mono text-sm bg-background/50 rounded-xl p-4 leading-relaxed"
+                />
+                <p className="mt-3 text-[10px] text-muted-foreground uppercase font-bold tracking-widest pl-1 leading-tight">
+                  {dictionary.imageGrid.description}
+                </p>
+            </CardContent>
+          </Card>
+        )}
       </div>
 
-      {/* Generated Result Section - Wide Card below inputs */}
-      <Card className="border-primary/20 shadow-2xl overflow-hidden mt-8 ring-4 ring-primary/5">
+      {/* 4. Final Generated Prompt Section */}
+      <Card className="border-primary/20 shadow-2xl overflow-hidden ring-4 ring-primary/5">
         <CardHeader className="flex flex-col sm:flex-row items-center justify-between border-b bg-muted/30 py-5 px-8 gap-4">
           <CardTitle className="text-xl font-headline flex items-center gap-3">
             <div className="p-1.5 bg-green-500/10 rounded-full">
@@ -463,7 +447,7 @@ export function PromptGeneratorClient({ dictionary }: { dictionary: any }) {
             </div>
             {dictionary.generatedPromptTitle}
           </CardTitle>
-          <Button onClick={handleCopyMain} variant="default" size="lg" className="gap-2 px-8 rounded-full shadow-lg h-12 transition-transform active:scale-95">
+          <Button onClick={handleCopyMain} variant="default" size="lg" className="gap-2 px-10 rounded-full shadow-lg h-12 transition-all hover:scale-[1.02] active:scale-95">
             {isCopied ? <Check className="h-5 w-5" /> : <Copy className="h-5 w-5" />}
             {isCopied ? dictionary.copiedButton : dictionary.copyButton}
           </Button>
