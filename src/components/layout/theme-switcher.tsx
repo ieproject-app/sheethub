@@ -28,6 +28,7 @@ export function ThemeSwitcher({ dictionary }: { dictionary: Dictionary }) {
   const handleThemeChange = (newTheme: string) => {
     setTheme(newTheme);
     const key = `theme${newTheme.charAt(0).toUpperCase() + newTheme.slice(1)}`;
+    // Null-safe access to dictionary to prevent runtime errors during transitions
     const msg = (dictionary?.notifications as any)?.[key];
     if (msg) notify(msg);
   };

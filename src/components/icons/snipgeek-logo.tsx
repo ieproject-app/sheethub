@@ -7,7 +7,7 @@ import React from 'react';
  */
 export const SnipGeekLogo = ({ 
   className, 
-  showBackground = true, 
+  showBackground, 
   ...props 
 }: React.SVGProps<SVGSVGElement> & { showBackground?: boolean }) => (
   <svg
@@ -17,7 +17,7 @@ export const SnipGeekLogo = ({
     {...props}
   >
     {/* Background kotak hanya muncul jika showBackground true */}
-    {showBackground && (
+    {showBackground === true && (
       <rect
         width="100"
         height="100"
@@ -33,7 +33,7 @@ export const SnipGeekLogo = ({
       y="50%"
       dominantBaseline="central"
       textAnchor="middle"
-      fill={showBackground ? "white" : "currentColor"}
+      fill={showBackground === true ? "white" : "currentColor"}
       style={{
         fontFamily: 'var(--font-space-grotesk), sans-serif',
         fontWeight: 900,
