@@ -173,7 +173,7 @@ export function Header({ searchableData, dictionary }: { searchableData: Searcha
 
   return (
     <header ref={headerRef} className={cn(
-        "fixed top-4 left-4 right-4 md:left-1/2 md:-translate-x-1/2 md:right-auto z-50 transition-all duration-300 ease-in-out",
+        "fixed top-4 left-4 right-4 md:left-1/2 md:-translate-x-1/2 md:right-auto z-50 transition-all duration-700 ease-[cubic-bezier(0.16,1,0.3,1)]",
         isSearchOpen ? 'md:w-[560px]' : 'md:w-[480px]',
         isVisible ? "opacity-100 translate-y-0" : "opacity-0 -translate-y-16"
     )}>
@@ -226,7 +226,16 @@ export function Header({ searchableData, dictionary }: { searchableData: Searcha
                         onClick={() => toggleView('menu')}
                         aria-label="Toggle Navigation Menu"
                     >
-                        <Menu className="h-5 w-5 shrink-0" />
+                        <div className="relative h-5 w-5 shrink-0 overflow-hidden">
+                            <Menu className={cn(
+                                "absolute inset-0 transition-all duration-500 ease-[cubic-bezier(0.34,1.56,0.64,1)]",
+                                isMenuOpen ? "opacity-0 rotate-90 scale-50" : "opacity-100 rotate-0 scale-100"
+                            )} />
+                            <X className={cn(
+                                "absolute inset-0 transition-all duration-500 ease-[cubic-bezier(0.34,1.56,0.64,1)]",
+                                isMenuOpen ? "opacity-100 rotate-0 scale-100" : "opacity-0 -rotate-90 scale-50"
+                            )} />
+                        </div>
                         <div className="w-px h-3 bg-white/20 hidden sm:block" />
                         <span className="text-[11px] font-black uppercase tracking-widest hidden sm:inline leading-none">MENU</span>
                     </Button>
@@ -252,7 +261,7 @@ export function Header({ searchableData, dictionary }: { searchableData: Searcha
                        {mounted && readingListItems.length > 0 && (
                             <span className={cn(
                                 "absolute top-1 right-1 flex h-4 min-w-4 items-center justify-center rounded-full bg-accent text-accent-foreground text-[10px] font-bold px-1 transition-all duration-300",
-                                isPulsing && "scale-125 ring-4 ring-accent/30"
+                                isPulsing ? "animate-badge-pop ring-4 ring-accent/30" : "scale-100"
                             )}>
                                 {readingListItems.length}
                             </span>
@@ -272,7 +281,7 @@ export function Header({ searchableData, dictionary }: { searchableData: Searcha
             
             {/* Search Input Overlay */}
             <div className={cn(
-                "absolute inset-0 w-full h-full flex items-center transition-all duration-300 ease-in-out",
+                "absolute inset-0 w-full h-full flex items-center transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)]",
                 isSearchOpen ? "opacity-100 z-10 px-2" : "opacity-0 -z-10 pointer-events-none"
             )}>
                 <Search className="absolute left-6 top-1/2 -translate-y-1/2 h-5 w-5 text-primary-foreground/70 pointer-events-none"/>
@@ -294,7 +303,7 @@ export function Header({ searchableData, dictionary }: { searchableData: Searcha
         <div className={cn(
             "absolute top-full left-0 right-0 z-40 mt-4 bg-primary/95 backdrop-blur-md shadow-2xl ring-1 ring-black/5 rounded-xl overflow-hidden transition-all duration-500 ease-[cubic-bezier(0.23,1,0.32,1)]",
             "transform-origin-top",
-            isMenuOpen ? "opacity-100 scale-y-100 translate-y-0" : "opacity-0 scale-y-95 -translate-y-4 pointer-events-none"
+            isMenuOpen ? "opacity-100 scale-100 translate-y-0" : "opacity-0 scale-95 -translate-y-2 pointer-events-none"
         )}>
             <div className="grid grid-cols-1">
                 {mounted && menuItems.map((item, index) => {
@@ -304,8 +313,12 @@ export function Header({ searchableData, dictionary }: { searchableData: Searcha
                             {isFirstSecondary && <div className="h-px bg-white/10 mx-4 my-1" />}
                             <Link 
                                 href={item.href} 
+                                style={{ 
+                                    transitionDelay: isMenuOpen ? `${index * 40}ms` : '0ms' 
+                                }}
                                 className={cn(
-                                    "group relative flex items-center gap-4 px-6 py-3.5 text-[12px] font-black uppercase tracking-tighter hover:bg-white/5 transition-all duration-300", 
+                                    "group relative flex items-center gap-4 px-6 py-3.5 text-[12px] font-black uppercase tracking-tighter hover:bg-white/5 transition-all duration-500", 
+                                    isMenuOpen ? "translate-x-0 opacity-100" : "-translate-x-4 opacity-0",
                                     navItemClass
                                 )} 
                                 onClick={() => setActiveView('none')}
@@ -324,15 +337,18 @@ export function Header({ searchableData, dictionary }: { searchableData: Searcha
 
         <div className="absolute top-full left-0 right-0 z-30 mt-4">
           {isSearchOpen && (
-            <div className="bg-background rounded-xl border shadow-2xl max-h-[400px] overflow-hidden">
+            <div className={cn(
+                "bg-background rounded-xl border shadow-2xl max-h-[400px] overflow-hidden transition-all duration-500 ease-[cubic-bezier(0.23,1,0.32,1)]",
+                isSearchOpen ? "opacity-100 scale-100 translate-y-0" : "opacity-0 scale-95 -translate-y-2"
+            )}>
                   {query.length > 1 ? (
                       results.length > 0 ? (
                           <ScrollArea className="h-full max-h-[400px]">
                               <div className="p-2">
                                   <p className="px-3 py-2 text-[10px] font-black uppercase tracking-widest text-muted-foreground opacity-50">{results.length} {dictionary.search.resultsFound}</p>
                                   <ul className="space-y-1">
-                                      {results.map((item) => (
-                                      <li key={`${item.type}-${item.slug}`}>
+                                      {results.map((item, idx) => (
+                                      <li key={`${item.type}-${item.slug}`} style={{ transitionDelay: `${idx * 30}ms` }} className="animate-in fade-in slide-in-from-left-2 duration-300">
                                           <Link href={item.href} onClick={handleResultClick} className="block p-3 rounded-xl hover:bg-muted transition-colors">
                                               <div className="overflow-hidden">
                                                   <div className="flex items-start justify-between gap-2">
@@ -361,7 +377,10 @@ export function Header({ searchableData, dictionary }: { searchableData: Searcha
           )}
 
           {isReadingListOpen && (
-            <div className="bg-background rounded-xl border shadow-2xl max-h-[400px] overflow-hidden">
+            <div className={cn(
+                "bg-background rounded-xl border shadow-2xl max-h-[400px] overflow-hidden transition-all duration-500 ease-[cubic-bezier(0.23,1,0.32,1)]",
+                isReadingListOpen ? "opacity-100 scale-100 translate-y-0" : "opacity-0 scale-95 -translate-y-2"
+            )}>
                 <ScrollArea className="h-full max-h-[400px]">
                   <div className="p-2">
                     <p className="px-3 py-2 text-[10px] font-black uppercase tracking-widest text-muted-foreground opacity-50">
@@ -369,8 +388,8 @@ export function Header({ searchableData, dictionary }: { searchableData: Searcha
                     </p>
                     {mounted && readingListItems.length > 0 ? (
                       <ul className="space-y-1">
-                        {readingListItems.map((item) => (
-                          <li key={`${item.type}-${item.slug}`} className="group relative">
+                        {readingListItems.map((item, idx) => (
+                          <li key={`${item.type}-${item.slug}`} style={{ transitionDelay: `${idx * 30}ms` }} className="group relative animate-in fade-in slide-in-from-left-2 duration-300">
                               <Link href={item.href} onClick={() => setActiveView('none')} className="block p-3 rounded-xl hover:bg-muted transition-colors">
                                   <div className="overflow-hidden pr-10">
                                       <div className="flex items-start justify-between gap-2">
