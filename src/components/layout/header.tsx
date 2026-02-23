@@ -225,9 +225,9 @@ export function Header({ searchableData, dictionary }: { searchableData: Searcha
                         onClick={() => toggleView('menu')}
                         aria-label="Toggle Navigation Menu"
                     >
-                        <div className="relative w-5 h-5 flex items-center justify-center shrink-0">
+                        <div className="relative flex items-center justify-center shrink-0">
                             <Menu className={cn(
-                                "absolute inset-0 transition-all duration-500 ease-[cubic-bezier(0.34,1.56,0.64,1)]",
+                                "transition-all duration-500 ease-[cubic-bezier(0.34,1.56,0.64,1)]",
                                 isMenuOpen ? "opacity-0 rotate-90 scale-50" : "opacity-100 rotate-0 scale-100"
                             )} />
                             <X className={cn(
