@@ -284,22 +284,20 @@ export function Header({ searchableData, dictionary }: { searchableData: Searcha
             "transform-origin-top",
             isMenuOpen ? "opacity-100 scale-y-100" : "opacity-0 scale-y-95 pointer-events-none"
         )}>
-            <div className="p-2">
-                <div className="grid grid-cols-1 gap-1">
-                    {menuItems.map((item) => (
-                        <Link 
-                            key={item.name} 
-                            href={item.href} 
-                            className={cn(
-                                "block px-5 py-2.5 text-[10px] font-black uppercase tracking-tighter rounded-xl hover:bg-white/10 transition-colors", 
-                                navItemClass
-                            )} 
-                            onClick={() => setActiveView('none')}
-                        >
-                            {item.name}
-                        </Link>
-                    ))}
-                </div>
+            <div className="grid grid-cols-1">
+                {menuItems.map((item) => (
+                    <Link 
+                        key={item.name} 
+                        href={item.href} 
+                        className={cn(
+                            "block px-6 py-3.5 text-[10px] font-black uppercase tracking-tighter hover:bg-white/10 transition-colors", 
+                            navItemClass
+                        )} 
+                        onClick={() => setActiveView('none')}
+                    >
+                        {item.name}
+                    </Link>
+                ))}
             </div>
         </div>
 
