@@ -176,7 +176,7 @@ export function Header({ searchableData, dictionary }: { searchableData: Searcha
             )}>
                 <Link 
                     href="/" 
-                    className="flex items-center justify-center h-10 w-10 transition-all duration-300 hover:scale-110 active:scale-95" 
+                    className="flex items-center justify-center h-9 w-9 transition-all duration-300 hover:scale-110 active:scale-95" 
                     aria-label="SnipGeek Home"
                 >
                     <SnipGeekLogo className="h-full w-full" />
@@ -277,7 +277,7 @@ export function Header({ searchableData, dictionary }: { searchableData: Searcha
 
         {/* Dropdowns (Menu, Search Results, Reading List) */}
         <div className={cn(
-            "absolute top-full left-0 right-0 z-40 mt-4 bg-primary/95 backdrop-blur-md shadow-2xl ring-1 ring-black/5 rounded-[1.5rem] overflow-hidden transition-all duration-300 ease-in-out",
+            "absolute top-full left-0 right-0 z-40 mt-4 bg-primary/95 backdrop-blur-md shadow-2xl ring-1 ring-black/5 rounded-xl overflow-hidden transition-all duration-300 ease-in-out",
             "transform-origin-top",
             isMenuOpen ? "opacity-100 scale-y-100" : "opacity-0 scale-y-95 pointer-events-none"
         )}>
@@ -302,7 +302,7 @@ export function Header({ searchableData, dictionary }: { searchableData: Searcha
 
         <div className="absolute top-full left-0 right-0 z-30 mt-4">
           {isSearchOpen && (
-            <div className="bg-background rounded-[1.5rem] border shadow-2xl max-h-[400px] overflow-hidden">
+            <div className="bg-background rounded-xl border shadow-2xl max-h-[400px] overflow-hidden">
                   {query.length > 1 ? (
                       results.length > 0 ? (
                           <ScrollArea className="h-full max-h-[400px]">
@@ -339,7 +339,7 @@ export function Header({ searchableData, dictionary }: { searchableData: Searcha
           )}
 
           {isReadingListOpen && (
-            <div className="bg-background rounded-[1.5rem] border shadow-2xl max-h-[400px] overflow-hidden">
+            <div className="bg-background rounded-xl border shadow-2xl max-h-[400px] overflow-hidden">
                 <ScrollArea className="h-full max-h-[400px]">
                   <div className="p-2">
                     <p className="px-3 py-2 text-[10px] font-black uppercase tracking-widest text-muted-foreground opacity-50">
