@@ -1,3 +1,4 @@
+
 'use client';
 
 import React, { useState, useEffect, useRef } from 'react';
@@ -227,11 +228,11 @@ export function Header({ searchableData, dictionary }: { searchableData: Searcha
                     >
                         <div className="relative flex items-center justify-center shrink-0">
                             <Menu className={cn(
-                                "transition-all duration-500 ease-[cubic-bezier(0.34,1.56,0.64,1)]",
+                                "h-5 w-5 transition-all duration-500 ease-[cubic-bezier(0.34,1.56,0.64,1)]",
                                 isMenuOpen ? "opacity-0 rotate-90 scale-50" : "opacity-100 rotate-0 scale-100"
                             )} />
                             <X className={cn(
-                                "absolute inset-0 transition-all duration-500 ease-[cubic-bezier(0.34,1.56,0.64,1)]",
+                                "absolute h-5 w-5 transition-all duration-500 ease-[cubic-bezier(0.34,1.56,0.64,1)]",
                                 isMenuOpen ? "opacity-100 rotate-0 scale-100" : "opacity-0 -rotate-90 scale-50"
                             )} />
                         </div>

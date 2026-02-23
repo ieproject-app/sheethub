@@ -1,3 +1,4 @@
+
 import { getSortedPostsData } from '@/lib/posts';
 import Link from 'next/link';
 import { i18n } from '@/i18n-config';
