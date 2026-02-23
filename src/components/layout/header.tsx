@@ -227,14 +227,18 @@ export function Header({ searchableData, dictionary }: { searchableData: Searcha
                         aria-label="Toggle Navigation Menu"
                     >
                         <div className="relative flex items-center justify-center shrink-0">
-                            <Menu className={cn(
-                                "h-5 w-5 transition-all duration-500 ease-[cubic-bezier(0.34,1.56,0.64,1)]",
-                                isMenuOpen ? "opacity-0 rotate-90 scale-50" : "opacity-100 rotate-0 scale-100"
-                            )} />
-                            <X className={cn(
-                                "absolute h-5 w-5 transition-all duration-500 ease-[cubic-bezier(0.34,1.56,0.64,1)]",
-                                isMenuOpen ? "opacity-100 rotate-0 scale-100" : "opacity-0 -rotate-90 scale-50"
-                            )} />
+                            {mounted && (
+                              <>
+                                <Menu className={cn(
+                                    "h-5 w-5 transition-all duration-500 ease-[cubic-bezier(0.34,1.56,0.64,1)]",
+                                    isMenuOpen ? "opacity-0 rotate-90 scale-50" : "opacity-100 rotate-0 scale-100"
+                                )} />
+                                <X className={cn(
+                                    "absolute h-5 w-5 transition-all duration-500 ease-[cubic-bezier(0.34,1.56,0.64,1)]",
+                                    isMenuOpen ? "opacity-100 rotate-0 scale-100" : "opacity-0 -rotate-90 scale-50"
+                                )} />
+                              </>
+                            )}
                         </div>
                     </Button>
                 </div>
@@ -391,7 +395,7 @@ export function Header({ searchableData, dictionary }: { searchableData: Searcha
                     </p>
                 </div>
                 <ScrollArea className="h-full max-h-[400px]">
-                  <div>
+                  <div className="py-0">
                     {mounted && readingListItems.length > 0 ? (
                       <ul className="grid grid-cols-1">
                         {readingListItems.map((item, idx) => (
