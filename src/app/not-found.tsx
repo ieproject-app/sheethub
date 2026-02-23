@@ -2,27 +2,27 @@
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import './globals.css';
-import { Roboto, Roboto_Condensed } from 'next/font/google';
+import { Fira_Sans, Fira_Sans_Condensed } from 'next/font/google';
 import { cn } from '@/lib/utils';
 import { Search, Home, BookOpen, PenTool } from 'lucide-react';
 
-const robotoCondensed = Roboto_Condensed({
+const firaSansCondensed = Fira_Sans_Condensed({
   subsets: ['latin'],
   display: 'swap',
-  variable: '--font-roboto-condensed',
+  variable: '--font-fira-sans-condensed',
   weight: ['700'],
 });
 
-const roboto = Roboto({
+const firaSans = Fira_Sans({
   subsets: ['latin'],
   display: 'swap',
-  variable: '--font-roboto',
+  variable: '--font-fira-sans',
   weight: ['400'],
 });
 
 export default function NotFound() {
   return (
-    <html lang="en" className={cn(robotoCondensed.variable, roboto.variable)}>
+    <html lang="en" className={cn(firaSansCondensed.variable, firaSans.variable)}>
       <head>
         <title>404 - Page Not Found | SnipGeek</title>
         <meta name="description" content="Sorry, the page you're looking for doesn't exist. Find tutorials, notes, and tech tools at SnipGeek." />

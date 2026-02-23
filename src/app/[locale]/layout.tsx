@@ -12,22 +12,27 @@ import { NotificationProvider } from '@/hooks/use-notification';
 import { BackToTop } from '@/components/layout/back-to-top';
 import { getDictionary } from '@/lib/get-dictionary';
 import { DraftList } from '@/components/layout/draft-list';
-import { Roboto, Roboto_Condensed } from 'next/font/google';
-import { GeistMono } from 'geist/font/mono';
+import { Fira_Sans, Fira_Sans_Condensed, Fira_Code } from 'next/font/google';
 import { cn } from '@/lib/utils';
 
-const robotoCondensed = Roboto_Condensed({
+const firaSans = Fira_Sans({
   subsets: ['latin'],
   display: 'swap',
-  variable: '--font-roboto-condensed',
+  variable: '--font-fira-sans',
+  weight: ['300', '400', '500', '700'],
+});
+
+const firaSansCondensed = Fira_Sans_Condensed({
+  subsets: ['latin'],
+  display: 'swap',
+  variable: '--font-fira-sans-condensed',
   weight: ['400', '700'],
 });
 
-const roboto = Roboto({
+const firaCode = Fira_Code({
   subsets: ['latin'],
   display: 'swap',
-  variable: '--font-roboto',
-  weight: ['300', '400', '500', '700'],
+  variable: '--font-fira-code',
 });
 
 export const metadata: Metadata = {
@@ -90,7 +95,7 @@ export default async function LocaleLayout({
   const draftNotes = getDraftNotesData(locale);
   
   return (
-    <html lang={locale} className={cn(robotoCondensed.variable, roboto.variable, GeistMono.variable, "scroll-smooth")} suppressHydrationWarning>
+    <html lang={locale} className={cn(firaSans.variable, firaSansCondensed.variable, firaCode.variable, "scroll-smooth")} suppressHydrationWarning>
       <head />
       <body className="font-body antialiased fade-in-on-load">
         <ThemeProvider
