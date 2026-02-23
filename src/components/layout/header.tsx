@@ -209,14 +209,14 @@ export function Header({ searchableData, dictionary }: { searchableData: Searcha
                     <Button 
                         variant="ghost" 
                         className={cn(
-                            "h-10 px-3 gap-2 rounded-full bg-transparent hover:bg-white/10 transition-all", 
+                            "h-10 px-3 gap-1.5 rounded-full bg-transparent hover:bg-white/10 transition-all", 
                             navItemClass
                         )} 
                         onClick={() => toggleView('menu')}
                         aria-label="Toggle Navigation Menu"
                     >
                         <AlignLeft className="h-5 w-5 shrink-0" />
-                        <span className="text-[10px] font-black uppercase tracking-tighter hidden sm:inline">MENU</span>
+                        <span className="text-[10px] font-black uppercase tracking-tighter hidden sm:inline leading-none mb-[0.5px]">MENU</span>
                     </Button>
                 </div>
 
