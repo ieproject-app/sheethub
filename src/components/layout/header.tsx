@@ -378,41 +378,55 @@ export function Header({ searchableData, dictionary }: { searchableData: Searcha
 
           {isReadingListOpen && (
             <div className={cn(
-                "bg-background rounded-xl border shadow-2xl max-h-[400px] overflow-hidden transition-all duration-500 ease-[cubic-bezier(0.23,1,0.32,1)]",
+                "bg-background rounded-xl border shadow-2xl max-h-[450px] overflow-hidden transition-all duration-500 ease-[cubic-bezier(0.23,1,0.32,1)]",
                 isReadingListOpen ? "opacity-100 scale-100 translate-y-0" : "opacity-0 scale-95 -translate-y-2"
             )}>
-                <ScrollArea className="h-full max-h-[400px]">
-                  <div className="p-2">
-                    <p className="px-3 py-2 text-[10px] font-black uppercase tracking-widest text-muted-foreground opacity-50">
+                <div className="px-4 py-3 border-b bg-muted/20 flex items-center justify-between">
+                    <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground opacity-60">
                       {mounted ? readingListItems.length : 0} {mounted && readingListItems.length === 1 ? dictionary.readingList.item : dictionary.readingList.items} {dictionary.readingList.inYourList}
                     </p>
+                </div>
+                <ScrollArea className="h-full max-h-[400px]">
+                  <div className="p-2">
                     {mounted && readingListItems.length > 0 ? (
-                      <ul className="space-y-1">
+                      <ul className="space-y-2">
                         {readingListItems.map((item, idx) => (
                           <li key={`${item.type}-${item.slug}`} style={{ transitionDelay: `${idx * 30}ms` }} className="group relative animate-in fade-in slide-in-from-left-2 duration-300">
-                              <Link href={item.href} onClick={() => setActiveView('none')} className="block p-3 rounded-xl hover:bg-muted transition-colors">
-                                  <div className="overflow-hidden pr-10">
-                                      <div className="flex items-start justify-between gap-2">
-                                          <span className="font-bold text-sm text-primary line-clamp-2 flex-1 min-w-0">{item.title}</span>
-                                          <Badge variant="outline" className="capitalize text-[10px] font-black tracking-tighter shrink-0">{item.type}</Badge>
+                              <div className="relative rounded-xl border border-transparent hover:border-primary/10 hover:bg-muted/50 transition-all duration-300 overflow-hidden">
+                                  <Link href={item.href} onClick={() => setActiveView('none')} className="block p-4 pr-12">
+                                      <h4 className="font-bold text-sm text-primary line-clamp-2 leading-snug mb-2 transition-colors group-hover:text-accent">
+                                          {item.title}
+                                      </h4>
+                                      <div className="flex items-center gap-2">
+                                          <Badge variant="secondary" className="text-[9px] h-4 uppercase font-black tracking-wider px-1.5 rounded-sm shrink-0">
+                                              {item.type}
+                                          </Badge>
+                                          <span className="text-[10px] text-muted-foreground font-medium opacity-30">•</span>
+                                          <p className="text-[11px] text-muted-foreground line-clamp-1 italic opacity-70">
+                                              {item.description}
+                                          </p>
                                       </div>
-                                      <p className="text-xs text-muted-foreground mt-1 line-clamp-2">{item.description}</p>
-                                  </div>
-                              </Link>
-                              <Button 
-                                variant="ghost" 
-                                size="icon" 
-                                className="absolute right-2 top-1/2 -translate-y-1/2 h-8 w-8 rounded-full opacity-0 group-hover:opacity-100 transition-opacity" 
-                                onClick={() => removeReadingListItem(item.slug)}
-                                aria-label="Remove from Reading List"
-                              >
-                                <Trash2 className="h-4 w-4 text-destructive" />
-                              </Button>
+                                  </Link>
+                                  <Button 
+                                    variant="ghost" 
+                                    size="icon" 
+                                    className="absolute top-3 right-2 h-8 w-8 rounded-full text-muted-foreground/40 hover:text-destructive hover:bg-destructive/10 transition-all duration-300" 
+                                    onClick={(e) => {
+                                        e.preventDefault();
+                                        e.stopPropagation();
+                                        removeReadingListItem(item.slug);
+                                    }}
+                                    aria-label="Remove from Reading List"
+                                  >
+                                    <Trash2 className="h-4 w-4" />
+                                  </Button>
+                              </div>
                           </li>
                         ))}
                       </ul>
                     ) : (
-                      <div className="p-10 text-center text-sm text-muted-foreground italic">
+                      <div className="p-12 text-center text-sm text-muted-foreground italic flex flex-col items-center gap-3">
+                        <Bookmark className="h-8 w-8 opacity-10" />
                         {dictionary.readingList.empty}
                       </div>
                     )}
