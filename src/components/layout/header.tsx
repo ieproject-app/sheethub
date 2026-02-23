@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useState, useEffect, useRef } from 'react';
@@ -169,7 +170,7 @@ export function Header({ searchableData, dictionary }: { searchableData: Searcha
         <nav className={cn(
             "relative mx-auto bg-primary/90 backdrop-blur-sm text-primary-foreground shadow-lg ring-1 ring-black/5 h-12 transition-all duration-300 ease-in-out rounded-full"
         )}>
-            {/* Centered Logo - Reverted to stay within bounds */}
+            {/* Centered Logo */}
             <div className={cn(
                 "absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-50 transition-all duration-500 ease-in-out",
                 (isSearchOpen || (mounted && message)) ? "opacity-0 scale-75 pointer-events-none" : "opacity-100 scale-100"
@@ -217,7 +218,7 @@ export function Header({ searchableData, dictionary }: { searchableData: Searcha
                     </Button>
                 </div>
 
-                {/* CENTER: Empty space for Logo absolute placement */}
+                {/* CENTER: Placeholder for Logo absolute placement */}
                 <div className="flex justify-center" />
 
                 {/* RIGHT SIDE: Bookmark & Search */}
@@ -277,18 +278,18 @@ export function Header({ searchableData, dictionary }: { searchableData: Searcha
 
         {/* Dropdowns (Menu, Search Results, Reading List) */}
         <div className={cn(
-            "absolute top-full left-0 right-0 z-40 mt-4 bg-primary/95 backdrop-blur-md shadow-2xl ring-1 ring-black/5 rounded-[2rem] overflow-hidden transition-all duration-300 ease-in-out",
+            "absolute top-full left-0 right-0 z-40 mt-4 bg-primary/95 backdrop-blur-md shadow-2xl ring-1 ring-black/5 rounded-[1.5rem] overflow-hidden transition-all duration-300 ease-in-out",
             "transform-origin-top",
             isMenuOpen ? "opacity-100 scale-y-100" : "opacity-0 scale-y-95 pointer-events-none"
         )}>
-            <div className="p-3">
+            <div className="p-2">
                 <div className="grid grid-cols-1 gap-1">
                     {menuItems.map((item) => (
                         <Link 
                             key={item.name} 
                             href={item.href} 
                             className={cn(
-                                "block px-6 py-3.5 text-sm font-bold uppercase tracking-widest rounded-2xl hover:bg-white/10 transition-colors", 
+                                "block px-5 py-2.5 text-xs font-black uppercase tracking-tighter rounded-xl hover:bg-white/10 transition-colors", 
                                 navItemClass
                             )} 
                             onClick={() => setActiveView('none')}
@@ -302,16 +303,16 @@ export function Header({ searchableData, dictionary }: { searchableData: Searcha
 
         <div className="absolute top-full left-0 right-0 z-30 mt-4">
           {isSearchOpen && (
-            <div className="bg-background rounded-[2rem] border shadow-2xl max-h-[400px] overflow-hidden">
+            <div className="bg-background rounded-[1.5rem] border shadow-2xl max-h-[400px] overflow-hidden">
                   {query.length > 1 ? (
                       results.length > 0 ? (
                           <ScrollArea className="h-full max-h-[400px]">
-                              <div className="p-3">
+                              <div className="p-2">
                                   <p className="px-3 py-2 text-[10px] font-black uppercase tracking-widest text-muted-foreground opacity-50">{results.length} {dictionary.search.resultsFound}</p>
                                   <ul className="space-y-1">
                                       {results.map((item) => (
                                       <li key={`${item.type}-${item.slug}`}>
-                                          <Link href={item.href} onClick={handleResultClick} className="block p-4 rounded-2xl hover:bg-muted transition-colors">
+                                          <Link href={item.href} onClick={handleResultClick} className="block p-3 rounded-xl hover:bg-muted transition-colors">
                                               <div className="overflow-hidden">
                                                   <div className="flex items-start justify-between gap-2">
                                                       <span className="font-bold text-sm text-primary line-clamp-2 flex-1 min-w-0">{item.title}</span>
@@ -339,9 +340,9 @@ export function Header({ searchableData, dictionary }: { searchableData: Searcha
           )}
 
           {isReadingListOpen && (
-            <div className="bg-background rounded-[2rem] border shadow-2xl max-h-[400px] overflow-hidden">
+            <div className="bg-background rounded-[1.5rem] border shadow-2xl max-h-[400px] overflow-hidden">
                 <ScrollArea className="h-full max-h-[400px]">
-                  <div className="p-3">
+                  <div className="p-2">
                     <p className="px-3 py-2 text-[10px] font-black uppercase tracking-widest text-muted-foreground opacity-50">
                       {mounted ? readingListItems.length : 0} {mounted && readingListItems.length === 1 ? dictionary.readingList.item : dictionary.readingList.items} {dictionary.readingList.inYourList}
                     </p>
@@ -349,7 +350,7 @@ export function Header({ searchableData, dictionary }: { searchableData: Searcha
                       <ul className="space-y-1">
                         {readingListItems.map((item) => (
                           <li key={`${item.type}-${item.slug}`} className="group relative">
-                              <Link href={item.href} onClick={() => setActiveView('none')} className="block p-4 rounded-2xl hover:bg-muted transition-colors">
+                              <Link href={item.href} onClick={() => setActiveView('none')} className="block p-3 rounded-xl hover:bg-muted transition-colors">
                                   <div className="overflow-hidden pr-10">
                                       <div className="flex items-start justify-between gap-2">
                                           <span className="font-bold text-sm text-primary line-clamp-2 flex-1 min-w-0">{item.title}</span>
@@ -361,7 +362,7 @@ export function Header({ searchableData, dictionary }: { searchableData: Searcha
                               <Button 
                                 variant="ghost" 
                                 size="icon" 
-                                className="absolute right-2 top-1/2 -translate-y-1/2 h-9 w-9 rounded-full opacity-0 group-hover:opacity-100 transition-opacity" 
+                                className="absolute right-2 top-1/2 -translate-y-1/2 h-8 w-8 rounded-full opacity-0 group-hover:opacity-100 transition-opacity" 
                                 onClick={() => removeReadingListItem(item.slug)}
                                 aria-label="Remove from Reading List"
                               >
