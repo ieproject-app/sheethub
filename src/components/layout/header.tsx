@@ -3,7 +3,7 @@
 import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import { cn } from '@/lib/utils';
-import { Search, X, Menu, Bookmark, Trash2, MoreHorizontal } from 'lucide-react';
+import { Search, X, Menu, Bookmark, Trash2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { ScrollArea } from '@/components/ui/scroll-area';
@@ -154,28 +154,37 @@ export function Header({ searchableData, dictionary }: { searchableData: Searcha
     { name: dictionary.navigation.blog, href: '/blog' },
     { name: dictionary.navigation.notes, href: '/notes' },
     { name: dictionary.navigation.tools, href: '/tools' },
-  ];
-
-  const moreMenuItems = [
     { name: dictionary.navigation.about, href: '/about' },
     { name: dictionary.navigation.contact, href: '/contact' },
   ];
-  
-  const allMobileMenuItems = [...menuItems, ...moreMenuItems];
 
   const navItemClass = "transition-all duration-300 text-primary-foreground/70 hover:text-primary-foreground";
 
   return (
     <header ref={headerRef} className={cn(
         "fixed top-4 left-4 right-4 md:left-1/2 md:-translate-x-1/2 md:right-auto z-50 transition-all duration-300 ease-in-out",
-        isSearchOpen ? 'md:w-[560px]' : 'md:w-[520px]',
+        isSearchOpen ? 'md:w-[560px]' : 'md:w-[480px]',
         isVisible ? "opacity-100 translate-y-0" : "opacity-0 -translate-y-16"
     )}>
         <nav className={cn(
-            "relative mx-auto bg-primary/90 backdrop-blur-sm text-primary-foreground shadow-lg ring-1 ring-black/5 h-12 transition-all duration-300 ease-in-out rounded-full overflow-hidden"
+            "relative mx-auto bg-primary/90 backdrop-blur-sm text-primary-foreground shadow-lg ring-1 ring-black/5 h-12 transition-all duration-300 ease-in-out rounded-full"
         )}>
+            {/* Centered Floating Logo - Larger than container */}
+            <div className={cn(
+                "absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-50 transition-all duration-500 ease-in-out",
+                (isSearchOpen || (mounted && message)) ? "opacity-0 scale-75 pointer-events-none" : "opacity-100 scale-100"
+            )}>
+                <Link 
+                    href="/" 
+                    className="flex items-center justify-center h-16 w-16 transition-all duration-300 hover:scale-110 active:scale-95 drop-shadow-[0_10px_25px_rgba(0,0,0,0.4)]" 
+                    aria-label="SnipGeek Home"
+                >
+                    <SnipGeekLogo showBackground={true} className="h-full w-full" />
+                </Link>
+            </div>
+
             {/* Status Notification Pill (Centered) */}
-            <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-50">
+            <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-[60]">
               <div className={cn(
                 "px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-tighter flex items-center gap-2 transition-all duration-500 ease-[cubic-bezier(0.23,1,0.32,1)] backdrop-blur-md",
                 (mounted && message) 
@@ -190,58 +199,59 @@ export function Header({ searchableData, dictionary }: { searchableData: Searcha
               </div>
             </div>
 
-            {/* Main Header Content - Using grid for perfect centering */}
+            {/* Main Header Content */}
             <div className={cn(
                 "grid grid-cols-3 items-center h-full px-2 transition-all duration-300 ease-in-out",
-                (isSearchOpen || (mounted && message)) ? "opacity-0 pointer-events-none" : "opacity-100"
+                isSearchOpen ? "opacity-0 pointer-events-none" : "opacity-100"
             )}>
-                {/* LEFT SIDE: Navigation Menu */}
-                <div className="flex items-center">
-                    {/* Desktop Menu */}
-                    <div className="hidden md:flex items-center gap-1 pl-2">
-                        {menuItems.map(item => (
-                            <Link key={item.name} href={item.href} className={cn("px-2 py-1 text-[10px] font-black uppercase tracking-widest", navItemClass)}>
-                                {item.name}
-                            </Link>
-                        ))}
-                    </div>
-                    {/* Mobile Hamburger */}
-                    <div className="flex md:hidden">
-                        <Button variant="ghost" size="icon" className={cn("h-9 w-9 rounded-full bg-transparent hover:bg-transparent", navItemClass)} onClick={() => toggleView('menu')}>
-                            <Menu className="h-5 w-5" />
-                        </Button>
-                    </div>
+                {/* LEFT SIDE: Minimalist Burger Menu */}
+                <div className="flex items-center pl-1">
+                    <Button 
+                        variant="ghost" 
+                        size="icon" 
+                        className={cn("h-10 w-10 rounded-full bg-transparent hover:bg-white/10", navItemClass)} 
+                        onClick={() => toggleView('menu')}
+                        aria-label="Toggle Navigation Menu"
+                    >
+                        <Menu className="h-6 w-6" />
+                    </Button>
                 </div>
 
-                {/* CENTER: The Logo */}
-                <div className="flex justify-center">
-                    <Link href="/" className="flex items-center justify-center h-10 w-10 p-1.5 transition-all duration-300 hover:scale-110 active:scale-95 group" aria-label="SnipGeek Home">
-                        <SnipGeekLogo showBackground={false} className="h-full w-full" />
-                    </Link>
-                </div>
+                {/* CENTER: Empty space for Logo absolute placement */}
+                <div className="flex justify-center" />
 
-                {/* RIGHT SIDE: Search, Reading List & More */}
-                <div className="flex items-center justify-end gap-0 md:gap-1 pr-2">
-                    <Button variant="ghost" size="icon" className={cn("relative rounded-full h-9 w-9 bg-transparent hover:bg-transparent transition-all", isPulsing && "scale-110 bg-accent/20", navItemClass)} onClick={() => toggleView('readingList')}>
+                {/* RIGHT SIDE: Bookmark & Search */}
+                <div className="flex items-center justify-end gap-1 pr-1">
+                    <Button 
+                        variant="ghost" 
+                        size="icon" 
+                        className={cn(
+                            "relative rounded-full h-10 w-10 bg-transparent hover:bg-white/10 transition-all", 
+                            isPulsing && "scale-110 bg-accent/20", 
+                            navItemClass
+                        )} 
+                        onClick={() => toggleView('readingList')}
+                        aria-label="Reading List"
+                    >
                        <Bookmark className={cn("h-5 w-5", isPulsing && "animate-heartbeat text-accent fill-accent")} />
                        {mounted && readingListItems.length > 0 && (
                             <span className={cn(
-                                "absolute -top-1 -right-1 flex h-4 min-w-4 items-center justify-center rounded-full bg-accent text-accent-foreground text-[10px] font-bold px-1 transition-all duration-300",
+                                "absolute top-1 right-1 flex h-4 min-w-4 items-center justify-center rounded-full bg-accent text-accent-foreground text-[10px] font-bold px-1 transition-all duration-300",
                                 isPulsing && "scale-125 ring-4 ring-accent/30"
                             )}>
                                 {readingListItems.length}
                             </span>
                        )}
                     </Button>
-                    <Button variant="ghost" size="icon" className={cn("rounded-full h-9 w-9 bg-transparent hover:bg-transparent", navItemClass)} onClick={() => toggleView('search')}>
+                    <Button 
+                        variant="ghost" 
+                        size="icon" 
+                        className={cn("h-10 w-10 rounded-full bg-transparent hover:bg-white/10", navItemClass)} 
+                        onClick={() => toggleView('search')}
+                        aria-label="Search"
+                    >
                        <Search className="h-5 w-5" />
                     </Button>
-                    {/* Desktop More Actions */}
-                    <div className="hidden md:flex">
-                        <Button variant="ghost" size="icon" className={cn("h-9 w-9 rounded-full bg-transparent hover:bg-transparent", navItemClass)} onClick={() => toggleView('menu')}>
-                            <MoreHorizontal className="h-5 w-5" />
-                        </Button>
-                    </div>
                 </div>
             </div>
             
@@ -267,21 +277,22 @@ export function Header({ searchableData, dictionary }: { searchableData: Searcha
 
         {/* Dropdowns (Menu, Search Results, Reading List) */}
         <div className={cn(
-            "absolute top-full left-0 right-0 z-40 mt-2 bg-primary/90 backdrop-blur-sm shadow-xl ring-1 ring-black/5 rounded-2xl overflow-hidden transition-all duration-300 ease-in-out",
+            "absolute top-full left-0 right-0 z-40 mt-4 bg-primary/95 backdrop-blur-md shadow-2xl ring-1 ring-black/5 rounded-[2rem] overflow-hidden transition-all duration-300 ease-in-out",
             "transform-origin-top",
             isMenuOpen ? "opacity-100 scale-y-100" : "opacity-0 scale-y-95 pointer-events-none"
         )}>
-            <div className="p-2">
-                <div className="md:hidden">
-                    {allMobileMenuItems.map((item) => (
-                        <Link key={item.name} href={item.href} className={cn("block px-4 py-3 text-base rounded-lg", navItemClass)} onClick={() => setActiveView('none')}>
-                            {item.name}
-                        </Link>
-                    ))}
-                </div>
-                <div className="hidden md:block">
-                    {moreMenuItems.map((item) => (
-                        <Link key={item.name} href={item.href} className={cn("block px-4 py-3 text-base rounded-lg", navItemClass)} onClick={() => setActiveView('none')}>
+            <div className="p-3">
+                <div className="grid grid-cols-1 gap-1">
+                    {menuItems.map((item) => (
+                        <Link 
+                            key={item.name} 
+                            href={item.href} 
+                            className={cn(
+                                "block px-6 py-4 text-base font-bold uppercase tracking-widest rounded-2xl hover:bg-white/10 transition-colors", 
+                                navItemClass
+                            )} 
+                            onClick={() => setActiveView('none')}
+                        >
                             {item.name}
                         </Link>
                     ))}
@@ -289,22 +300,22 @@ export function Header({ searchableData, dictionary }: { searchableData: Searcha
             </div>
         </div>
 
-        <div className="absolute top-full left-0 right-0 z-30 mt-2">
+        <div className="absolute top-full left-0 right-0 z-30 mt-4">
           {isSearchOpen && (
-            <div className="bg-background rounded-2xl border shadow-xl max-h-[400px] overflow-hidden">
+            <div className="bg-background rounded-[2rem] border shadow-2xl max-h-[400px] overflow-hidden">
                   {query.length > 1 ? (
                       results.length > 0 ? (
                           <ScrollArea className="h-full max-h-[400px]">
-                              <div className="p-2">
-                                  <p className="px-2 py-1.5 text-xs font-semibold text-muted-foreground">{results.length} {dictionary.search.resultsFound}</p>
-                                  <ul>
+                              <div className="p-3">
+                                  <p className="px-3 py-2 text-[10px] font-black uppercase tracking-widest text-muted-foreground opacity-50">{results.length} {dictionary.search.resultsFound}</p>
+                                  <ul className="space-y-1">
                                       {results.map((item) => (
                                       <li key={`${item.type}-${item.slug}`}>
-                                          <Link href={item.href} onClick={handleResultClick} className="block p-3 rounded-xl hover:bg-muted transition-colors">
+                                          <Link href={item.href} onClick={handleResultClick} className="block p-4 rounded-2xl hover:bg-muted transition-colors">
                                               <div className="overflow-hidden">
                                                   <div className="flex items-start justify-between gap-2">
-                                                      <span className="font-medium text-sm text-primary line-clamp-2 flex-1 min-w-0">{item.title}</span>
-                                                      <Badge variant="outline" className="capitalize text-xs shrink-0">{item.type}</Badge>
+                                                      <span className="font-bold text-sm text-primary line-clamp-2 flex-1 min-w-0">{item.title}</span>
+                                                      <Badge variant="outline" className="capitalize text-[10px] font-black tracking-tighter shrink-0">{item.type}</Badge>
                                                   </div>
                                                   <p className="text-xs text-muted-foreground mt-1 line-clamp-2">{item.description}</p>
                                               </div>
@@ -315,12 +326,12 @@ export function Header({ searchableData, dictionary }: { searchableData: Searcha
                               </div>
                           </ScrollArea>
                       ) : (
-                          <div className="p-6 text-center text-sm text-muted-foreground">
+                          <div className="p-10 text-center text-sm text-muted-foreground italic">
                               {dictionary.search.noResults} &quot;{query}&quot;.
                           </div>
                       )
                   ) : (
-                      <div className="p-6 text-center text-sm text-muted-foreground">
+                      <div className="p-10 text-center text-sm text-muted-foreground font-medium">
                           {dictionary.search.prompt}
                       </div>
                   )}
@@ -328,33 +339,39 @@ export function Header({ searchableData, dictionary }: { searchableData: Searcha
           )}
 
           {isReadingListOpen && (
-            <div className="bg-background rounded-2xl border shadow-xl max-h-[400px] overflow-hidden">
+            <div className="bg-background rounded-[2rem] border shadow-2xl max-h-[400px] overflow-hidden">
                 <ScrollArea className="h-full max-h-[400px]">
-                  <div className="p-2">
-                    <p className="px-2 py-1.5 text-xs font-semibold text-muted-foreground">
+                  <div className="p-3">
+                    <p className="px-3 py-2 text-[10px] font-black uppercase tracking-widest text-muted-foreground opacity-50">
                       {mounted ? readingListItems.length : 0} {mounted && readingListItems.length === 1 ? dictionary.readingList.item : dictionary.readingList.items} {dictionary.readingList.inYourList}
                     </p>
                     {mounted && readingListItems.length > 0 ? (
-                      <ul>
+                      <ul className="space-y-1">
                         {readingListItems.map((item) => (
                           <li key={`${item.type}-${item.slug}`} className="group relative">
-                              <Link href={item.href} onClick={() => setActiveView('none')} className="block p-3 rounded-xl hover:bg-muted transition-colors">
-                                  <div className="overflow-hidden pr-8">
+                              <Link href={item.href} onClick={() => setActiveView('none')} className="block p-4 rounded-2xl hover:bg-muted transition-colors">
+                                  <div className="overflow-hidden pr-10">
                                       <div className="flex items-start justify-between gap-2">
-                                          <span className="font-medium text-sm text-primary line-clamp-2 flex-1 min-w-0">{item.title}</span>
-                                          <Badge variant="outline" className="capitalize text-xs shrink-0">{item.type}</Badge>
+                                          <span className="font-bold text-sm text-primary line-clamp-2 flex-1 min-w-0">{item.title}</span>
+                                          <Badge variant="outline" className="capitalize text-[10px] font-black tracking-tighter shrink-0">{item.type}</Badge>
                                       </div>
                                       <p className="text-xs text-muted-foreground mt-1 line-clamp-2">{item.description}</p>
                                   </div>
                               </Link>
-                              <Button variant="ghost" size="icon" className="absolute right-1 top-1/2 -translate-y-1/2 h-8 w-8 rounded-full opacity-0 group-hover:opacity-100 transition-opacity" onClick={() => removeReadingListItem(item.slug)}>
-                                <Trash2 className="h-4 w-4 text-muted-foreground" />
+                              <Button 
+                                variant="ghost" 
+                                size="icon" 
+                                className="absolute right-2 top-1/2 -translate-y-1/2 h-9 w-9 rounded-full opacity-0 group-hover:opacity-100 transition-opacity" 
+                                onClick={() => removeReadingListItem(item.slug)}
+                                aria-label="Remove from Reading List"
+                              >
+                                <Trash2 className="h-4 w-4 text-destructive" />
                               </Button>
                           </li>
                         ))}
                       </ul>
                     ) : (
-                      <div className="p-6 text-center text-sm text-muted-foreground">
+                      <div className="p-10 text-center text-sm text-muted-foreground italic">
                         {dictionary.readingList.empty}
                       </div>
                     )}
