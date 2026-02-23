@@ -333,41 +333,52 @@ export function Header({ searchableData, dictionary }: { searchableData: Searcha
         <div className="absolute top-full left-0 right-0 z-30 mt-4">
           {isSearchOpen && (
             <div className={cn(
-                "bg-background rounded-xl border shadow-2xl max-h-[400px] overflow-hidden transition-all duration-500 ease-[cubic-bezier(0.23,1,0.32,1)]",
+                "bg-background rounded-xl border shadow-2xl max-h-[450px] overflow-hidden transition-all duration-500 ease-[cubic-bezier(0.23,1,0.32,1)]",
                 isSearchOpen ? "opacity-100 scale-100 translate-y-0" : "opacity-0 scale-95 -translate-y-2"
             )}>
-                  {query.length > 1 ? (
-                      results.length > 0 ? (
-                          <ScrollArea className="h-full max-h-[400px]">
-                              <div className="p-2">
-                                  <p className="px-3 py-2 text-[10px] font-black uppercase tracking-widest text-muted-foreground opacity-50">{results.length} {dictionary.search.resultsFound}</p>
-                                  <ul className="space-y-1">
+                  <div className="px-4 py-3 border-b bg-muted/20 flex items-center justify-between">
+                      <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground opacity-60">
+                        {query.length > 1 ? `${results.length} ${dictionary.search.resultsFound}` : dictionary.search.prompt}
+                      </p>
+                  </div>
+                  <ScrollArea className="h-full max-h-[400px]">
+                      <div className="p-2">
+                          {query.length > 1 ? (
+                              results.length > 0 ? (
+                                  <ul className="space-y-2">
                                       {results.map((item, idx) => (
                                       <li key={`${item.type}-${item.slug}`} style={{ transitionDelay: `${idx * 30}ms` }} className="animate-in fade-in slide-in-from-left-2 duration-300">
-                                          <Link href={item.href} onClick={handleResultClick} className="block p-3 rounded-xl hover:bg-muted transition-colors">
-                                              <div className="overflow-hidden">
-                                                  <div className="flex items-start justify-between gap-2">
-                                                      <span className="font-bold text-sm text-primary line-clamp-2 flex-1 min-w-0">{item.title}</span>
-                                                      <Badge variant="outline" className="capitalize text-[10px] font-black tracking-tighter shrink-0">{item.type}</Badge>
+                                          <Link href={item.href} onClick={handleResultClick} className="block group">
+                                              <div className="relative rounded-xl border border-transparent hover:border-primary/10 hover:bg-muted/50 transition-all duration-300 p-4">
+                                                  <h4 className="font-bold text-sm text-primary line-clamp-2 leading-snug mb-2 transition-colors group-hover:text-accent">
+                                                      {item.title}
+                                                  </h4>
+                                                  <div className="flex items-center gap-2">
+                                                      <Badge variant="secondary" className="text-[9px] h-4 uppercase font-black tracking-wider px-1.5 rounded-sm shrink-0">
+                                                          {item.type}
+                                                      </Badge>
+                                                      <span className="text-[10px] text-muted-foreground font-medium opacity-30">•</span>
+                                                      <p className="text-[11px] text-muted-foreground line-clamp-1 italic opacity-70">
+                                                          {item.description}
+                                                      </p>
                                                   </div>
-                                                  <p className="text-xs text-muted-foreground mt-1 line-clamp-2">{item.description}</p>
                                               </div>
                                           </Link>
                                       </li>
                                       ))}
                                   </ul>
+                              ) : (
+                                  <div className="p-12 text-center text-sm text-muted-foreground italic">
+                                      {dictionary.search.noResults} &quot;{query}&quot;.
+                                  </div>
+                              )
+                          ) : (
+                              <div className="p-12 text-center text-sm text-muted-foreground font-medium">
+                                  {dictionary.search.placeholder}
                               </div>
-                          </ScrollArea>
-                      ) : (
-                          <div className="p-10 text-center text-sm text-muted-foreground italic">
-                              {dictionary.search.noResults} &quot;{query}&quot;.
-                          </div>
-                      )
-                  ) : (
-                      <div className="p-10 text-center text-sm text-muted-foreground font-medium">
-                          {dictionary.search.placeholder}
+                          )}
                       </div>
-                  )}
+                  </ScrollArea>
               </div>
           )}
 
