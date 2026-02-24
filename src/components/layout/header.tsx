@@ -294,7 +294,13 @@ export function Header({ searchableData, dictionary }: { searchableData: Searcha
                     value={query}
                     onChange={(e) => setQuery(e.target.value)}
                 />
-                <Button variant="ghost" size="icon" className={cn("rounded-full absolute right-2 z-20 h-9 w-9 bg-transparent hover:bg-transparent", navItemClass)} onClick={() => { setActiveView('none'); setQuery(''); }}>
+                <Button 
+                  variant="ghost" 
+                  size="icon" 
+                  className={cn("rounded-full absolute right-2 z-20 h-9 w-9 bg-transparent hover:bg-transparent", navItemClass)} 
+                  onClick={() => { setActiveView('none'); setQuery(''); }}
+                  aria-label="Close search"
+                >
                    <X className="h-5 w-5" />
                 </Button>
             </div>

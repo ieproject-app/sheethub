@@ -22,10 +22,19 @@ const jakarta = Plus_Jakarta_Sans({
   variable: '--font-jakarta',
 });
 
+const geistMono = GeistMono;
+
 export const metadata: Metadata = {
   metadataBase: new URL('https://snipgeek.com'),
-  title: 'SnipGeek - A Modern Minimalist Tech Blog',
-  description: 'A modern minimalist tech blog for geeks, powered by local MDX.',
+  title: {
+    default: 'SnipGeek - A Modern Minimalist Tech Blog',
+    template: '%s | SnipGeek',
+  },
+  description: 'A modern minimalist tech blog for geeks, exploring software, hardware, and IT automation.',
+  keywords: ['Tech Blog', 'Next.js', 'Programming', 'Windows', 'Web Development', 'Tutorials', 'SnipGeek'],
+  authors: [{ name: 'Iwan Efendi' }],
+  creator: 'Iwan Efendi',
+  publisher: 'SnipGeek',
   icons: {
     icon: '/images/logo/favicon.ico',
     shortcut: '/images/logo/favicon.ico',
@@ -36,6 +45,40 @@ export const metadata: Metadata = {
     languages: {
       'en': '/',
       'id': '/id',
+    },
+  },
+  openGraph: {
+    type: 'website',
+    locale: 'en_US',
+    url: 'https://snipgeek.com',
+    siteName: 'SnipGeek',
+    title: 'SnipGeek - A Modern Minimalist Tech Blog',
+    description: 'A modern minimalist tech blog for geeks, exploring software, hardware, and IT automation.',
+    images: [
+      {
+        url: '/images/footer/about.webp',
+        width: 1200,
+        height: 630,
+        alt: 'SnipGeek - Modern Tech Insights',
+      },
+    ],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'SnipGeek - A Modern Minimalist Tech Blog',
+    description: 'A modern minimalist tech blog for geeks, exploring software, hardware, and IT automation.',
+    images: ['/images/footer/about.webp'],
+    creator: '@iwnefnd',
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      'max-video-preview': -1,
+      'max-image-preview': 'large',
+      'max-snippet': -1,
     },
   },
 };
@@ -82,7 +125,7 @@ export default async function LocaleLayout({
   const draftNotes = getDraftNotesData(locale);
   
   return (
-    <html lang={locale} className={cn(jakarta.variable, GeistMono.variable, "scroll-smooth")} suppressHydrationWarning>
+    <html lang={locale} className={cn(jakarta.variable, geistMono.variable, "scroll-smooth")} suppressHydrationWarning>
       <head />
       <body className="font-body antialiased fade-in-on-load">
         <ThemeProvider
