@@ -25,6 +25,7 @@ export function ThemeSwitcher({ dictionary }: { dictionary: Dictionary }) {
     const nextTheme = theme === 'system' ? 'light' : theme === 'light' ? 'dark' : 'system';
     setTheme(nextTheme);
     
+    // Trigger notification bar in Header
     const key = `theme${nextTheme.charAt(0).toUpperCase() + nextTheme.slice(1)}`;
     const msg = (dictionary?.notifications as any)?.[key];
     if (msg) notify(msg);
@@ -46,7 +47,7 @@ export function ThemeSwitcher({ dictionary }: { dictionary: Dictionary }) {
       className="h-10 w-10 rounded-full bg-transparent hover:bg-white/10 transition-all duration-300 group active:scale-90"
       aria-label="Toggle theme mode"
     >
-      <div className="transition-transform duration-500 ease-in-out group-hover:rotate-45">
+      <div className="transition-transform duration-500 ease-in-out group-hover:rotate-[12deg]">
         {getIcon()}
       </div>
     </Button>

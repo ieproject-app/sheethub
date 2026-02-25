@@ -26,9 +26,11 @@ export function AddToReadingListButton({ item, dictionary, showText = true, clas
     
     if (isSaved) {
       removeItem(item.slug);
+      // Trigger notification bar in Header
       notify(dictionary.remove);
     } else {
       addItem(item);
+      // Trigger notification bar in Header
       notify(dictionary.add);
     }
   };
@@ -44,14 +46,16 @@ export function AddToReadingListButton({ item, dictionary, showText = true, clas
       onClick={handleClick}
       className={cn(
         !showText && 'h-8 w-8 rounded-full',
-        className
+        className,
+        "group/btn"
       )}
     >
       <Bookmark
         className={cn(
-          'h-4 w-4 transition-colors',
+          'h-4 w-4 transition-all duration-300',
           showText && 'mr-2',
-          isSaved && 'fill-current'
+          isSaved && 'fill-current',
+          "group-hover/btn:-translate-y-1"
         )}
       />
       {showText && buttonText}

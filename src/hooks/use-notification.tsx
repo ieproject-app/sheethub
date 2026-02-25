@@ -14,7 +14,7 @@ export function NotificationProvider({ children }: { children: ReactNode }) {
 
   const notify = useCallback((msg: string) => {
     setMessage(msg);
-    // Auto-clear message after 3 seconds
+    // Auto-clear message after a set time (2.5 seconds)
     const timer = setTimeout(() => {
       setMessage(null);
     }, 2500);
