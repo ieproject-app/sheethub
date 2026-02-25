@@ -63,6 +63,9 @@ export function Header({ searchableData, dictionary }: { searchableData: Searcha
   useEffect(() => {
     if (message) {
       setIsVisible(true);
+      setIsPulsing(true);
+      const timer = setTimeout(() => setIsPulsing(false), 2000);
+      return () => clearTimeout(timer);
     }
   }, [message]);
 
@@ -177,7 +180,7 @@ export function Header({ searchableData, dictionary }: { searchableData: Searcha
   return (
     <header ref={headerRef} className={cn(
         "fixed top-4 left-4 right-4 md:left-1/2 md:-translate-x-1/2 md:right-auto z-50 transition-all duration-700 ease-[cubic-bezier(0.16,1,0.3,1)]",
-        isSearchOpen ? 'md:w-[600px]' : 'md:w-[560px]',
+        isSearchOpen ? 'md:w-[600px]' : 'md:w-[580px]',
         isVisible ? "opacity-100 translate-y-0" : "opacity-0 -translate-y-16"
     )}>
         <nav className={cn(
@@ -188,7 +191,7 @@ export function Header({ searchableData, dictionary }: { searchableData: Searcha
                 "absolute inset-y-0 left-0 z-40 bg-primary/95 backdrop-blur-md transition-all duration-500 ease-[cubic-bezier(0.23,1,0.32,1)] rounded-full flex items-center",
                 (mounted && message) ? "w-full opacity-100" : "w-12 opacity-0 pointer-events-none"
             )}>
-                <div className="flex-1 flex items-center justify-center pl-14 pr-6">
+                <div className="flex-1 flex items-center justify-center pl-24 pr-6">
                     <p className={cn(
                         "text-[10px] font-black uppercase tracking-widest text-primary-foreground transition-all duration-500 delay-100",
                         message ? "opacity-100 translate-x-0" : "opacity-0 -translate-x-4"
@@ -198,20 +201,46 @@ export function Header({ searchableData, dictionary }: { searchableData: Searcha
                 </div>
             </div>
 
-            {/* Left Section: Logo (Always on top) */}
+            {/* Left Section: Menu + Logo */}
             <div className={cn(
-                "flex items-center pl-2 z-50 transition-all duration-500",
+                "flex items-center z-50 transition-all duration-500",
                 isSearchOpen ? "opacity-0 pointer-events-none w-0" : "opacity-100"
             )}>
+                <Button 
+                    variant="ghost" 
+                    size="icon"
+                    className={cn(
+                        "h-10 w-10 rounded-full bg-transparent hover:bg-white/10 transition-all shrink-0", 
+                        navItemClass
+                    )} 
+                    onClick={() => toggleView('menu')}
+                    aria-label="Toggle More Menu"
+                >
+                    <div className="relative flex items-center justify-center">
+                        {mounted && (
+                            <>
+                            <MoreHorizontal className={cn(
+                                "h-5 w-5 transition-all duration-500",
+                                isMenuOpen ? "opacity-0 rotate-90 scale-50" : "opacity-100 rotate-0 scale-100"
+                            )} />
+                            <X className={cn(
+                                "absolute h-5 w-5 transition-all duration-500",
+                                isMenuOpen ? "opacity-100 rotate-0 scale-100" : "opacity-0 -rotate-90 scale-50"
+                            )} />
+                            </>
+                        )}
+                    </div>
+                </Button>
+
                 <Link 
                     href="/" 
                     className={cn(
-                        "flex items-center justify-center h-7 w-7 transition-all duration-300 hover:scale-110 active:scale-95",
+                        "flex items-center justify-center h-7 w-7 transition-all duration-300 hover:scale-110 active:scale-95 ml-1",
                         message && "animate-pulse"
                     )} 
                     aria-label="SnipGeek Home"
                 >
-                    <SnipGeekLogo className="h-full w-full" />
+                    <SnipGeekLogo className={cn("h-full w-full", isPulsing && "animate-pulse")} />
                 </Link>
             </div>
 
@@ -235,7 +264,7 @@ export function Header({ searchableData, dictionary }: { searchableData: Searcha
                 ))}
             </div>
 
-            {/* Right Section: Utilities & More */}
+            {/* Right Section: Utilities */}
             <div className={cn(
                 "flex items-center gap-0.5 transition-all duration-500",
                 (isSearchOpen || message) ? "opacity-0 pointer-events-none" : "opacity-100"
@@ -272,32 +301,6 @@ export function Header({ searchableData, dictionary }: { searchableData: Searcha
                 >
                     <Search className="h-5 w-5" />
                 </Button>
-
-                <Button 
-                    variant="ghost" 
-                    size="icon"
-                    className={cn(
-                        "h-10 w-10 rounded-full bg-transparent hover:bg-white/10 transition-all", 
-                        navItemClass
-                    )} 
-                    onClick={() => toggleView('menu')}
-                    aria-label="Toggle More Menu"
-                >
-                    <div className="relative flex items-center justify-center shrink-0">
-                        {mounted && (
-                            <>
-                            <MoreHorizontal className={cn(
-                                "h-5 w-5 transition-all duration-500",
-                                isMenuOpen ? "opacity-0 rotate-90 scale-50" : "opacity-100 rotate-0 scale-100"
-                            )} />
-                            <X className={cn(
-                                "absolute h-5 w-5 transition-all duration-500",
-                                isMenuOpen ? "opacity-100 rotate-0 scale-100" : "opacity-0 -rotate-90 scale-50"
-                            )} />
-                            </>
-                        )}
-                    </div>
-                </Button>
             </div>
             
             {/* Search Input Overlay */}
@@ -328,8 +331,8 @@ export function Header({ searchableData, dictionary }: { searchableData: Searcha
 
         {/* More Menu Dropdown */}
         <div className={cn(
-            "absolute top-full right-0 z-40 mt-4 w-48 bg-primary/95 backdrop-blur-md shadow-2xl ring-1 ring-black/5 rounded-xl overflow-hidden transition-all duration-500 ease-[cubic-bezier(0.23,1,0.32,1)]",
-            "transform-origin-top-right",
+            "absolute top-full left-0 z-40 mt-4 w-48 bg-primary/95 backdrop-blur-md shadow-2xl ring-1 ring-black/5 rounded-xl overflow-hidden transition-all duration-500 ease-[cubic-bezier(0.23,1,0.32,1)]",
+            "transform-origin-top-left",
             isMenuOpen ? "opacity-100 scale-100 translate-y-0" : "opacity-0 scale-95 -translate-y-2 pointer-events-none"
         )}>
             <div className="grid grid-cols-1">
@@ -337,7 +340,7 @@ export function Header({ searchableData, dictionary }: { searchableData: Searcha
                     <>
                         {/* Mobile-only visible items */}
                         <div className="sm:hidden border-b border-white/10">
-                            {directLinks.map((item, index) => (
+                            {directLinks.map((item) => (
                                 <Link 
                                     key={item.href}
                                     href={item.href} 
@@ -353,7 +356,7 @@ export function Header({ searchableData, dictionary }: { searchableData: Searcha
                             ))}
                         </div>
                         {/* Always visible secondary items */}
-                        {moreItems.map((item, index) => (
+                        {moreItems.map((item) => (
                             <Link 
                                 key={item.href}
                                 href={item.href} 
