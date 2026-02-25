@@ -25,6 +25,7 @@ import { useReadingList } from '@/hooks/use-reading-list';
 import { useNotification } from '@/hooks/use-notification';
 import type { Dictionary } from '@/lib/get-dictionary';
 import { SnipGeekLogo } from '@/components/icons/snipgeek-logo';
+import { ThemeSwitcher } from './theme-switcher';
 
 type SearchableItem = {
   slug: string;
@@ -246,8 +247,9 @@ export function Header({ searchableData, dictionary }: { searchableData: Searcha
                 {/* CENTER: Placeholder */}
                 <div className="flex justify-center" />
 
-                {/* RIGHT SIDE: Bookmark & Search */}
-                <div className="flex justify-end items-center">
+                {/* RIGHT SIDE: Theme, Bookmark & Search */}
+                <div className="flex justify-end items-center gap-0.5">
+                    <ThemeSwitcher dictionary={dictionary} />
                     <Button 
                         variant="ghost" 
                         size="icon" 

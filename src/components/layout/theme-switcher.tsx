@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useTheme } from 'next-themes';
@@ -6,12 +7,7 @@ import { cn } from '@/lib/utils';
 import { useEffect, useState } from 'react';
 import { useNotification } from '@/hooks/use-notification';
 import type { Dictionary } from '@/lib/get-dictionary';
-
-const themeOptions = [
-  { theme: 'light', icon: Sun },
-  { theme: 'system', icon: Laptop },
-  { theme: 'dark', icon: Moon },
-];
+import { Button } from '@/components/ui/button';
 
 export function ThemeSwitcher({ dictionary }: { dictionary: Dictionary }) {
   const { theme, setTheme } = useTheme();
@@ -22,49 +18,39 @@ export function ThemeSwitcher({ dictionary }: { dictionary: Dictionary }) {
     setMounted(true);
   }, []);
   
-  const currentThemeIndex = themeOptions.findIndex((t) => t.theme === theme);
-  const activeIndex = currentThemeIndex === -1 ? 1 : currentThemeIndex; // Default to system
+  if (!mounted) {
+    return <div className="h-10 w-10" />;
+  }
 
-  const handleThemeChange = (newTheme: string) => {
-    setTheme(newTheme);
-    const key = `theme${newTheme.charAt(0).toUpperCase() + newTheme.slice(1)}`;
-    // Null-safe access to dictionary to prevent runtime errors during transitions
+  const cycleTheme = () => {
+    // Cycle: system -> light -> dark -> system
+    const nextTheme = theme === 'system' ? 'light' : theme === 'light' ? 'dark' : 'system';
+    setTheme(nextTheme);
+    
+    const key = `theme${nextTheme.charAt(0).toUpperCase() + nextTheme.slice(1)}`;
     const msg = (dictionary?.notifications as any)?.[key];
     if (msg) notify(msg);
   };
 
+  const getIcon = () => {
+    switch (theme) {
+      case 'light': return <Sun className="h-5 w-5 text-amber-400 fill-amber-400/20" />;
+      case 'dark': return <Moon className="h-5 w-5 text-amber-400 fill-amber-400/10" />;
+      default: return <Laptop className="h-5 w-5 text-primary-foreground/70" />;
+    }
+  };
+
   return (
-    <div 
-      className="relative flex items-center bg-black/20 rounded-full p-1 text-sm min-h-[28px] min-w-[90px] shadow-inner"
-      suppressHydrationWarning
+    <Button
+      variant="ghost"
+      size="icon"
+      onClick={cycleTheme}
+      className="h-10 w-10 rounded-full bg-transparent hover:bg-white/10 transition-all duration-300 group active:scale-90"
+      aria-label="Toggle theme mode"
     >
-      {!mounted ? (
-        <div className="w-full h-full animate-pulse bg-white/10 rounded-full" />
-      ) : (
-        <>
-          <div
-            className={cn(
-              'absolute h-5 w-7 bg-accent shadow-sm rounded-full transition-transform duration-300 ease-in-out'
-            )}
-            style={{ transform: `translateX(${activeIndex * 100}%)` }}
-          />
-          {themeOptions.map((option) => (
-            <button
-              key={option.theme}
-              onClick={() => handleThemeChange(option.theme)}
-              className={cn(
-                'relative z-10 w-7 h-5 flex items-center justify-center rounded-full transition-colors',
-                theme === option.theme
-                  ? 'text-primary'
-                  : 'text-primary-foreground/60 hover:text-primary-foreground'
-              )}
-              aria-label={`Switch to ${option.theme} mode`}
-            >
-              <option.icon className="h-3 w-3" />
-            </button>
-          ))}
-        </>
-      )}
-    </div>
+      <div className="transition-transform duration-500 ease-in-out group-hover:rotate-12">
+        {getIcon()}
+      </div>
+    </Button>
   );
 }

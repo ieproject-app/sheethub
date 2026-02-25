@@ -5,7 +5,6 @@ import { PlaceHolderImages } from '@/lib/placeholder-images';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { i18n } from '@/i18n-config';
 import { cn } from '@/lib/utils';
-import { ThemeSwitcher } from './theme-switcher';
 import type { Dictionary } from '@/lib/get-dictionary';
 import { LanguageSwitcher } from './language-switcher';
 import type { TranslationsMap } from '@/lib/posts';
@@ -109,8 +108,6 @@ export function Footer({ dictionary, translationsMap }: { dictionary: Dictionary
                             {/* Switchers inside Header-styled Pill */}
                             <div className="bg-primary/90 backdrop-blur-sm rounded-full p-1.5 flex items-center gap-2 shadow-xl border border-white/5">
                                 <LanguageSwitcher translationsMap={translationsMap} dictionary={dictionary} />
-                                <div className="w-px h-4 bg-primary-foreground/20" />
-                                <ThemeSwitcher dictionary={dictionary} />
                             </div>
                         </div>
                         <p className="font-medium tracking-wide">&copy; {new Date().getFullYear()} SnipGeek. All Rights Reserved.</p>
