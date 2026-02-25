@@ -1,4 +1,3 @@
-
 import Image from 'next/image';
 import Link from 'next/link';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
@@ -13,19 +12,19 @@ import { TikTokLogo } from '@/components/icons/tiktok-logo';
 
 export function Footer({ dictionary, translationsMap }: { dictionary: Dictionary, translationsMap: TranslationsMap }) {
     const footerNavItems = [
-      { id: 'footer-about', title: dictionary.navigation.about, href: '/about', icon: <User2 className="h-5 w-5" /> },
-      { id: 'footer-notes', title: dictionary.navigation.notes, href: '/notes', icon: <StickyNote className="h-5 w-5" /> },
-      { id: 'footer-tools', title: dictionary.navigation.tools, href: '/tools', icon: <LayoutGrid className="h-5 w-5" /> },
-      { id: 'footer-contact', title: dictionary.navigation.contact, href: '/contact', icon: <Mail className="h-5 w-5" /> },
+      { id: 'footer-about', title: dictionary.navigation.about, href: '/about', icon: <User2 className="h-5 w-5" strokeWidth={2.5} /> },
+      { id: 'footer-notes', title: dictionary.navigation.notes, href: '/notes', icon: <StickyNote className="h-5 w-5" strokeWidth={2.5} /> },
+      { id: 'footer-tools', title: dictionary.navigation.tools, href: '/tools', icon: <LayoutGrid className="h-5 w-5" strokeWidth={2.5} /> },
+      { id: 'footer-contact', title: dictionary.navigation.contact, href: '/contact', icon: <Mail className="h-5 w-5" strokeWidth={2.5} /> },
     ];
 
     const authorName = "Iwan Efendi";
     const authorAvatar = "/images/profile/profile.png";
 
     const socialLinks = [
-        { icon: <Facebook className="h-5 w-5" />, href: "https://www.facebook.com/iwan.efendi.777", label: "Facebook" },
-        { icon: <Youtube className="h-5 w-5" />, href: "https://www.youtube.com/@iwantools", label: "YouTube" },
-        { icon: <Instagram className="h-5 w-5" />, href: "https://www.instagram.com/iwnefnd/", label: "Instagram" },
+        { icon: <Facebook className="h-5 w-5" strokeWidth={2.5} />, href: "https://www.facebook.com/iwan.efendi.777", label: "Facebook" },
+        { icon: <Youtube className="h-5 w-5" strokeWidth={2.5} />, href: "https://www.youtube.com/@iwantools", label: "YouTube" },
+        { icon: <Instagram className="h-5 w-5" strokeWidth={2.5} />, href: "https://www.instagram.com/iwnefnd/", label: "Instagram" },
         { icon: <TikTokLogo className="h-5 w-5" />, href: "https://www.tiktok.com/@iwantools", label: "TikTok" },
     ];
 

@@ -1,4 +1,3 @@
-
 'use client';
 
 import React, { useState, useEffect, useRef } from 'react';
@@ -222,11 +221,11 @@ export function Header({ searchableData, dictionary }: { searchableData: Searcha
                             <MoreHorizontal className={cn(
                                 "h-5 w-5 transition-all duration-500",
                                 isMenuOpen ? "opacity-0 rotate-90 scale-50" : "opacity-100 rotate-0 scale-100"
-                            )} />
+                            )} strokeWidth={2.5} />
                             <X className={cn(
                                 "absolute h-5 w-5 transition-all duration-500",
                                 isMenuOpen ? "opacity-100 rotate-0 scale-100" : "opacity-0 -rotate-90 scale-50"
-                            )} />
+                            )} strokeWidth={2.5} />
                             </>
                         )}
                     </div>
@@ -258,7 +257,7 @@ export function Header({ searchableData, dictionary }: { searchableData: Searcha
                             pathname.includes(item.href) ? "text-accent" : "text-primary-foreground/70"
                         )}
                     >
-                        <item.icon className="h-3.5 w-3.5" />
+                        <item.icon className="h-3.5 w-3.5" strokeWidth={2.5} />
                         <span>{item.name}</span>
                     </Link>
                 ))}
@@ -281,7 +280,7 @@ export function Header({ searchableData, dictionary }: { searchableData: Searcha
                     onClick={() => toggleView('readingList')}
                     aria-label="Reading List"
                 >
-                    <Bookmark className="h-5 w-5" />
+                    <Bookmark className="h-5 w-5" strokeWidth={2.5} />
                     {mounted && readingListItems.length > 0 && (
                         <span className={cn(
                             "absolute top-1.5 right-1.5 flex h-3.5 min-w-[14px] items-center justify-center rounded-full bg-accent text-accent-foreground text-[9px] font-bold px-1 transition-all duration-300",
@@ -299,7 +298,7 @@ export function Header({ searchableData, dictionary }: { searchableData: Searcha
                     onClick={() => toggleView('search')}
                     aria-label="Search"
                 >
-                    <Search className="h-5 w-5" />
+                    <Search className="h-5 w-5" strokeWidth={2.5} />
                 </Button>
             </div>
             
@@ -308,7 +307,7 @@ export function Header({ searchableData, dictionary }: { searchableData: Searcha
                 "absolute inset-0 w-full h-full flex items-center transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)]",
                 isSearchOpen ? "opacity-100 z-50 px-2" : "opacity-0 -z-10 pointer-events-none"
             )}>
-                <Search className="absolute left-6 top-1/2 -translate-y-1/2 h-5 w-5 text-primary-foreground/70 pointer-events-none"/>
+                <Search className="absolute left-6 top-1/2 -translate-y-1/2 h-5 w-5 text-primary-foreground/70 pointer-events-none" strokeWidth={2.5}/>
                 <Input 
                     ref={searchInputRef}
                     type="text" 
@@ -324,7 +323,7 @@ export function Header({ searchableData, dictionary }: { searchableData: Searcha
                   onClick={() => { setActiveView('none'); setQuery(''); }}
                   aria-label={dictionary.search.close || "Close Search"}
                 >
-                   <X className="h-5 w-5" />
+                   <X className="h-5 w-5" strokeWidth={2.5} />
                 </Button>
             </div>
         </nav>
@@ -350,7 +349,7 @@ export function Header({ searchableData, dictionary }: { searchableData: Searcha
                                     )} 
                                     onClick={() => setActiveView('none')}
                                 >
-                                    <item.icon className="h-4 w-4 shrink-0 text-accent" />
+                                    <item.icon className="h-4 w-4 shrink-0 text-accent" strokeWidth={2.5} />
                                     <span>{item.name}</span>
                                 </Link>
                             ))}
@@ -367,7 +366,7 @@ export function Header({ searchableData, dictionary }: { searchableData: Searcha
                                 onClick={() => setActiveView('none')}
                             >
                                 <div className="absolute left-0 top-0 bottom-0 w-1 bg-accent scale-y-0 group-hover:scale-y-100 transition-transform duration-300 origin-center" />
-                                <item.icon className="h-4 w-4 shrink-0 transition-all duration-300 group-hover:scale-110 group-hover:text-accent" />
+                                <item.icon className="h-4 w-4 shrink-0 transition-all duration-300 group-hover:scale-110 group-hover:text-accent" strokeWidth={2.5} />
                                 <span className="transition-transform duration-300 group-hover:translate-x-1">{item.name}</span>
                             </Link>
                         ))}
@@ -469,7 +468,7 @@ export function Header({ searchableData, dictionary }: { searchableData: Searcha
                                     }}
                                     aria-label="Remove from Reading List"
                                   >
-                                    <Trash2 className="h-4 w-4" />
+                                    <Trash2 className="h-4 w-4" strokeWidth={2.5} />
                                   </Button>
                               </div>
                           </li>
@@ -477,7 +476,7 @@ export function Header({ searchableData, dictionary }: { searchableData: Searcha
                       </ul>
                     ) : (
                       <div className="p-12 text-center text-sm text-muted-foreground italic flex flex-col items-center gap-3">
-                        <Bookmark className="h-8 w-8 opacity-10" />
+                        <Bookmark className="h-8 w-8 opacity-10" strokeWidth={2.5} />
                         {dictionary.readingList.empty}
                       </div>
                     )}

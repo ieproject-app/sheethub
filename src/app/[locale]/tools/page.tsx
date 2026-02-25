@@ -1,4 +1,3 @@
-
 import { i18n } from '@/i18n-config';
 import type { Metadata } from 'next';
 import { getDictionary } from '@/lib/get-dictionary';
@@ -30,18 +29,18 @@ export default async function ToolsPage({ params }: { params: Promise<{ locale: 
   const publicTools = [
     {
       id: 'number_to_words',
-      icon: <Calculator className="h-8 w-8" />,
+      icon: <Calculator className="h-8 w-8" strokeWidth={2.5} />,
     },
     {
       id: 'random_name',
-      icon: <Shuffle className="h-8 w-8" />,
+      icon: <Shuffle className="h-8 w-8" strokeWidth={2.5} />,
     },
   ];
 
   const internalTools = [
     {
       id: 'ai_prompt_generator',
-      icon: <ClipboardPenLine className="h-8 w-8" />,
+      icon: <ClipboardPenLine className="h-8 w-8" strokeWidth={2.5} />,
       isLink: true,
       href: `${linkPrefix}/tools/prompt-generator`,
       badge: pageContent.new_badge,
@@ -49,7 +48,7 @@ export default async function ToolsPage({ params }: { params: Promise<{ locale: 
     },
     {
       id: 'employee_history',
-      icon: <Briefcase className="h-8 w-8" />,
+      icon: <Briefcase className="h-8 w-8" strokeWidth={2.5} />,
       isLink: true,
       href: `${linkPrefix}/tools/employee-history`,
       badge: pageContent.open_tool,
@@ -57,7 +56,7 @@ export default async function ToolsPage({ params }: { params: Promise<{ locale: 
     },
     {
       id: 'number_generator',
-      icon: <Hash className="h-8 w-8" />,
+      icon: <Hash className="h-8 w-8" strokeWidth={2.5} />,
     },
   ];
 

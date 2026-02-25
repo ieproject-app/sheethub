@@ -1,4 +1,3 @@
-
 'use client';
 
 import { useEffect, useState } from 'react';
@@ -41,7 +40,7 @@ export function BackToTop() {
       onClick={scrollToTop}
       aria-label="Back to top"
     >
-      <ArrowUp className="h-5 w-5" />
+      <ArrowUp className="h-5 w-5" strokeWidth={3} />
     </Button>
   );
 }
