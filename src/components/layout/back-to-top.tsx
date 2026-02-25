@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useEffect, useState } from 'react';
@@ -29,7 +30,6 @@ export function BackToTop() {
     });
   };
 
-  // Using bg-primary/90 to match the Header's "Pill" style
   return (
     <Button
       variant="default"
@@ -39,7 +39,7 @@ export function BackToTop() {
         isVisible ? 'opacity-100' : 'opacity-0 pointer-events-none'
       )}
       onClick={scrollToTop}
-      aria-label="Go to top"
+      aria-label="Back to top"
     >
       <ArrowUp className="h-5 w-5" />
     </Button>
