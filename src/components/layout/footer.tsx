@@ -71,8 +71,15 @@ export function Footer({ dictionary, translationsMap }: { dictionary: Dictionary
                 </div>
             </div>
 
+            {/* Wave Divider */}
+            <div className="relative w-full overflow-hidden leading-none -mb-1">
+                <svg viewBox="0 0 1440 80" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none" className="w-full h-16 sm:h-20 fill-muted/30">
+                    <path d="M0,40 C360,80 1080,0 1440,40 L1440,80 L0,80 Z" />
+                </svg>
+            </div>
+
             {/* Sub-Footer Section */}
-            <div className="relative w-full pt-12 pb-12 bg-muted/30 border-t border-primary/5">
+            <div className="relative w-full pt-0 pb-12 bg-muted/30">
                 <div className="relative z-10 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
                     <div className="text-center mb-16 -mt-24">
                         <Avatar className="w-24 h-24 mx-auto mb-6 border-4 border-background shadow-2xl bg-background">
