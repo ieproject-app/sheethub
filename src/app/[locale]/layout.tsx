@@ -36,9 +36,9 @@ export const metadata: Metadata = {
   creator: 'Iwan Efendi',
   publisher: 'SnipGeek',
   icons: {
-    icon: '/images/logo/favicon.ico',
-    shortcut: '/images/logo/favicon.ico',
-    apple: '/images/logo/apple-touch-icon.png',
+    icon: '/logo.svg',
+    shortcut: '/logo.svg',
+    apple: '/logo.svg',
   },
   alternates: {
     canonical: '/',
