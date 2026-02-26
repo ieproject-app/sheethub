@@ -214,7 +214,7 @@ export function Header({ searchableData, dictionary }: { searchableData: Searcha
 
   return (
     <header ref={headerRef} className={cn(
-        "fixed top-4 left-4 right-4 md:left-1/2 md:-translate-x-1/2 md:right-auto z-50 transition-all duration-700 ease-[cubic-bezier(0.16,1,0.3,1)]",
+        "fixed top-4 left-4 right-4 md:left-1/2 md:-translate-x-1/2 md:right-auto z-[100] transition-all duration-700 ease-[cubic-bezier(0.16,1,0.3,1)]",
         isSearchOpen ? 'md:w-[600px]' : 'md:w-[580px]',
         isVisible ? "opacity-100 translate-y-0" : "opacity-0 -translate-y-16"
     )}>
@@ -351,8 +351,8 @@ export function Header({ searchableData, dictionary }: { searchableData: Searcha
             
             {/* Search Input Overlay */}
             <div className={cn(
-                "absolute inset-0 w-full h-full flex items-center transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)]",
-                isSearchOpen ? "opacity-100 z-50 px-2" : "opacity-0 -z-10 pointer-events-none"
+                "absolute inset-0 w-full h-full flex items-center transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] z-10",
+                isSearchOpen ? "opacity-100 px-2" : "opacity-0 pointer-events-none"
             )}>
                 <Search className="absolute left-6 top-1/2 -translate-y-1/2 h-5 w-5 text-primary-foreground/70 pointer-events-none" />
                 <Input 
@@ -377,7 +377,7 @@ export function Header({ searchableData, dictionary }: { searchableData: Searcha
 
         {/* More Menu Dropdown */}
         <div className={cn(
-            "absolute top-full left-0 z-[60] mt-4 w-48 bg-primary/95 backdrop-blur-md shadow-2xl ring-1 ring-black/5 rounded-xl overflow-hidden transition-all duration-500 ease-[cubic-bezier(0.23,1,0.32,1)]",
+            "absolute top-full left-0 z-[70] mt-4 w-48 bg-primary/95 backdrop-blur-md shadow-2xl ring-1 ring-black/5 rounded-xl overflow-hidden transition-all duration-500 ease-[cubic-bezier(0.23,1,0.32,1)]",
             "transform-origin-top-left",
             isMenuOpen ? "opacity-100 scale-100 translate-y-0" : "opacity-0 scale-95 -translate-y-2 pointer-events-none invisible"
         )}>
@@ -419,11 +419,11 @@ export function Header({ searchableData, dictionary }: { searchableData: Searcha
         </div>
 
         {/* Search Results Dropdown */}
-        <div className="absolute top-full left-0 right-0 z-[60] mt-4">
-            <div className={cn(
-                "bg-primary/95 backdrop-blur-xl rounded-2xl border border-primary-foreground/[0.08] shadow-[0_24px_60px_-12px_rgba(0,0,0,0.6)] max-h-[450px] overflow-hidden transition-all duration-500 ease-[cubic-bezier(0.34,1.56,0.64,1)]",
-                isSearchOpen ? "opacity-100 scale-100 translate-y-0" : "opacity-0 scale-[0.97] -translate-y-4 invisible"
-            )}>
+        <div className={cn(
+            "absolute top-full left-0 right-0 z-[70] mt-4 transition-all duration-500 ease-[cubic-bezier(0.34,1.56,0.64,1)]",
+            isSearchOpen ? "opacity-100 scale-100 translate-y-0" : "opacity-0 scale-[0.97] -translate-y-4 pointer-events-none invisible"
+        )}>
+            <div className="bg-primary/95 backdrop-blur-xl rounded-2xl border border-primary-foreground/[0.08] shadow-[0_24px_60px_-12px_rgba(0,0,0,0.6)] max-h-[450px] overflow-hidden">
                   <div className="px-5 py-3 bg-primary-foreground/[0.02] border-b border-primary-foreground/[0.06] flex items-center justify-between">
                       <div className="flex items-center gap-3">
                         <div className={cn(
@@ -508,11 +508,11 @@ export function Header({ searchableData, dictionary }: { searchableData: Searcha
         </div>
 
         {/* Reading List Dropdown */}
-        <div className="absolute top-full left-0 right-0 z-[60] mt-4">
-            <div className={cn(
-                "bg-primary/95 backdrop-blur-xl rounded-2xl border border-primary-foreground/[0.08] shadow-[0_24px_60px_-12px_rgba(0,0,0,0.6)] max-h-[450px] overflow-hidden transition-all duration-500 ease-[cubic-bezier(0.34,1.56,0.64,1)]",
-                isReadingListOpen ? "opacity-100 scale-100 translate-y-0" : "opacity-0 scale-[0.97] -translate-y-4 invisible"
-            )}>
+        <div className={cn(
+            "absolute top-full left-0 right-0 z-[70] mt-4 transition-all duration-500 ease-[cubic-bezier(0.34,1.56,0.64,1)]",
+            isReadingListOpen ? "opacity-100 scale-100 translate-y-0" : "opacity-0 scale-[0.97] -translate-y-4 pointer-events-none invisible"
+        )}>
+            <div className="bg-primary/95 backdrop-blur-xl rounded-2xl border border-primary-foreground/[0.08] shadow-[0_24px_60px_-12px_rgba(0,0,0,0.6)] max-h-[450px] overflow-hidden">
                 <div className="px-5 py-3 bg-primary-foreground/[0.02] border-b border-primary-foreground/[0.06] flex items-center justify-between">
                     <p className="text-[10px] font-black uppercase tracking-widest text-primary-foreground/40">
                       {dictionary.readingList.inYourList}
