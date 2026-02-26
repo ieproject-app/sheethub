@@ -2,20 +2,21 @@
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import './globals.css';
-import { Plus_Jakarta_Sans } from 'next/font/google';
+import { Poppins } from 'next/font/google';
 import { GeistMono } from 'geist/font/mono';
 import { cn } from '@/lib/utils';
 import { Search, Home, BookOpen, PenTool } from 'lucide-react';
 
-const jakarta = Plus_Jakarta_Sans({
+const poppins = Poppins({
   subsets: ['latin'],
+  weight: ['400', '600', '700', '800'],
   display: 'swap',
-  variable: '--font-jakarta',
+  variable: '--font-poppins',
 });
 
 export default function NotFound() {
   return (
-    <html lang="en" className={cn(jakarta.variable, GeistMono.variable)}>
+    <html lang="en" className={cn(poppins.variable, GeistMono.variable)}>
       <head>
         <title>404 - Page Not Found | SnipGeek</title>
         <meta name="description" content="Sorry, the page you're looking for doesn't exist. Find tutorials, notes, and tech tools at SnipGeek." />

@@ -1,3 +1,4 @@
+
 import { Header } from '@/components/layout/header';
 import { Footer } from '@/components/layout/footer';
 import { i18n } from '@/i18n-config';
@@ -12,14 +13,15 @@ import { BackToTop } from '@/components/layout/back-to-top';
 import { ThemeSwitcher } from '@/components/layout/theme-switcher';
 import { getDictionary } from '@/lib/get-dictionary';
 import { DraftList } from '@/components/layout/draft-list';
-import { Plus_Jakarta_Sans } from 'next/font/google';
+import { Poppins } from 'next/font/google';
 import { GeistMono } from 'geist/font/mono';
 import { cn } from '@/lib/utils';
 
-const jakarta = Plus_Jakarta_Sans({
+const poppins = Poppins({
   subsets: ['latin'],
+  weight: ['300', '400', '500', '600', '700', '800'],
   display: 'swap',
-  variable: '--font-jakarta',
+  variable: '--font-poppins',
 });
 
 const geistMono = GeistMono;
@@ -125,7 +127,7 @@ export default async function LocaleLayout({
   const draftNotes = getDraftNotesData(locale);
   
   return (
-    <html lang={locale} className={cn(jakarta.variable, geistMono.variable, "scroll-smooth")} suppressHydrationWarning>
+    <html lang={locale} className={cn(poppins.variable, geistMono.variable, "scroll-smooth")} suppressHydrationWarning>
       <head />
       <body className="font-body antialiased fade-in-on-load">
         <ThemeProvider

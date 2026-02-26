@@ -12,8 +12,8 @@ export default {
   theme: {
     extend: {
       fontFamily: {
-        body: ['var(--font-jakarta)', 'system-ui', '-apple-system', 'sans-serif'],
-        headline: ['var(--font-jakarta)', 'system-ui', 'sans-serif'],
+        body: ['var(--font-poppins)', 'system-ui', '-apple-system', 'sans-serif'],
+        headline: ['var(--font-poppins)', 'system-ui', 'sans-serif'],
         code: ['var(--font-geist-mono)', 'ui-monospace', 'monospace'],
       },
       colors: {
