@@ -1,3 +1,4 @@
+
 import { getSortedPostsData } from '@/lib/posts';
 import Link from 'next/link';
 import { i18n } from '@/i18n-config';
@@ -218,7 +219,7 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
       {/* TopicSection (Windows Style) */}
       {topicPosts.length > 0 && (
         <TopicSection 
-          posts={topicPosts as any}
+          posts={topicPosts as any} 
           title={dictionary.home.specialTagSectionTitle}
           breadcrumbHome={dictionary.home.breadcrumbHome}
           viewAllText={dictionary.home.viewAllPosts}
@@ -235,6 +236,7 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
           title={dictionary.home.softwareUpdateSlider.title}
           viewMoreText={dictionary.home.softwareUpdateSlider.viewMore}
           locale={locale}
+          tag={updateTag}
         />
       )}
     </div>

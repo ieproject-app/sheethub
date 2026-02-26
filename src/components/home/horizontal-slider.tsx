@@ -1,3 +1,4 @@
+
 'use client';
 
 import * as React from 'react';
@@ -31,13 +32,14 @@ interface HorizontalSliderProps {
   title: string;
   viewMoreText: string;
   locale: string;
+  tag?: string;
 }
 
 /**
  * HorizontalSlider - A carousel component displaying cards with 1:1 images.
  * Mixes the carousel functionality of FeatureSlider with the card style of TopicSection.
  */
-export function HorizontalSlider({ posts, title, viewMoreText, locale }: HorizontalSliderProps) {
+export function HorizontalSlider({ posts, title, viewMoreText, locale, tag }: HorizontalSliderProps) {
   const [api, setApi] = React.useState<CarouselApi>();
   const [current, setCurrent] = React.useState(0);
   const [count, setCount] = React.useState(0);
@@ -54,6 +56,7 @@ export function HorizontalSlider({ posts, title, viewMoreText, locale }: Horizon
   }, [api]);
 
   const linkPrefix = locale === 'en' ? '' : `/${locale}`;
+  const viewMoreHref = tag ? `${linkPrefix}/tags/${tag.toLowerCase()}` : `${linkPrefix}/blog`;
 
   return (
     <section className="pb-12 sm:pb-16 overflow-hidden">
@@ -171,7 +174,7 @@ export function HorizontalSlider({ posts, title, viewMoreText, locale }: Horizon
               <div className="h-3 w-px bg-primary/10 hidden sm:block" />
 
               <Link 
-                href={`${linkPrefix}/blog`} 
+                href={viewMoreHref} 
                 className="text-[10px] font-bold uppercase tracking-widest text-primary hover:text-accent transition-all flex items-center gap-1 group/more"
               >
                 {viewMoreText}
