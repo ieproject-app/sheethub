@@ -25,14 +25,14 @@ export const SnipGeekLogo = ({
       {...props}
     >
       <defs>
-        {/* Light Blue Gradient (Cyan/Sky) */}
-        <linearGradient id={`bb5-${id}`} x1="0%" y1="0%" x2="100%" y2="100%">
+        {/* Light Blue Gradient (Bright) */}
+        <linearGradient id={`bb-bright-${id}`} x1="0%" y1="0%" x2="100%" y2="100%">
           <stop offset="0%" stopColor="#bae6fd"/>
           <stop offset="100%" stopColor="#0ea5e9"/>
         </linearGradient>
         
-        {/* Dark Blue Gradient (Royal/Navy) */}
-        <linearGradient id={`bd5-${id}`} x1="0%" y1="0%" x2="100%" y2="100%">
+        {/* Dark Blue Gradient (Deep) */}
+        <linearGradient id={`bd-deep-${id}`} x1="0%" y1="0%" x2="100%" y2="100%">
           <stop offset="0%" stopColor="#1d4ed8"/>
           <stop offset="100%" stopColor="#0c2461"/>
         </linearGradient>
@@ -57,25 +57,30 @@ export const SnipGeekLogo = ({
         `}</style>
       </defs>
 
-      {/* TL: Light Blue - Snipped corner */}
+      {/* Background pill */}
+      {showBackground && (
+        <rect x="0" y="0" width="100" height="100" rx="20" fill="currentColor" opacity="0.10"/>
+      )}
+
+      {/* TL: bright — snipped bottom-right corner */}
       <polygon 
         className={`w3-tl-${id}`} 
         points="5,5 49,5 49,40 40,49 5,49"
-        fill={`url(#bb5-${id})`}
+        fill={`url(#bb-bright-${id})`}
       />
 
-      {/* BR: Light Blue - Snipped corner */}
+      {/* BR: bright — snipped top-left corner */}
       <polygon 
         className={`w3-br-${id}`} 
         points="60,51 95,51 95,95 51,95 51,60"
-        fill={`url(#bb5-${id})`}
+        fill={`url(#bb-bright-${id})`}
       />
 
-      {/* TR: Dark Blue */}
-      <rect className={`w3-tr-${id}`} x="51" y="5" width="44" height="44" rx="4" fill={`url(#bd5-${id})`}/>
+      {/* TR: deep blue */}
+      <rect className={`w3-tr-${id}`} x="51" y="5" width="44" height="44" rx="4" fill={`url(#bd-deep-${id})`}/>
 
-      {/* BL: Dark Blue */}
-      <rect className={`w3-bl-${id}`} x="5" y="51" width="44" height="44" rx="4" fill={`url(#bd5-${id})`}/>
+      {/* BL: deep blue */}
+      <rect className={`w3-bl-${id}`} x="5" y="51" width="44" height="44" rx="4" fill={`url(#bd-deep-${id})`}/>
 
       {/* Center pivot dot */}
       <circle className={`w3-dot-${id}`} cx="50" cy="50" r="2" fill="#bae6fd" opacity="0.9"/>
