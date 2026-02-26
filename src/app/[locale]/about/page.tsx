@@ -1,3 +1,4 @@
+
 import { i18n } from '@/i18n-config';
 import type { Metadata } from 'next';
 import { getPageContent } from '@/lib/pages';
@@ -214,7 +215,7 @@ export default async function AboutPage({ params }: { params: Promise<{ locale: 
         </div>
 
         {/* Download Section */}
-        <section className="text-center bg-primary/5 border border-primary/10 rounded-2xl p-8 md:p-12">
+        <section className="text-center bg-primary/5 border border-primary/10 rounded-lg p-8 md:p-12">
             <FileText className="w-12 h-12 text-primary mx-auto mb-6" />
             <h2 className="text-2xl font-bold font-headline text-primary mb-4 uppercase tracking-tight">{dictionary.about.downloadResume}</h2>
             <div className="flex justify-center">

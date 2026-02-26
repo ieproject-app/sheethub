@@ -1,3 +1,4 @@
+
 'use client'
 
 import { useState, useMemo, useEffect } from 'react'
@@ -195,7 +196,7 @@ export default function EmployeeHistoryClient({
   return (
     <div className="space-y-12">
       {/* Search Section */}
-      <Card className="border bg-card/50 rounded-2xl overflow-hidden shadow-sm border-primary/10">
+      <Card className="border bg-card/50 rounded-lg overflow-hidden shadow-sm border-primary/10">
         <CardHeader className="border-b bg-muted/20">
           <div className="flex items-center gap-3">
             <div className="p-2 bg-primary/10 rounded-lg">
@@ -215,14 +216,14 @@ export default function EmployeeHistoryClient({
                     placeholder={t.searchPlaceholder} 
                     value={searchText} 
                     onChange={e => setSearchText(e.target.value)} 
-                    className="pl-10 h-11 rounded-xl bg-background/50 border-muted focus-visible:ring-primary/20" 
+                    className="pl-10 h-11 rounded-lg bg-background/50 border-muted focus-visible:ring-primary/20" 
                 />
             </div>
             <Select value={searchGrup} onValueChange={setSearchGrup}>
-                <SelectTrigger className="w-full md:w-[240px] h-11 rounded-xl bg-background/50 border-muted">
+                <SelectTrigger className="w-full md:w-[240px] h-11 rounded-lg bg-background/50 border-muted">
                     <SelectValue placeholder={t.groupPlaceholder} />
                 </SelectTrigger>
-                <SelectContent className="rounded-xl">
+                <SelectContent className="rounded-lg">
                     {uniqueGrupJabatans.map(grup => (
                         <SelectItem key={grup} value={grup}>{grup === 'all' ? t.allGroups : grup}</SelectItem>
                     ))}
@@ -230,7 +231,7 @@ export default function EmployeeHistoryClient({
             </Select>
           </div>
 
-          <div className="relative rounded-xl border bg-background/50 overflow-hidden">
+          <div className="relative rounded-lg border bg-background/50 overflow-hidden">
             <div className="overflow-x-auto">
                 <Table>
                 <TableHeader className="bg-muted/30">
@@ -290,7 +291,7 @@ export default function EmployeeHistoryClient({
       </Card>
 
       {/* Generator Section */}
-      <Card className="border bg-card/50 rounded-2xl overflow-hidden shadow-sm border-primary/10">
+      <Card className="border bg-card/50 rounded-lg overflow-hidden shadow-sm border-primary/10">
         <CardHeader className="border-b bg-muted/20">
           <div className="flex items-center gap-3">
             <div className="p-2 bg-primary/10 rounded-lg">
@@ -305,24 +306,24 @@ export default function EmployeeHistoryClient({
         <CardContent className="p-6">
           <div className="space-y-4">
             {docQueries.map((query, index) => (
-                <div key={query.id} className="flex flex-col md:flex-row items-end gap-4 p-5 border rounded-xl bg-background/30 relative group transition-all hover:border-primary/30">
+                <div key={query.id} className="flex flex-col md:flex-row items-end gap-4 p-5 border rounded-lg bg-background/30 relative group transition-all hover:border-primary/30">
                     <div className="w-full md:flex-1 space-y-2">
                         <label className="text-xs font-bold uppercase tracking-wider text-muted-foreground">{t.docTypePlaceholder}</label>
                         <Select value={query.docType} onValueChange={value => handleQueryChange(query.id, 'docType', value)}>
-                            <SelectTrigger className="h-11 rounded-xl bg-background/50 focus:ring-primary/20"><SelectValue /></SelectTrigger>
-                            <SelectContent className="rounded-xl">
+                            <SelectTrigger className="h-11 rounded-lg bg-background/50 focus:ring-primary/20"><SelectValue /></SelectTrigger>
+                            <SelectContent className="rounded-lg">
                                 {Object.keys(docRules).map(doc => <SelectItem key={doc} value={doc}>{doc}</SelectItem>)}
                             </SelectContent>
                         </Select>
                     </div>
                     <div className="w-full md:flex-1 space-y-2">
                         <label className="text-xs font-bold uppercase tracking-wider text-muted-foreground">{t.startDateHeader}</label>
-                        <Input type="date" value={query.docDate} onChange={e => handleQueryChange(query.id, 'docDate', e.target.value)} className="h-11 rounded-xl bg-background/50 focus-visible:ring-primary/20" />
+                        <Input type="date" value={query.docDate} onChange={e => handleQueryChange(query.id, 'docDate', e.target.value)} className="h-11 rounded-lg bg-background/50 focus-visible:ring-primary/20" />
                     </div>
                     {(query.docType === 'AMD PENUTUP' || query.docType === 'BAST') && (
                         <div className="w-full md:flex-1 space-y-2">
                             <label className="text-xs font-bold uppercase tracking-wider text-muted-foreground">{t.projectValuePlaceholder}</label>
-                            <Input type="number" value={query.projectValue} onChange={e => handleQueryChange(query.id, 'projectValue', parseInt(e.target.value))} className="h-11 rounded-xl bg-background/50 focus-visible:ring-primary/20" />
+                            <Input type="number" value={query.projectValue} onChange={e => handleQueryChange(query.id, 'projectValue', parseInt(e.target.value))} className="h-11 rounded-lg bg-background/50 focus-visible:ring-primary/20" />
                         </div>
                     )}
                     <Button 
@@ -339,10 +340,10 @@ export default function EmployeeHistoryClient({
           </div>
           
           <div className="flex flex-col sm:flex-row gap-4 mt-8">
-            <Button onClick={addQueryRow} variant="outline" className="flex-1 rounded-xl h-12 border-dashed border-primary/30 hover:bg-primary/5">
+            <Button onClick={addQueryRow} variant="outline" className="flex-1 rounded-lg h-12 border-dashed border-primary/30 hover:bg-primary/5">
                 <Plus className="mr-2 h-4 w-4" /> Add Another Document
             </Button>
-            <Button onClick={handleGenerateSigners} className="flex-1 rounded-xl h-12 shadow-lg shadow-primary/20 transition-all hover:scale-[1.02] active:scale-[0.98]">
+            <Button onClick={handleGenerateSigners} className="flex-1 rounded-lg h-12 shadow-lg shadow-primary/20 transition-all hover:scale-[1.02] active:scale-[0.98]">
                 <UserCheck className="mr-2 h-4 w-4" /> Generate Signers
             </Button>
           </div>
@@ -361,7 +362,7 @@ export default function EmployeeHistoryClient({
                         <div className="inline-flex items-center px-4 py-1.5 rounded-full bg-primary text-primary-foreground text-sm font-bold tracking-tight shadow-md">
                             {key}
                         </div>
-                        <div className="overflow-hidden border border-primary/10 rounded-2xl bg-background/40 backdrop-blur-sm shadow-sm">
+                        <div className="overflow-hidden border border-primary/10 rounded-lg bg-background/40 backdrop-blur-sm shadow-sm">
                             <Table>
                                 <TableHeader className="bg-muted/30">
                                     <TableRow className="hover:bg-transparent">

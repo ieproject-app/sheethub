@@ -49,7 +49,7 @@ export default async function NotesPage({ params }: { params: Promise<{ locale: 
                 type: 'note' as const
             };
             return (
-              <Card key={note.slug} className="group relative flex flex-col overflow-hidden rounded-xl border bg-card/50 shadow-sm transition-all hover:shadow-lg hover:-translate-y-2 will-change-transform h-full">
+              <Card key={note.slug} className="group relative flex flex-col overflow-hidden rounded-lg border bg-card/50 shadow-sm transition-all hover:shadow-lg hover:-translate-y-2 will-change-transform h-full">
                 <CardHeader className="p-6 pb-0 flex-row justify-between items-start space-y-0">
                     <div className="p-2 bg-muted/50 rounded-lg group-hover:bg-primary/10 transition-colors">
                         <StickyNote className="h-5 w-5 text-muted-foreground group-hover:text-primary transition-colors" />

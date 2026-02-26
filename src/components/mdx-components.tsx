@@ -157,6 +157,7 @@ const MdxA = ({ class: _class, className, parentName, ...props }: React.AnchorHT
 const MdxUl = ({ children, class: _class, className, parentName, ...props }: any) => <ul className={cn("my-6 ml-6 list-disc [&>li]:mt-2", _class, className)} {...props}>{children}</ul>;
 const MdxOl = ({ children, class: _class, className, parentName, ...props }: any) => <ol className={cn("my-6 ml-6 list-decimal [&>li]:mt-2", _class, className)} {...props}>{children}</ol>;
 const MdxAItem = ({ children, class: _class, className, parentName, ...props }: any) => <li className={cn(_class, className)} {...props}>{children}</li>;
+const MdxAItemMarker = ({ children, class: _class, className, parentName, ...props }: any) => <li className={cn(_class, className)} {...props}>{children}</li>;
 const MdxBlockquote = ({ children, class: _class, className, parentName, ...props }: any) => <blockquote className={cn("mt-6 border-l-2 border-primary/20 pl-6 italic text-muted-foreground", _class, className)} {...props}>{children}</blockquote>;
 
 const MdxPre = ({ className, class: _class, parentName, ...props }: any) => (
@@ -193,7 +194,7 @@ export const mdxComponents: MDXComponents = {
     td: TableCell,
     pre: MdxPre,
     details: ({ children, class: _class, className, parentName, ...props }: any) => (
-      <details className={cn("my-6 p-4 rounded-xl border bg-muted/20", _class, className)} {...props}>
+      <details className={cn("my-6 p-4 rounded-lg border bg-muted/20", _class, className)} {...props}>
         {children}
       </details>
     ),

@@ -1,3 +1,4 @@
+
 'use client';
 
 import React, { useState, useEffect, useRef } from 'react';
@@ -374,7 +375,7 @@ export function Header({ searchableData, dictionary }: { searchableData: Searcha
 
         {/* More Menu Dropdown */}
         <div className={cn(
-            "absolute top-full left-0 z-40 mt-4 w-48 bg-primary/95 backdrop-blur-md shadow-2xl ring-1 ring-black/5 rounded-xl overflow-hidden transition-all duration-500 ease-[cubic-bezier(0.23,1,0.32,1)]",
+            "absolute top-full left-0 z-40 mt-4 w-48 bg-primary/95 backdrop-blur-md shadow-2xl ring-1 ring-black/5 rounded-lg overflow-hidden transition-all duration-500 ease-[cubic-bezier(0.23,1,0.32,1)]",
             "transform-origin-top-left",
             isMenuOpen ? "opacity-100 scale-100 translate-y-0" : "opacity-0 scale-95 -translate-y-2 pointer-events-none invisible"
         )}>
@@ -420,7 +421,7 @@ export function Header({ searchableData, dictionary }: { searchableData: Searcha
             "absolute top-full left-0 right-0 z-30 mt-4 transition-all duration-500 ease-[cubic-bezier(0.34,1.56,0.64,1)]",
             isSearchOpen ? "opacity-100 scale-100 translate-y-0" : "opacity-0 scale-[0.97] -translate-y-4 pointer-events-none invisible"
         )}>
-            <div className="bg-primary/95 backdrop-blur-xl rounded-2xl border border-primary-foreground/[0.08] shadow-[0_24px_60px_-12px_rgba(0,0,0,0.6)] max-h-[450px] overflow-hidden">
+            <div className="bg-primary/95 backdrop-blur-xl rounded-lg border border-primary-foreground/[0.08] shadow-[0_24px_60px_-12px_rgba(0,0,0,0.6)] max-h-[450px] overflow-hidden">
                   <div className="px-5 py-3 bg-primary-foreground/[0.02] border-b border-primary-foreground/[0.06] flex items-center justify-between">
                       <div className="flex items-center gap-3">
                         <div className={cn(
@@ -447,12 +448,12 @@ export function Header({ searchableData, dictionary }: { searchableData: Searcha
                                           const config = typeConfig[item.type];
                                           return (
                                             <li key={`${item.type}-${item.slug}`} style={{ animationDelay: `${idx * 45}ms` }} className="animate-in fade-in slide-in-from-bottom-2 duration-300 fill-mode-both">
-                                                <Link href={item.href} className="block group px-3 py-2.5 rounded-xl hover:bg-primary-foreground/[0.05] transition-all duration-300 relative overflow-hidden">
+                                                <Link href={item.href} className="block group px-3 py-2.5 rounded-lg hover:bg-primary-foreground/[0.05] transition-all duration-300 relative overflow-hidden">
                                                     {/* Left Accent Bar */}
                                                     <div className={cn("absolute left-0 top-2 bottom-2 w-0.5 rounded-full transition-transform duration-300 origin-center scale-y-0 group-hover:scale-y-100", config.accent)} />
                                                     
                                                     <div className="flex items-center gap-3">
-                                                        <div className={cn("w-[34px] h-[34px] rounded-[10px] flex items-center justify-center shrink-0", config.bg, config.color)}>
+                                                        <div className={cn("w-[34px] h-[34px] rounded-lg flex items-center justify-center shrink-0", config.bg, config.color)}>
                                                             <config.icon className="w-4 h-4" />
                                                         </div>
                                                         <div className="flex-1 min-w-0">
@@ -511,7 +512,7 @@ export function Header({ searchableData, dictionary }: { searchableData: Searcha
             "absolute top-full left-0 right-0 z-30 mt-4 transition-all duration-500 ease-[cubic-bezier(0.34,1.56,0.64,1)]",
             isReadingListOpen ? "opacity-100 scale-100 translate-y-0" : "opacity-0 scale-[0.97] -translate-y-4 pointer-events-none invisible"
         )}>
-            <div className="bg-primary/95 backdrop-blur-xl rounded-2xl border border-primary-foreground/[0.08] shadow-[0_24px_60px_-12px_rgba(0,0,0,0.6)] max-h-[450px] overflow-hidden">
+            <div className="bg-primary/95 backdrop-blur-xl rounded-lg border border-primary-foreground/[0.08] shadow-[0_24px_60px_-12px_rgba(0,0,0,0.6)] max-h-[450px] overflow-hidden">
                 <div className="px-5 py-3 bg-primary-foreground/[0.02] border-b border-primary-foreground/[0.06] flex items-center justify-between">
                     <p className="text-[10px] font-black uppercase tracking-widest text-primary-foreground/40">
                       {dictionary.readingList.inYourList}
@@ -547,7 +548,7 @@ export function Header({ searchableData, dictionary }: { searchableData: Searcha
                                       removingSlug === item.slug && "animate-out fade-out slide-out-to-right-4 duration-300 fill-mode-forwards"
                                   )}
                               >
-                                  <div className="relative hover:bg-primary-foreground/[0.05] rounded-xl transition-all duration-300 overflow-hidden group">
+                                  <div className="relative hover:bg-primary-foreground/[0.05] rounded-lg transition-all duration-300 overflow-hidden group">
                                       {/* Left Accent Bar */}
                                       <div className={cn("absolute left-0 top-2 bottom-2 w-0.5 rounded-full transition-transform duration-300 origin-center scale-y-0 group-hover:scale-y-100", config.accent)} />
                                       
@@ -558,7 +559,7 @@ export function Header({ searchableData, dictionary }: { searchableData: Searcha
                                                   {idx + 1}
                                               </span>
                                               <div className="absolute inset-0 flex items-center justify-center opacity-0 scale-0 group-hover:opacity-100 group-hover:scale-100 transition-all duration-200">
-                                                  <div className={cn("w-full h-full rounded-[10px] flex items-center justify-center", config.bg, config.color)}>
+                                                  <div className={cn("w-full h-full rounded-lg flex items-center justify-center", config.bg, config.color)}>
                                                       <ItemIcon className="w-4 h-4" />
                                                   </div>
                                               </div>

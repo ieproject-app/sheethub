@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useState, useEffect } from 'react';
@@ -39,7 +40,7 @@ export function TableOfContents({ headings, title }: TableOfContentsProps) {
 
     return (
         <div className={cn(
-            "my-8 rounded-2xl border border-primary/10 overflow-hidden transition-all duration-300",
+            "my-8 rounded-lg border border-primary/10 overflow-hidden transition-all duration-300",
             "bg-gradient-to-br from-muted/40 via-background to-muted/10 shadow-sm hover:shadow-md",
             "border-l-4 border-l-primary/50"
         )}>

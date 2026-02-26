@@ -161,7 +161,7 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
                 </h1>
             </header>
 
-            <div className="relative my-8 sm:my-12 rounded-2xl overflow-hidden shadow-2xl bg-muted group">
+            <div className="relative my-8 sm:my-12 rounded-lg overflow-hidden shadow-2xl bg-muted group">
                 {heroSource ? (
                     <Image
                         src={heroSource.url}
