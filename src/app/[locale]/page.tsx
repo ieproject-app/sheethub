@@ -170,7 +170,7 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
         <Link 
             key={post.slug}
             href={`${linkPrefix}/blog/${post.slug}`} 
-            className="flex items-start gap-4 p-4 border-b border-primary/5 transition-all duration-300 hover:bg-primary/5 group"
+            className="flex items-start gap-4 py-4 border-b border-primary/5 transition-all duration-300 hover:bg-primary/5 group"
         >
             <div className="relative w-[100px] h-[100px] shrink-0 overflow-hidden rounded-lg shadow-sm border border-primary/5">
                 <Image
