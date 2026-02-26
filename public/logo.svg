@@ -9,22 +9,10 @@
       <stop offset="100%" stop-color="#0c2461"/>
     </linearGradient>
   </defs>
-
-  <!-- Background pill (optional, usually transparent for favicon) -->
-  <rect x="0" y="0" width="100" height="100" rx="20" fill="white" opacity="0.05"/>
-
-  <!-- TL: bright — snipped bottom-right corner -->
-  <polygon points="5,5 49,5 49,40 40,49 5,49" fill="url(#blue-bright)"/>
-
-  <!-- BR: bright — snipped top-left corner -->
-  <polygon points="60,51 95,51 95,95 51,95 51,60" fill="url(#blue-bright)"/>
-
-  <!-- TR: deep blue -->
-  <rect x="51" y="5" width="44" height="44" rx="4" fill="url(#blue-deep)"/>
-
-  <!-- BL: deep blue -->
-  <rect x="5" y="51" width="44" height="44" rx="4" fill="url(#blue-deep)"/>
-
-  <!-- Center pivot dot -->
+  <!-- Main colorful version for branding assets -->
+  <polygon points="5,5 46,5 46,37 37,46 5,46" fill="url(#blue-bright)"/>
+  <polygon points="63,54 95,54 95,95 54,95 54,63" fill="url(#blue-bright)"/>
+  <rect x="54" y="5" width="41" height="41" rx="4" fill="url(#blue-deep)"/>
+  <rect x="5" y="54" width="41" height="41" rx="4" fill="url(#blue-deep)"/>
   <circle cx="50" cy="50" r="2" fill="#bae6fd" opacity="0.9"/>
 </svg>

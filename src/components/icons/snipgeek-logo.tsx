@@ -2,17 +2,16 @@ import React, { useId } from 'react';
 
 interface SnipGeekLogoProps extends React.SVGProps<SVGSVGElement> {
   showBackground?: boolean;
-  showBadge?: boolean;
 }
 
 /**
- * SnipGeekLogo - Refined version with new coordinates and deep blue gradients.
- * Features dual-tone active states and a precise center pivot.
+ * SnipGeekLogo - Adaptive version
+ * - Monochrome White: Used for Dark Backgrounds (Light Mode Header)
+ * - Colorful Gradient: Used for Light Backgrounds (Dark Mode Header)
  */
 export const SnipGeekLogo = ({ 
   className, 
   showBackground,
-  showBadge,
   ...props 
 }: SnipGeekLogoProps) => {
   const id = useId().replace(/:/g, "");
@@ -25,65 +24,39 @@ export const SnipGeekLogo = ({
       {...props}
     >
       <defs>
-        {/* Light Blue Gradient (Bright) */}
-        <linearGradient id={`bb-bright-${id}`} x1="0%" y1="0%" x2="100%" y2="100%">
+        {/* Colorful Gradients for Light Background (Dark Mode) */}
+        <linearGradient id={`blue-bright-${id}`} x1="0%" y1="0%" x2="100%" y2="100%">
           <stop offset="0%" stopColor="#bae6fd"/>
           <stop offset="100%" stopColor="#0ea5e9"/>
         </linearGradient>
-        
-        {/* Dark Blue Gradient (Deep) */}
-        <linearGradient id={`bd-deep-${id}`} x1="0%" y1="0%" x2="100%" y2="100%">
+        <linearGradient id={`blue-deep-${id}`} x1="0%" y1="0%" x2="100%" y2="100%">
           <stop offset="0%" stopColor="#1d4ed8"/>
           <stop offset="100%" stopColor="#0c2461"/>
         </linearGradient>
-
-        <style>{`
-          .w3-tl-${id} { animation: pulse-a-${id} 3s ease-in-out infinite;       transform-origin: 27px 27px; }
-          .w3-br-${id} { animation: pulse-a-${id} 3s ease-in-out 1.5s infinite;  transform-origin: 73px 73px; }
-          .w3-tr-${id} { animation: pulse-b-${id} 3s ease-in-out 0.75s infinite; transform-origin: 73px 27px; }
-          .w3-bl-${id} { animation: pulse-b-${id} 3s ease-in-out 2.25s infinite; transform-origin: 27px 73px; }
-          .w3-dot-${id} { animation: pulse-a-${id} 3s ease-in-out 0.2s infinite; transform-origin: 50px 50px; }
-
-          @keyframes pulse-a-${id} {
-            0%, 100% { transform: scale(1); opacity: 1; }
-            40%       { transform: scale(1.03); opacity: 0.9; }
-            70%       { transform: scale(0.98); }
-          }
-          @keyframes pulse-b-${id} {
-            0%, 100% { transform: scale(1); opacity: 0.8; }
-            40%       { transform: scale(0.96); opacity: 0.6; }
-            70%       { transform: scale(1.01); opacity: 0.8; }
-          }
-        `}</style>
       </defs>
 
-      {/* Background pill */}
+      {/* Optional Background Pill */}
       {showBackground && (
         <rect x="0" y="0" width="100" height="100" rx="20" fill="currentColor" opacity="0.10"/>
       )}
 
-      {/* TL: bright — snipped bottom-right corner */}
-      <polygon 
-        className={`w3-tl-${id}`} 
-        points="5,5 49,5 49,40 40,49 5,49"
-        fill={`url(#bb-bright-${id})`}
-      />
+      {/* VERSION 1: DARK MODE (Colorful Gradient) - Visible when .dark class is active */}
+      <g className="hidden dark:block">
+        <polygon points="5,5 46,5 46,37 37,46 5,46" fill={`url(#blue-bright-${id})`}/>
+        <polygon points="63,54 95,54 95,95 54,95 54,63" fill={`url(#blue-bright-${id})`}/>
+        <rect x="54" y="5" width="41" height="41" rx="4" fill={`url(#blue-deep-${id})`}/>
+        <rect x="5" y="54" width="41" height="41" rx="4" fill={`url(#blue-deep-${id})`}/>
+        <circle cx="50" cy="50" r="2" fill="#bae6fd" opacity="0.9"/>
+      </g>
 
-      {/* BR: bright — snipped top-left corner */}
-      <polygon 
-        className={`w3-br-${id}`} 
-        points="60,51 95,51 95,95 51,95 51,60"
-        fill={`url(#bb-bright-${id})`}
-      />
-
-      {/* TR: deep blue */}
-      <rect className={`w3-tr-${id}`} x="51" y="5" width="44" height="44" rx="4" fill={`url(#bd-deep-${id})`}/>
-
-      {/* BL: deep blue */}
-      <rect className={`w3-bl-${id}`} x="5" y="51" width="44" height="44" rx="4" fill={`url(#bd-deep-${id})`}/>
-
-      {/* Center pivot dot */}
-      <circle className={`w3-dot-${id}`} cx="50" cy="50" r="2" fill="#bae6fd" opacity="0.9"/>
+      {/* VERSION 2: LIGHT MODE (Monochrome White) - Visible by default (Light Mode Header is dark) */}
+      <g className="block dark:hidden">
+        <polygon points="5,5 46,5 46,37 37,46 5,46" fill="white"/>
+        <polygon points="63,54 95,54 95,95 54,95 54,63" fill="white"/>
+        <rect x="54" y="5" width="41" height="41" rx="4" fill="white" opacity="0.3"/>
+        <rect x="5" y="54" width="41" height="41" rx="4" fill="white" opacity="0.3"/>
+        <circle cx="50" cy="50" r="2" fill="white" opacity="0.6"/>
+      </g>
     </svg>
   );
 };
