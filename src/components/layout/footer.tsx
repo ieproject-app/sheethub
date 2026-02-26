@@ -71,33 +71,28 @@ export function Footer({ dictionary, translationsMap }: { dictionary: Dictionary
                 </div>
             </div>
 
-            {/* Wave Divider */}
-            <div className="relative w-full overflow-hidden leading-none -mb-1">
-                <svg viewBox="0 0 1440 80" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none" className="w-full h-16 sm:h-20 fill-muted/40">
-                    <path d="M0,40 C360,80 1080,0 1440,40 L1440,80 L0,80 Z" />
-                </svg>
-            </div>
-
-            {/* Floating Avatar Wrapper (Outside clipped sub-footer) */}
-            <div className="relative z-20 flex justify-center -mt-16 pointer-events-none">
-                <div className="relative inline-block rounded-full ring-2 ring-primary/20 ring-offset-4 ring-offset-background shadow-2xl transition-all duration-300 ease-in-out group hover:ring-primary/40 pointer-events-auto">
-                    <Avatar className="w-24 h-24 mx-auto border-4 border-background bg-background transition-transform duration-500 group-hover:scale-105">
-                        <AvatarImage src={authorAvatar} alt={authorName} />
-                        <AvatarFallback className="bg-muted text-primary">{authorName.split(' ').map(n => n[0]).join('')}</AvatarFallback>
-                    </Avatar>
-                </div>
-            </div>
-
             {/* Sub-Footer Section */}
-            <div className="relative w-full pt-0 pb-12 bg-gradient-to-br from-muted/40 via-background to-muted/20 overflow-hidden transition-all duration-300 ease-in-out">
-                {/* Decorative Ambient Light Circles */}
-                <div className="absolute top-0 left-0 w-96 h-96 rounded-full blur-3xl opacity-10 bg-primary -translate-x-1/2 -translate-y-1/2 pointer-events-none" />
-                <div className="absolute bottom-0 right-0 w-96 h-96 rounded-full blur-3xl opacity-10 bg-primary translate-x-1/2 translate-y-1/2 pointer-events-none" />
+            <div className="relative w-full pt-20 pb-12 bg-gradient-to-br from-muted/40 via-background to-muted/20 border-t border-primary/5 transition-all duration-300 ease-in-out">
+                {/* Decorative Ambient Light Circles (Clipped inside this div) */}
+                <div className="absolute inset-0 overflow-hidden pointer-events-none">
+                    <div className="absolute top-0 left-0 w-96 h-96 rounded-full blur-3xl opacity-10 bg-primary -translate-x-1/2 -translate-y-1/2" />
+                    <div className="absolute bottom-0 right-0 w-96 h-96 rounded-full blur-3xl opacity-10 bg-primary translate-x-1/2 translate-y-1/2" />
+                </div>
 
                 <div className="relative z-10 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-                    <div className="text-center mb-16 pt-20">
+                    <div className="text-center mb-16">
+                        {/* Normalized Avatar - Balanced position */}
+                        <div className="relative inline-block mb-8 -mt-32">
+                            <div className="relative rounded-full ring-2 ring-primary/20 ring-offset-4 ring-offset-background shadow-2xl transition-all duration-300 ease-in-out group hover:ring-primary/40">
+                                <Avatar className="w-24 h-24 mx-auto border-4 border-background bg-background transition-transform duration-500 group-hover:scale-105">
+                                    <AvatarImage src={authorAvatar} alt={authorName} />
+                                    <AvatarFallback className="bg-muted text-primary">{authorName.split(' ').map(n => n[0]).join('')}</AvatarFallback>
+                                </Avatar>
+                            </div>
+                        </div>
+
                         <h4 className="font-headline text-3xl font-bold text-foreground tracking-tight">{authorName}</h4>
-                        <p className="mt-4 text-muted-foreground max-w-md mx-auto text-lg leading-relaxed font-medium opacity-0 animate-in fade-in duration-700 fill-mode-forwards">
+                        <p className="mt-4 text-muted-foreground max-w-md mx-auto text-lg leading-relaxed font-medium animate-in fade-in duration-700">
                             {dictionary.footer.authorBio}
                         </p>
                         
