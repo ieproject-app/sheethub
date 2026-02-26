@@ -73,7 +73,7 @@ export function Footer({ dictionary, translationsMap }: { dictionary: Dictionary
 
             {/* Sub-Footer Section */}
             <div className="relative w-full pt-20 pb-12 bg-gradient-to-br from-muted/40 via-background to-muted/20 border-t border-primary/5 transition-all duration-300 ease-in-out">
-                {/* Decorative Ambient Light Circles (Clipped inside this div) */}
+                {/* Decorative Ambient Light Circles (Clipped inside this layer) */}
                 <div className="absolute inset-0 overflow-hidden pointer-events-none">
                     <div className="absolute top-0 left-0 w-96 h-96 rounded-full blur-3xl opacity-10 bg-primary -translate-x-1/2 -translate-y-1/2" />
                     <div className="absolute bottom-0 right-0 w-96 h-96 rounded-full blur-3xl opacity-10 bg-primary translate-x-1/2 translate-y-1/2" />
@@ -81,7 +81,7 @@ export function Footer({ dictionary, translationsMap }: { dictionary: Dictionary
 
                 <div className="relative z-10 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
                     <div className="text-center mb-16">
-                        {/* Normalized Avatar - Balanced position */}
+                        {/* Normalized Avatar - Balanced position exactly on the border */}
                         <div className="relative inline-block mb-8 -mt-32">
                             <div className="relative rounded-full ring-2 ring-primary/20 ring-offset-4 ring-offset-background shadow-2xl transition-all duration-300 ease-in-out group hover:ring-primary/40">
                                 <Avatar className="w-24 h-24 mx-auto border-4 border-background bg-background transition-transform duration-500 group-hover:scale-105">
