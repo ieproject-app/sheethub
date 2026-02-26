@@ -1,4 +1,3 @@
-
 'use client';
 
 import { useState } from 'react';
@@ -53,5 +52,3 @@ export function TableOfContents({ headings, title }: TableOfContentsProps) {
         </div>
     );
 }
-
-    
