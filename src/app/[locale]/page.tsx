@@ -54,8 +54,8 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
     )
     .slice(0, 8);
 
-  // 5. Software Updates Slider (Filtered by tag 'Update', 6 items)
-  const updateTag = "Update";
+  // 5. Software Updates Slider (Filtered by tag 'Android' for testing, 6 items)
+  const updateTag = "Android";
   const updatePosts = allPostsData
     .filter(post => 
       post.frontmatter.published &&
@@ -228,7 +228,7 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
         />
       )}
 
-      {/* HorizontalSlider Section (Software Updates) */}
+      {/* HorizontalSlider Section (Software Updates - Test Tag: Android) */}
       {updatePosts.length > 0 && (
         <HorizontalSlider 
           posts={updatePosts as any}
