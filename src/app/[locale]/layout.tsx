@@ -13,15 +13,20 @@ import { BackToTop } from '@/components/layout/back-to-top';
 import { ThemeSwitcher } from '@/components/layout/theme-switcher';
 import { getDictionary } from '@/lib/get-dictionary';
 import { DraftList } from '@/components/layout/draft-list';
-import { Poppins } from 'next/font/google';
+import { Archivo, Archivo_Narrow } from 'next/font/google';
 import { GeistMono } from 'geist/font/mono';
 import { cn } from '@/lib/utils';
 
-const poppins = Poppins({
+const archivo = Archivo({
   subsets: ['latin'],
-  weight: ['300', '400', '500', '600', '700', '800'],
   display: 'swap',
-  variable: '--font-poppins',
+  variable: '--font-archivo',
+});
+
+const archivoNarrow = Archivo_Narrow({
+  subsets: ['latin'],
+  display: 'swap',
+  variable: '--font-archivo-narrow',
 });
 
 const geistMono = GeistMono;
@@ -127,7 +132,7 @@ export default async function LocaleLayout({
   const draftNotes = getDraftNotesData(locale);
   
   return (
-    <html lang={locale} className={cn(poppins.variable, geistMono.variable, "scroll-smooth")} suppressHydrationWarning>
+    <html lang={locale} className={cn(archivo.variable, archivoNarrow.variable, geistMono.variable, "scroll-smooth")} suppressHydrationWarning>
       <head />
       <body className="font-body antialiased fade-in-on-load">
         <ThemeProvider

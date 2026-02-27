@@ -2,21 +2,26 @@
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import './globals.css';
-import { Poppins } from 'next/font/google';
+import { Archivo, Archivo_Narrow } from 'next/font/google';
 import { GeistMono } from 'geist/font/mono';
 import { cn } from '@/lib/utils';
 import { Search, Home, BookOpen, PenTool } from 'lucide-react';
 
-const poppins = Poppins({
+const archivo = Archivo({
   subsets: ['latin'],
-  weight: ['400', '600', '700', '800'],
   display: 'swap',
-  variable: '--font-poppins',
+  variable: '--font-archivo',
+});
+
+const archivoNarrow = Archivo_Narrow({
+  subsets: ['latin'],
+  display: 'swap',
+  variable: '--font-archivo-narrow',
 });
 
 export default function NotFound() {
   return (
-    <html lang="en" className={cn(poppins.variable, GeistMono.variable)}>
+    <html lang="en" className={cn(archivo.variable, archivoNarrow.variable, GeistMono.variable)}>
       <head>
         <title>404 - Page Not Found | SnipGeek</title>
         <meta name="description" content="Sorry, the page you're looking for doesn't exist. Find tutorials, notes, and tech tools at SnipGeek." />
