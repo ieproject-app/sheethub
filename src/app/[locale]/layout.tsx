@@ -12,7 +12,7 @@ import { BackToTop } from '@/components/layout/back-to-top';
 import { ThemeSwitcher } from '@/components/layout/theme-switcher';
 import { getDictionary } from '@/lib/get-dictionary';
 import { DraftList } from '@/components/layout/draft-list';
-import { Archivo, Bebas_Neue } from 'next/font/google';
+import { Archivo, Fjalla_One } from 'next/font/google';
 import { GeistMono } from 'geist/font/mono';
 import { cn } from '@/lib/utils';
 
@@ -22,11 +22,11 @@ const archivo = Archivo({
   variable: '--font-archivo',
 });
 
-const bebasNeue = Bebas_Neue({
+const fjallaOne = Fjalla_One({
   weight: '400',
   subsets: ['latin'],
   display: 'swap',
-  variable: '--font-bebas-neue',
+  variable: '--font-fjalla-one',
 });
 
 const geistMono = GeistMono;
@@ -132,7 +132,7 @@ export default async function LocaleLayout({
   const draftNotes = getDraftNotesData(locale);
   
   return (
-    <html lang={locale} className={cn(archivo.variable, bebasNeue.variable, geistMono.variable, "scroll-smooth")} suppressHydrationWarning>
+    <html lang={locale} className={cn(archivo.variable, fjallaOne.variable, geistMono.variable, "scroll-smooth")} suppressHydrationWarning>
       <head />
       <body className="font-body antialiased fade-in-on-load">
         <ThemeProvider
