@@ -145,11 +145,20 @@ export function Header({ searchableData, dictionary }: { searchableData: Searcha
     const handleScroll = () => {
       if (activeView !== 'none' || message) return;
       const currentScrollY = window.scrollY;
-      if (currentScrollY < lastScrollY.current || currentScrollY < 10) {
+      const delta = currentScrollY - lastScrollY.current;
+
+      // Logika threshold untuk menghindari flickering
+      if (currentScrollY < 10) {
+        // Tampilkan selalu jika di paling atas
         setIsVisible(true);
-      } else if (currentScrollY > 100 && currentScrollY > lastScrollY.current) {
+      } else if (delta > 8 && currentScrollY > 80) {
+        // Sembunyikan jika scroll ke bawah dengan kecepatan tertentu
         setIsVisible(false);
+      } else if (delta < -8) {
+        // Munculkan jika scroll ke atas dengan kecepatan tertentu
+        setIsVisible(true);
       }
+      
       lastScrollY.current = currentScrollY;
     };
 
@@ -213,9 +222,14 @@ export function Header({ searchableData, dictionary }: { searchableData: Searcha
   const navItemClass = "transition-all duration-300 text-foreground/70 hover:text-foreground";
 
   return (
-    <header ref={headerRef} className={cn(
-        "fixed top-0 left-0 right-0 z-50 w-full h-20 bg-background/80 backdrop-blur-md border-b border-border/50 transition-transform duration-500 ease-in-out",
-        isVisible ? "translate-y-0" : "-translate-y-20"
+    <header 
+      ref={headerRef} 
+      style={{ willChange: 'transform' }}
+      className={cn(
+        "fixed top-0 left-0 right-0 z-50 w-full h-20 bg-background/80 backdrop-blur-md border-b border-border/50 transition-transform [transition-timing-function:cubic-bezier(0.4,0,0.2,1)] will-change-transform",
+        isVisible 
+          ? "translate-y-0 duration-500" 
+          : "-translate-y-full duration-300"
     )}>
         <div className="max-w-4xl mx-auto h-full px-4 flex items-center justify-between relative">
             
@@ -242,10 +256,10 @@ export function Header({ searchableData, dictionary }: { searchableData: Searcha
             )}>
                 <NextLink href="/" className="flex items-center gap-3 group" aria-label="SnipGeek Home">
                     <SnipGeekLogo className="h-9 w-9 transition-transform duration-300 group-hover:scale-110" />
-                    <span className="font-headline text-2xl font-black tracking-tighter hidden sm:block">
+                    <div className="font-headline text-2xl font-black tracking-tighter hidden sm:flex items-baseline">
                         <span className="text-foreground">Snip</span>
-                        <span className="text-accent dark:text-foreground">Geek</span>
-                    </span>
+                        <span className="text-accent dark:text-foreground ml-px">Geek</span>
+                    </div>
                 </NextLink>
             </div>
 
