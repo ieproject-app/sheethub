@@ -59,6 +59,7 @@ interface PromptGeneratorClientProps {
 }
 
 export function PromptGeneratorClient({ dictionary, existingArticles }: PromptGeneratorClientProps) {
+  const [mounted, setMounted] = useState(false);
   const [mode, setMode] = useState<'create' | 'modify'>('create');
   const [contentType, setContentType] = useState<'blog' | 'note'>('blog');
   const [selectedSlug, setSelectedSlug] = useState<string>('');
@@ -112,8 +113,9 @@ export function PromptGeneratorClient({ dictionary, existingArticles }: PromptGe
     };
   }, [draft, originalContent, mode]);
 
-  // Persistence for feature toggles
+  // Persistence for feature toggles & hydration fix
   useEffect(() => {
+    setMounted(true);
     const saved = localStorage.getItem('snipgeek-prompt-features');
     if (saved) {
       try {
@@ -126,12 +128,14 @@ export function PromptGeneratorClient({ dictionary, existingArticles }: PromptGe
   }, []);
 
   useEffect(() => {
-    localStorage.setItem('snipgeek-prompt-features', JSON.stringify({
-      showDownloads,
-      showGrids,
-      showImages
-    }));
-  }, [showDownloads, showGrids, showImages]);
+    if (mounted) {
+      localStorage.setItem('snipgeek-prompt-features', JSON.stringify({
+        showDownloads,
+        showGrids,
+        showImages
+      }));
+    }
+  }, [showDownloads, showGrids, showImages, mounted]);
 
   // Prompt Builder Logic
   useEffect(() => {
@@ -693,7 +697,7 @@ export function PromptGeneratorClient({ dictionary, existingArticles }: PromptGe
                 
                 {/* Visual Hint for Draft status */}
                 <p className="text-center text-[9px] font-black uppercase tracking-[0.4em] text-muted-foreground/40 animate-pulse">
-                    Live Preview Updated • {new Date().toLocaleTimeString()}
+                    Live Preview Updated • {mounted ? new Date().toLocaleTimeString() : '--:--:--'}
                 </p>
             </div>
         </div>
