@@ -176,6 +176,7 @@
         "contentTypeNote": "Catatan (Note)",
         "selectArticleLabel": "Target Artikel untuk Dimodifikasi",
         "selectArticlePlaceholder": "Pilih artikel yang sudah ada...",
+        "searchArticlePlaceholder": "Ketik judul atau slug artikel untuk mencari...",
         "features": {
             "title": "Fitur Opsional",
             "downloads": "Tombol Unduhan",
@@ -196,7 +197,7 @@
         },
         "downloadLinks": {
             "title": "Tautan Unduhan",
-            "description": "Petakan placeholder [DOWNLOAD_X] ke ID yang sudah ada atau enter URL baru.",
+            "description": "Petakan placeholder [DOWNLOAD_X] dengan ID yang sudah ada atau enter URL baru.",
             "addDownload": "Tambah Item Unduhan",
             "selectId": "Pilih ID yang sudah ada...",
             "urlPlaceholder": "Tempel URL unduhan...",

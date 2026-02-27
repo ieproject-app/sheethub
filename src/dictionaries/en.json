@@ -176,6 +176,7 @@
         "contentTypeNote": "Note",
         "selectArticleLabel": "Target Article to Modify",
         "selectArticlePlaceholder": "Select an existing article...",
+        "searchArticlePlaceholder": "Type to search articles by title or slug...",
         "features": {
             "title": "Optional Features",
             "downloads": "Download Buttons",

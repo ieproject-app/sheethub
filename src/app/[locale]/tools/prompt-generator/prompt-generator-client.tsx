@@ -1,7 +1,7 @@
 
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -30,13 +30,13 @@ import {
   RefreshCw,
   Sparkles,
   Type,
-  ListFilter
+  ListFilter,
+  Search
 } from 'lucide-react';
 import { downloadLinks } from '@/lib/data-downloads';
 import { useNotification } from '@/hooks/use-notification';
 import { cn } from '@/lib/utils';
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
-import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { ScrollArea } from '@/components/ui/scroll-area';
 
 type DownloadItem = {
   id: string;
@@ -59,6 +59,7 @@ export function PromptGeneratorClient({ dictionary, existingArticles }: PromptGe
   const [mode, setMode] = useState<'create' | 'modify'>('create');
   const [contentType, setContentType] = useState<'blog' | 'note'>('blog');
   const [selectedSlug, setSelectedSlug] = useState<string>('');
+  const [articleSearch, setArticleSearch] = useState('');
   const [draft, setDraft] = useState('');
   const [originalContent, setOriginalContent] = useState('');
   const [modInstructions, setModInstructions] = useState('');
@@ -86,7 +87,17 @@ export function PromptGeneratorClient({ dictionary, existingArticles }: PromptGe
   const [isCopied, setIsCopied] = useState(false);
   const { notify } = useNotification();
 
-  const downloadIds = Object.keys(downloadLinks).sort();
+  const downloadIds = useMemo(() => Object.keys(downloadLinks).sort(), []);
+
+  // Filter articles based on search query
+  const filteredArticles = useMemo(() => {
+    if (!articleSearch.trim()) return existingArticles;
+    const query = articleSearch.toLowerCase();
+    return existingArticles.filter(a => 
+      a.title.toLowerCase().includes(query) || 
+      a.slug.toLowerCase().includes(query)
+    );
+  }, [existingArticles, articleSearch]);
 
   // Persistence for feature toggles
   useEffect(() => {
@@ -331,32 +342,68 @@ export function PromptGeneratorClient({ dictionary, existingArticles }: PromptGe
         </div>
       </Card>
 
-      {/* Article Selection (Only in Modify Mode) */}
+      {/* Article Search & Selection (Only in Modify Mode) */}
       {mode === 'modify' && (
-        <Card className="bg-card/50 border-primary/10 shadow-sm">
+        <Card className="bg-card/50 border-primary/10 shadow-sm overflow-hidden">
           <CardHeader className="py-3 px-6 border-b bg-muted/5">
             <CardTitle className="text-[10px] font-bold uppercase tracking-widest flex items-center gap-2">
               <ListFilter className="h-3.5 w-3.5 text-primary" />
               {dictionary.selectArticleLabel}
             </CardTitle>
           </CardHeader>
-          <CardContent className="p-4">
-            <Select value={selectedSlug} onValueChange={setSelectedSlug}>
-              <SelectTrigger className="w-full bg-background/50 border-muted">
-                <SelectValue placeholder={dictionary.selectArticlePlaceholder} />
-              </SelectTrigger>
-              <SelectContent>
-                {existingArticles.map((article) => (
-                  <SelectItem key={article.slug} value={article.slug}>
-                    <div className="flex items-center gap-2">
-                      <Badge variant="outline" className="text-[8px] h-4 px-1 uppercase">{article.type}</Badge>
-                      <span className="font-semibold">{article.title}</span>
-                      <span className="text-muted-foreground text-[10px] italic">({article.slug})</span>
-                    </div>
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
+          <CardContent className="p-4 space-y-4">
+            <div className="relative">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+              <Input 
+                placeholder={dictionary.searchArticlePlaceholder || "Search articles..."} 
+                value={articleSearch} 
+                onChange={(e) => setArticleSearch(e.target.value)}
+                className="pl-10 h-10 bg-background/50 border-muted rounded-lg"
+              />
+            </div>
+            
+            <ScrollArea className="h-[200px] rounded-lg border border-muted/20 bg-background/20 p-2">
+              <div className="space-y-1">
+                {filteredArticles.length > 0 ? (
+                  filteredArticles.map((article) => (
+                    <button
+                      key={article.slug}
+                      onClick={() => setSelectedSlug(article.slug)}
+                      className={cn(
+                        "w-full text-left px-3 py-2 rounded-md transition-all flex flex-col gap-0.5 group/item",
+                        selectedSlug === article.slug 
+                          ? "bg-primary text-primary-foreground shadow-md" 
+                          : "hover:bg-primary/5 text-muted-foreground hover:text-primary"
+                      )}
+                    >
+                      <div className="flex items-center gap-2">
+                        <Badge 
+                          variant="outline" 
+                          className={cn(
+                            "text-[8px] h-4 px-1 uppercase shrink-0 font-black tracking-tighter", 
+                            selectedSlug === article.slug ? "border-white/40 text-white" : "text-muted-foreground group-hover/item:border-primary group-hover/item:text-primary"
+                          )}
+                        >
+                          {article.type}
+                        </Badge>
+                        <span className="font-bold text-xs line-clamp-1 flex-1">{article.title}</span>
+                        {selectedSlug === article.slug && <Check className="h-3 w-3 shrink-0" />}
+                      </div>
+                      <span className={cn(
+                        "text-[9px] font-mono opacity-60 ml-10 truncate", 
+                        selectedSlug === article.slug ? "text-white" : "text-muted-foreground"
+                      )}>
+                        {article.slug}
+                      </span>
+                    </button>
+                  ))
+                ) : (
+                  <div className="p-8 text-center text-xs text-muted-foreground italic bg-muted/5 rounded-lg border border-dashed">
+                    {dictionary.search.noResults || "No articles found."}
+                  </div>
+                )}
+              </div>
+            </ScrollArea>
           </CardContent>
         </Card>
       )}
