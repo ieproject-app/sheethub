@@ -1,14 +1,12 @@
-
 import { getSortedPostsData } from '@/lib/posts';
 import Link from 'next/link';
 import { i18n } from '@/i18n-config';
 import Image from 'next/image';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
-import { cn } from '@/lib/utils';
+import { cn, formatRelativeTime } from '@/lib/utils';
 import { AddToReadingListButton } from '@/components/layout/add-to-reading-list-button';
-import { Flame } from 'lucide-react';
+import { Flame, ChevronRight } from 'lucide-react';
 import { getDictionary } from '@/lib/get-dictionary';
-import { Button } from '@/components/ui/button';
 import { FeatureSlider } from '@/components/home/feature-slider';
 import { TopicSection } from '@/components/home/topic-section';
 import { HorizontalSlider } from '@/components/home/horizontal-slider';
@@ -25,10 +23,10 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
   const featuredPosts = allPostsData.filter(post => post.frontmatter.published && post.frontmatter.featured).slice(0, 4);
   const featuredSlugs = new Set(featuredPosts.map(p => p.slug));
 
-  // 2. Latest Posts (Excluding Featured, Top 4)
+  // 2. Latest Posts (Excluding Featured, Top 6)
   const latestPosts = allPostsData
     .filter(post => post.frontmatter.published && !featuredSlugs.has(post.slug))
-    .slice(0, 4);
+    .slice(0, 6);
   
   // 3. Slider (Filtered by category 'Tutorial')
   const sliderCategory = "Tutorial";
@@ -67,7 +65,7 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
   const dictionary = await getDictionary(locale);
   const linkPrefix = locale === i18n.defaultLocale ? '' : `/${locale}`;
 
-  const renderPostCard = (post: (typeof allPostsData)[0], isFeatured: boolean, index: number) => {
+  const renderFeaturedCard = (post: (typeof allPostsData)[0], index: number) => {
     const heroImageValue = post.frontmatter.heroImage;
     let heroImageSrc: string | undefined;
     let heroImageHint: string | undefined;
@@ -93,82 +91,96 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
         type: 'blog' as const,
     };
 
-    if (isFeatured) {
-        return (
-            <Link href={`${linkPrefix}/blog/${post.slug}`} className="block group" aria-label={`Read more about ${post.frontmatter.title}`}>
-                <article className="relative w-full aspect-[4/3] rounded-lg overflow-hidden shadow-2xl transition-all duration-300 group-hover:shadow-[0_20px_50px_rgba(0,0,0,0.3)] border-primary/5">
-                    <div className="absolute top-3 right-3 z-20 flex items-center gap-2">
-                        <AddToReadingListButton 
-                            item={item}
-                            dictionary={dictionary.readingList}
-                            showText={false}
-                            className="text-white bg-black/30 hover:bg-black/50 hover:text-white opacity-0 group-hover:opacity-100 transition-opacity"
-                        />
-                        <Flame className="h-5 w-5 text-orange-400 fill-orange-400" />
-                    </div>
-                    {heroImageSrc && (
-                        <Image
-                            src={heroImageSrc}
-                            alt={post.frontmatter.imageAlt || post.frontmatter.title}
-                            fill
-                            className="object-cover transition-transform duration-500"
-                            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                            priority={index < 2}
-                            data-ai-hint={heroImageHint}
-                        />
-                    )}
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/95 via-black/60 to-transparent" />
-                    <div className="absolute bottom-0 left-0 p-6 text-white w-full">
-                        <p className="text-xs font-semibold uppercase tracking-wider opacity-80 mb-1">{post.frontmatter.category}</p>
-                        <h3 className="font-headline text-xl font-extrabold leading-tight">
-                            {post.frontmatter.title}
-                        </h3>
-                    </div>
-                </article>
-            </Link>
-        );
+    return (
+        <Link href={`${linkPrefix}/blog/${post.slug}`} className="block group" aria-label={`Read more about ${post.frontmatter.title}`}>
+            <article className="relative w-full aspect-[4/3] rounded-lg overflow-hidden shadow-2xl transition-all duration-300 group-hover:shadow-[0_20px_50px_rgba(0,0,0,0.3)] border-primary/5">
+                <div className="absolute top-3 right-3 z-20 flex items-center gap-2">
+                    <AddToReadingListButton 
+                        item={item}
+                        dictionary={dictionary.readingList}
+                        showText={false}
+                        className="text-white bg-black/30 hover:bg-black/50 hover:text-white opacity-0 group-hover:opacity-100 transition-opacity"
+                    />
+                    <Flame className="h-5 w-5 text-orange-400 fill-orange-400" />
+                </div>
+                {heroImageSrc && (
+                    <Image
+                        src={heroImageSrc}
+                        alt={post.frontmatter.imageAlt || post.frontmatter.title}
+                        fill
+                        className="object-cover transition-transform duration-500"
+                        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                        priority={index < 2}
+                        data-ai-hint={heroImageHint}
+                    />
+                )}
+                <div className="absolute inset-0 bg-gradient-to-t from-black/95 via-black/60 to-transparent" />
+                <div className="absolute bottom-0 left-0 p-6 text-white w-full">
+                    <p className="text-xs font-semibold uppercase tracking-wider opacity-80 mb-1">{post.frontmatter.category}</p>
+                    <h3 className="font-headline text-xl font-extrabold leading-tight">
+                        {post.frontmatter.title}
+                    </h3>
+                </div>
+            </article>
+        </Link>
+    );
+  }
+
+  const renderLatestCard = (post: (typeof allPostsData)[0]) => {
+    const heroImageValue = post.frontmatter.heroImage;
+    let heroImageSrc: string | undefined;
+    let heroImageHint: string | undefined;
+
+    if (heroImageValue) {
+        if (heroImageValue.startsWith('http') || heroImageValue.startsWith('/')) {
+            heroImageSrc = heroImageValue;
+            heroImageHint = post.frontmatter.imageAlt || post.frontmatter.title;
+        } else {
+            const placeholder = PlaceHolderImages.find(p => p.id === heroImageValue);
+            if (placeholder) {
+                heroImageSrc = placeholder.imageUrl;
+                heroImageHint = placeholder.imageHint;
+            }
+        }
     }
 
     return (
-        <div key={post.slug} className="group relative transition-all duration-300 hover:-translate-y-2">
+        <div key={post.slug} className="group relative transition-all duration-300 hover:-translate-y-1">
             <Link href={`${linkPrefix}/blog/${post.slug}`} className="block" aria-label={`Read more about ${post.frontmatter.title}`}>
-                <div className="relative w-full aspect-video overflow-hidden rounded-lg mb-4 shadow-sm group-hover:shadow-xl transition-shadow duration-300">
+                <div className="relative w-full aspect-video overflow-hidden rounded-lg mb-4 shadow-sm group-hover:shadow-md transition-all duration-300">
                     {heroImageSrc && (
                         <Image
                             src={heroImageSrc}
                             alt={post.frontmatter.imageAlt || post.frontmatter.title}
                             fill
-                            className="object-cover"
-                            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 400px"
+                            className="object-cover transition-transform duration-500 group-hover:scale-105"
+                            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 33vw, 300px"
                             data-ai-hint={heroImageHint}
                         />
                     )}
                 </div>
 
-                {post.frontmatter.category && <p className="text-sm text-muted-foreground mb-1">{post.frontmatter.category}</p>}
-                <h3 className="font-headline text-xl font-bold tracking-tight text-primary transition-colors group-hover:text-accent">
+                {post.frontmatter.category && (
+                    <p className="text-[10px] font-black uppercase tracking-[0.2em] text-accent mb-1.5">
+                        {post.frontmatter.category}
+                    </p>
+                )}
+                <h3 className="font-headline text-base font-bold tracking-tight text-primary transition-colors group-hover:text-accent leading-tight">
                     {post.frontmatter.title}
                 </h3>
-                <p className="leading-relaxed text-muted-foreground mt-2 text-sm line-clamp-3">
-                    {post.frontmatter.description}
-                </p>
+                <time className="text-[10px] font-medium text-muted-foreground mt-2 block opacity-60">
+                    {formatRelativeTime(new Date(post.frontmatter.date), locale)}
+                </time>
             </Link>
-
-            <AddToReadingListButton 
-                item={item}
-                showText={false}
-                dictionary={dictionary.readingList}
-                className="absolute top-3 right-3 z-10 text-white bg-black/30 hover:bg-black/50 hover:text-white opacity-0 group-hover:opacity-100 transition-opacity"
-            />
         </div>
     );
   }
 
   return (
     <div className="w-full">
-      {/* Featured Posts Section - With Custom Background and Border */}
+      {/* Featured Posts Section */}
       {featuredPosts.length > 0 && (
-        <section className="py-16 sm:py-24 mb-20 sm:mb-28 bg-primary/[0.03] dark:bg-muted/30 border-y border-primary/5">
+        <section className="py-12 sm:py-16 mb-20 sm:mb-28 bg-primary/[0.03] dark:bg-muted/30 border-y border-primary/5">
           <div className="container max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-0">
               {featuredPosts.map((post, index) => (
@@ -180,7 +192,7 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
                       (index === 1 || index === 3) && "-rotate-2 z-10 hover:-translate-y-4"
                     )}
                   >
-                    {renderPostCard(post, true, index)}
+                    {renderFeaturedCard(post, index)}
                   </div>
                 ))}
             </div>
@@ -188,19 +200,33 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
         </section>
       )}
 
-      {/* Latest Posts Section */}
+      {/* Latest Posts Section - Updated to 3 columns and 6 items */}
       {latestPosts.length > 0 && (
-        <section className="container max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 pb-12 sm:pb-16">
-          <h2 className="text-3xl font-bold font-headline tracking-tighter text-primary mb-8 text-center">{dictionary.home.latestPosts}</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-12 mb-12">
-            {latestPosts.map((post, index) => renderPostCard(post, false, index))}
+        <section className="container max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 pb-12 sm:pb-16">
+          <h2 className="text-3xl font-bold font-headline tracking-tighter text-primary mb-12 text-center">{dictionary.home.latestPosts}</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-12 mb-16">
+            {latestPosts.map((post) => renderLatestCard(post))}
           </div>
+          
+          {/* Custom "View All" Button Style */}
           <div className="flex justify-center">
-            <Button asChild variant="outline" size="lg" className="rounded-full">
-                <Link href={`${linkPrefix}/blog`}>
+            <Link 
+                href={`${linkPrefix}/blog`}
+                className="flex items-center gap-6 bg-muted/30 px-6 py-3 rounded-full border border-primary/5 hover:bg-muted/50 transition-all group"
+            >
+                {/* Left Side: Pagination Style Indicators */}
+                <div className="flex items-center gap-2 pr-4 border-r border-primary/10">
+                    <div className="h-1.5 w-8 bg-accent rounded-full" />
+                    <div className="h-1.5 w-1.5 bg-primary/20 rounded-full" />
+                    <div className="h-1.5 w-1.5 bg-primary/20 rounded-full" />
+                </div>
+
+                {/* Right Side: Text & Navigation */}
+                <span className="text-xs font-black uppercase tracking-widest text-primary/80 group-hover:text-primary transition-all flex items-center gap-2">
                     {dictionary.home.viewAllPosts}
-                </Link>
-            </Button>
+                    <ChevronRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
+                </span>
+            </Link>
           </div>
         </section>
       )}
@@ -229,7 +255,7 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
         />
       )}
 
-      {/* HorizontalSlider Section (Software Updates - Test Tag: Android) */}
+      {/* HorizontalSlider Section (Software Updates) */}
       {updatePosts.length > 0 && (
         <HorizontalSlider 
           posts={updatePosts as any}

@@ -1,4 +1,3 @@
-
 'use client';
 
 import * as React from 'react';
@@ -10,8 +9,7 @@ import {
   CarouselItem, 
   type CarouselApi 
 } from '@/components/ui/carousel';
-import { Button } from '@/components/ui/button';
-import { ChevronLeft, ChevronRight } from 'lucide-react';
+import { ChevronRight } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
 
@@ -35,10 +33,6 @@ interface HorizontalSliderProps {
   tag?: string;
 }
 
-/**
- * HorizontalSlider - A carousel component displaying cards with 1:1 images.
- * Mixes the carousel functionality of FeatureSlider with the card style of TopicSection.
- */
 export function HorizontalSlider({ posts, title, viewMoreText, locale, tag }: HorizontalSliderProps) {
   const [api, setApi] = React.useState<CarouselApi>();
   const [current, setCurrent] = React.useState(0);
@@ -131,54 +125,21 @@ export function HorizontalSlider({ posts, title, viewMoreText, locale, tag }: Ho
             })}
           </CarouselContent>
 
-          {/* Controls */}
+          {/* Controls - Redesigned Style */}
           <div className="mt-10 flex flex-col sm:flex-row items-center justify-center gap-8">
-            <div className="flex items-center gap-2 order-2 sm:order-1">
-              <Button
-                variant="outline"
-                size="icon"
-                className="rounded-full h-9 w-9 border-primary/10 bg-background text-primary hover:bg-primary hover:text-white transition-all"
-                onClick={() => api?.scrollPrev()}
-                disabled={!api?.canScrollPrev()}
-                aria-label="Previous slide"
-              >
-                <ChevronLeft className="h-4 w-4" />
-              </Button>
-              <Button
-                variant="outline"
-                size="icon"
-                className="rounded-full h-9 w-9 border-primary/10 bg-background text-primary hover:bg-primary hover:text-white transition-all"
-                onClick={() => api?.scrollNext()}
-                disabled={!api?.canScrollNext()}
-                aria-label="Next slide"
-              >
-                <ChevronRight className="h-4 w-4" />
-              </Button>
-            </div>
-
-            <div className="flex items-center gap-6 order-1 sm:order-2 bg-muted/30 px-5 py-2 rounded-full border border-primary/5">
-              <div className="flex items-center gap-1.5">
-                {Array.from({ length: count }).map((_, i) => (
-                  <button
-                    key={i}
-                    className={cn(
-                      "h-1 transition-all duration-300 rounded-full",
-                      current === i ? "w-6 bg-accent" : "w-1 bg-primary/20"
-                    )}
-                    onClick={() => api?.scrollTo(i)}
-                    aria-label={`Go to slide ${i + 1}`}
-                  />
-                ))}
+            <div className="flex items-center gap-6 bg-muted/30 px-5 py-2.5 rounded-full border border-primary/5">
+              <div className="flex items-center gap-2 pr-4 border-r border-primary/10">
+                <div className="h-1.5 w-8 bg-accent rounded-full" />
+                <div className="h-1.5 w-1.5 bg-primary/20 rounded-full" />
+                <div className="h-1.5 w-1.5 bg-primary/20 rounded-full" />
               </div>
-              
-              <div className="h-3 w-px bg-primary/10 hidden sm:block" />
 
               <Link 
                 href={viewMoreHref} 
-                className="text-[10px] font-bold uppercase tracking-widest text-primary hover:text-accent transition-all flex items-center gap-1 group/more"
+                className="text-[10px] font-black uppercase tracking-widest text-primary/80 hover:text-primary transition-all flex items-center gap-2 group/more"
               >
                 {viewMoreText}
-                <ChevronRight className="h-3 w-3 transition-transform group-hover/more:translate-x-0.5" />
+                <ChevronRight className="h-3.5 w-3.5 transition-transform group-hover/more:translate-x-1" />
               </Link>
             </div>
           </div>
