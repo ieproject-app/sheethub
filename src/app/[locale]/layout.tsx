@@ -141,7 +141,7 @@ export default async function LocaleLayout({
           <NotificationProvider>
             <ReadingListProvider>
               <Header searchableData={searchableData} dictionary={dictionary} />
-              <main>{children}</main>
+              <main className="pt-20">{children}</main>
               <Footer dictionary={dictionary} translationsMap={translationsMap} />
               <BackToTop dictionary={dictionary} />
               <ThemeSwitcher dictionary={dictionary} />
