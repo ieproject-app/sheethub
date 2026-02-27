@@ -161,7 +161,7 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
                 </div>
 
                 {post.frontmatter.category && (
-                    <p className="text-[10px] font-black tracking-wider text-accent mb-1.5">
+                    <p className="text-[10px] font-medium tracking-wider text-accent mb-1.5">
                         {post.frontmatter.category}
                     </p>
                 )}
@@ -180,7 +180,7 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
     <div className="w-full">
       {/* Featured Posts Section */}
       {featuredPosts.length > 0 && (
-        <section className="py-12 sm:py-16 mb-20 sm:mb-28 bg-primary/[0.03] dark:bg-muted/30 border-y border-primary/5">
+        <section className="py-12 sm:py-16 bg-primary/[0.03] dark:bg-muted/30 border-y border-primary/5">
           <div className="container max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-0">
               {featuredPosts.map((post, index) => (
@@ -202,7 +202,7 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
 
       {/* Latest Posts Section */}
       {latestPosts.length > 0 && (
-        <section className="container max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 pb-12 sm:pb-16">
+        <section className="container max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-24">
           <h2 className="text-3xl font-bold font-headline tracking-tighter text-primary mb-12 text-center">{dictionary.home.latestPosts}</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-12 mb-16">
             {latestPosts.map((post) => renderLatestCard(post))}
