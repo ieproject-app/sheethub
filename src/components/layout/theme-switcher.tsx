@@ -63,10 +63,10 @@ export function ThemeSwitcher({ dictionary }: { dictionary: Dictionary }) {
         "fixed bottom-20 right-6 z-50 transition-all duration-300 group",
         isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4 pointer-events-none'
     )}>
-      {/* Floating Pill Tooltip (Left Position) */}
+      {/* Standardized Floating Pill Tooltip */}
       <span className={cn(
-          "absolute top-1/2 -translate-y-1/2 right-full mr-3 px-3 py-1.5 rounded-full bg-primary text-primary-foreground text-[10px] font-black uppercase tracking-widest shadow-2xl whitespace-nowrap",
-          "opacity-0 scale-50 translate-x-4 transition-all duration-300 pointer-events-none z-20",
+          "absolute top-1/2 -translate-y-1/2 right-full mr-3 px-3 py-1.5 rounded-full bg-primary text-primary-foreground text-[10px] font-black uppercase tracking-widest shadow-2xl whitespace-nowrap z-20 pointer-events-none",
+          "transition-all duration-300 opacity-0 scale-50 translate-x-4",
           "group-hover:opacity-100 group-hover:scale-100 group-hover:translate-x-0"
       )}>
           {dictionary.promptGenerator.tooltips.theme}
