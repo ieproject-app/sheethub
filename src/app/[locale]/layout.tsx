@@ -12,17 +12,9 @@ import { BackToTop } from '@/components/layout/back-to-top';
 import { ThemeSwitcher } from '@/components/layout/theme-switcher';
 import { getDictionary } from '@/lib/get-dictionary';
 import { DraftList } from '@/components/layout/draft-list';
-import { Archivo } from 'next/font/google';
+import { GeistSans } from 'geist/font/sans';
 import { GeistMono } from 'geist/font/mono';
 import { cn } from '@/lib/utils';
-
-const archivo = Archivo({
-  subsets: ['latin'],
-  display: 'swap',
-  variable: '--font-archivo',
-});
-
-const geistMono = GeistMono;
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://snipgeek.com'),
@@ -125,7 +117,7 @@ export default async function LocaleLayout({
   const draftNotes = getDraftNotesData(locale);
   
   return (
-    <html lang={locale} className={cn(archivo.variable, geistMono.variable, "scroll-smooth")} suppressHydrationWarning>
+    <html lang={locale} className={cn(GeistSans.variable, GeistMono.variable, "scroll-smooth")} suppressHydrationWarning>
       <head />
       <body className="font-body antialiased fade-in-on-load">
         <ThemeProvider
