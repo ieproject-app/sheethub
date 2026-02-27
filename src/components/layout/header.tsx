@@ -2,7 +2,6 @@
 'use client';
 
 import React, { useState, useEffect, useRef } from 'react';
-import Link from 'next/link';
 import { cn } from '@/lib/utils';
 import { 
   Search, 
@@ -27,6 +26,7 @@ import { useReadingList } from '@/hooks/use-reading-list';
 import { useNotification } from '@/hooks/use-notification';
 import type { Dictionary } from '@/lib/get-dictionary';
 import { SnipGeekLogo } from '@/components/icons/snipgeek-logo';
+import NextLink from 'next/link';
 
 type SearchableItem = {
   slug: string;
@@ -278,7 +278,7 @@ export function Header({ searchableData, dictionary }: { searchableData: Searcha
                     </div>
                 </Button>
 
-                <Link 
+                <NextLink 
                     href="/" 
                     className={cn(
                         "flex items-center justify-center h-7 w-7 transition-all duration-300 hover:scale-110 active:scale-95 ml-1 group/logo shrink-0"
@@ -286,7 +286,7 @@ export function Header({ searchableData, dictionary }: { searchableData: Searcha
                     aria-label="SnipGeek Home"
                 >
                     <SnipGeekLogo className="h-full w-full" />
-                </Link>
+                </NextLink>
             </div>
 
             {/* Middle Section: Nav Links (Centered) */}
@@ -295,18 +295,17 @@ export function Header({ searchableData, dictionary }: { searchableData: Searcha
                 (isSearchOpen || message) ? "opacity-0 pointer-events-none" : "opacity-100"
             )}>
                 {directLinks.map((item) => (
-                    <Link 
+                    <NextLink 
                         key={item.href}
                         href={item.href}
                         className={cn(
-                            "px-3 py-1.5 rounded-full text-[10px] font-bold uppercase tracking-wider transition-all hidden sm:flex items-center gap-2",
-                            "hover:bg-white/10 hover:-translate-y-0.5",
-                            pathname.includes(item.href) ? "text-primary-foreground bg-white/10" : "text-primary-foreground/90"
+                            "px-4 py-1 text-[10px] font-black uppercase tracking-widest transition-all hidden sm:flex items-center",
+                            "hover:-translate-y-0.5 active:scale-95",
+                            pathname.includes(item.href) ? "text-accent" : "text-primary-foreground/70 hover:text-primary-foreground"
                         )}
                     >
-                        <item.icon className="h-3.5 w-3.5" />
                         <span>{item.name}</span>
-                    </Link>
+                    </NextLink>
                 ))}
             </div>
 
@@ -384,7 +383,7 @@ export function Header({ searchableData, dictionary }: { searchableData: Searcha
                     <>
                         <div className="sm:hidden border-b border-white/10">
                             {directLinks.map((item) => (
-                                <Link 
+                                <NextLink 
                                     key={item.href}
                                     href={item.href} 
                                     className={cn(
@@ -394,11 +393,11 @@ export function Header({ searchableData, dictionary }: { searchableData: Searcha
                                 >
                                     <item.icon className="h-4 w-4 shrink-0 text-accent" />
                                     <span>{item.name}</span>
-                                </Link>
+                                </NextLink>
                             ))}
                         </div>
                         {moreItems.map((item) => (
-                            <Link 
+                            <NextLink 
                                 key={item.href}
                                 href={item.href} 
                                 className={cn(
@@ -409,7 +408,7 @@ export function Header({ searchableData, dictionary }: { searchableData: Searcha
                                 <div className="absolute left-0 top-0 bottom-0 w-1 bg-accent scale-y-0 group-hover:scale-y-100 transition-transform duration-300 origin-center" />
                                 <item.icon className="h-4 w-4 shrink-0 transition-all duration-300 group-hover:scale-110 group-hover:text-accent" />
                                 <span className="transition-transform duration-300 group-hover:translate-x-1">{item.name}</span>
-                            </Link>
+                            </NextLink>
                         ))}
                     </>
                 )}
@@ -448,7 +447,7 @@ export function Header({ searchableData, dictionary }: { searchableData: Searcha
                                           const config = typeConfig[item.type];
                                           return (
                                             <li key={`${item.type}-${item.slug}`} style={{ animationDelay: `${idx * 45}ms` }} className="animate-in fade-in slide-in-from-bottom-2 duration-300 fill-mode-both">
-                                                <Link href={item.href} className="block group px-3 py-2.5 rounded-lg hover:bg-primary-foreground/[0.05] transition-all duration-300 relative overflow-hidden">
+                                                <NextLink href={item.href} className="block group px-3 py-2.5 rounded-lg hover:bg-primary-foreground/[0.05] transition-all duration-300 relative overflow-hidden">
                                                     {/* Left Accent Bar */}
                                                     <div className={cn("absolute left-0 top-2 bottom-2 w-0.5 rounded-full transition-transform duration-300 origin-center scale-y-0 group-hover:scale-y-100", config.accent)} />
                                                     
@@ -469,7 +468,7 @@ export function Header({ searchableData, dictionary }: { searchableData: Searcha
                                                             <span className={cn("text-[8px] font-black uppercase tracking-tighter", config.color)}>{item.type}</span>
                                                         </div>
                                                     </div>
-                                                </Link>
+                                                </NextLink>
                                             </li>
                                           );
                                         })}
@@ -565,14 +564,14 @@ export function Header({ searchableData, dictionary }: { searchableData: Searcha
                                               </div>
                                           </div>
 
-                                          <Link href={item.href} className="block flex-1 min-w-0">
+                                          <NextLink href={item.href} className="block flex-1 min-w-0">
                                               <h4 className="text-[13px] font-semibold text-primary-foreground/85 line-clamp-1 leading-snug transition-colors group-hover:text-accent">
                                                   {item.title}
                                               </h4>
                                               <p className="text-[11px] text-primary-foreground/35 line-clamp-1 mt-0.5 italic">
                                                   {item.description}
                                               </p>
-                                          </Link>
+                                          </NextLink>
                                       </div>
 
                                       <Button 
