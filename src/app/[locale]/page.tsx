@@ -166,11 +166,10 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
 
   return (
     <div className="w-full">
-      {/* Featured Posts Section - Reduced Spacing */}
+      {/* Featured Posts Section - With Custom Background and Border */}
       {featuredPosts.length > 0 && (
-        <section className="pt-12 sm:pt-16 mb-20 sm:mb-28">
+        <section className="py-16 sm:py-24 mb-20 sm:mb-28 bg-primary/[0.03] dark:bg-muted/30 border-y border-primary/5">
           <div className="container max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <h2 className="text-3xl font-bold font-headline tracking-tighter text-primary mb-12 text-center">{dictionary.home.featuredPosts}</h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-0">
               {featuredPosts.map((post, index) => (
                   <div
