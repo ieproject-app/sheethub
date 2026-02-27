@@ -244,7 +244,7 @@ export function Header({ searchableData, dictionary }: { searchableData: Searcha
                     <SnipGeekLogo className="h-9 w-9 transition-transform duration-300 group-hover:scale-110" />
                     <span className="font-headline text-2xl font-black tracking-tighter hidden sm:block">
                         <span className="text-foreground">Snip</span>
-                        <span className="text-accent">Geek</span>
+                        <span className="text-accent dark:text-foreground">Geek</span>
                     </span>
                 </NextLink>
             </div>

@@ -1,16 +1,15 @@
 
 import React, { useId } from 'react';
 
-interface SnipGeekLogoProps extends React.SVGProps<SVGSVGElement> {
-  showBackground?: boolean;
-}
+interface SnipGeekLogoProps extends React.SVGProps<SVGSVGElement> {}
 
 /**
- * SnipGeekLogo - Adaptive Monochrome for Dark Mode
+ * SnipGeekLogo - Adaptive branding with two versions:
+ * 1. Colorful gradients for Light Mode.
+ * 2. Monochrome white with opacities for Dark Mode.
  */
 export const SnipGeekLogo = ({ 
   className, 
-  showBackground,
   ...props 
 }: SnipGeekLogoProps) => {
   const id = useId().replace(/:/g, "");
@@ -23,42 +22,44 @@ export const SnipGeekLogo = ({
       {...props}
     >
       <defs>
-        {/* Colorful Gradients for Light Mode */}
         <linearGradient id={`blue-bright-${id}`} x1="0%" y1="0%" x2="100%" y2="100%">
-          <stop offset="0%" className="stop-color-[#bae6fd] dark:stop-color-primary" />
-          <stop offset="100%" className="stop-color-[#0ea5e9] dark:stop-color-primary" />
+          <stop offset="0%" stopColor="#bae6fd" />
+          <stop offset="100%" stopColor="#0ea5e9" />
         </linearGradient>
         <linearGradient id={`blue-deep-${id}`} x1="0%" y1="0%" x2="100%" y2="100%">
-          <stop offset="0%" className="stop-color-[#1d4ed8] dark:stop-color-primary/80" />
-          <stop offset="100%" className="stop-color-[#0c2461] dark:stop-color-primary/80" />
+          <stop offset="0%" stopColor="#1d4ed8" />
+          <stop offset="100%" stopColor="#0c2461" />
         </linearGradient>
       </defs>
 
-      {/* Modern Geometry Branding */}
-      <g className="transition-colors duration-500">
+      {/* Light Mode Version (Default) */}
+      <g className="dark:hidden transition-opacity duration-500">
         <polygon 
             points="5,5 46,5 46,37 37,46 5,46" 
-            className="fill-[url(#blue-bright-ID)] dark:fill-primary"
-            style={{ fill: `url(#blue-bright-${id})` }}
+            fill={`url(#blue-bright-${id})`}
         />
         <polygon 
             points="63,54 95,54 95,95 54,95 54,63" 
-            className="fill-[url(#blue-bright-ID)] dark:fill-primary"
-            style={{ fill: `url(#blue-bright-${id})` }}
+            fill={`url(#blue-bright-${id})`}
         />
         <rect 
             x="54" y="5" width="41" height="41" rx="4" 
-            className="fill-[url(#blue-deep-ID)] dark:fill-primary/60"
-            style={{ fill: `url(#blue-deep-${id})` }}
+            fill={`url(#blue-deep-${id})`}
         />
         <rect 
             x="5" y="54" width="41" height="41" rx="4" 
-            className="fill-[url(#blue-deep-ID)] dark:fill-primary/60"
-            style={{ fill: `url(#blue-deep-${id})` }}
+            fill={`url(#blue-deep-${id})`}
         />
-        <circle cx="50" cy="50" r="3" className="fill-[#bae6fd] dark:fill-primary" opacity="0.9">
-            <animate attributeName="opacity" values="0.4;1;0.4" dur="3s" repeatCount="indefinite" />
-        </circle>
+        <circle cx="50" cy="50" r="2" fill="#bae6fd" opacity="0.9" />
+      </g>
+
+      {/* Dark Mode Version (Monochrome White) */}
+      <g className="hidden dark:block transition-opacity duration-500">
+        <polygon points="5,5 46,5 46,37 37,46 5,46" fill="white" />
+        <polygon points="63,54 95,54 95,95 54,95 54,63" fill="white" />
+        <rect x="54" y="5" width="41" height="41" rx="4" fill="white" opacity="0.3" />
+        <rect x="5" y="54" width="41" height="41" rx="4" fill="white" opacity="0.3" />
+        <circle cx="50" cy="50" r="2" fill="white" opacity="0.6" />
       </g>
     </svg>
   );
