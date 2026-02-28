@@ -1,3 +1,4 @@
+
 'use client';
 
 import * as React from 'react';
@@ -12,6 +13,8 @@ import {
 import { ChevronRight } from 'lucide-react';
 import { cn, formatRelativeTime } from '@/lib/utils';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
+import { AddToReadingListButton } from '@/components/layout/add-to-reading-list-button';
+import type { Dictionary } from '@/lib/get-dictionary';
 
 interface SliderPost {
   slug: string;
@@ -29,11 +32,12 @@ interface HorizontalSliderProps {
   posts: SliderPost[];
   title: string;
   viewMoreText: string;
+  readingListDictionary: Dictionary['readingList'];
   locale: string;
   tag?: string;
 }
 
-export function HorizontalSlider({ posts, title, viewMoreText, locale, tag }: HorizontalSliderProps) {
+export function HorizontalSlider({ posts, title, viewMoreText, readingListDictionary, locale, tag }: HorizontalSliderProps) {
   const [api, setApi] = React.useState<CarouselApi>();
   const [current, setCurrent] = React.useState(0);
   const [count, setCount] = React.useState(0);
@@ -90,13 +94,21 @@ export function HorizontalSlider({ posts, title, viewMoreText, locale, tag }: Ho
                 }
               }
 
+              const item = {
+                slug: post.slug,
+                title: post.frontmatter.title,
+                description: post.frontmatter.description,
+                href: `${linkPrefix}/blog/${post.slug}`,
+                type: 'blog' as const,
+              };
+
               return (
                 <CarouselItem key={post.slug} className="pl-4 sm:pl-6 md:basis-1/2">
-                  <Link href={`${linkPrefix}/blog/${post.slug}`} className="block group h-full">
-                    <article className={cn(
-                        "bg-card/50 rounded-lg overflow-hidden border border-primary/5 p-3 transition-all duration-500 h-full flex gap-4 shadow-sm",
-                        "hover:-translate-y-1 hover:bg-card hover:border-primary/10"
-                    )}>
+                  <article className={cn(
+                      "bg-card/50 rounded-lg overflow-hidden border border-primary/5 p-3 transition-all duration-500 h-full flex gap-4 shadow-sm group",
+                      "hover:-translate-y-1 hover:bg-card hover:border-primary/10"
+                  )}>
+                    <Link href={`${linkPrefix}/blog/${post.slug}`} className="contents">
                       {/* 1:1 Square Thumbnail (100px) */}
                       <div className="relative w-[100px] h-[100px] shrink-0 overflow-hidden rounded-lg shadow-sm border border-primary/5">
                         <Image
@@ -106,6 +118,12 @@ export function HorizontalSlider({ posts, title, viewMoreText, locale, tag }: Ho
                           className="object-cover transition-transform duration-700 group-hover:scale-110"
                           sizes="100px"
                           data-ai-hint={heroImageHint}
+                        />
+                        <AddToReadingListButton 
+                          item={item}
+                          dictionary={readingListDictionary}
+                          showText={false}
+                          className="absolute top-1 right-1 z-20 text-white bg-black/30 hover:bg-black/50 hover:text-white opacity-0 group-hover:opacity-100 transition-opacity h-6 w-6"
                         />
                       </div>
                       
@@ -121,8 +139,8 @@ export function HorizontalSlider({ posts, title, viewMoreText, locale, tag }: Ho
                           {formatRelativeTime(new Date(post.frontmatter.date), locale)}
                         </time>
                       </div>
-                    </article>
-                  </Link>
+                    </Link>
+                  </article>
                 </CarouselItem>
               );
             })}

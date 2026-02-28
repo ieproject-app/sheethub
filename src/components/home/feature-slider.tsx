@@ -1,3 +1,4 @@
+
 'use client';
 
 import * as React from 'react';
@@ -12,6 +13,8 @@ import {
 import { ChevronRight } from 'lucide-react';
 import { cn, formatRelativeTime } from '@/lib/utils';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
+import { AddToReadingListButton } from '@/components/layout/add-to-reading-list-button';
+import type { Dictionary } from '@/lib/get-dictionary';
 
 interface SliderPost {
   slug: string;
@@ -29,11 +32,12 @@ interface FeatureSliderProps {
   posts: SliderPost[];
   title: string;
   viewMoreText: string;
+  readingListDictionary: Dictionary['readingList'];
   locale: string;
   tag?: string;
 }
 
-export function FeatureSlider({ posts, title, viewMoreText, locale, tag }: FeatureSliderProps) {
+export function FeatureSlider({ posts, title, viewMoreText, readingListDictionary, locale, tag }: FeatureSliderProps) {
   const [api, setApi] = React.useState<CarouselApi>();
   const [current, setCurrent] = React.useState(0);
   const [count, setCount] = React.useState(0);
@@ -90,14 +94,22 @@ export function FeatureSlider({ posts, title, viewMoreText, locale, tag }: Featu
                 }
               }
 
+              const item = {
+                slug: post.slug,
+                title: post.frontmatter.title,
+                description: post.frontmatter.description,
+                href: `${linkPrefix}/blog/${post.slug}`,
+                type: 'blog' as const,
+              };
+
               return (
                 <CarouselItem key={post.slug} className="pl-4 sm:pl-6 md:basis-1/2 lg:basis-1/3 py-8">
-                  <Link href={`${linkPrefix}/blog/${post.slug}`} className="block group h-full">
-                    <article className={cn(
-                        "relative bg-card rounded-lg border border-primary/5 transition-all duration-500 h-full flex flex-col group/card overflow-hidden shadow-md",
-                        "hover:-translate-y-1.5 hover:border-primary/10",
-                        "dark:shadow-black/40"
-                    )}>
+                  <article className={cn(
+                      "relative bg-card rounded-lg border border-primary/5 transition-all duration-500 h-full flex flex-col group/card overflow-hidden shadow-md",
+                      "hover:-translate-y-1.5 hover:border-primary/10",
+                      "dark:shadow-black/40"
+                  )}>
+                    <Link href={`${linkPrefix}/blog/${post.slug}`} className="block h-full group">
                       {/* Image container */}
                       <div className="relative aspect-video overflow-hidden z-10 rounded-t-lg">
                         <Image
@@ -107,6 +119,12 @@ export function FeatureSlider({ posts, title, viewMoreText, locale, tag }: Featu
                           className="object-cover transition-transform duration-700 group-hover:scale-110"
                           sizes="(max-width: 768px) 100vw, (max-width: 1200px) 33vw, 300px"
                           data-ai-hint={heroImageHint}
+                        />
+                        <AddToReadingListButton 
+                          item={item}
+                          dictionary={readingListDictionary}
+                          showText={false}
+                          className="absolute top-2 right-2 z-20 text-white bg-black/30 hover:bg-black/50 hover:text-white opacity-0 group-hover/card:opacity-100 transition-opacity"
                         />
                       </div>
                       <div className="p-5 flex-1 flex flex-col z-10">
@@ -120,8 +138,8 @@ export function FeatureSlider({ posts, title, viewMoreText, locale, tag }: Featu
                           {formatRelativeTime(new Date(post.frontmatter.date), locale)}
                         </time>
                       </div>
-                    </article>
-                  </Link>
+                    </Link>
+                  </article>
                 </CarouselItem>
               );
             })}

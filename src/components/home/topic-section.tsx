@@ -1,3 +1,4 @@
+
 'use client';
 
 import Link from 'next/link';
@@ -6,11 +7,14 @@ import { Undo2, ArrowRight } from 'lucide-react';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
 import { Breadcrumbs } from '@/components/layout/breadcrumbs';
 import { formatRelativeTime } from '@/lib/utils';
+import { AddToReadingListButton } from '@/components/layout/add-to-reading-list-button';
+import type { Dictionary } from '@/lib/get-dictionary';
 
 interface TopicPost {
   slug: string;
   frontmatter: {
     title: string;
+    description: string;
     category?: string;
     date: string;
     heroImage: string;
@@ -23,6 +27,7 @@ interface TopicSectionProps {
   title: string;
   breadcrumbHome: string;
   viewAllText: string;
+  readingListDictionary: Dictionary['readingList'];
   locale: string;
   linkPrefix: string;
   tag: string;
@@ -33,6 +38,7 @@ export function TopicSection({
   title, 
   breadcrumbHome, 
   viewAllText,
+  readingListDictionary,
   locale, 
   linkPrefix,
   tag
@@ -49,33 +55,48 @@ export function TopicSection({
         }
     }
 
+    const item = {
+        slug: post.slug,
+        title: post.frontmatter.title,
+        description: post.frontmatter.description,
+        href: `${linkPrefix}/blog/${post.slug}`,
+        type: 'blog' as const,
+    };
+
     return (
-        <Link 
-            key={post.slug}
-            href={`${linkPrefix}/blog/${post.slug}`} 
-            className="flex items-start gap-4 py-3 border-b border-primary/5 transition-all duration-300 group"
-        >
-            <div className="relative w-[100px] h-[100px] shrink-0 overflow-hidden rounded-lg shadow-sm border border-primary/5">
-                <Image
-                    src={heroImageSrc}
-                    alt={post.frontmatter.imageAlt || post.frontmatter.title}
-                    fill
-                    className="object-cover transition-transform duration-500 group-hover:scale-110"
-                    sizes="100px"
-                />
-            </div>
-            <div className="flex-1 min-w-0 py-1">
-                <span className="text-[10px] font-bold tracking-wider text-accent mb-1 block">
-                    {post.frontmatter.category || tag}
-                </span>
-                <h3 className="font-headline text-[13px] md:text-sm font-medium text-primary leading-snug line-clamp-2 transition-colors group-hover:text-accent">
-                    {post.frontmatter.title}
-                </h3>
-                <time className="text-[10px] text-muted-foreground mt-2 block font-medium opacity-60">
-                    {formatRelativeTime(new Date(post.frontmatter.date), locale)}
-                </time>
-            </div>
-        </Link>
+        <div key={post.slug} className="group relative flex items-start gap-4 py-3 border-b border-primary/5 transition-all duration-300">
+            <Link 
+                href={`${linkPrefix}/blog/${post.slug}`} 
+                className="flex items-start gap-4 flex-1 min-w-0"
+            >
+                <div className="relative w-[100px] h-[100px] shrink-0 overflow-hidden rounded-lg shadow-sm border border-primary/5">
+                    <Image
+                        src={heroImageSrc}
+                        alt={post.frontmatter.imageAlt || post.frontmatter.title}
+                        fill
+                        className="object-cover transition-transform duration-500 group-hover:scale-110"
+                        sizes="100px"
+                    />
+                </div>
+                <div className="flex-1 min-w-0 py-1">
+                    <span className="text-[10px] font-bold tracking-wider text-accent mb-1 block">
+                        {post.frontmatter.category || tag}
+                    </span>
+                    <h3 className="font-headline text-[13px] md:text-sm font-medium text-primary leading-snug line-clamp-2 transition-colors group-hover:text-accent">
+                        {post.frontmatter.title}
+                    </h3>
+                    <time className="text-[10px] text-muted-foreground mt-2 block font-medium opacity-60">
+                        {formatRelativeTime(new Date(post.frontmatter.date), locale)}
+                    </time>
+                </div>
+            </Link>
+            <AddToReadingListButton 
+                item={item}
+                dictionary={readingListDictionary}
+                showText={false}
+                className="self-center text-muted-foreground hover:text-primary h-8 w-8 opacity-0 group-hover:opacity-100 transition-opacity shrink-0"
+            />
+        </div>
     );
   };
 

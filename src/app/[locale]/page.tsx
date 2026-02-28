@@ -1,3 +1,4 @@
+
 import { getSortedPostsData } from '@/lib/posts';
 import Link from 'next/link';
 import { i18n } from '@/i18n-config';
@@ -144,6 +145,14 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
         }
     }
 
+    const item = {
+        slug: post.slug,
+        title: post.frontmatter.title,
+        description: post.frontmatter.description,
+        href: `${linkPrefix}/blog/${post.slug}`,
+        type: 'blog' as const,
+    };
+
     return (
         <div key={post.slug} className="group relative transition-all duration-500 hover:-translate-y-1">
             <Link href={`${linkPrefix}/blog/${post.slug}`} className="block" aria-label={`Read more about ${post.frontmatter.title}`}>
@@ -158,6 +167,12 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
                             data-ai-hint={heroImageHint}
                         />
                     )}
+                    <AddToReadingListButton 
+                        item={item}
+                        dictionary={dictionary.readingList}
+                        showText={false}
+                        className="absolute top-3 right-3 z-10 text-white bg-black/30 hover:bg-black/50 hover:text-white opacity-0 group-hover:opacity-100 transition-opacity"
+                    />
                 </div>
 
                 {post.frontmatter.category && (
@@ -235,6 +250,7 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
           posts={sliderPosts as any} 
           title={dictionary.home.sliderAndShadow.title}
           viewMoreText={dictionary.home.sliderAndShadow.viewMore}
+          readingListDictionary={dictionary.readingList}
           locale={locale}
           tag={sliderCategory}
         />
@@ -247,6 +263,7 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
           title={dictionary.home.specialTagSectionTitle}
           breadcrumbHome={dictionary.home.breadcrumbHome}
           viewAllText={dictionary.home.viewAllPosts}
+          readingListDictionary={dictionary.readingList}
           locale={locale}
           linkPrefix={linkPrefix}
           tag={topicTag}
@@ -259,6 +276,7 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
           posts={updatePosts as any}
           title={dictionary.home.softwareUpdateSlider.title}
           viewMoreText={dictionary.home.softwareUpdateSlider.viewMore}
+          readingListDictionary={dictionary.readingList}
           locale={locale}
           tag={updateTag}
         />

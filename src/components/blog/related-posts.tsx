@@ -119,6 +119,12 @@ export async function RelatedPosts({ type, locale, currentSlug, currentTags, cur
                             data-ai-hint={heroImageHint}
                         />
                     )}
+                    <AddToReadingListButton 
+                        item={item}
+                        showText={false}
+                        dictionary={dictionary.readingList}
+                        className="absolute top-3 right-3 z-10 text-white bg-black/30 hover:bg-black/50 hover:text-white opacity-0 group-hover:opacity-100 transition-opacity"
+                    />
                 </div>
 
                 {post.frontmatter.category && (
@@ -133,12 +139,6 @@ export async function RelatedPosts({ type, locale, currentSlug, currentTags, cur
                     {formatRelativeTime(new Date(post.frontmatter.date), locale)}
                 </time>
             </Link>
-            <AddToReadingListButton 
-                item={item}
-                showText={false}
-                dictionary={dictionary.readingList}
-                className="absolute top-3 right-3 z-10 text-white bg-black/30 hover:bg-black/50 hover:text-white opacity-0 group-hover:opacity-100 transition-opacity"
-            />
         </div>
     );
   }
@@ -157,6 +157,12 @@ export async function RelatedPosts({ type, locale, currentSlug, currentTags, cur
         <Link href={`${linkPrefix}/notes/${note.slug}`} className="block" aria-label={note.frontmatter.title}>
             <div className="relative w-full aspect-video overflow-hidden rounded-lg mb-4 shadow-sm transition-all duration-500 border border-primary/5 bg-primary/5 flex items-center justify-center">
                 <StickyNote className="h-12 w-12 text-primary/20 transition-transform duration-700 group-hover:scale-110" />
+                <AddToReadingListButton 
+                    item={item}
+                    showText={false}
+                    dictionary={dictionary.readingList}
+                    className="absolute top-3 right-3 z-10 text-white bg-black/30 hover:bg-black/50 hover:text-white opacity-0 group-hover:opacity-100 transition-opacity"
+                />
             </div>
             
             <p className="text-[10px] font-medium tracking-wider text-accent mb-1.5 uppercase">
@@ -171,12 +177,6 @@ export async function RelatedPosts({ type, locale, currentSlug, currentTags, cur
                 {formatRelativeTime(new Date(note.frontmatter.date), locale)}
             </time>
         </Link>
-        <AddToReadingListButton 
-            item={item}
-            showText={false}
-            dictionary={dictionary.readingList}
-            className="absolute top-3 right-3 z-10 text-white bg-black/30 hover:bg-black/50 hover:text-white opacity-0 group-hover:opacity-100 transition-opacity"
-        />
       </div>
     );
   }
