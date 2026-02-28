@@ -93,7 +93,7 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
 
     return (
         <Link href={`${linkPrefix}/blog/${post.slug}`} className="block group" aria-label={`Read more about ${post.frontmatter.title}`}>
-            <article className="relative w-full aspect-[4/3] rounded-lg overflow-hidden shadow-2xl transition-all duration-300 group-hover:shadow-[0_20px_50px_rgba(0,0,0,0.3)] border-primary/5">
+            <article className="relative w-full aspect-[4/3] rounded-lg overflow-hidden shadow-2xl transition-all duration-500 group-hover:shadow-[0_30px_60px_rgba(0,0,0,0.4)] border-primary/5">
                 <div className="absolute top-3 right-3 z-20 flex items-center gap-2">
                     <AddToReadingListButton 
                         item={item}
@@ -108,7 +108,7 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
                         src={heroImageSrc}
                         alt={post.frontmatter.imageAlt || post.frontmatter.title}
                         fill
-                        className="object-cover transition-transform duration-500"
+                        className="object-cover transition-transform duration-700 group-hover:scale-110"
                         sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                         priority={index < 2}
                         data-ai-hint={heroImageHint}
@@ -145,15 +145,15 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
     }
 
     return (
-        <div key={post.slug} className="group relative transition-all duration-300 hover:-translate-y-1">
+        <div key={post.slug} className="group relative transition-all duration-500 hover:-translate-y-2">
             <Link href={`${linkPrefix}/blog/${post.slug}`} className="block" aria-label={`Read more about ${post.frontmatter.title}`}>
-                <div className="relative w-full aspect-video overflow-hidden rounded-lg mb-4 shadow-sm group-hover:shadow-md transition-all duration-300">
+                <div className="relative w-full aspect-video overflow-hidden rounded-xl mb-4 shadow-sm group-hover:shadow-[0_15px_30px_rgba(0,0,0,0.1)] dark:group-hover:shadow-[0_15px_30px_rgba(0,0,0,0.3)] transition-all duration-500 border border-primary/5">
                     {heroImageSrc && (
                         <Image
                             src={heroImageSrc}
                             alt={post.frontmatter.imageAlt || post.frontmatter.title}
                             fill
-                            className="object-cover transition-transform duration-500 group-hover:scale-105"
+                            className="object-cover transition-transform duration-700 group-hover:scale-110"
                             sizes="(max-width: 768px) 100vw, (max-width: 1200px) 33vw, 300px"
                             data-ai-hint={heroImageHint}
                         />
@@ -187,7 +187,7 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
                   <div
                     key={post.slug}
                     className={cn(
-                      "transform transition-all duration-300 ease-in-out will-change-transform",
+                      "transform transition-all duration-500 ease-in-out will-change-transform",
                       (index === 0 || index === 2) && "rotate-2 -translate-y-4 hover:-translate-y-8",
                       (index === 1 || index === 3) && "-rotate-2 z-10 hover:-translate-y-4"
                     )}

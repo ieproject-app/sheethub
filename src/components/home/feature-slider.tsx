@@ -94,16 +94,16 @@ export function FeatureSlider({ posts, title, viewMoreText, locale, tag }: Featu
                 <CarouselItem key={post.slug} className="pl-4 sm:pl-6 md:basis-1/2 lg:basis-1/3 py-8">
                   <Link href={`${linkPrefix}/blog/${post.slug}`} className="block group h-full">
                     <article className={cn(
-                        "relative bg-card rounded-lg overflow-hidden border transition-all duration-300 hover:-translate-y-2 h-full flex flex-col",
-                        "before:content-[''] before:absolute before:bottom-0 before:inset-x-6 before:h-10 before:z-[-1]",
-                        "before:shadow-[0_15px_30px_rgba(0,0,0,0.4)] before:opacity-0 group-hover:before:opacity-100 before:transition-opacity before:duration-500"
+                        "relative bg-card rounded-xl overflow-hidden border border-primary/5 transition-all duration-500 h-full flex flex-col",
+                        "shadow-sm hover:shadow-[0_20px_50px_rgba(0,0,0,0.15)] dark:hover:shadow-[0_20px_50px_rgba(0,0,0,0.4)]",
+                        "hover:-translate-y-3 hover:border-primary/10"
                     )}>
                       <div className="relative aspect-video overflow-hidden">
                         <Image
                           src={heroImageSrc}
                           alt={post.frontmatter.imageAlt || post.frontmatter.title}
                           fill
-                          className="object-cover transition-transform duration-500 group-hover:scale-105"
+                          className="object-cover transition-transform duration-700 group-hover:scale-110"
                           sizes="(max-width: 768px) 100vw, (max-width: 1200px) 33vw, 300px"
                           data-ai-hint={heroImageHint}
                         />
