@@ -11,7 +11,7 @@ import {
   type CarouselApi 
 } from '@/components/ui/carousel';
 import { ChevronRight } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { cn, formatRelativeTime } from '@/lib/utils';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
 
 interface SliderPost {
@@ -95,20 +95,12 @@ export function FeatureSlider({ posts, title, viewMoreText, locale, tag }: Featu
                 <CarouselItem key={post.slug} className="pl-4 sm:pl-6 md:basis-1/2 lg:basis-1/3 py-8">
                   <Link href={`${linkPrefix}/blog/${post.slug}`} className="block group h-full">
                     <article className={cn(
-                        "relative bg-card rounded-xl border border-primary/5 transition-all duration-500 h-full flex flex-col group/card",
+                        "relative bg-card rounded-xl border border-primary/5 transition-all duration-500 h-full flex flex-col group/card overflow-hidden",
                         "hover:-translate-y-2 hover:border-primary/10",
-                        "isolate", // Menghindari bayangan bocor ke atas konten
-                        // Permanent Fold Shadow Effect (Pseudo-elements)
-                        "before:content-[''] before:absolute before:z-[-1] before:bottom-[12px] before:left-[10px] before:w-[45%] before:h-[15%] before:shadow-[0_15px_10px_rgba(0,0,0,0.4)] before:rotate-[-3deg] before:transition-all before:duration-500 before:bg-transparent before:pointer-events-none",
-                        "after:content-[''] after:absolute after:z-[-1] after:bottom-[12px] after:right-[10px] after:w-[45%] after:h-[15%] after:shadow-[0_15px_10px_rgba(0,0,0,0.4)] after:rotate-[3deg] after:transition-all after:duration-500 after:bg-transparent after:pointer-events-none",
-                        // Dark mode depth adjustments
-                        "dark:before:shadow-[0_15px_15px_rgba(0,0,0,0.7)] dark:after:shadow-[0_15px_15px_rgba(0,0,0,0.7)]",
-                        // Response when card lifts
-                        "group-hover:before:bottom-[15px] group-hover:before:shadow-[0_20px_15px_rgba(0,0,0,0.25)]",
-                        "group-hover:after:bottom-[15px] group-hover:after:shadow-[0_20px_15px_rgba(0,0,0,0.25)]"
+                        "shadow-lg hover:shadow-2xl dark:shadow-black/40"
                     )}>
-                      {/* Image container with its own rounded corner clip */}
-                      <div className="relative aspect-video overflow-hidden rounded-t-xl z-10">
+                      {/* Image container */}
+                      <div className="relative aspect-video overflow-hidden z-10">
                         <Image
                           src={heroImageSrc}
                           alt={post.frontmatter.imageAlt || post.frontmatter.title}
@@ -125,6 +117,9 @@ export function FeatureSlider({ posts, title, viewMoreText, locale, tag }: Featu
                         <h3 className="font-headline text-base font-semibold text-primary leading-snug group-hover:text-accent transition-colors">
                           {post.frontmatter.title}
                         </h3>
+                        <time className="text-[10px] text-muted-foreground mt-3 block font-medium opacity-60">
+                          {formatRelativeTime(new Date(post.frontmatter.date), locale)}
+                        </time>
                       </div>
                     </article>
                   </Link>
