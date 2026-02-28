@@ -6,10 +6,9 @@ import Image from 'next/image';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
 import { getDictionary } from '@/lib/get-dictionary';
 import { AddToReadingListButton } from '@/components/layout/add-to-reading-list-button';
-import { Badge } from '@/components/ui/badge';
 import { i18n } from '@/i18n-config';
-import { Card, CardContent, CardFooter, CardHeader } from '@/components/ui/card';
 import { StickyNote } from 'lucide-react';
+import { cn, formatRelativeTime } from '@/lib/utils';
 
 type RelatedPostsProps = {
   type: 'blog' | 'note';
@@ -107,28 +106,32 @@ export async function RelatedPosts({ type, locale, currentSlug, currentTags, cur
     };
     
     return (
-        <div key={post.slug} className="group relative transition-all duration-300 hover:-translate-y-2 will-change-transform">
+        <div key={post.slug} className="group relative transition-all duration-500 hover:-translate-y-1">
             <Link href={`${linkPrefix}/blog/${post.slug}`} className="block" aria-label={`Read more about ${post.frontmatter.title}`}>
-                <div className="relative w-full aspect-video overflow-hidden rounded-lg mb-4 shadow-sm group-hover:shadow-xl transition-shadow duration-300">
+                <div className="relative w-full aspect-video overflow-hidden rounded-lg mb-4 shadow-sm transition-all duration-500 border border-primary/5">
                     {heroImageSrc && (
                         <Image
                             src={heroImageSrc}
                             alt={post.frontmatter.imageAlt || post.frontmatter.title}
                             fill
-                            className="object-cover"
-                            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 33vw, 400px"
+                            className="object-cover transition-transform duration-700 group-hover:scale-110"
+                            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 33vw, 300px"
                             data-ai-hint={heroImageHint}
                         />
                     )}
                 </div>
 
-                {post.frontmatter.category && <p className="text-sm text-muted-foreground mb-1">{post.frontmatter.category}</p>}
-                <h3 className="font-headline text-xl font-bold tracking-tight text-primary transition-colors group-hover:text-accent">
+                {post.frontmatter.category && (
+                    <p className="text-[10px] font-medium tracking-wider text-accent mb-1.5">
+                        {post.frontmatter.category}
+                    </p>
+                )}
+                <h3 className="font-headline text-base font-bold tracking-tight text-primary transition-colors group-hover:text-accent leading-tight">
                     {post.frontmatter.title}
                 </h3>
-                <p className="leading-relaxed text-muted-foreground mt-2 text-sm line-clamp-3">
-                    {post.frontmatter.description}
-                </p>
+                <time className="text-[10px] font-medium text-muted-foreground mt-2 block opacity-60">
+                    {formatRelativeTime(new Date(post.frontmatter.date), locale)}
+                </time>
             </Link>
             <AddToReadingListButton 
                 item={item}
@@ -141,10 +144,6 @@ export async function RelatedPosts({ type, locale, currentSlug, currentTags, cur
   }
 
   const renderNoteCard = (note: Note<NoteFrontmatter>) => {
-    const noteDate = new Date(note.frontmatter.date);
-    const formatDate = (date: Date) => {
-        return new Intl.DateTimeFormat(locale, { day: 'numeric', month: 'short', year: 'numeric' }).format(date);
-    };
     const item = {
         slug: note.slug,
         title: note.frontmatter.title,
@@ -154,46 +153,31 @@ export async function RelatedPosts({ type, locale, currentSlug, currentTags, cur
     };
 
     return (
-      <Card key={note.slug} className="group relative flex flex-col overflow-hidden rounded-lg border bg-card/50 shadow-sm transition-all hover:shadow-lg hover:-translate-y-2 will-change-transform h-full">
-        <CardHeader className="p-6 pb-0 flex-row justify-between items-start space-y-0">
-            <div className="p-2 bg-muted/50 rounded-lg group-hover:bg-primary/10 transition-colors">
-                <StickyNote className="h-5 w-5 text-muted-foreground group-hover:text-primary transition-colors" />
+      <div key={note.slug} className="group relative transition-all duration-500 hover:-translate-y-1">
+        <Link href={`${linkPrefix}/notes/${note.slug}`} className="block" aria-label={note.frontmatter.title}>
+            <div className="relative w-full aspect-video overflow-hidden rounded-lg mb-4 shadow-sm transition-all duration-500 border border-primary/5 bg-primary/5 flex items-center justify-center">
+                <StickyNote className="h-12 w-12 text-primary/20 transition-transform duration-700 group-hover:scale-110" />
             </div>
-            <AddToReadingListButton 
-                item={item}
-                showText={false}
-                dictionary={dictionary.readingList}
-                className="text-muted-foreground hover:text-primary z-10 opacity-0 group-hover:opacity-100 transition-opacity shrink-0"
-            />
-        </CardHeader>
-
-        <CardContent className="p-6 pt-4 flex-1">
-          <Link href={`${linkPrefix}/notes/${note.slug}`} aria-label={note.frontmatter.title} className="block group/link">
-            <time className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground mb-2 block">
-                {formatDate(noteDate)}
-            </time>
-            <h3 className="font-headline text-lg font-bold tracking-tight text-primary transition-colors group-hover/link:text-accent mb-2">
+            
+            <p className="text-[10px] font-medium tracking-wider text-accent mb-1.5 uppercase">
+                {dictionary.navigation.notes}
+            </p>
+            
+            <h3 className="font-headline text-base font-bold tracking-tight text-primary transition-colors group-hover:text-accent leading-tight">
                 {note.frontmatter.title}
             </h3>
-            <p className="text-sm text-muted-foreground line-clamp-2">
-                {note.frontmatter.description}
-            </p>
-          </Link>
-        </CardContent>
-        
-        <CardFooter className="px-6 py-4 border-t bg-muted/5">
-            <div className="flex flex-wrap gap-1">
-                {note.frontmatter.tags && note.frontmatter.tags.slice(0, 2).map(tag => (
-                    <Badge key={tag} variant="outline" className="text-[10px] font-medium bg-background/50">
-                        {tag}
-                    </Badge>
-                ))}
-                {note.frontmatter.tags && note.frontmatter.tags.length > 2 && (
-                    <span className="text-[10px] text-muted-foreground self-center">+{note.frontmatter.tags.length - 2}</span>
-                )}
-            </div>
-        </CardFooter>
-      </Card>
+            
+            <time className="text-[10px] font-medium text-muted-foreground mt-2 block opacity-60">
+                {formatRelativeTime(new Date(note.frontmatter.date), locale)}
+            </time>
+        </Link>
+        <AddToReadingListButton 
+            item={item}
+            showText={false}
+            dictionary={dictionary.readingList}
+            className="absolute top-3 right-3 z-10 text-white bg-black/30 hover:bg-black/50 hover:text-white opacity-0 group-hover:opacity-100 transition-opacity"
+        />
+      </div>
     );
   }
 
@@ -202,11 +186,12 @@ export async function RelatedPosts({ type, locale, currentSlug, currentTags, cur
       <h2 className="text-3xl font-bold font-headline tracking-tighter text-primary mb-12 text-center">
         {dictionary.post.relatedContent}
       </h2>
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-        {type === 'blog' 
-            ? (relatedContent as Post<PostFrontmatter>[]).map(item => renderBlogPostCard(item))
-            : (relatedContent as Note<NoteFrontmatter>[]).map(item => renderNoteCard(item))
-        }
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-x-8 gap-y-12">
+        {relatedContent.map(item => 
+            type === 'blog' 
+                ? renderBlogPostCard(item as Post<PostFrontmatter>)
+                : renderNoteCard(item as Note<NoteFrontmatter>)
+        )}
       </div>
     </section>
   );
