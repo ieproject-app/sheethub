@@ -69,7 +69,7 @@ export function PostMeta({ frontmatter, item, locale, dictionary, readingTime, i
     );
   }
 
-  // Standalone Minimalist Style (Default - Left Aligned)
+  // Standalone Style
   return (
     <div className={cn(
         "flex flex-wrap items-center gap-6 py-4 mb-8 border-b border-primary/5",

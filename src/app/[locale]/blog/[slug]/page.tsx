@@ -152,12 +152,12 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
 
   return (
     <div className="w-full">
-      <main className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 pt-6 sm:pt-8 pb-12 sm:pt-12 sm:pb-16">
+      <main className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 pt-10 pb-16 sm:pb-24">
         <article>
             <header className="mb-12">
                 <Breadcrumbs segments={breadcrumbSegments} className="mb-6" />
                 
-                {/* Hero Image - Clean (No Meta Overlay) */}
+                {/* Hero Image */}
                 <div className="relative my-8 rounded-lg overflow-hidden shadow-2xl bg-muted group">
                     {heroSource ? (
                         <Image
@@ -181,7 +181,7 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
                     {post.frontmatter.title}
                 </h1>
 
-                {/* Meta Post - Moved below Title */}
+                {/* Metadata */}
                 <PostMeta 
                     frontmatter={post.frontmatter}
                     item={itemForMeta}

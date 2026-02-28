@@ -4,13 +4,13 @@ import { Skeleton } from '@/components/ui/skeleton';
 export default function Loading() {
   return (
     <div className="w-full">
-      <main className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 pt-6 sm:pt-8 pb-12 sm:pt-12 sm:pb-16">
+      <main className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 pt-10 pb-16">
         <article className="animate-in fade-in duration-700">
             <header className="text-center mb-8">
                 <Skeleton className="h-12 w-3/4 mx-auto mb-4" />
             </header>
 
-            <div className="relative my-8 sm:my-12 rounded-lg overflow-hidden shadow-2xl">
+            <div className="relative my-8 rounded-lg overflow-hidden shadow-2xl">
                 <Skeleton className="w-full aspect-video" />
             </div>
 

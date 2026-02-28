@@ -52,7 +52,7 @@ export default async function EmployeeHistoryPage({
 
   return (
     <div className="w-full">
-      <main className="mx-auto max-w-5xl px-4 pt-6 pb-12 sm:px-6 sm:pt-8 sm:pb-16">
+      <main className="mx-auto max-w-5xl px-4 pt-10 pb-16 sm:px-6">
         <header className="mb-12 text-center">
             <h1 className="font-headline text-5xl font-extrabold tracking-tighter text-primary md:text-6xl mb-3">
                 {pageContent.title}

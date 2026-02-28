@@ -56,7 +56,7 @@ export default async function AboutPage({ params }: { params: Promise<{ locale: 
   
   return (
     <div className="w-full">
-      <main className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 pt-6 sm:pt-8 pb-12 sm:pb-16">
+      <main className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 pt-10 pb-16 sm:pb-24">
         
         {/* Hero Section */}
         <section className="mb-16 text-center animate-in fade-in slide-in-from-bottom-4 duration-700">
@@ -93,7 +93,7 @@ export default async function AboutPage({ params }: { params: Promise<{ locale: 
             </p>
         </section>
 
-        {/* Personal Story Section (from MDX) */}
+        {/* MDX Content */}
         <section className="mb-20 prose prose-lg dark:prose-invert max-w-none">
              <div className="flex items-center gap-4 mb-8">
                 <h2 className="text-2xl font-bold font-headline text-primary shrink-0 uppercase tracking-tight">{dictionary.about.title}</h2>
@@ -123,11 +123,9 @@ export default async function AboutPage({ params }: { params: Promise<{ locale: 
             <div className="space-y-12 relative before:absolute before:inset-0 before:ml-5 before:-translate-x-px md:before:mx-auto md:before:translate-x-0 before:h-full before:w-0.5 before:bg-gradient-to-b before:from-transparent before:via-border before:to-transparent">
                 {data.experiences.map((exp, index) => (
                     <div key={index} className="relative flex items-center justify-between md:justify-normal md:odd:flex-row-reverse group">
-                        {/* Dot */}
                         <div className="flex items-center justify-center w-10 h-10 rounded-full border bg-background shadow shrink-0 md:order-1 md:group-odd:-translate-x-1/2 md:group-even:translate-x-1/2 z-10">
                             <Briefcase className="w-5 h-5 text-primary" />
                         </div>
-                        {/* Content */}
                         <Card className="w-[calc(100%-4rem)] md:w-[calc(50%-2.5rem)] bg-card/50 transition-all duration-300 hover:shadow-lg hover:-translate-y-1 border-primary/10">
                             <CardHeader className="p-6">
                                 <time className="text-xs font-bold uppercase tracking-widest text-muted-foreground block mb-2">{exp.period}</time>

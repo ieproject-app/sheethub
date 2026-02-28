@@ -35,7 +35,6 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
     };
   }
 
-  // Multi-language SEO Logic
   const translationsMap = getAllNotesTranslationsMap();
   const translationKey = note.frontmatter.translationKey;
   const languages: Record<string, string> = {};
@@ -90,7 +89,6 @@ export default async function NotePage({ params }: { params: Promise<{ slug: str
   const dictionary = await getDictionary(locale as any);
   const headings = extractHeadings(note.content);
 
-  // Reading time calculation (average 200 wpm)
   const wordCount = note.content.trim().split(/\s+/).length;
   const readingTime = Math.ceil(wordCount / 200);
 
@@ -109,7 +107,7 @@ export default async function NotePage({ params }: { params: Promise<{ slug: str
 
   return (
     <div className="w-full">
-      <main className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 pt-6 sm:pt-8 pb-12 sm:pt-12 sm:pb-16">
+      <main className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 pt-10 pb-16 sm:pb-24">
         <article>
             <header className="mb-8">
                 <Breadcrumbs segments={breadcrumbSegments} className="mb-6" />
