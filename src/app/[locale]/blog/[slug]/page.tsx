@@ -152,13 +152,19 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
 
   return (
     <div className="w-full">
-      <main className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 pt-16 pb-16 sm:pb-24">
+      {/* 
+        Symmetry Math: 
+        pt-14 (56px) padding-top on main.
+        mb-6 (24px) on Breadcrumbs + mt-8 (32px) from Image my-8 = 56px.
+        Result: Breadcrumbs is perfectly centered between Header and Hero Image.
+      */}
+      <main className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 pt-14 pb-16 sm:pb-24">
         <article>
             <header className="mb-12">
                 <Breadcrumbs segments={breadcrumbSegments} className="mb-6" />
                 
                 {/* Hero Image */}
-                <div className="relative my-8 rounded-lg overflow-hidden shadow-2xl bg-muted group">
+                <div className="relative my-8 rounded-lg overflow-hidden shadow-xl bg-muted group">
                     {heroSource ? (
                         <Image
                             src={heroSource.url}

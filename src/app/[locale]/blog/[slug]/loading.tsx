@@ -4,15 +4,15 @@ import { Skeleton } from '@/components/ui/skeleton';
 export default function Loading() {
   return (
     <div className="w-full">
-      <main className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 pt-10 pb-16">
+      <main className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 pt-14 pb-16">
         <article className="animate-in fade-in duration-700">
             <header className="text-center mb-8">
-                <Skeleton className="h-12 w-3/4 mx-auto mb-4" />
+                <Skeleton className="h-6 w-32 mb-6" />
+                <div className="relative my-8 rounded-lg overflow-hidden shadow-2xl">
+                    <Skeleton className="w-full aspect-video" />
+                </div>
+                <Skeleton className="h-12 w-3/4 mb-4" />
             </header>
-
-            <div className="relative my-8 rounded-lg overflow-hidden shadow-2xl">
-                <Skeleton className="w-full aspect-video" />
-            </div>
 
             <div className="flex justify-between items-center py-4 mb-8 border-b border-primary/5">
                 <div className="flex gap-3">
