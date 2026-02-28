@@ -93,7 +93,7 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
 
     return (
         <Link href={`${linkPrefix}/blog/${post.slug}`} className="block group" aria-label={`Read more about ${post.frontmatter.title}`}>
-            <article className="relative w-full aspect-[4/3] rounded-lg overflow-hidden shadow-2xl transition-all duration-500 group-hover:shadow-[0_30px_60px_rgba(0,0,0,0.4)] border-primary/5">
+            <article className="relative w-full aspect-[4/3] rounded-lg overflow-hidden shadow-xl transition-all duration-500 border-primary/5">
                 <div className="absolute top-3 right-3 z-20 flex items-center gap-2">
                     <AddToReadingListButton 
                         item={item}
@@ -145,9 +145,9 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
     }
 
     return (
-        <div key={post.slug} className="group relative transition-all duration-500 hover:-translate-y-2">
+        <div key={post.slug} className="group relative transition-all duration-500 hover:-translate-y-1">
             <Link href={`${linkPrefix}/blog/${post.slug}`} className="block" aria-label={`Read more about ${post.frontmatter.title}`}>
-                <div className="relative w-full aspect-video overflow-hidden rounded-lg mb-4 shadow-sm group-hover:shadow-[0_15px_30px_rgba(0,0,0,0.1)] dark:group-hover:shadow-[0_15px_30px_rgba(0,0,0,0.3)] transition-all duration-500 border border-primary/5">
+                <div className="relative w-full aspect-video overflow-hidden rounded-lg mb-4 shadow-sm transition-all duration-500 border border-primary/5">
                     {heroImageSrc && (
                         <Image
                             src={heroImageSrc}

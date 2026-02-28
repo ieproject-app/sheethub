@@ -1,4 +1,3 @@
-
 import { getSortedPostsData } from '@/lib/posts';
 import Link from 'next/link';
 import { i18n } from '@/i18n-config';
@@ -82,9 +81,9 @@ export default async function BlogPage({ params }: { params: Promise<{ locale: s
                     type: 'blog' as const,
                 };
                 return (
-                    <div key={post.slug} className="group relative transition-all duration-300 hover:-translate-y-2">
+                    <div key={post.slug} className="group relative transition-all duration-300 hover:-translate-y-1">
                         <Link href={`${linkPrefix}/blog/${post.slug}`} className="block" aria-label={`Read more about ${post.frontmatter.title}`}>
-                            <div className="relative w-full aspect-video overflow-hidden rounded-lg mb-4 shadow-sm group-hover:shadow-xl transition-shadow duration-300">
+                            <div className="relative w-full aspect-video overflow-hidden rounded-lg mb-4 shadow-sm transition-shadow duration-300">
                                 {heroImageSrc && (
                                     <Image
                                         src={heroImageSrc}
