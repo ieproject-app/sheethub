@@ -1,0 +1,521 @@
+{
+  "navigation": {
+    "blog": "Blog",
+    "about": "Tentang",
+    "contact": "Kontak",
+    "notes": "Catatan",
+    "tools": "Alat",
+    "privacy": "Kebijakan Privasi",
+    "disclaimer": "Disclaimer",
+    "terms": "Ketentuan"
+  },
+  "footer": {
+    "authorBio": "Seorang developer bersemangat yang menjelajahi web dan berbagi temuan di sepanjang jalan.",
+    "viewProfile": "Lihat Profil Saya"
+  },
+  "home": {
+    "title": "SnipGeek - Windows dan Ubuntu: Tutorial, Troubleshooting, dan Update Penting",
+    "description": "Tutorial Windows dan Ubuntu, panduan troubleshooting, dan update penting untuk pengguna harian.",
+    "featuredPosts": "Postingan Unggulan",
+    "latestPosts": "Postingan Terbaru",
+    "viewAllPosts": "Lihat Semua Postingan",
+    "specialTagSectionTitle": "Postingan",
+    "breadcrumbHome": "Beranda",
+    "sliderAndShadow": {
+      "title": "Cari tutorial apa?",
+      "viewMore": "selengkapnya"
+    },
+    "softwareUpdateSlider": {
+      "title": "Ada pembaruan software?",
+      "viewMore": "cek pembaruan"
+    }
+  },
+  "blog": {
+    "title": "Blog",
+    "description": "Pembahasan mendalam tentang teknologi, tutorial, dan wawasan pengembangan."
+  },
+  "notes": {
+    "title": "Catatan",
+    "description": "Catatan teknis pribadi dan referensi cepat."
+  },
+  "about": {
+    "title": "Tentang SnipGeek",
+    "description": "Cerita di balik SnipGeek, alasan blog ini dibangun, dan cara saya bekerja di baliknya.",
+    "experience": "Sorotan Pengalaman",
+    "skills": "Kekuatan Inti",
+    "education": "Pendidikan",
+    "certifications": "Lisensi & Sertifikasi",
+    "downloadResume": "Unduh Resume Lengkap",
+    "getInTouch": "Mari Terhubung",
+    "summary": "Catatan Founder",
+    "story": "Cerita dan Identitas Blog",
+    "workflow": "Perangkat & Alur Kerja",
+    "philosophy": "Filosofi Menulis"
+  },
+  "tools": {
+    "title": "Alat",
+    "description": "Kumpulan alat bantu untuk alur kerja saya.",
+    "public_section": "Alat Publik",
+    "internal_section": "Alat Internal",
+    "wip": "Halaman ini sedang dalam tahap pembuatan.",
+    "internal": "Internal",
+    "open_tool": "Buka Alat",
+    "coming_soon": "Segera Hadir",
+    "new_badge": "Baru",
+    "tool_list": {
+      "bios_keys": {
+        "title": "Tombol BIOS & Boot Menu",
+        "description": "Temukan tombol pengaturan BIOS/UEFI dan pintasan Boot Menu untuk semua merek laptop dan motherboard utama."
+      },
+      "ai_prompt_generator": {
+        "title": "AI Article Prompt Generator",
+        "description": "Buat prompt terstruktur untuk meminta artikel baru dengan detail yang lengkap."
+      },
+      "number_to_words": {
+        "title": "Generator Terbilang",
+        "description": "Mengubah angka menjadi bentuk tulisan dalam Bahasa Indonesia."
+      },
+      "random_name": {
+        "title": "Pemilih Nama Acak",
+        "description": "Pilih nama secara acak dari sebuah daftar, cocok untuk undian."
+      },
+      "employee_history": {
+        "title": "Riwayat Karyawan",
+        "description": "Catatan pribadi untuk melacak riwayat kerja dan kinerja karyawan."
+      },
+      "number_generator": {
+        "title": "Generator Nomor",
+        "description": "Menghasilkan nomor urut unik untuk keperluan pelacakan internal."
+      },
+      "spin_wheel": {
+        "title": "Spin Wheel",
+        "description": "Roda putar interaktif untuk pengacakan. Masukkan daftar nama, putar, dan dapatkan pemenang secara acak. Tersedia mode raffle, template, dan efek suara."
+      },
+      "image_crop": {
+        "title": "Potong Gambar",
+        "description": "Potong ke rasio 16:9 dan ekspor WebP untuk banner hero."
+      },
+      "compress_pdf": {
+        "title": "Kompres PDF",
+        "description": "Perkecil ukuran file PDF Anda tanpa mengurangi kualitas secara signifikan."
+      },
+      "signatories_index": {
+        "title": "Indeks Penandatangan",
+        "description": "Kelola dan cari daftar penandatangan dokumen secara terpusat."
+      },
+      "address_label": {
+        "title": "Label Alamat",
+        "description": "Generate label alamat pengiriman yang rapi untuk amplop dan paket."
+      }
+    },
+    "image_crop": {
+      "invalidImageFile": "Silakan unggah file gambar yang valid.",
+      "downloaded": "Diunduh: {filename} ({size})",
+      "dropTitle": "Letakkan gambar di sini",
+      "dropDescription": "atau klik untuk menjelajah - PNG, JPG, dan WebP didukung.",
+      "pasteHint": "Anda juga bisa Ctrl+V / Cmd+V untuk menempel",
+      "outputBadge": "Output: 16:9 .webp",
+      "original": "Asli",
+      "ratio": "Rasio",
+      "target": "Target 16:9",
+      "already169": "Sudah 16:9",
+      "horizontal": "Horizontal",
+      "vertical": "Vertikal",
+      "noAdjustment": "tidak ada penyesuaian",
+      "center": "Tengah",
+      "webpQuality": "Kualitas WebP",
+      "qualityHigh": "Kelas-lossless",
+      "qualityBalanced": "Seimbang",
+      "qualitySmall": "Ukuran kecil",
+      "defaultLabel": "85% default",
+      "outputLabel": "Output:",
+      "clientSideInfo": "100% client-side, tidak ada unggahan.",
+      "downloadButton": "Unduh WebP",
+      "loadAnother": "Muat Gambar Lain",
+      "dragHint": "Seret untuk reposisi",
+      "removeImage": "Hapus gambar",
+      "previewAlt": "Pratinjau crop",
+      "howTo": [
+        {
+          "step": "01",
+          "title": "Unggah Gambar",
+          "desc": "Letakkan atau pilih gambar apa pun dari screenshot atau file."
+        },
+        {
+          "step": "02",
+          "title": "Seret untuk Reposisi",
+          "desc": "Klik dan seret pratinjau langsung untuk memposisikan jendela crop 16:9."
+        },
+        {
+          "step": "03",
+          "title": "Unduh WebP",
+          "desc": "Dapatkan .webp yang dipotong dengan sempurna siap digunakan di artikel Anda."
+        }
+      ]
+    },
+    "random_name": {
+      "title": "Pemilih Nama Acak",
+      "description": "Pilih nama secara acak dari sebuah daftar, cocok untuk undian.",
+      "enterNames": "Masukkan Nama",
+      "namesPlaceholder": "Masukkan nama, satu per baris...",
+      "namesEntered": "nama dimasukkan",
+      "import": "Impor",
+      "settings": "Pengaturan",
+      "numberOfWinners": "Jumlah Pemenang",
+      "separator": "Pemisah",
+      "removeWinners": "Hapus pemenang dari pool",
+      "soundEffects": "Efek suara",
+      "advancedSettings": "Pengaturan Lanjutan",
+      "animationDuration": "Durasi Animasi (ms)",
+      "pickWinners": "Pilih Pemenang",
+      "reset": "Reset",
+      "saveList": "Simpan Daftar",
+      "present": "Presentasi",
+      "exportWinners": "Ekspor Pemenang",
+      "allParticipants": "Semua Peserta",
+      "search": "Cari...",
+      "pickHistory": "Riwayat Pemilihan",
+      "noHistoryYet": "Belum ada riwayat",
+      "saveListTitle": "Simpan Daftar",
+      "saveListDescription": "Masukkan nama untuk daftar ini untuk menyimpannya digunakan nanti.",
+      "listName": "Nama daftar...",
+      "cancel": "Batal",
+      "save": "Simpan",
+      "savedLists": "Daftar Tersimpan",
+      "noSavedLists": "Tidak ada daftar tersimpan",
+      "loadList": "Muat Daftar",
+      "names": "nama",
+      "winnersWillAppearHere": "Pemenang akan muncul di sini",
+      "exitPresentationMode": "Keluar mode presentasi",
+      "winnerRevealSingle": "Pemenang",
+      "winnerRevealPlural": "Pemenang",
+      "readyToPick": "Siap Memilih",
+      "startPicking": "Mulai Memilih",
+      "pickAgain": "Pilih Lagi",
+      "starting": "Memulai...",
+      "picking": "Memilih...",
+      "notEnoughNames": "Nama tidak cukup",
+      "notEnoughNamesDesc": "Hanya {count} nama yang tersedia untuk dipilih.",
+      "noNames": "Tidak ada nama",
+      "noNamesDesc": "Silakan masukkan setidaknya satu nama.",
+      "listSaved": "Daftar berhasil disimpan!",
+      "listLoaded": "Dimuat",
+      "listDeleted": "Daftar dihapus",
+      "winnersExported": "Pemenang berhasil diekspor!",
+      "fileImported": "File berhasil diimpor!",
+      "shuffle": "Acak",
+      "clearAll": "Hapus Semua",
+      "clearAllConfirmTitle": "Hapus Semua?",
+      "clearAllConfirmDescription": "Ini akan menghapus semua nama, pemenang, dan riwayat pemilihan. Tindakan ini tidak dapat dibatalkan.",
+      "confirmClear": "Ya, Hapus Semua",
+      "totalLabel": "Total",
+      "selectedLabel": "Dipilih",
+      "availableLabel": "Tersedia",
+      "pickedTimes": "\u00d7{count}",
+      "noNamesYet": "Belum ada nama yang dimasukkan",
+      "searchParticipants": "Cari peserta\u2026",
+      "winnersTab": "Pemenang",
+      "participantsTab": "Peserta",
+      "historyTab": "Riwayat",
+      "countdownDuration": "Hitung Mundur (d)",
+      "startingIn": "Mulai dalam",
+      "allCleared": "Semua Dihapus",
+      "less": "Kurang",
+      "export": "Ekspor"
+    },
+    "systemNotReady": {
+      "title": "SISTEM BELUM SIAP",
+      "description": "Aplikasi belum bisa mendeteksi Kunci API dari dashboard Firebase Mas Iwan.",
+      "step1": "LANGKAH 1: HUBUNGKAN & SIMPAN",
+      "step1Desc": "Pilih repositori SnipGeek di tab Deployment dan klik Save.",
+      "step2": "LANGKAH 2: START ROLLOUT (WAJIB)",
+      "step2Desc": "Buka tab Rollouts dan klik Start Rollout untuk menyeduh variabel terbaru.",
+      "step3": "LANGKAH 3: CEK PREFIX",
+      "step3Desc": "Pastikan nama variabel di tab Environment diawali dengan NEXT_PUBLIC_.",
+      "footer": "Tanpa proses 'Start Rollout', browser Mas Iwan tidak diizinkan membaca kunci rahasia demi keamanan sistem.",
+      "authorized": "Authorized",
+      "logout": "Keluar Akun",
+      "connecting": "Menghubungkan ke Cloud...",
+      "restrictedAccess": "Akses Terbatas",
+      "restrictedDesc": "Tool {tool} memerlukan login akun Google terdaftar untuk menjaga integritas sistem.",
+      "loginWithGoogle": "Masuk dengan Google"
+    }
+  },
+  "employeeHistory": {
+    "searchTitle": "Cari Riwayat Karyawan",
+    "searchDescription": "Cari berdasarkan nama, jabatan, atau grup. Anda juga bisa mengetikkan tanggal (misal: 20/05/2023) untuk melihat siapa yang aktif pada hari itu.",
+    "searchPlaceholder": "Masukkan nama atau tanggal...",
+    "groupPlaceholder": "Filter Grup",
+    "allGroups": "Semua Grup",
+    "nameHeader": "Nama",
+    "positionHeader": "Jabatan",
+    "groupHeader": "Grup",
+    "nikHeader": "NIK",
+    "startDateHeader": "Tgl Mulai",
+    "endDateHeader": "Tgl Selesai",
+    "present": "Sekarang",
+    "generatorTitle": "Generator Penandatangan Dokumen",
+    "generatorDescription": "Identifikasi penandatangan yang tepat dengan cepat untuk jenis dokumen tertentu berdasarkan tanggal target.",
+    "docTypePlaceholder": "Pilih Jenis Dokumen",
+    "projectValuePlaceholder": "Nilai Proyek (Rp)"
+  },
+  "contact": {
+    "title": "Kontak",
+    "description": "Hubungi saya. Cara terbaik untuk menghubungi saya adalah melalui email.",
+    "intro": "Jangan ragu untuk menghubungi. Cara terbaik untuk menghubungi saya adalah melalui email.",
+    "wip": "Halaman ini sedang dalam tahap pembuatan."
+  },
+  "tags": {
+    "title": "Tag: {tag}",
+    "description": "Semua artikel dan catatan dengan tag {tag}.",
+    "noItems": "Tidak ada artikel yang ditemukan untuk tag ini.",
+    "allTagsTitle": "Semua Topik",
+    "allTagsDescription": "Telusuri koleksi artikel dan catatan teknis kami yang dikategorikan berdasarkan topik."
+  },
+  "search": {
+    "placeholder": "Cari postingan dan catatan...",
+    "prompt": "Cari artikel berdasarkan judul atau deskripsi.",
+    "noResults": "Tidak ada hasil yang ditemukan untuk",
+    "resultsFound": "hasil ditemukan"
+  },
+  "localeSuggestion": {
+    "title": "Lebih nyaman membaca dalam Bahasa Indonesia?",
+    "description": "Kami mendeteksi browser Anda memakai preferensi bahasa Indonesia. Pindah ke versi Indonesia untuk navigasi dan konten yang lebih sesuai.",
+    "switch": "Pindah ke Bahasa Indonesia",
+    "stay": "Tetap di English",
+    "dismiss": "Tutup saran bahasa"
+  },
+  "post": {
+    "by": "Oleh",
+    "readingTime": "{minutes} mnt baca",
+    "share": "Bagikan",
+    "shareArticle": "Bagikan artikel ini",
+    "relatedContent": "Anda Mungkin Juga Suka",
+    "toc": "Daftar Isi"
+  },
+  "readingList": {
+    "add": "Simpan ke Daftar",
+    "remove": "Hapus dari Daftar",
+    "added": {
+      "title": "Disimpan ke Daftar Baca",
+      "description": "telah ditambahkan."
+    },
+    "removed": {
+      "title": "Dihapus dari Daftar Baca",
+      "description": "telah dihapus."
+    },
+    "item": "item",
+    "items": "item",
+    "inYourList": "dalam daftar baca Anda",
+    "empty": "Daftar baca Anda kosong. Simpan artikel untuk membacanya nanti."
+  },
+
+  "downloadGate": {
+    "title": "Mempersiapkan Unduhan Anda",
+    "fileSizeLabel": "Ukuran:",
+    "continueButton": "Lanjutkan untuk Mengunduh",
+    "redirecting": "atau unduhan Anda akan dimulai otomatis dalam {countdown} detik..."
+  },
+  "notFound": {
+    "title": "Halaman Tidak Ditemukan",
+    "description": "Halaman yang Anda cari mungkin telah dipindahkan atau dihapus.",
+    "backHome": "Kembali ke Beranda",
+    "popularLinks": "Coba lihat ini saja:"
+  },
+  "promptGenerator": {
+    "title": "Generator Prompt Konten AI",
+    "description": "Gunakan formulir ini untuk menghasilkan prompt terstruktur untuk meminta konten baru atau modifikasi.",
+    "modes": {
+      "create": "Buat Baru",
+      "modify": "Modifikasi"
+    },
+    "contentTypeLabel": "Jenis Konten",
+    "contentTypeSeries": "Series",
+    "contentTypeNews": "Berita/Update",
+    "contentTypeTips": "Tips & Tricks",
+    "contentTypeNotes": "Catatan/Notes",
+    "seriesPhaseLabel": "Fase Series",
+    "seriesArticleLabel": "Artikel Series",
+    "seriesTargetLabel": "Target Pembaca",
+    "seriesToneLabel": "Petunjuk Tone",
+    "newsSourceUrlsLabel": "URL Sumber",
+    "newsAngleLabel": "Angle SnipGeek",
+    "tipsStandaloneLabel": "Mode Standalone",
+    "notesIntentLabel": "Intent Catatan",
+    "notesIntentFinding": "Temuan",
+    "notesIntentReference": "Referensi",
+    "notesIntentMiniFix": "Perbaikan Singkat",
+    "notesIntentObservation": "Observasi",
+    "selectArticleLabel": "Target Artikel untuk Dimodifikasi",
+    "selectArticlePlaceholder": "Pilih artikel yang sudah ada...",
+    "searchArticlePlaceholder": "Ketik judul atau slug artikel untuk mencari...",
+    "features": {
+      "title": "Fitur Opsional",
+      "downloads": "Tombol Unduhan",
+      "grids": "Grid Gambar",
+      "images": "Gambar Pendukung"
+    },
+    "draftTitle": "Draf Konten / Poin Utama",
+    "draftPlaceholder": "Tempelkan draf konten baru Anda di sini...",
+    "originalContentTitle": "Konten Asli (File yang ingin diedit)",
+    "originalContentPlaceholder": "Tempelkan isi lengkap file MDX yang sekarang di sini...",
+    "modInstructionsTitle": "Instruksi Perubahan",
+    "modInstructionsPlaceholder": "Bagian mana yang mau diubah? (misal: Update narasi intro, tambahkan kesimpulan tentang desain 4px...)",
+    "quickActions": {
+      "label": "Instruksi Cepat:",
+      "narrative": "Refresh intro & penutup",
+      "images": "Ubah list jadi Steps",
+      "metadata": "Hanya tambah tgl update",
+      "polish": "Polish alur naratif (Tone)"
+    },
+    "downloadLinks": {
+      "title": "Tautan Unduhan",
+      "description": "Petakan placeholder [DOWNLOAD_X] dengan ID yang sudah ada atau enter URL baru.",
+      "addDownload": "Tambah Item Unduhan",
+      "selectId": "Pilih ID yang sudah ada...",
+      "urlPlaceholder": "Tempel URL unduhan...",
+      "promptTitle": "Tombol Unduhan",
+      "promptInstruction": "Tolong ganti placeholder [DOWNLOAD_X] dengan komponen <DownloadButton> sesuai detail berikut:"
+    },
+    "imageGrid": {
+      "title": "Grid Gambar (Otomatis)",
+      "description": "Masukkan data grid per baris (format: cols | path1, path2...).",
+      "placeholder": "3 | /img1.webp, /img2.webp, /img3.webp",
+      "promptTitle": "Grid Gambar",
+      "promptInstruction": "Tolong grupkan gambar-gambar berikut menggunakan komponen <ImageGrid>:"
+    },
+    "imagesTitle": "Detail Gambar",
+    "imagesDescription": "Baris pertama ADALAH gambar utama (hero image), dipisahkan `|` untuk teks alt.",
+    "imagesPlaceholder": "/images/blank/blank.webp | Teks alt hero\n/images/articles/sub.webp | Teks alt sub",
+    "imagesTitleNote": "Gambar Pendukung (Opsional)",
+    "imagesDescriptionNote": "Masukkan path dan teks alt untuk gambar yang akan disisipkan di dalam catatan.",
+    "imagesPlaceholderNote": "/images/notes/img.webp | Teks alt",
+    "metadataTitle": "Metadata & Penautan",
+    "articleTitleLabel": "Judul Konten",
+    "articleTitleDescription": "Judul Inggris disarankan. Untuk SEO, WAJIB 50-60 karakter.",
+    "slugLabel": "Slug URL (Inggris)",
+    "slugPlaceholder": "cara-memasang-rufus",
+    "publishDateLabel": "Tanggal Terbit",
+    "publishDateLabelModify": "Tanggal Terbit Asli",
+    "statusLabel": "Status",
+    "publishSwitchLabel": "Terbitkan Langsung",
+    "featuredSwitchLabel": "Tandai sebagai Unggulan",
+    "idOnlySwitchLabel": "ID Only",
+    "tagsLabel": "Tag",
+    "generatedPromptTitle": "Hasil Prompt",
+    "copyButton": "Salin Prompt",
+    "copiedButton": "Tersalin!",
+    "promptBaseBlog": "Tolong buat dan terbitkan artikel blog baru untuk saya berdasarkan detail berikut. Versi Bahasa Inggris harus menggunakan slug yang ditentukan, dan versi Bahasa Indonesia juga harus menggunakan SLUG YANG SAMA PERSIS.",
+    "promptBaseBlogIdOnly": "Tolong buat dan terbitkan artikel blog baru untuk saya HANYA DALAM BAHASA INDONESIA berdasarkan detail berikut.",
+    "promptBaseNote": "Tolong buat dan terbitkan catatan teknis baru untuk saya berdasarkan detail berikut.",
+    "promptBaseNoteIdOnly": "Tolong buat dan terbitkan catatan teknis baru untuk saya HANYA DALAM BAHASA INDONESIA berdasarkan detail berikut.",
+    "modifyPromptBase": "Tolong MODIFIKASI konten yang sudah ada untuk saya. PENTING: Anda WAJIB menjaga SLUG ASLI dan TANGGAL TERBIT ASLI. HANYA ubah apa yang diminta di instruksi. JANGAN menulis ulang bagian yang tidak terkait. Pertahankan semua langkah teknis, blok kode, dan gambar yang sudah ada kecuali diminta diubah.",
+    "frontmatterDetails": "Detail Frontmatter",
+    "titleLabel": "Judul",
+    "titlePlaceholder": "Judul SEO-friendly (50-60 karakter)",
+    "dateLabel": "Tanggal Terbit Asli",
+    "supportingImagesLabel": "Gambar Pendukung",
+    "supportingImagesLabelNote": "Gambar untuk disisipkan",
+    "draftContentLabel": "Konten/Draf Utama",
+    "originalContentLabel": "Konten Asli untuk Dimodifikasi",
+    "modInstructionsLabel": "Poin Perubahan",
+    "categoryHintLabel": "Petunjuk Kategori",
+    "categoryHintPlaceholder": "AI akan buat kategori...",
+    "finalInstruction": "Instruksi Tambahan: 1. Konfirmasi translationKey dan slug Inggris. 2. Panjang judul HARUS 50-60 karakter. 3. KEPATUHAN MDX KETAT: Gunakan hanya komponen yang didukung (<DownloadButton />, <ImageGrid />, tabel Markdown standar). 4. Kepatuhan React: SELALU gunakan 'className'. 5. Teks Alt Gambar: Buat teks alt SEO yang berkualitas jika kosong.",
+    "tooltips": {
+      "backToTop": "Ke Atas",
+      "theme": "Ganti Tema",
+      "moreMenu": "Menu Lain",
+      "readingList": "Daftar Baca",
+      "search": "Cari",
+      "languageEn": "Bahasa Inggris",
+      "languageId": "Bahasa Indonesia"
+    }
+  },
+  "notifications": {
+    "themeLight": "Tema: Terang",
+    "themeDark": "Tema: Gelap",
+    "themeSystem": "Tema: Sistem",
+    "langEn": "Bahasa: Inggris",
+    "langId": "Bahasa: Indonesia",
+    "readingListAdded": "Tersimpan ke Daftar Baca",
+    "readingListRemoved": "Dihapus dari Daftar Baca",
+    "copied": "Tersalin ke Clipboard",
+    "stockInsufficient": "Stok tidak cukup untuk {type}",
+    "stockEmpty": "Periode yang dipilih sedang kosong",
+    "stockGenerated": "Berhasil generate {count} nomor",
+    "logoutSuccess": "Berhasil keluar",
+    "authNotReady": "Sistem login belum siap. Silakan coba lagi.",
+    "loginError": "Gagal masuk. Silakan periksa koneksi Anda.",
+    "limitReached": "Batas penggunaan tercapai. Silakan coba lagi dalam 10 menit."
+  },
+  "laptopServiceEstimator": {
+    "title": "Estimasi Servis Laptop",
+    "description": "Jelaskan keluhan laptop dan AI akan memperkirakan tindakan servis serta biayanya secara instan.",
+    "steps": {
+      "a": {
+        "badge": "Langkah Pertama",
+        "title": "Informasi Laptop",
+        "brandLabel": "Merek Laptop",
+        "brandPlaceholder": "cth: Asus, Lenovo, HP...",
+        "modelLabel": "Seri / Model",
+        "modelOptional": "(opsional)",
+        "modelPlaceholder": "cth: VivoBook 14 A416...",
+        "modelHint": "Sertakan seri spesifik agar spek AI lebih akurat.",
+        "scanLabelBtn": "Scan Label Laptop",
+        "scanOr": "atau",
+        "scanHint": "Tidak tahu modelnya? Unggah foto stiker label di bawah laptop."
+      },
+      "b": {
+        "badge": "Keluhan Pelanggan",
+        "title": "Apa Masalahnya?",
+        "labelProblem": "Detail Keluhan",
+        "placeholder": "cth: Laptop lemot, keyboard tidak berfungsi, sering mati sendiri...",
+        "labelHistory": "Riwayat Part / Servis Lab",
+        "placeholderHistory": "cth: Pernah ganti baterai 2023, ganti SSD 1 tahun lalu..."
+      },
+      "c": {
+        "badge": "Preferensi Servis",
+        "title": "Pilih Servis Jika Sudah Tahu",
+        "optionalHint": "Opsional. Kalau belum yakin, AI akan menyarankan servis dari keluhan yang kamu isi.",
+        "selectedCount": "{count}/5 DIPILIH",
+        "priceLabel": "Estimasi Jasa"
+      }
+    },
+    "services": {
+      "thermal": { "label": "Ganti Thermal Paste", "desc": "Aplikasi thermal paste baru untuk CPU/GPU" },
+      "cleaning": { "label": "Cleaning Internal", "desc": "Bersih fan, heatsink, dan debu internal" },
+      "ram": { "label": "Jasa Upgrade RAM", "desc": "Pasang/ganti modul RAM (belum termasuk part)" },
+      "ssd": { "label": "Jasa Upgrade SSD/HDD", "desc": "Pasang storage (include instal OS dasar)" },
+      "os": { "label": "Instal Ulang OS", "desc": "Windows/Linux, include driver & software standar" },
+      "screen": { "label": "Jasa Ganti Layar", "desc": "Bongkar pasang panel (cek ketersediaan part)" },
+      "keyboard": { "label": "Jasa Ganti Keyboard", "desc": "Bongkar pasang keyboard laptop" },
+      "repair": { "label": "Repair Hardware Minor", "desc": "Perbaikan komponen (IC, port, dll)" },
+      "diagnosa": { "label": "Diagnosa & Estimasi", "desc": "Gratis, AI akan menganalisa keluhan dan menyarankan servis yang tepat" }
+    },
+    "form": {
+      "submit": "Hitung Estimasi dengan AI",
+      "submitHint": "Isi merek laptop dan detail keluhan untuk melanjutkan. Pilihan servis bersifat opsional.",
+      "loadingTitle": "AI sedang menganalisis...",
+      "loadingDesc": "Mencari spesifikasi laptop dan menghitung estimasi biaya servis."
+    },
+    "result": {
+      "status": "Estimasi Selesai",
+      "verified": "Terverifikasi",
+      "unverified": "Laptop",
+      "unverifiedDesc": "Detail perangkat dikonfirmasi saat konsultasi via WhatsApp.",
+      "specsTitle": "Spesifikasi Umum",
+      "priceDetails": "Rincian Harga Jasa",
+      "totalEstimate": "Total Estimasi",
+      "totalNote": "Biaya jasa saja, belum termasuk part",
+      "disclaimer": "Harga di atas adalah estimasi biaya jasa saja. Harga komponen/spare part belum termasuk. Harga final dikonfirmasi setelah pemeriksaan perangkat secara langsung.",
+      "whatsappButton": "Konsultasi via WhatsApp",
+      "recalculate": "Hitung Ulang",
+      "waGreeting": "Halo, saya mau konsultasi servis laptop mas iwan,",
+      "waProblem": "Kendala:",
+      "waHistoryLabel": "Riwayat:",
+      "waRequired": "Servis yang dibutuhkan:",
+      "waVerifiedLabel": "Laptop Terverifikasi"
+    }
+  }
+}

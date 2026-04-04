@@ -1,0 +1,91 @@
+---
+title: "How to Install Fuji Xerox DocuCentre-V 2060 Driver"
+date: "2026-02-20"
+description: "A complete guide to installing and configuring the Fuji Xerox DocuCentre-V 2060 printer driver on a Windows network."
+heroImage: "/images/_posts/printer/fuji-xerox/docucentre-v2060-banner-ai.webp"
+imageAlt: "Fuji Xerox DocuCentre-V 2060 multifunction printer in a modern office environment."
+translationKey: "install-fuji-xerox-docucentre-v2060"
+published: true
+featured: false
+tags: ["windows", "printer", "driver", "fuji-xerox"]
+category: "Tutorial"
+---
+
+Installing a multifunction printer like the Fuji Xerox DocuCentre-V 2060 on an office network can sometimes be a challenge, especially in ensuring a smooth connection between the laptop and the printer. This guide will walk you through every step, from downloading the driver to IP configuration, to get your printer ready to use.
+
+---
+
+## Step 1: Download the Correct Driver
+
+The first step is to ensure you have the right driver file. We have provided the PCL 6 driver, which is the most common and compatible driver for most printing needs.
+
+> **Important:** We have provided the driver file in `.iso` format below to make it easy for you to follow this tutorial. However, as a best security practice, we highly recommend always downloading drivers directly from the manufacturer's official website whenever possible.
+
+<DownloadButton id="driver-fuji-xerox-v2060" />
+
+After the file is downloaded, right-click the `.iso` file and select **Mount**. This will create a virtual drive in File Explorer containing the installation files.
+
+---
+
+## Step 2: Configure a Static IP on the Printer
+
+To ensure your laptop can always find the printer on the network, it's important to set a static IP address on the printer.
+
+1.  Access the admin menu on the printer and navigate to the network settings. This is usually under the **Connectivity & Network Setup > Protocol Settings** menu.
+
+    ![Fuji Xerox DocuCentre-V 2060 control panel Connectivity menu](/images/_posts/printer/fuji-xerox/docucentre-v2060-2.webp)
+    *Image: Control panel to access network settings.*
+
+2.  Find the **TCP/IP - Network Settings**.
+
+    ![Fuji Xerox printer network protocol settings screen](/images/_posts/printer/fuji-xerox/docucentre-v2060-3.webp)
+    *Image: TCP/IP protocol settings option.*
+
+3.  Set a static IP address according to your network segment (e.g., `192.168.1.100`). **Write down this IP address**, as we will use it during the installation on the laptop.
+
+    ![Fuji Xerox static IP configuration confirmation screen](/images/_posts/printer/fuji-xerox/docucentre-v2060-4.webp)
+    *Image: Example of static IP configuration on the printer.*
+
+---
+
+## Step 3: Install the Driver on Windows
+
+Now, we will connect your Windows laptop to the printer.
+
+1.  Open **Settings > Bluetooth & devices > Printers & scanners**.
+2.  Click the **Add device** button. Wait a moment until the option **"The printer that I want isn't listed"** appears, then click **Add manually**.
+3.  In the "Add Printer" window, select the option **"Add a printer using an IP address or hostname"** and click Next.
+
+    ![Windows Add Printer wizard selecting IP address option](/images/_posts/printer/fuji-xerox/Set/docucentre-v2060-set-1.webp)
+    *Image: Choosing to add a printer via IP address.*
+
+4.  Change the "Device type" to **TCP/IP Device**. Enter the printer's IP address you noted earlier in the "Hostname or IP address" field. Let the "Port name" auto-populate. Click Next.
+
+    ![Entering the printer static IP in Windows installation](/images/_posts/printer/fuji-xerox/Set/docucentre-v2060-set-2.webp)
+    *Image: Entering the noted printer IP address.*
+
+<details>
+  <summary className="font-bold text-primary cursor-pointer hover:text-accent transition-colors">Can't Find the "TCP/IP Device" Option?</summary>
+  <p className="mt-2 text-sm leading-relaxed">
+    If the "TCP/IP Device" option does not appear, you may need to disable "Windows Protected Mode". To do this: open <strong>Control Panel > Internet Options > Security</strong>. Uncheck <strong>"Enable Protected Mode"</strong>. Additionally, make sure the <strong>"Let Windows manage my default printer"</strong> option is enabled in the "Printers & scanners" settings.
+  </p>
+</details>
+
+5.  In the next window, click the **"Have Disk..."** button.
+
+    ![Clicking Have Disk button in Windows printer driver setup](/images/_posts/printer/fuji-xerox/Set/docucentre-v2060-set-3.webp)
+    *Image: Using the 'Have Disk...' button for a manual driver.*
+
+6.  Click **"Browse..."** and navigate to the virtual drive (from mounting the `.iso` file). Find the appropriate `.inf` driver file (it's usually inside a folder for your operating system, e.g., `x64`). Click **Open**, then **OK**.
+
+    ![Browsing for the INF driver file in the virtual drive](/images/_posts/printer/fuji-xerox/Set/docucentre-v2060-set-4.webp)
+    *Image: Selecting the `.inf` driver file manually.*
+
+7.  The system will display a list of compatible printers. Select the correct model, **"DocuCentre-V 2060 PCL 6"**, then click **Next**.
+
+    ![Selecting DocuCentre-V 2060 PCL 6 from the driver list](/images/_posts/printer/fuji-xerox/Set/docucentre-v2060-set-5.webp)
+    *Image: Selecting the appropriate printer model from the list.*
+
+8.  Follow the remaining instructions to complete the installation. You can print a test page to ensure the printer has been successfully installed.
+
+That's the complete guide to installing the DocuCentre-V 2060 printer driver. Hopefully, this is helpful!

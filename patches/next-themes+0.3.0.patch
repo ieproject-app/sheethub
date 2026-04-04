@@ -1,0 +1,12 @@
+diff --git a/node_modules/next-themes/package.json b/node_modules/next-themes/package.json
+index 1d36d3b..1b66b8e 100644
+--- a/node_modules/next-themes/package.json
++++ b/node_modules/next-themes/package.json
+@@ -62,6 +62,6 @@
+     "url": "https://github.com/pacocoursey/next-themes.git"
+   },
+   "peerDependencies": {
+-    "react": "^16.8 || ^17 || ^18"
++    "react": "^16.8 || ^17 || ^18 || ^19"
+   }
+ }

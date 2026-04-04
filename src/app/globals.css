@@ -1,0 +1,545 @@
+@import "tailwindcss";
+@plugin "tailwindcss-animate";
+@plugin "@tailwindcss/typography";
+
+@theme {
+    /* ── Font Families ────────────────────────────── */
+    /* --gf-* variables are set by Next.js Google Fonts in layout.tsx */
+    --font-sans: var(--gf-sans), system-ui, -apple-system, sans-serif;
+    --font-serif: var(--gf-serif), Georgia, "Times New Roman", serif;
+    --font-display: var(--gf-display), system-ui, -apple-system, sans-serif;
+    --font-mono: var(--gf-mono), "SF Mono", Consolas, Menlo, monospace;
+
+    /* ── Typography Tokens (Fluid) ───────────────── */
+    --text-h1: clamp(1.875rem, 1.2rem + 2.5vw, 3.25rem);
+
+    /* ── Colors ───────────────────────────────────── */
+    --color-background: hsl(var(--background));
+    --color-foreground: hsl(var(--foreground));
+    --color-muted: hsl(var(--muted));
+    --color-muted-foreground: hsl(var(--muted-foreground));
+    --color-border: hsl(var(--border));
+    --color-input: hsl(var(--input));
+    --color-ring: hsl(var(--ring));
+    --color-card: hsl(var(--card));
+    --color-card-foreground: hsl(var(--card-foreground));
+    --color-popover: hsl(var(--popover));
+    --color-popover-foreground: hsl(var(--popover-foreground));
+    --color-primary: hsl(var(--primary));
+    --color-primary-foreground: hsl(var(--primary-foreground));
+    --color-secondary: hsl(var(--secondary));
+    --color-secondary-foreground: hsl(var(--secondary-foreground));
+    --color-accent: hsl(var(--accent));
+    --color-accent-foreground: hsl(var(--accent-foreground));
+    --color-nav-primary: hsl(var(--nav-primary));
+    --color-nav-primary-foreground: hsl(var(--nav-primary-foreground));
+    --color-destructive: hsl(var(--destructive));
+    --color-destructive-foreground: hsl(var(--destructive-foreground));
+
+    /* ── Animations ───────────────────────────────── */
+    --animate-accordion-down: accordion-down 0.2s ease-out;
+    --animate-accordion-up: accordion-up 0.2s ease-out;
+
+    @keyframes accordion-down {
+        from {
+            height: 0;
+        }
+
+        to {
+            height: var(--radix-accordion-content-height);
+        }
+    }
+
+    @keyframes accordion-up {
+        from {
+            height: var(--radix-accordion-content-height);
+        }
+
+        to {
+            height: 0;
+        }
+    }
+}
+
+@layer components {
+    code {
+        font-family: var(--font-mono, Menlo, monospace);
+        @apply relative rounded bg-muted px-[0.4rem] py-[0.2rem] font-semibold text-foreground/80 text-[0.85em];
+    }
+
+    pre code {
+        @apply bg-transparent text-inherit p-0 font-normal rounded-none static text-[13px] leading-relaxed;
+    }
+
+    .prose-content {
+        @apply leading-relaxed;
+    }
+}
+
+@layer base {
+    :root {
+        /* "Clean Slate" Light Mode - User adjusted (Bg: White, Card: Slate-50) */
+        color-scheme: light;
+        --background: 0 0% 100%;
+        /* white */
+        --foreground: 222.2 84% 4.9%;
+        /* slate-950 */
+        --card: 210 40% 98%;
+        /* slate-50 */
+        --card-foreground: 222.2 84% 4.9%;
+        /* slate-950 */
+        --popover: 210 40% 98%;
+        /* slate-50 for consistency with card */
+        --popover-foreground: 222.2 84% 4.9%;
+        /* slate-950 */
+        --primary: 222.2 47.4% 11.2%;
+        /* slate-900 */
+        --primary-foreground: 210 40% 98%;
+        /* slate-50 */
+        --secondary: 210 40% 96.1%;
+        /* slate-100 */
+        --secondary-foreground: 222.2 47.4% 11.2%;
+        /* slate-900 */
+        --muted: 210 40% 96.1%;
+        /* slate-100 */
+        --muted-foreground: 215.4 16.3% 46.9%;
+        /* slate-500 */
+        --accent: 200 94% 45%;
+        /* Darker Blue for high contrast on white */
+        --accent-foreground: 0 0% 100%;
+        /* White text on blue accent bg */
+        --nav-primary: 200 94% 45%;
+        /* Stable brand color used by secondary navigation in both themes */
+        --nav-primary-foreground: 0 0% 100%;
+        --destructive: 0 84.2% 60.2%;
+        --destructive-foreground: 210 40% 98%;
+        --border: 214.3 31.8% 91.4%;
+        /* slate-200 */
+        --input: 214.3 31.8% 91.4%;
+        /* slate-200 */
+        --ring: 200 94% 45%;
+        /* Legible Blue */
+        --radius: 0.5rem;
+    }
+
+    .dark {
+        /* "Clean Slate" Dark Mode - Using Zinc (neutral feeling) */
+        color-scheme: dark;
+        --background: 240 10% 3.9%;
+        /* zinc-950 */
+        --foreground: 0 0% 98%;
+        /* zinc-50 */
+        --card: 240 5.3% 10.2%;
+        /* zinc-900 */
+        --card-foreground: 0 0% 98%;
+        /* zinc-50 */
+        --popover: 240 5.3% 10.2%;
+        /* zinc-900 */
+        --popover-foreground: 0 0% 98%;
+        /* zinc-50 */
+        --primary: 0 0% 98%;
+        /* zinc-50 */
+        --primary-foreground: 240 5.9% 10%;
+        /* zinc-900 */
+        --secondary: 240 3.7% 15.9%;
+        /* zinc-800 */
+        --secondary-foreground: 0 0% 98%;
+        /* zinc-50 */
+        --muted: 240 3.7% 15.9%;
+        /* zinc-800 */
+        --muted-foreground: 240 5% 64.9%;
+        /* zinc-400 */
+        --accent: 200 94% 73%;
+        /* SnipGeek cyan brand color */
+        --accent-foreground: 202 22% 10%;
+        /* Darker foreground for cyan bg */
+        --nav-primary: 200 94% 45%;
+        /* Keep secondary nav stable in dark mode */
+        --nav-primary-foreground: 0 0% 100%;
+        --destructive: 0 62.8% 30.6%;
+        --destructive-foreground: 0 0% 98%;
+        --border: 240 3.7% 15.9%;
+        /* zinc-800 */
+        --input: 240 3.7% 15.9%;
+        /* zinc-800 */
+        --ring: 200 94% 73%;
+        /* SnipGeek cyan brand color */
+    }
+}
+
+@layer base {
+    * {
+        @apply border-border;
+    }
+
+    .skeleton {
+        position: relative;
+        overflow: hidden;
+        background-color: hsl(var(--muted));
+        transform: translateZ(0);
+        backface-visibility: hidden;
+    }
+
+    .skeleton[data-variant="static"] {
+        background-color: hsl(var(--muted));
+    }
+
+    .skeleton[data-variant="pulse"] {
+        animation: skeleton-pulse 1.8s ease-in-out infinite;
+    }
+
+    .skeleton::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background-image: linear-gradient(
+            90deg,
+            transparent,
+            hsl(var(--muted-foreground) / 0.08),
+            transparent
+        );
+        transform: translate3d(-100%, 0, 0);
+        animation: skeleton-shimmer 1.6s ease-in-out infinite;
+        will-change: transform;
+        pointer-events: none;
+        opacity: 0;
+    }
+
+    .skeleton[data-variant="shimmer"]::after {
+        opacity: 1;
+    }
+
+    @keyframes skeleton-shimmer {
+        to {
+            transform: translate3d(100%, 0, 0);
+        }
+    }
+
+    @keyframes skeleton-pulse {
+        0%,
+        100% {
+            opacity: 0.95;
+        }
+
+        50% {
+            opacity: 0.78;
+        }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        * {
+            transition-duration: 0ms;
+        }
+
+        .skeleton[data-variant="pulse"] {
+            animation: none;
+        }
+
+        .skeleton[data-variant="shimmer"]::after {
+            animation: none;
+            opacity: 0;
+        }
+    }
+
+    /* Tailwind v4 removed cursor:pointer from buttons (CSS spec compliance) */
+    button,
+    [role="button"],
+    a,
+    summary {
+        cursor: pointer;
+    }
+
+    /* Smoother theme switch: root and body transition when .dark toggles */
+    html {
+        transition: background-color 0.4s cubic-bezier(0.4, 0, 0.2, 1),
+            color 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    body {
+        @apply bg-background text-foreground font-sans antialiased;
+        transition: background-color 0.4s cubic-bezier(0.4, 0, 0.2, 1),
+            color 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    h1,
+    h2,
+    h3,
+    h4 {
+        @apply text-balance;
+    }
+
+    .fade-in-on-load {
+        animation: fade-in 0.4s ease-in-out;
+    }
+
+    @keyframes fade-in {
+        from {
+            opacity: 0;
+        }
+
+        to {
+            opacity: 1;
+        }
+    }
+
+    @keyframes badge-pop {
+        0% {
+            transform: scale(0);
+        }
+
+        70% {
+            transform: scale(1.3);
+        }
+
+        100% {
+            transform: scale(1);
+        }
+    }
+
+    .animate-badge-pop {
+        animation: badge-pop 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+    }
+
+    /* ── Secondary nav staggered entry ─────────────── */
+    @keyframes nav-enter {
+        from {
+            opacity: 0;
+            transform: translateX(-10px);
+        }
+        to {
+            opacity: 1;
+            transform: translateX(0);
+        }
+    }
+
+    .animate-nav-enter {
+        animation: nav-enter 0.38s cubic-bezier(0.16, 1, 0.3, 1) both;
+    }
+
+    /* ── Bookmark spring feedback ───────────────────── */
+    @keyframes bookmark-spring {
+        0%   { transform: scale(1); }
+        35%  { transform: scale(1.28) rotate(-8deg); }
+        65%  { transform: scale(0.92) rotate(4deg); }
+        100% { transform: scale(1) rotate(0deg); }
+    }
+
+    .animate-bookmark-spring {
+        animation: bookmark-spring 0.45s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+    }
+
+    /* ── Search icon active ring pulse ─────────────── */
+    @keyframes search-active-ring {
+        0%   { box-shadow: 0 0 0 0 hsl(var(--accent) / 0.35); }
+        60%  { box-shadow: 0 0 0 6px hsl(var(--accent) / 0); }
+        100% { box-shadow: 0 0 0 0 hsl(var(--accent) / 0); }
+    }
+
+    .animate-search-ping {
+        animation: search-active-ring 0.55s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        * {
+            animation-duration: 0.01ms !important;
+            transition-duration: 0.01ms !important;
+        }
+
+        .skeleton::after {
+            display: none;
+        }
+    }
+
+    @supports (-moz-appearance: none) {
+        .skeleton::after {
+            display: none;
+        }
+
+        .skeleton {
+            animation: skeleton-pulse 1.4s ease-in-out infinite;
+        }
+    }
+
+    @media (pointer: coarse) {
+        .skeleton::after {
+            display: none;
+        }
+
+        .skeleton {
+            animation: none;
+        }
+    }
+
+    /* ─── View Transitions API — Smooth Theme Toggle ──────────
+   *
+   *  Longer duration + smooth easing for a less jarring switch.
+   *  Old snapshot fades OUT, new fades IN (crossfade).
+   * ─────────────────────────────────────────────────────── */
+
+    ::view-transition-old(root),
+    ::view-transition-new(root) {
+        animation-duration: 450ms;
+        animation-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+        animation-fill-mode: both;
+        mix-blend-mode: normal;
+    }
+
+    /* Light → Dark: new (dark) fades IN on top */
+    ::view-transition-old(root) {
+        animation-name: vt-fade-out;
+        z-index: 1;
+    }
+
+    ::view-transition-new(root) {
+        animation-name: vt-fade-in;
+        z-index: 2147483646;
+    }
+
+    /* Dark → Light: old (dark) fades OUT on top, reveals light below */
+    .dark::view-transition-old(root) {
+        animation-name: vt-fade-out;
+        z-index: 2147483646;
+    }
+
+    .dark::view-transition-new(root) {
+        animation-name: vt-fade-in;
+        z-index: 1;
+    }
+
+    @keyframes vt-fade-out {
+        from {
+            opacity: 1;
+        }
+
+        to {
+            opacity: 0;
+        }
+    }
+
+    @keyframes vt-fade-in {
+        from {
+            opacity: 0;
+        }
+
+        to {
+            opacity: 1;
+        }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        ::view-transition-old(root),
+        ::view-transition-new(root) {
+            animation-duration: 0.01ms;
+        }
+    }
+}
+
+/* Random Name Picker Animations */
+@keyframes countdown-pop {
+    0% {
+        transform: scale(0.8);
+        opacity: 0;
+    }
+    50% {
+        transform: scale(1.2);
+    }
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+@keyframes winner-flash {
+    0%, 100% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0.5;
+    }
+}
+
+@keyframes winner-reveal {
+    0% {
+        transform: scale(0) rotate(180deg);
+        opacity: 0;
+    }
+    50% {
+        transform: scale(1.1) rotate(90deg);
+    }
+    100% {
+        transform: scale(1) rotate(0deg);
+        opacity: 1;
+    }
+}
+
+@keyframes dot-pulse {
+    0%, 100% {
+        transform: scale(1);
+        opacity: 0.5;
+    }
+    50% {
+        transform: scale(1.2);
+        opacity: 1;
+    }
+}
+
+.animate-countdown-pop {
+    animation: countdown-pop 0.5s ease-out;
+}
+
+.animate-winner-flash {
+    animation: winner-flash 0.5s ease-in-out 3;
+}
+
+.animate-winner-reveal {
+    animation: winner-reveal 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.animate-dot-pulse {
+    animation: dot-pulse 1.4s ease-in-out infinite;
+}
+
+.animate-dot-pulse.animation-delay-200 {
+    animation-delay: 200ms;
+}
+
+.animate-dot-pulse.animation-delay-400 {
+    animation-delay: 400ms;
+}
+
+@keyframes bookmark-spring {
+    0% {
+        transform: scale(1);
+    }
+    30% {
+        transform: scale(1.3);
+    }
+    60% {
+        transform: scale(0.9);
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+
+.animate-bookmark-spring {
+    animation: bookmark-spring 0.5s ease-in-out;
+}
+
+@keyframes badge-pop {
+    0% {
+        transform: scale(0);
+        opacity: 0;
+    }
+    50% {
+        transform: scale(1.1);
+    }
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+.animate-badge-pop {
+    animation: badge-pop 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+}

@@ -1,0 +1,40 @@
+---
+title: How to Optimize Next.js Image Scrolling for Better UX
+date: '2026-02-21'
+description: Learn how to eliminate scrolling lag in Next.js by optimizing image loading and leveraging hardware acceleration.
+translationKey: nextjs-scrolling-optimization
+published: true
+tags: ["nextjs", "performance", "image-optimization", "css"]
+---
+
+Collaborating with AI speeds up development, but it often leads to a common pitfall: heavy, unoptimized media that makes the user interface feel "heavy" or "janky" during scrolling. In our latest optimization round, we tackled this head-on.
+
+## The Problem: Why Does Scrolling Feel Heavy?
+
+When a page contains many images (like a blog feed or a featured section), the browser often struggles with two things:
+1. **Bandwidth Overload:** Downloading 2MB images for a 300px container because the browser doesn't know the final display size.
+2. **Main Thread Blocking:** Calculating complex CSS animations and transformations (like hover scales or rotations) purely on the CPU.
+
+## The Solution: A Three-Pronged Approach
+
+We implemented three specific technical optimizations to transform the scrolling experience:
+
+### 1. The Power of the `sizes` Attribute
+By default, `next/image` with the `fill` property doesn't know how large the image will be on the user's screen until the CSS is fully loaded. This often results in the browser downloading a huge image. 
+
+We added specific `sizes` mappings (e.g., `(max-width: 768px) 100vw, 33vw`). This tells the browser: "On mobile, use the full width; on desktop, this image only takes up a third of the screen." This significantly reduces the payload.
+
+### 2. Prioritizing "Above the Fold" Content
+Images at the top of the page should be ready instantly. We identified our "Featured" cards and added the `priority` prop. This ensures these critical assets are preloaded, improving the Largest Contentful Paint (LCP).
+
+### 3. Hardware Acceleration with `will-change`
+For cards with hover animations or entrance rotations, we added `will-change: transform`. This small CSS addition hints to the browser that an element will change, allowing it to offload the rendering to the GPU (Graphics Processing Unit) instead of the CPU.
+
+## The Result
+
+The implementation leads to:
+- **Zero Layout Shift:** Containers are reserved accurately.
+- **Instant Response:** Scroll-triggered animations feel fluid.
+- **Better Core Web Vitals:** Improved scores for LCP and CLS.
+
+Optimizing for performance isn't just about speed; it's about making the interaction feel natural and responsive to the user's touch or scroll.
