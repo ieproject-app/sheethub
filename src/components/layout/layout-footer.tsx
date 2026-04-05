@@ -12,24 +12,13 @@ import {
   Youtube,
   Instagram,
   User2,
-  ShieldCheck,
-  ShieldAlert,
-  Mail,
-  FileText,
   Terminal,
-  LogOut,
-  Chrome,
   Sparkles,
 } from "lucide-react";
 import { TikTokLogo } from "@/components/icons/tiktok-logo";
 import { ScrollReveal } from "@/components/ui/scroll-reveal";
 import { SnipTooltip } from "@/components/ui/snip-tooltip";
 import { getLinkPrefix } from "@/lib/utils";
-import { useAuth, useUser } from "@/firebase";
-import { initiateGoogleSignIn } from "@/firebase/non-blocking-login";
-import { isFirebaseConfigValid } from "@/firebase/config";
-import { signOut } from "firebase/auth";
-import { useNotification } from "@/hooks/use-notification";
 
 export function LayoutFooter({
   locale,
@@ -41,9 +30,6 @@ export function LayoutFooter({
   translationsMap: TranslationsMap;
 }) {
   const linkPrefix = getLinkPrefix(locale);
-  const { user } = useUser();
-  const auth = useAuth();
-  const { notify } = useNotification();
 
   const footerNavItems = [
     {
@@ -67,38 +53,6 @@ export function LayoutFooter({
       href: `${linkPrefix}/contact`,
     },
   ];
-
-  const handleLogin = async () => {
-    if (!auth) {
-      const isDev = process.env.NODE_ENV === "development";
-      const configReady = isFirebaseConfigValid();
-      notify(
-        isDev && !configReady
-          ? "Mode dev: Firebase Auth belum dikonfigurasi lengkap (.env.local)."
-          : dictionary?.notifications?.authNotReady || "Sistem login belum siap. Silakan coba lagi.",
-        <ShieldAlert className="h-4 w-4" />
-      );
-      return;
-    }
-    try {
-      await initiateGoogleSignIn(auth);
-    } catch (error) {
-           notify(
-             dictionary?.notifications?.loginError || "Gagal masuk.",
-             <ShieldAlert className="h-4 w-4" />
-           );
-         }
-  };
-
-  const handleLogout = async () => {
-    if (auth) {
-      await signOut(auth);
-      notify(
-        dictionary?.notifications?.logoutSuccess || "Berhasil keluar.",
-        <LogOut className="h-4 w-4" />
-      );
-    }
-  };
 
   const authorName = "Iwan Efendi";
   const authorAvatar = "/images/profile/profile.png";
@@ -224,7 +178,7 @@ export function LayoutFooter({
             </div>
             
             <div className="flex flex-col items-center justify-center gap-5 text-center">
-              {/* Added Row: Tools & Admin Login */}
+              {/* Utility links */}
               <nav className="flex flex-wrap items-center justify-center gap-x-6 gap-y-3">
                 <Link
                   href={`${linkPrefix}/tools`}
@@ -233,24 +187,6 @@ export function LayoutFooter({
                   <Terminal className="h-3.5 w-3.5 transition-transform group-hover:scale-120 group-hover:rotate-12" />
                   <span>{dictionary.navigation.tools || "Tools"}</span>
                 </Link>
-                <div className="w-1 h-1 rounded-full bg-primary/20" />
-                {!user ? (
-                  <button
-                    onClick={handleLogin}
-                    className="group flex items-center gap-2 text-[11px] font-black uppercase tracking-widest text-primary/60 hover:text-accent transition-all duration-300"
-                  >
-                    <Chrome className="h-3.5 w-3.5 transition-transform group-hover:scale-120" />
-                    <span>Admin Portal</span>
-                  </button>
-                ) : (
-                  <button
-                    onClick={handleLogout}
-                    className="group flex items-center gap-2 text-[11px] font-black uppercase tracking-widest text-destructive/60 hover:text-destructive transition-all duration-300"
-                  >
-                    <LogOut className="h-3.5 w-3.5 transition-transform group-hover:scale-120" />
-                    <span>Sign Out</span>
-                  </button>
-                )}
                 {process.env.NODE_ENV === "development" && (
                   <>
                     <div className="w-1 h-1 rounded-full bg-primary/20" />
@@ -278,7 +214,7 @@ export function LayoutFooter({
               </nav>
               
               <small className="font-extrabold tracking-widest text-[10px] uppercase text-primary/30 hover:text-primary transition-colors duration-300">
-                &copy; {new Date().getFullYear()} SnipGeek. All Rights Reserved.
+                &copy; {new Date().getFullYear()} SheetHub. All Rights Reserved.
               </small>
             </div>
           </div>

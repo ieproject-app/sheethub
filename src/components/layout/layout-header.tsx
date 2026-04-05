@@ -16,9 +16,6 @@ import {
   Moon,
   SunMoon,
   Hash,
-  Monitor,
-  Terminal,
-  Smartphone,
   Cpu,
   GraduationCap,
 } from "lucide-react";
@@ -30,7 +27,7 @@ import { usePathname, useParams, useRouter } from "next/navigation";
 import { useReadingList } from "@/hooks/use-reading-list";
 import { useNotification } from "@/hooks/use-notification";
 import type { Dictionary } from "@/lib/get-dictionary";
-import { SnipGeekLogo } from "@/components/icons/snipgeek-logo";
+import { SheetHubLogo } from "@/components/icons/sheethub-logo";
 import { PlaceHolderImages } from "@/lib/placeholder-images";
 import NextLink from "next/link";
 import Image from "next/image";
@@ -92,8 +89,9 @@ const getTagKeyFromHref = (href: string) => {
 
 const getTagFamilyKey = (tag: string) => {
   const normalized = tag.toLowerCase();
-  if (normalized.startsWith("windows")) return "windows";
-  if (normalized.startsWith("ubuntu")) return "ubuntu";
+  if (normalized.startsWith("google-sheets")) return "google-sheets";
+  if (normalized.startsWith("sheets")) return "google-sheets";
+  if (normalized.startsWith("excel")) return "excel";
   return normalized;
 };
 
@@ -292,7 +290,8 @@ export function LayoutHeader({
   }, [activeIndex]);
 
   useEffect(() => {
-    setActiveIndex(-1);
+    const timer = window.setTimeout(() => setActiveIndex(-1), 0);
+    return () => window.clearTimeout(timer);
   }, [query, isSearchOpen]);
 
   useEffect(() => {
@@ -338,8 +337,8 @@ export function LayoutHeader({
 
   const directLinks = useMemo(
     () => [
-      { name: "Windows 11", href: "/tags/windows-11", icon: Monitor, badge: "25H2" },
-      { name: "Ubuntu 26.04", href: "/tags/ubuntu-26-04", icon: Terminal, badge: "LTS" },
+      { name: "Excel", href: "/tags/excel", icon: BookOpen, badge: "M365" },
+      { name: "Google Sheets", href: "/tags/google-sheets", icon: StickyNote, badge: "Cloud" },
     ],
     [],
   );
@@ -348,8 +347,8 @@ export function LayoutHeader({
   const moreItems = useMemo(
     () => [
       { name: "Tutorial", href: "/tags/tutorial", icon: GraduationCap },
-      { name: "Linux", href: "/tags/linux", icon: Terminal },
-      { name: "Android", href: "/tags/android", icon: Smartphone },
+      { name: "Formula", href: "/tags/formula", icon: Hash },
+      { name: "Templates", href: "/tags/template", icon: StickyNote },
       { name: "Hardware", href: "/tags/hardware", icon: Cpu },
     ],
     [],
@@ -367,8 +366,9 @@ export function LayoutHeader({
       if (tagKey) tagFamilies.add(getTagFamilyKey(tagKey));
 
       const label = item.name.toLowerCase();
-      if (label.includes("windows")) tagFamilies.add("windows");
-      if (label.includes("ubuntu")) tagFamilies.add("ubuntu");
+      if (label.includes("excel")) tagFamilies.add("excel");
+      if (label.includes("google sheets")) tagFamilies.add("google-sheets");
+      if (label.includes("sheets")) tagFamilies.add("google-sheets");
     });
 
     return {
@@ -402,7 +402,11 @@ export function LayoutHeader({
     });
 
     // 2. Determine base tags based on current context
-    let pool: { name: string; href: string; icon: any }[] = [];
+    let pool: {
+      name: string;
+      href: string;
+      icon: React.ComponentType<{ className?: string }>;
+    }[] = [];
 
     const blogDetailPrefix = `${linkPrefix}/blog/`;
     const noteDetailPrefix = `${linkPrefix}/notes/`;
@@ -481,11 +485,6 @@ export function LayoutHeader({
     return [...baseLinks, ...dynamicTagLinks];
   }, [dictionary.navigation.blog, dictionary.navigation.notes, dynamicTagLinks]);
 
-  const isHomePage = useMemo(
-    () => normalizedPath === (linkPrefix || "/"),
-    [linkPrefix, normalizedPath],
-  );
-
   const getIsActivePath = (href: string) => {
     const localizedHref = `${linkPrefix}${href}` || "/";
     if (href === "/tags") return pathname === localizedHref;
@@ -501,8 +500,10 @@ export function LayoutHeader({
       locale: currentLocale,
       sourcePath: normalizedPath,
     };
-    window.dispatchEvent(new CustomEvent("snipgeek:secondary-nav-click", { detail }));
-    const gtag = (window as any).gtag;
+    window.dispatchEvent(new CustomEvent("sheethub:secondary-nav-click", { detail }));
+    const gtag = (window as Window & {
+      gtag?: (command: string, eventName: string, params?: Record<string, unknown>) => void;
+    }).gtag;
     if (typeof gtag === "function") gtag("event", "secondary_nav_click", detail);
   };
 
@@ -548,7 +549,7 @@ export function LayoutHeader({
                   </div>
                   <div className="relative h-9 w-9 flex items-center justify-center shrink-0">
                     <div className="absolute inset-0 bg-accent/10 rounded-xl transition-all duration-500 group-hover:bg-accent/20 group-hover:shadow-sm group-hover:rotate-6 group-hover:scale-110" />
-                    <SnipGeekLogo className="h-6 w-6 relative z-10 transition-all duration-500 group-hover:scale-110 group-hover:rotate-3" />
+                    <SheetHubLogo className="h-6 w-6 relative z-10 transition-all duration-500 group-hover:scale-110 group-hover:rotate-3" />
                   </div>
                 </div>
                 <div className="flex flex-col">
@@ -566,13 +567,13 @@ export function LayoutHeader({
               <NextLink
                 href="/"
                 className="flex items-center gap-2 sm:gap-3 group"
-                aria-label="SnipGeek Home"
+                aria-label="SheetHub Home"
               >
-                <SnipGeekLogo className="h-7 w-7 sm:h-8 sm:w-8 transition-transform duration-500 ease-in-out group-hover:scale-[1.15] group-hover:rotate-3" />
+                <SheetHubLogo className="h-7 w-7 sm:h-8 sm:w-8 transition-transform duration-500 ease-in-out group-hover:scale-[1.15] group-hover:rotate-3" />
                 <div className="font-display text-lg sm:text-xl font-black tracking-[-0.03em] flex items-baseline leading-none">
-                  <span className="text-foreground">Snip</span>
+                  <span className="text-foreground">Sheet</span>
                   <span className="text-accent ml-px">
-                    Geek
+                    Hub
                   </span>
                 </div>
               </NextLink>
@@ -590,19 +591,19 @@ export function LayoutHeader({
           >
             {directLinks.map((item) => {
               const isActive = getIsActivePath(item.href);
-              const isWindowsLink = item.name.toLowerCase().includes("windows");
-              const isUbuntuLink = item.name.toLowerCase().includes("ubuntu");
+              const isExcelLink = item.name.toLowerCase().includes("excel");
+              const isSheetsLink = item.name.toLowerCase().includes("sheets");
 
-              const activeToneClass = isWindowsLink
-                ? "border-[#0078D4]/40 bg-[#0078D4]/14 text-[#0078D4] shadow-[0_2px_10px_rgba(0,120,212,0.16)]"
-                : isUbuntuLink
-                  ? "border-[#E95420]/40 bg-[#E95420]/13 text-[#E95420] shadow-[0_2px_10px_rgba(233,84,32,0.16)]"
+              const activeToneClass = isExcelLink
+                ? "border-[#217346]/40 bg-[#217346]/14 text-[#217346] shadow-[0_2px_10px_rgba(33,115,70,0.16)]"
+                : isSheetsLink
+                  ? "border-[#0F9D58]/40 bg-[#0F9D58]/13 text-[#0F9D58] shadow-[0_2px_10px_rgba(15,157,88,0.16)]"
                   : "border-accent/35 bg-accent/12 text-accent shadow-sm";
 
-              const hoverToneClass = isWindowsLink
-                ? "hover:text-[#0078D4] hover:border-[#0078D4]/25 hover:bg-[#0078D4]/7"
-                : isUbuntuLink
-                  ? "hover:text-[#E95420] hover:border-[#E95420]/25 hover:bg-[#E95420]/7"
+              const hoverToneClass = isExcelLink
+                ? "hover:text-[#217346] hover:border-[#217346]/25 hover:bg-[#217346]/7"
+                : isSheetsLink
+                  ? "hover:text-[#0F9D58] hover:border-[#0F9D58]/25 hover:bg-[#0F9D58]/7"
                   : "hover:text-foreground hover:border-accent/20 hover:bg-accent/7";
 
               return (
@@ -618,14 +619,14 @@ export function LayoutHeader({
                   )}
                 >
                   {item.name}
-                  {item.name === "Ubuntu 26.04" && (
-                    <span className="text-[8px] font-black uppercase tracking-wide px-1 py-0.5 rounded bg-[#E95420]/15 text-[#E95420] border border-[#E95420]/30 leading-none">
-                      LTS
+                  {item.name === "Google Sheets" && (
+                    <span className="text-[8px] font-black uppercase tracking-wide px-1 py-0.5 rounded bg-[#0F9D58]/15 text-[#0F9D58] border border-[#0F9D58]/30 leading-none">
+                      Cloud
                     </span>
                   )}
-                  {item.name === "Windows 11" && (
-                    <span className="text-[8px] font-black uppercase tracking-wide px-1 py-0.5 rounded bg-[#0078D4]/15 text-[#0078D4] border border-[#0078D4]/30 leading-none">
-                      25H2
+                  {item.name === "Excel" && (
+                    <span className="text-[8px] font-black uppercase tracking-wide px-1 py-0.5 rounded bg-[#217346]/15 text-[#217346] border border-[#217346]/30 leading-none">
+                      M365
                     </span>
                   )}
                 </NextLink>
@@ -691,7 +692,7 @@ export function LayoutHeader({
                 <div className="py-3">
                   <div className="px-4 py-2 mb-1">
                     <p className="font-sans text-[10px] font-black uppercase tracking-widest text-muted-foreground/40">
-                      SnipGeek · Navigate
+                      SheetHub · Navigate
                     </p>
                   </div>
 
@@ -706,14 +707,14 @@ export function LayoutHeader({
                         <div className="absolute left-0 top-1/2 -translate-y-1/2 w-0.5 h-4 bg-accent opacity-0 group-hover/item:opacity-60 transition-opacity" />
                         <item.icon className="h-4 w-4 text-accent" />
                         {item.name}
-                        {item.name === "Ubuntu 26.04" && (
-                          <span className="text-[8px] font-black uppercase tracking-wide px-1 py-0.5 rounded bg-[#E95420]/15 text-[#E95420] border border-[#E95420]/30 leading-none">
-                            LTS
+                        {item.name === "Google Sheets" && (
+                          <span className="text-[8px] font-black uppercase tracking-wide px-1 py-0.5 rounded bg-[#0F9D58]/15 text-[#0F9D58] border border-[#0F9D58]/30 leading-none">
+                            Cloud
                           </span>
                         )}
-                        {item.name === "Windows 11" && (
-                          <span className="text-[8px] font-black uppercase tracking-wide px-1 py-0.5 rounded bg-[#0078D4]/15 text-[#0078D4] border border-[#0078D4]/30 leading-none">
-                            25H2
+                        {item.name === "Excel" && (
+                          <span className="text-[8px] font-black uppercase tracking-wide px-1 py-0.5 rounded bg-[#217346]/15 text-[#217346] border border-[#217346]/30 leading-none">
+                            M365
                           </span>
                         )}
                       </NextLink>

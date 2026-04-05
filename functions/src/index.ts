@@ -15,10 +15,23 @@ import * as fs from "fs/promises";
 import * as path from "path";
 import * as os from "os";
 
+type ErrorWithCode = {
+    message?: string;
+    stack?: string;
+    code?: string;
+};
+
+function toErrorWithCode(error: unknown): ErrorWithCode {
+    if (typeof error === "object" && error !== null) {
+        return error as ErrorWithCode;
+    }
+    return {};
+}
+
 // Initialize Firebase Admin SDK if not already initialized
 try {
     initializeApp();
-} catch (e) {
+} catch {
     logger.info("Firebase Admin SDK already initialized.");
 }
 
@@ -112,31 +125,34 @@ export const processPdfOnCall = onCall({
         logger.log(`Successfully processed file. New size: ${newSize}, URL: ${url}`);
         return { downloadUrl: url, newSize };
 
-    } catch (error: any) {
+    } catch (error: unknown) {
+        const err = toErrorWithCode(error);
         logger.error("Error during compression pipeline:", {
-            message: error.message,
-            stack: error.stack,
-            code: error.code
+            message: err.message,
+            stack: err.stack,
+            code: err.code
         });
         if (error instanceof HttpsError) {
             throw error;
         }
         // Fallback for any other unexpected errors
-        throw new HttpsError('internal', 'An unexpected error occurred during the compression pipeline.', { details: error.message });
+        throw new HttpsError('internal', 'An unexpected error occurred during the compression pipeline.', { details: err.message });
     } finally {
         // 6. Cleanup temporary files, ensuring it doesn't crash if files don't exist
         logger.log("Cleaning up temporary files...");
         try {
             await fs.unlink(tempInputPath);
-        } catch (cleanupError: any) {
-            if (cleanupError.code !== 'ENOENT') {
+        } catch (cleanupError: unknown) {
+            const err = toErrorWithCode(cleanupError);
+            if (err.code !== 'ENOENT') {
                 logger.warn("Failed to cleanup temporary input file:", cleanupError);
             }
         }
         try {
             await fs.unlink(tempOutputPath);
-        } catch (cleanupError: any) {
-            if (cleanupError.code !== 'ENOENT') {
+        } catch (cleanupError: unknown) {
+            const err = toErrorWithCode(cleanupError);
+            if (err.code !== 'ENOENT') {
                 logger.warn("Failed to cleanup temporary output file:", cleanupError);
             }
         }

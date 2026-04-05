@@ -1,58 +1,25 @@
 "use client";
 
 import { useState, useEffect, useMemo, useRef, useCallback, type SyntheticEvent } from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { motion } from "framer-motion";
 import { Input } from "@/components/ui/input";
-import { Switch } from "@/components/ui/switch";
-import { Textarea } from "@/components/ui/textarea";
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import { SnipTooltip } from "@/components/ui/snip-tooltip";
 import {
-  Copy,
   Check,
   X,
   AlertTriangle,
-  Plus,
   Trash2,
-  ChevronDown,
-  Download,
-  Grid3X3,
-  GalleryHorizontal,
-  ImageIcon,
-  Calendar,
-  Zap,
-  Search,
-  Type,
-  Star,
-  Hash,
-  AlignLeft,
-  Sparkles,
-  Layers,
-  PenLine,
-  Settings2,
-  FileText,
-  BookOpen,
   ChevronsUpDown,
   CheckCircle2,
 } from "lucide-react";
 import { downloadLinks } from "@/lib/data-downloads";
 import { useNotification } from "@/hooks/use-notification";
 import { cn } from "@/lib/utils";
-import { ScrollArea } from "@/components/ui/scroll-area";
-import { ToolWrapper } from "@/components/tools/tool-wrapper";
-import { ScrollReveal } from "@/components/ui/scroll-reveal";
 import type { Dictionary } from "@/lib/get-dictionary";
 
 // Simple debounce hook
@@ -297,16 +264,16 @@ const seriesBlueprint: Record<
 > = {
   "phase-1": {
     target: {
-      en: "Beginner moving from single-OS setup to safe dual-boot",
-      id: "Pemula yang berpindah dari single-OS ke dual-boot aman",
+      en: "Beginner building first reliable spreadsheet workflow",
+      id: "Pemula yang membangun alur kerja spreadsheet pertama yang rapi",
     },
     tone: {
       en: "Practical, reassuring, low-jargon",
       id: "Praktis, menenangkan, minim jargon",
     },
     context: {
-      en: "Initial planning and risk prevention before changing partitions or boot setup.",
-      id: "Perencanaan awal dan pencegahan risiko sebelum mengubah partisi atau boot setup.",
+      en: "Initial planning for clean workbook structure, naming, and formula foundations.",
+      id: "Perencanaan awal untuk struktur workbook, penamaan, dan fondasi rumus yang bersih.",
     },
   },
   "phase-2": {
@@ -325,16 +292,16 @@ const seriesBlueprint: Record<
   },
   "phase-3": {
     target: {
-      en: "Daily dual-boot user optimizing stability and workflow",
-      id: "Pengguna dual-boot harian yang mengoptimalkan stabilitas dan workflow",
+      en: "Daily spreadsheet user optimizing speed and consistency",
+      id: "Pengguna spreadsheet harian yang mengoptimalkan kecepatan dan konsistensi",
     },
     tone: {
       en: "Direct with practical tradeoff notes",
       id: "Lugas dengan catatan kompromi praktis",
     },
     context: {
-      en: "Post-install improvements for drivers, updates, and productivity setup.",
-      id: "Peningkatan pasca-instalasi untuk driver, update, dan setup produktivitas.",
+      en: "Post-setup improvements for formulas, templates, and repeatable reporting workflows.",
+      id: "Peningkatan pasca-setup untuk rumus, template, dan alur pelaporan yang berulang.",
     },
   },
   "phase-4": {
@@ -347,14 +314,14 @@ const seriesBlueprint: Record<
       id: "Diagnostik dan metodis",
     },
     context: {
-      en: "Troubleshooting phase focused on boot errors, update failures, and recovery paths.",
-      id: "Fase troubleshooting yang fokus pada error boot, gagal update, dan jalur pemulihan.",
+      en: "Troubleshooting phase focused on formula errors, broken references, and data cleanup paths.",
+      id: "Fase troubleshooting yang fokus pada error rumus, referensi rusak, dan jalur pembersihan data.",
     },
   },
   "phase-5": {
     target: {
-      en: "Power user maintaining long-term dual-boot reliability",
-      id: "Power user yang menjaga keandalan dual-boot jangka panjang",
+      en: "Power user maintaining long-term spreadsheet reliability",
+      id: "Power user yang menjaga keandalan spreadsheet jangka panjang",
     },
     tone: {
       en: "Strategic and maintenance-oriented",
@@ -639,12 +606,20 @@ export function usePromptLogic({
     ? seriesProfile.context.id
     : seriesProfile.context.en;
   const selectedArticleType = contentType === "notes" ? "note" : "blog";
-  const noteIntentLabelMap: Record<NoteIntent, string> = {
-    finding: dictionary.notesIntentFinding,
-    reference: dictionary.notesIntentReference,
-    "mini-fix": dictionary.notesIntentMiniFix,
-    observation: dictionary.notesIntentObservation,
-  };
+  const noteIntentLabelMap = useMemo<Record<NoteIntent, string>>(
+    () => ({
+      finding: dictionary.notesIntentFinding,
+      reference: dictionary.notesIntentReference,
+      "mini-fix": dictionary.notesIntentMiniFix,
+      observation: dictionary.notesIntentObservation,
+    }),
+    [
+      dictionary.notesIntentFinding,
+      dictionary.notesIntentReference,
+      dictionary.notesIntentMiniFix,
+      dictionary.notesIntentObservation,
+    ],
+  );
 
   // ── Filtered article list ──
   const articlesForType = useMemo(
@@ -1034,7 +1009,7 @@ export function usePromptLogic({
           id: "news-angle-empty",
           severity: "warning",
           title: "News angle is empty",
-          description: "AI can still generate the brief, but without a clear SnipGeek angle the output may feel generic.",
+          description: "AI can still generate the brief, but without a clear SheetHub angle the output may feel generic.",
         });
       }
     }
@@ -1043,14 +1018,12 @@ export function usePromptLogic({
   }, [
     contentType,
     downloadItems,
-    debouncedDraft,
     debouncedGalleryMappings,
     debouncedHeroImage,
     debouncedImageGridMappings,
     mode,
     debouncedNewsAngle,
     debouncedNewsSourceUrls,
-    debouncedOriginalContent,
     showDownloads,
     showGallery,
     showGrids,
@@ -1069,9 +1042,8 @@ export function usePromptLogic({
 
   // ── Persist feature flags ──
   useEffect(() => {
-    // eslint-disable-next-line react-hooks/set-state-in-effect
     setMounted(true);
-    const saved = localStorage.getItem("snipgeek-prompt-features");
+    const saved = localStorage.getItem("sheethub-prompt-features");
     if (saved) {
       try {
         const p = JSON.parse(saved);
@@ -1096,7 +1068,7 @@ export function usePromptLogic({
         setCategoryHint(typeof p.categoryHint === "string" ? p.categoryHint : "");
       } catch { }
     }
-    const savedDraft = localStorage.getItem("snipgeek-prompt-draft");
+    const savedDraft = localStorage.getItem("sheethub-prompt-draft");
     if (savedDraft) {
       try {
         const d = JSON.parse(savedDraft);
@@ -1126,7 +1098,7 @@ export function usePromptLogic({
   useEffect(() => {
     if (!mounted) return;
     localStorage.setItem(
-      "snipgeek-prompt-features",
+      "sheethub-prompt-features",
       JSON.stringify({
         showImages,
         showDownloads,
@@ -1160,7 +1132,7 @@ export function usePromptLogic({
   useEffect(() => {
     if (!mounted) return;
     localStorage.setItem(
-      "snipgeek-prompt-draft",
+      "sheethub-prompt-draft",
       JSON.stringify({
         mode,
         contentType,
@@ -1242,10 +1214,10 @@ export function usePromptLogic({
           ? "text-right"
           : "text-center";
 
-    let prompt = `**INTERNAL CONTENT BRIEF FOR SNIPGEEK AGENT**\n`;
-    const activeSkills = ["content-generator", "snipgeek-blog-tone"];
+    let prompt = `**INTERNAL CONTENT BRIEF FOR SHEETHUB AGENT**\n`;
+    const activeSkills = ["content-generator"];
     prompt += `**FOLLOWING SKILLS:** \`${activeSkills.join("`, `")}\` \n\n`;
-    prompt += `**IMPORTANT:** Before generating content, you MUST read and understand all referenced skills above. They contain critical standards for MDX formatting, frontmatter requirements, and SnipGeek-specific conventions.\n\n`;
+    prompt += `**IMPORTANT:** Before generating content, you MUST read and understand all referenced skills above. They contain critical standards for MDX formatting, frontmatter requirements, and SheetHub-specific conventions.\n\n`;
 
     prompt += `**1. MODE & TYPE**\n`;
     prompt += `- Action: ${isModify ? "MODIFY EXISTING" : "CREATE NEW"}\n`;
@@ -1280,7 +1252,7 @@ export function usePromptLogic({
         .map(t => `${t.name}(${t.count})`)
         .join(", ");
       prompt += `**2A. EXISTING TAG REGISTRY**\n`;
-      prompt += `Before inventing new tags, prefer selecting from this live list of tags already used in SnipGeek:\n`;
+      prompt += `Before inventing new tags, prefer selecting from this live list of tags already used in SheetHub:\n`;
       prompt += `${tagList}\n`;
       prompt += `Format: tag-name(article-count). Higher count = more established tag. Still follow tag rules: kebab-case, min 3, max 6, include 1 platform tag.\n\n`;
     }
@@ -1317,7 +1289,7 @@ export function usePromptLogic({
         prompt += `**NOTES CONTEXT BLOCK**\n`;
         prompt += `- Note Intent: ${noteIntentLabelMap[noteIntent]}\n`;
         prompt += `- Goal: Produce a concise, referenceable note with practical value and minimal filler.\n`;
-        prompt += `- Routing: Save under _notes/{locale}/{YYYY-H1 or YYYY-H2}/ based on the article date (not _posts/{locale}/). E.g. _notes/en/2026-H1/slug.mdx for Jan–Jun 2026.\n\n`;
+        prompt += `- Routing: Save under _notes/{locale}/ directly (not _posts/{locale}/ and no half-year subfolder). E.g. _notes/en/slug.mdx or _notes/id/slug.mdx.\n\n`;
       }
     }
 
@@ -1377,7 +1349,7 @@ export function usePromptLogic({
       });
       prompt += `\n**DOWNLOAD COMPONENT RULES (MANDATORY — must follow for every Link above):**\n`;
       prompt += `- NEVER render download links as plain markdown anchor links (e.g. [text](url)) or raw <a> tags.\n`;
-      prompt += `- ALWAYS use the SnipGeek \`<DownloadButton id="..." />\` component — this renders a proper download card with filename, filesize, and platform icon.\n`;
+      prompt += `- ALWAYS use the SheetHub \`<DownloadButton id="..." />\` component — this renders a proper download card with filename, filesize, and platform icon.\n`;
       prompt += `- For ID-type links: use the ID directly → \`<DownloadButton id="the-given-id" />\`\n`;
       prompt += `- For URL-type links: you MUST first register a new entry in \`src/lib/data-downloads.ts\` with a descriptive kebab-case ID, fileName, fileSize (estimate if unknown), externalUrl, and platform. Then reference it in MDX as \`<DownloadButton id="your-new-id" />\`. Include the full \`data-downloads.ts\` entry in your output so the author can paste it.\n`;
       prompt += `- Place the \`<DownloadButton />\` component exactly where the {{Link n}} marker appears in the source content.\n`;
@@ -1440,7 +1412,7 @@ export function usePromptLogic({
     prompt += `- Generate a strong SEO title (target ~55-65 chars) and meta description (target ~140-160 chars) that align with user intent.\n`;
     prompt += `- Keep one clear H1 and build scannable H2/H3 sections with practical progression.\n`;
     prompt += `- For tutorial/procedural posts, include: prerequisites, step-by-step actions, verification/check results, and common error fixes.\n`;
-    prompt += `- Add 2-4 internal links to relevant SnipGeek content clusters (windows/ubuntu/tutorial/troubleshooting) where naturally useful.\n`;
+    prompt += `- Add 2-4 internal links to relevant SheetHub content clusters (excel/google-sheets/formula/automation/template) where naturally useful.\n`;
     prompt += `- For version-specific or factual claims, anchor to reliable/official sources and avoid unverifiable assertions.\n`;
     prompt += `- Prefer concrete examples, command/output evidence, and practical caveats over abstract wording.\n`;
     prompt += `- Word-count is not fixed; ensure coverage is complete and non-repetitive for the topic complexity.\n`;
@@ -1494,14 +1466,14 @@ export function usePromptLogic({
       }
     }
 
-    prompt += `\n---\n**FINAL INSTRUCTION:** Generate the full MDX following the SnipGeek skills assigned above. `;
-    prompt += `Use \`snipgeek-blog-tone\` for narrative depth, personal voice, and bilingual storytelling, while ensuring \`content-generator\` technical standards are strictly met. `;
+    prompt += `\n---\n**FINAL INSTRUCTION:** Generate the full MDX following the SheetHub skills assigned above. `;
+    prompt += `Use \`content-generator\` technical standards strictly while keeping narrative depth, personal voice, and bilingual storytelling aligned with SheetHub positioning. `;
     prompt += `**Voice enforcement:** Write in first person ("I"/"saya"), address the reader as "you"/"kamu", never open with generic phrases like "In this article" or "Artikel ini akan membahas", and never use robotic transitions like "Furthermore" or "In conclusion". The Indonesian version must be fully re-narrated in native Indonesian — not translated sentence by sentence from English. Include at least one honest personal moment (doubt, surprise, or discovery) in the narrative to make it feel genuine, not polished. `;
     if (!isModify && contentType !== "notes") {
       prompt += `Opening paragraph must begin with personal context or a real situation the author experienced — pull the reader in before introducing any technical detail. `;
     }
     if (!isModify && contentType === "news") {
-      prompt += `Fetch all listed source URLs, extract only relevant facts, then rewrite in original SnipGeek voice with a clear "SnipGeek's take" section based on the provided angle. `;
+      prompt += `Fetch all listed source URLs, extract only relevant facts, then rewrite in original SheetHub voice with a clear "SheetHub's take" section based on the provided angle. `;
     }
     if (!isModify && (contentType === "series" || contentType === "tips")) {
       prompt += `Expand the provided key points into complete, practical sections with implementation details, warnings, and checks. `;
@@ -1522,7 +1494,7 @@ export function usePromptLogic({
     if (hasHeroImage) {
       prompt += `Set the hero image as frontmatter heroImage/banner and do not render it again in article body unless explicitly requested. `;
     }
-    prompt += `Ensure all metadata (slugs, translation keys, alt texts) are generated automatically. Tags must never contain spaces and must never produce %20 in URLs. Any tag that would produce %20 is invalid and must be rewritten into lowercase kebab-case (e.g., windows-11, clean-install, ui-design, ubuntu-25-10). Always include 1 platform tag (windows/ubuntu/linux/android/hardware) and 1 versioned tag if the article targets a specific OS version (e.g., windows-11, ubuntu-25-10). Minimum 3 tags, maximum 6 tags per article. `;
+    prompt += `Ensure all metadata (slugs, translation keys, alt texts) are generated automatically. Tags must never contain spaces and must never produce %20 in URLs. Any tag that would produce %20 is invalid and must be rewritten into lowercase kebab-case (e.g., excel-formula, google-sheets, pivot-table, data-validation). Always include 1 platform tag (excel/google-sheets/spreadsheet/automation/template) and 1 context tag when relevant (e.g., formula, dashboard, lookup, reporting). Minimum 3 tags, maximum 6 tags per article. `;
     prompt += `Run a final self-check against the readability rhythm rules and the QA checklist before returning final MDX. `;
     prompt += `Ensure the output is genuinely helpful, intent-focused, and clearly better than a generic rewrite.`;
 
@@ -1539,7 +1511,6 @@ export function usePromptLogic({
     isFeatured,
     isIdOnly,
     debouncedHeroImage,
-    debouncedImages,
     contentType,
     downloadItems,
     debouncedImageGridMappings,
@@ -1750,10 +1721,6 @@ export function usePromptLogic({
   const copySpecCaller = useCallback(async (index: number) => {
     await writeClipboard(`{{Specs ${index + 1}}}`, `Specs ${index + 1} caller copied`);
   }, [writeClipboard]);
-
-  const focusRing =
-    "focus-visible:ring-primary/20 focus-visible:ring-offset-0 focus-visible:border-primary/30 transition-all duration-300";
-
 
   return {
     mode, setMode, contentType, setContentType,

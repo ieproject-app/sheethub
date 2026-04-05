@@ -494,27 +494,6 @@ const MdxBlockquote = ({
   </blockquote>
 );
 
-const MdxPre = ({
-  children,
-  className,
-  class: _class,
-  style,
-  ...props
-}: MdxElementProps & { style?: React.CSSProperties }) => (
-  <pre
-    className={cn(
-      "rounded-lg p-6 my-6 overflow-x-auto border border-primary/5 text-[13px] leading-relaxed font-mono",
-      "[&>code]:bg-transparent [&>code]:p-0 [&>code]:text-inherit [&>code]:font-normal",
-      _class,
-      className,
-    )}
-    style={style}
-    {...props}
-  >
-    {children}
-  </pre>
-);
-
 const MdxHr = ({ class: _class, className, ...props }: MdxElementProps) => (
   <hr
     className={cn(

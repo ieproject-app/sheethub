@@ -100,13 +100,11 @@ export function HomeTopics({
     );
   };
 
-  const breadcrumbSegments = [
-    { label: linkPrefix || "/" },
-    { label: tag },
-  ];
-
   return (
-    <section className="container max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 pb-12 sm:pb-16 overflow-hidden">
+    <section
+      className="container max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 pb-12 sm:pb-16 overflow-hidden"
+      data-locale={locale}
+    >
       <ScrollReveal direction="left">
         <div className="mb-8 text-left">
           <h2 className="text-sm font-medium font-display text-primary mb-2 italic">

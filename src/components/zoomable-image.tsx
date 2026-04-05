@@ -1,7 +1,8 @@
 "use client";
 
-import { useEffect, useState, type ImgHTMLAttributes } from "react";
+import { useState, type ImgHTMLAttributes } from "react";
 import { cn } from "@/lib/utils";
+/* eslint-disable @next/next/no-img-element */
 import {
     Plus,
 } from "lucide-react";
@@ -28,15 +29,12 @@ export const ZoomableImage = ({
     src,
     alt,
     className,
-    priority: _priority,
+    priority = false,
     ...props
 }: ZoomableImageProps) => {
-    const [isLoaded, setIsLoaded] = useState(false);
+    const [loadedSrc, setLoadedSrc] = useState<string | null>(null);
+    const isLoaded = loadedSrc === src;
     const { onLoad: onImageLoad, ...imageProps } = props;
-
-    useEffect(() => {
-        setIsLoaded(false);
-    }, [src]);
 
     const parseDimension = (value: number | string | undefined) => {
         if (typeof value === "number" && Number.isFinite(value) && value > 0) {
@@ -78,12 +76,12 @@ export const ZoomableImage = ({
 
                     <img
                         src={src}
-                        alt={alt || "SnipGeek Image"}
-                        loading={imageProps.loading ?? "lazy"}
+                        alt={alt || "SheetHub Image"}
+                        loading={imageProps.loading ?? (priority ? "eager" : "lazy")}
                         decoding={imageProps.decoding ?? "async"}
                         {...imageProps}
                         onLoad={(event) => {
-                            setIsLoaded(true);
+                            setLoadedSrc(src);
                             onImageLoad?.(event);
                         }}
                         className={cn(
@@ -130,7 +128,7 @@ export const ZoomableImage = ({
                             >
                                 <img
                                     src={src}
-                                    alt={alt || "SnipGeek Image"}
+                                    alt={alt || "SheetHub Image"}
                                     loading="eager"
                                     decoding="async"
                                     className="max-w-full max-h-212.5 object-contain rounded-2xl shadow-[0_0_100px_-20px_rgba(0,0,0,0.5)] border border-white/5"

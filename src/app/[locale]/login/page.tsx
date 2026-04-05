@@ -2,14 +2,45 @@
 
 import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 import { useAuth, useUser } from '@/firebase';
 import { initiateGoogleSignIn } from '@/firebase/non-blocking-login';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { SnipGeekLogo } from '@/components/icons/snipgeek-logo';
-import { Loader2, Chrome, AlertCircle } from 'lucide-react';
+import { SheetHubLogo } from '@/components/icons/sheethub-logo';
+import { Loader2, Chrome, AlertCircle, ArrowLeft } from 'lucide-react';
+import { FEATURE_FLAGS } from '@/lib/feature-flags';
 
-export default function LoginPage() {
+function LoginTemporarilyDisabled() {
+  return (
+    <div className="flex min-h-[calc(100vh-68px)] w-full items-center justify-center px-4 py-12">
+      <Card className="w-full max-w-md shadow-xl border-primary/10 bg-card/60 backdrop-blur-sm overflow-hidden">
+        <div className="h-1.5 w-full bg-primary/20" />
+        <CardHeader className="space-y-4 text-center pt-10 pb-6">
+          <div className="flex justify-center mb-2">
+            <SheetHubLogo className="h-14 w-14 opacity-80" />
+          </div>
+          <CardTitle className="font-display text-3xl font-black tracking-tighter uppercase text-primary">
+            Login Dinonaktifkan
+          </CardTitle>
+          <CardDescription className="text-base px-6">
+            Fitur login sedang diisolasi sementara agar fokus pengembangan ada di konten utama.
+          </CardDescription>
+        </CardHeader>
+        <CardContent className="pb-10 px-8">
+          <Button asChild variant="outline" className="w-full h-11 rounded-full gap-2 font-bold uppercase tracking-widest">
+            <Link href="/tools">
+              <ArrowLeft className="h-4 w-4" />
+              Kembali ke Tools
+            </Link>
+          </Button>
+        </CardContent>
+      </Card>
+    </div>
+  );
+}
+
+function LoginEnabledPage() {
   const { user, isUserLoading } = useUser();
   const auth = useAuth();
   const router = useRouter();
@@ -17,7 +48,7 @@ export default function LoginPage() {
   useEffect(() => {
     if (user) {
       // Redirect back to tools or home after successful login
-      router.push('/tools/number-generator');
+      router.push('/tools');
     }
   }, [user, router]);
 
@@ -69,13 +100,13 @@ export default function LoginPage() {
         <div className="h-1.5 w-full bg-accent" />
         <CardHeader className="space-y-4 text-center pt-10 pb-8">
           <div className="flex justify-center mb-2">
-            <SnipGeekLogo className="h-16 w-16" />
+            <SheetHubLogo className="h-16 w-16" />
           </div>
           <CardTitle className="font-display text-4xl font-black tracking-tighter uppercase">
             Masuk Akun
           </CardTitle>
           <CardDescription className="text-base px-6">
-            Gunakan akun Google Anda untuk mengakses tool internal SnipGeek.
+            Gunakan akun Google Anda untuk mengakses tool internal SheetHub.
           </CardDescription>
         </CardHeader>
         <CardContent className="pb-12 px-10">
@@ -96,4 +127,12 @@ export default function LoginPage() {
       </Card>
     </div>
   );
+}
+
+export default function LoginPage() {
+  if (!FEATURE_FLAGS.loginEnabled) {
+    return <LoginTemporarilyDisabled />;
+  }
+
+  return <LoginEnabledPage />;
 }

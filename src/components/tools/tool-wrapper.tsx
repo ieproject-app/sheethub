@@ -27,6 +27,7 @@ import {
 import { useNotification } from "@/hooks/use-notification";
 import type { Dictionary } from "@/lib/get-dictionary";
 import { Separator } from "@/components/ui/separator";
+import { FEATURE_FLAGS } from "@/lib/feature-flags";
 
 interface ToolWrapperProps {
   children: React.ReactNode;
@@ -147,6 +148,28 @@ export function ToolWrapper({
     );
   }
 
+  if (!FEATURE_FLAGS.loginEnabled) {
+    return (
+      <div className="max-w-2xl mx-auto py-12 px-4 animate-in fade-in duration-700">
+        <Card className="border-primary/20 bg-primary/[0.02] p-8 rounded-2xl shadow-xl border-t-4 border-t-primary/50">
+          <CardHeader className="text-center space-y-4">
+            <div className="mx-auto p-4 bg-primary/10 rounded-full w-fit">
+              <ShieldX className="h-12 w-12 text-primary/70" />
+            </div>
+            <div className="space-y-1">
+              <CardTitle className="font-display text-3xl font-black tracking-tighter text-primary uppercase">
+                Login Diisolasi
+              </CardTitle>
+              <CardDescription className="text-base">
+                Akses internal sementara dinonaktifkan untuk memprioritaskan pengembangan konten publik.
+              </CardDescription>
+            </div>
+          </CardHeader>
+        </Card>
+      </div>
+    );
+  }
+
   if (!isFirebaseInitialized && process.env.NODE_ENV !== 'development') {
     return (
       <div className="max-w-2xl mx-auto py-12 px-4 animate-in fade-in duration-700">
@@ -229,7 +252,7 @@ export function ToolWrapper({
               <div className="flex items-center justify-center gap-2">
                 <div className="h-1.5 w-1.5 rounded-full bg-accent animate-pulse" />
                 <CardDescription className="text-[10px] uppercase font-bold tracking-[0.2em] text-muted-foreground">
-                  SnipGeek Internal Access
+                  SheetHub Internal Access
                 </CardDescription>
               </div>
             </div>

@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { ChevronLeft, ChevronRight, X } from "lucide-react";
 import { cn } from "@/lib/utils";
+/* eslint-disable @next/next/no-img-element */
 import {
   Dialog,
   DialogContent,

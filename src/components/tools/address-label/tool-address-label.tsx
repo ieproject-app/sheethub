@@ -170,7 +170,7 @@ export default function ToolAddressLabel({ locale }: { locale: "id" | "en" }) {
   };
   
   const handleSelectAddress = useCallback((entry: AddressEntry, type: 'sender' | 'receiver') => {
-    const { id, title, ...addressData } = entry;
+    const { ...addressData } = entry;
     if (type === 'sender') {
       setSender(addressData);
     } else {
@@ -296,7 +296,8 @@ export default function ToolAddressLabel({ locale }: { locale: "id" | "en" }) {
       const senderPart = sender.name.split(' ')[0] || 'pengirim';
       const receiverPart = receiver.name.split(' ')[0] || 'penerima';
       const fileName = `Label_${senderPart}_ke_${receiverPart}.pdf`.replace(/\s/g, '_');
-      saveAs(new Blob([pdfBytes as any], { type: 'application/pdf' }), fileName);
+      const normalizedPdfBytes = new Uint8Array(pdfBytes);
+      saveAs(new Blob([normalizedPdfBytes], { type: 'application/pdf' }), fileName);
 
     } catch (e) {
       console.error(e);
