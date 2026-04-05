@@ -11,7 +11,7 @@ import {
   ExternalLink,
   ImageIcon
 } from 'lucide-react';
-import { SnipGeekLogo } from '@/components/icons/snipgeek-logo';
+import { SheetHubLogo } from '@/components/icons/sheethub-logo';
 import { Button } from '@/components/ui/button';
 import { getAuth, signOut } from 'firebase/auth';
 
@@ -34,7 +34,7 @@ export function AdminSidebar() {
     <aside className="w-64 border-r bg-card flex flex-col h-screen sticky top-0">
       <div className="p-6 border-b">
         <Link href="/admin/posts" className="flex items-center gap-3">
-          <SnipGeekLogo className="h-8 w-8" />
+          <SheetHubLogo className="h-8 w-8" />
           <div className="font-display text-xl font-black tracking-tighter">
             Control<span className="text-accent">Panel</span>
           </div>

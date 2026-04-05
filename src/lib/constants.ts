@@ -1,5 +1,5 @@
 /**
- * Centralized localStorage key constants for SnipGeek.
+ * Centralized localStorage key constants for SheetHub.
  *
  * Always use these constants instead of raw string literals when reading
  * from or writing to localStorage. This prevents typo-related bugs and
@@ -14,7 +14,7 @@ export const STORAGE_KEYS = {
    * Only present when the user has manually chosen "light" or "dark".
    * Absent when the user is on "system" mode.
    */
-  THEME_MANUAL_EXPIRE: "snipgeek-theme-manual-expire",
+  THEME_MANUAL_EXPIRE: "sheethub-theme-manual-expire",
 
   /**
    * The active theme string stored by next-themes.

@@ -24,7 +24,7 @@ export async function generateMetadata({
     locale,
     fallbackTitle: "Disclaimer",
     fallbackDescription:
-      "SnipGeek disclaimer — important information about using our content, tutorials, tools, and downloads.",
+      "SheetHub disclaimer — important information about using our content, tutorials, tools, and downloads.",
     robots: { index: true, follow: true },
   });
 }
@@ -59,8 +59,8 @@ export default async function DisclaimerPage({
       maxWidthClassName="max-w-3xl"
       footerNote={
         locale === "id"
-          ? "Dengan menggunakan SnipGeek, Anda mengakui bahwa Anda telah membaca dan memahami Disclaimer ini."
-          : "By using SnipGeek, you acknowledge that you have read and understood this Disclaimer."
+          ? "Dengan menggunakan SheetHub, Anda mengakui bahwa Anda telah membaca dan memahami Disclaimer ini."
+          : "By using SheetHub, you acknowledge that you have read and understood this Disclaimer."
       }
     />
   );

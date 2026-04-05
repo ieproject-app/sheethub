@@ -4,7 +4,7 @@ import { getSortedNotesData } from "@/lib/notes";
 import { shouldIndexTag } from "@/lib/tags";
 import { i18n } from "@/i18n-config";
 
-const DOMAIN = "https://snipgeek.com";
+const DOMAIN = "https://sheethub.web.id";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const routes = [
@@ -20,12 +20,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   ];
 
   // Tools routes yang ingin diindeks
-  const toolRoutes = [
-    "laptop-service-estimator",
-    "bios-keys-boot-menu",
-    "spin-wheel",
-    "random-name-picker",
-  ];
+  const toolRoutes: string[] = [];
 
   // 1. Static Routes
   const staticEntries: MetadataRoute.Sitemap = i18n.locales.flatMap(

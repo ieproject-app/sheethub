@@ -57,7 +57,7 @@ export default async function BlogPage({
             "@type": "CollectionPage",
             name: dictionary.blog.title,
             description: dictionary.blog.description,
-            url: `https://snipgeek.com${linkPrefix}/blog`,
+            url: `https://sheethub.web.id${linkPrefix}/blog`,
           }),
         }}
       />
@@ -72,13 +72,13 @@ export default async function BlogPage({
                 "@type": "ListItem",
                 position: 1,
                 name: dictionary.home.breadcrumbHome,
-                item: "https://snipgeek.com" + (linkPrefix || "/"),
+                item: "https://sheethub.web.id" + (linkPrefix || "/"),
               },
               {
                 "@type": "ListItem",
                 position: 2,
                 name: dictionary.navigation.blog,
-                item: `https://snipgeek.com${linkPrefix}/blog`,
+                item: `https://sheethub.web.id${linkPrefix}/blog`,
               },
             ],
           }),

@@ -14,8 +14,8 @@
     "viewProfile": "Lihat Profil Saya"
   },
   "home": {
-    "title": "SnipGeek - Windows dan Ubuntu: Tutorial, Troubleshooting, dan Update Penting",
-    "description": "Tutorial Windows dan Ubuntu, panduan troubleshooting, dan update penting untuk pengguna harian.",
+    "title": "SheetHub - Excel dan Google Sheets: Tutorial, Rumus, dan Update Cepat",
+    "description": "Tutorial Excel dan Google Sheets, panduan rumus praktis, dan update cepat untuk alur kerja harian.",
     "featuredPosts": "Postingan Unggulan",
     "latestPosts": "Postingan Terbaru",
     "viewAllPosts": "Lihat Semua Postingan",
@@ -39,8 +39,8 @@
     "description": "Catatan teknis pribadi dan referensi cepat."
   },
   "about": {
-    "title": "Tentang SnipGeek",
-    "description": "Cerita di balik SnipGeek, alasan blog ini dibangun, dan cara saya bekerja di baliknya.",
+    "title": "Tentang SheetHub",
+    "description": "Cerita di balik SheetHub, alasan blog ini dibangun, dan cara saya bekerja di baliknya.",
     "experience": "Sorotan Pengalaman",
     "skills": "Kekuatan Inti",
     "education": "Pendidikan",
@@ -54,180 +54,42 @@
   },
   "tools": {
     "title": "Alat",
-    "description": "Kumpulan alat bantu untuk alur kerja saya.",
-    "public_section": "Alat Publik",
-    "internal_section": "Alat Internal",
-    "wip": "Halaman ini sedang dalam tahap pembuatan.",
-    "internal": "Internal",
+    "description": "Alat spreadsheet terfokus dan utilitas editorial internal untuk SheetHub.",
+    "hero_kicker": "Workspace berfokus Excel",
+    "hero_title": "Alat kecil untuk spreadsheet yang lebih rapi dan eksekusi yang lebih cepat.",
+    "hero_body": "Halaman ini sekarang sengaja dipersempit: utilitas praktis untuk operasi berbasis spreadsheet dan satu alur prompt internal untuk produksi editorial SheetHub.",
+    "hero_scope_label": "Fokus utama",
+    "hero_scope_value": "Impor Excel, perapian data spreadsheet, dan output label yang konsisten",
+    "hero_access_label": "Model akses",
+    "hero_access_value": "Tool internal tim dengan login Google yang terkontrol",
+    "hero_workflow_label": "Cocok untuk",
+    "hero_workflow_value": "Pengolahan spreadsheet harian, operasi ringan, dan perencanaan konten",
+    "spreadsheet_section_title": "Alat Spreadsheet",
+    "spreadsheet_section_desc": "Utilitas yang masih bergantung pada data baris terstruktur, impor workbook, atau alur kerja yang bentuk datanya seperti spreadsheet.",
+    "editorial_section_title": "Alat Editorial",
+    "editorial_section_desc": "Helper khusus mode pengembangan yang dipakai untuk merencanakan konten spreadsheet dan arah editorial SheetHub.",
+    "login_title": "Login Member Diperlukan",
+    "login_desc": "Masuk dengan akun SheetHub Anda untuk mengakses utilitas spreadsheet internal dan alur editorial yang terkontrol.",
+    "login_button": "Lanjut dengan Google",
+    "restricted_label": "Terbatas",
+    "verifying_access": "Memverifikasi Akses...",
     "open_tool": "Buka Alat",
     "coming_soon": "Segera Hadir",
-    "new_badge": "Baru",
     "tool_list": {
-      "bios_keys": {
-        "title": "Tombol BIOS & Boot Menu",
-        "description": "Temukan tombol pengaturan BIOS/UEFI dan pintasan Boot Menu untuk semua merek laptop dan motherboard utama."
-      },
       "ai_prompt_generator": {
-        "title": "AI Article Prompt Generator",
-        "description": "Buat prompt terstruktur untuk meminta artikel baru dengan detail yang lengkap."
-      },
-      "number_to_words": {
-        "title": "Generator Terbilang",
-        "description": "Mengubah angka menjadi bentuk tulisan dalam Bahasa Indonesia."
-      },
-      "random_name": {
-        "title": "Pemilih Nama Acak",
-        "description": "Pilih nama secara acak dari sebuah daftar, cocok untuk undian."
-      },
-      "employee_history": {
-        "title": "Riwayat Karyawan",
-        "description": "Catatan pribadi untuk melacak riwayat kerja dan kinerja karyawan."
-      },
-      "number_generator": {
-        "title": "Generator Nomor",
-        "description": "Menghasilkan nomor urut unik untuk keperluan pelacakan internal."
-      },
-      "spin_wheel": {
-        "title": "Spin Wheel",
-        "description": "Roda putar interaktif untuk pengacakan. Masukkan daftar nama, putar, dan dapatkan pemenang secara acak. Tersedia mode raffle, template, dan efek suara."
-      },
-      "image_crop": {
-        "title": "Potong Gambar",
-        "description": "Potong ke rasio 16:9 dan ekspor WebP untuk banner hero."
-      },
-      "compress_pdf": {
-        "title": "Kompres PDF",
-        "description": "Perkecil ukuran file PDF Anda tanpa mengurangi kualitas secara signifikan."
-      },
-      "signatories_index": {
-        "title": "Indeks Penandatangan",
-        "description": "Kelola dan cari daftar penandatangan dokumen secara terpusat."
+        "title": "AI Prompt Generator Konten Spreadsheet",
+        "description": "Buat prompt terstruktur untuk artikel, catatan, dan perencanaan editorial yang fokus ke spreadsheet."
       },
       "address_label": {
-        "title": "Label Alamat",
-        "description": "Generate label alamat pengiriman yang rapi untuk amplop dan paket."
+        "title": "Label Alamat dari Spreadsheet",
+        "description": "Impor dan ekspor buku alamat Excel, lalu generate label pengiriman PDF yang rapi."
       }
-    },
-    "image_crop": {
-      "invalidImageFile": "Silakan unggah file gambar yang valid.",
-      "downloaded": "Diunduh: {filename} ({size})",
-      "dropTitle": "Letakkan gambar di sini",
-      "dropDescription": "atau klik untuk menjelajah - PNG, JPG, dan WebP didukung.",
-      "pasteHint": "Anda juga bisa Ctrl+V / Cmd+V untuk menempel",
-      "outputBadge": "Output: 16:9 .webp",
-      "original": "Asli",
-      "ratio": "Rasio",
-      "target": "Target 16:9",
-      "already169": "Sudah 16:9",
-      "horizontal": "Horizontal",
-      "vertical": "Vertikal",
-      "noAdjustment": "tidak ada penyesuaian",
-      "center": "Tengah",
-      "webpQuality": "Kualitas WebP",
-      "qualityHigh": "Kelas-lossless",
-      "qualityBalanced": "Seimbang",
-      "qualitySmall": "Ukuran kecil",
-      "defaultLabel": "85% default",
-      "outputLabel": "Output:",
-      "clientSideInfo": "100% client-side, tidak ada unggahan.",
-      "downloadButton": "Unduh WebP",
-      "loadAnother": "Muat Gambar Lain",
-      "dragHint": "Seret untuk reposisi",
-      "removeImage": "Hapus gambar",
-      "previewAlt": "Pratinjau crop",
-      "howTo": [
-        {
-          "step": "01",
-          "title": "Unggah Gambar",
-          "desc": "Letakkan atau pilih gambar apa pun dari screenshot atau file."
-        },
-        {
-          "step": "02",
-          "title": "Seret untuk Reposisi",
-          "desc": "Klik dan seret pratinjau langsung untuk memposisikan jendela crop 16:9."
-        },
-        {
-          "step": "03",
-          "title": "Unduh WebP",
-          "desc": "Dapatkan .webp yang dipotong dengan sempurna siap digunakan di artikel Anda."
-        }
-      ]
-    },
-    "random_name": {
-      "title": "Pemilih Nama Acak",
-      "description": "Pilih nama secara acak dari sebuah daftar, cocok untuk undian.",
-      "enterNames": "Masukkan Nama",
-      "namesPlaceholder": "Masukkan nama, satu per baris...",
-      "namesEntered": "nama dimasukkan",
-      "import": "Impor",
-      "settings": "Pengaturan",
-      "numberOfWinners": "Jumlah Pemenang",
-      "separator": "Pemisah",
-      "removeWinners": "Hapus pemenang dari pool",
-      "soundEffects": "Efek suara",
-      "advancedSettings": "Pengaturan Lanjutan",
-      "animationDuration": "Durasi Animasi (ms)",
-      "pickWinners": "Pilih Pemenang",
-      "reset": "Reset",
-      "saveList": "Simpan Daftar",
-      "present": "Presentasi",
-      "exportWinners": "Ekspor Pemenang",
-      "allParticipants": "Semua Peserta",
-      "search": "Cari...",
-      "pickHistory": "Riwayat Pemilihan",
-      "noHistoryYet": "Belum ada riwayat",
-      "saveListTitle": "Simpan Daftar",
-      "saveListDescription": "Masukkan nama untuk daftar ini untuk menyimpannya digunakan nanti.",
-      "listName": "Nama daftar...",
-      "cancel": "Batal",
-      "save": "Simpan",
-      "savedLists": "Daftar Tersimpan",
-      "noSavedLists": "Tidak ada daftar tersimpan",
-      "loadList": "Muat Daftar",
-      "names": "nama",
-      "winnersWillAppearHere": "Pemenang akan muncul di sini",
-      "exitPresentationMode": "Keluar mode presentasi",
-      "winnerRevealSingle": "Pemenang",
-      "winnerRevealPlural": "Pemenang",
-      "readyToPick": "Siap Memilih",
-      "startPicking": "Mulai Memilih",
-      "pickAgain": "Pilih Lagi",
-      "starting": "Memulai...",
-      "picking": "Memilih...",
-      "notEnoughNames": "Nama tidak cukup",
-      "notEnoughNamesDesc": "Hanya {count} nama yang tersedia untuk dipilih.",
-      "noNames": "Tidak ada nama",
-      "noNamesDesc": "Silakan masukkan setidaknya satu nama.",
-      "listSaved": "Daftar berhasil disimpan!",
-      "listLoaded": "Dimuat",
-      "listDeleted": "Daftar dihapus",
-      "winnersExported": "Pemenang berhasil diekspor!",
-      "fileImported": "File berhasil diimpor!",
-      "shuffle": "Acak",
-      "clearAll": "Hapus Semua",
-      "clearAllConfirmTitle": "Hapus Semua?",
-      "clearAllConfirmDescription": "Ini akan menghapus semua nama, pemenang, dan riwayat pemilihan. Tindakan ini tidak dapat dibatalkan.",
-      "confirmClear": "Ya, Hapus Semua",
-      "totalLabel": "Total",
-      "selectedLabel": "Dipilih",
-      "availableLabel": "Tersedia",
-      "pickedTimes": "\u00d7{count}",
-      "noNamesYet": "Belum ada nama yang dimasukkan",
-      "searchParticipants": "Cari peserta\u2026",
-      "winnersTab": "Pemenang",
-      "participantsTab": "Peserta",
-      "historyTab": "Riwayat",
-      "countdownDuration": "Hitung Mundur (d)",
-      "startingIn": "Mulai dalam",
-      "allCleared": "Semua Dihapus",
-      "less": "Kurang",
-      "export": "Ekspor"
     },
     "systemNotReady": {
       "title": "SISTEM BELUM SIAP",
       "description": "Aplikasi belum bisa mendeteksi Kunci API dari dashboard Firebase Mas Iwan.",
       "step1": "LANGKAH 1: HUBUNGKAN & SIMPAN",
-      "step1Desc": "Pilih repositori SnipGeek di tab Deployment dan klik Save.",
+      "step1Desc": "Pilih repositori SheetHub di tab Deployment dan klik Save.",
       "step2": "LANGKAH 2: START ROLLOUT (WAJIB)",
       "step2Desc": "Buka tab Rollouts dan klik Start Rollout untuk menyeduh variabel terbaru.",
       "step3": "LANGKAH 3: CEK PREFIX",
@@ -339,7 +201,7 @@
     "seriesTargetLabel": "Target Pembaca",
     "seriesToneLabel": "Petunjuk Tone",
     "newsSourceUrlsLabel": "URL Sumber",
-    "newsAngleLabel": "Angle SnipGeek",
+    "newsAngleLabel": "Angle SheetHub",
     "tipsStandaloneLabel": "Mode Standalone",
     "notesIntentLabel": "Intent Catatan",
     "notesIntentFinding": "Temuan",

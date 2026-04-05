@@ -1,6 +1,6 @@
-# SnipGeek Project Structure Guide
+# SheetHub Project Structure Guide
 
-This document defines the **canonical structure** of the SnipGeek repository.
+This document defines the **canonical structure** of the SheetHub repository.
 
 It is written for:
 
@@ -14,7 +14,7 @@ If there is a conflict between convenience and consistency, prefer **consistency
 
 ## 1. Core Principles
 
-SnipGeek is organized around a few clear boundaries:
+SheetHub is organized around a few clear boundaries:
 
 1. **`src/` is for runtime application code**
 2. **`docs/` is for internal project documentation**
@@ -175,7 +175,7 @@ If a file does not directly support the running app, it probably does **not** be
 
 ## 4. Route Rules
 
-SnipGeek uses localized routes under:
+SheetHub uses localized routes under:
 
 - `src/app/[locale]/...`
 
@@ -228,7 +228,7 @@ That makes maintenance harder and encourages AI to generate inconsistent page st
 
 ## 6. Content Model Rules
 
-SnipGeek currently uses three public content collections:
+SheetHub currently uses three public content collections:
 
 - blog posts → `_posts/`
 - notes → `_notes/`
@@ -519,7 +519,7 @@ If you are unsure where something belongs, ask:
 ## 18. Common Pitfalls (AI & Human)
 
 ### The "src/content" Hallucination
-Many modern Next.js templates or documentation suggest a `src/content` folder. **SnipGeek does NOT use this.** 
+Many modern Next.js templates or documentation suggest a `src/content` folder. **SheetHub does NOT use this.** 
 If you see or feel tempted to create `src/content/_posts`, STOP. The correct path is `_posts/` at the root.
 
 ### MDX Component Usage
@@ -530,7 +530,7 @@ If you see or feel tempted to create `src/content/_posts`, STOP. The correct pat
 
 ## 19. Canonical Summary
 
-For SnipGeek:
+For SheetHub:
 
 - `src/` = runtime code
 - `docs/` = internal documentation

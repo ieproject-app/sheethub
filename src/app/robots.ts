@@ -11,6 +11,6 @@ export default function robots(): MetadataRoute.Robots {
       allow: '/',
       disallow: ['/api/', '/_next/'],
     },
-    sitemap: 'https://snipgeek.com/sitemap.xml',
+    sitemap: 'https://sheethub.web.id/sitemap.xml',
   };
 }

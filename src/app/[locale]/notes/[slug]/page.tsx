@@ -68,8 +68,8 @@ export async function generateMetadata({
   const ogImageUrl = heroSource
     ? heroSource.src.startsWith("http")
       ? heroSource.src
-      : `https://snipgeek.com${heroSource.src}`
-    : "https://snipgeek.com/opengraph-image";
+      : `https://sheethub.web.id${heroSource.src}`
+    : "https://sheethub.web.id/opengraph-image";
 
   return {
     title: note.frontmatter.title,
@@ -83,7 +83,7 @@ export async function generateMetadata({
     },
     openGraph: {
       type: "article",
-      url: `https://snipgeek.com${canonicalPath}`,
+      url: `https://sheethub.web.id${canonicalPath}`,
       title: note.frontmatter.title,
       description: note.frontmatter.description,
       images: [
@@ -160,8 +160,8 @@ export default async function Page({
   const ogImageUrl = heroSourceOg
     ? heroSourceOg.src.startsWith("http")
       ? heroSourceOg.src
-      : `https://snipgeek.com${heroSourceOg.src}`
-    : "https://snipgeek.com/images/logo/logo.svg";
+      : `https://sheethub.web.id${heroSourceOg.src}`
+    : "https://sheethub.web.id/images/logo/logo.svg";
 
   const canonicalPath =
     locale === i18n.defaultLocale
@@ -256,19 +256,19 @@ export default async function Page({
             "author": {
               "@type": "Person",
               "name": "Iwan Efendi",
-              "url": "https://snipgeek.com/about",
+              "url": "https://sheethub.web.id/about",
             },
             "publisher": {
               "@type": "Organization",
-              "name": "SnipGeek",
+              "name": "SheetHub",
               "logo": {
                 "@type": "ImageObject",
-                "url": "https://snipgeek.com/images/logo/logo.svg",
+                "url": "https://sheethub.web.id/images/logo/logo.svg",
               },
             },
             "mainEntityOfPage": {
               "@type": "WebPage",
-              "@id": `https://snipgeek.com${canonicalPath}`,
+              "@id": `https://sheethub.web.id${canonicalPath}`,
             },
           }),
         }}
@@ -284,7 +284,7 @@ export default async function Page({
               "position": index + 1,
               "name": segment.label,
               "item": segment.href
-                ? `https://snipgeek.com${segment.href}`
+                ? `https://sheethub.web.id${segment.href}`
                 : undefined,
             })),
           }),

@@ -6,7 +6,7 @@ export async function GET() {
     return NextResponse.json({ error: "Not found" }, { status: 404 });
   }
 
-  // Fetch tags from the primary locale (en) — tags are locale-agnostic in SnipGeek
+  // Fetch tags from the primary locale (en) — tags are locale-agnostic in SheetHub
   const tags = await getAllTags("en");
 
   return NextResponse.json({ tags });

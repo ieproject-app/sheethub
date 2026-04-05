@@ -65,7 +65,7 @@ export default async function TagsPage({
                         "@type": "CollectionPage",
                         name: dictionary.tags.allTagsTitle,
                         description: dictionary.tags.allTagsDescription,
-                        url: `https://snipgeek.com${linkPrefix}/tags`,
+                        url: `https://sheethub.web.id${linkPrefix}/tags`,
                     }),
                 }}
             />
@@ -80,13 +80,13 @@ export default async function TagsPage({
                                 "@type": "ListItem",
                                 position: 1,
                                 name: dictionary.home.breadcrumbHome,
-                                item: "https://snipgeek.com" + (linkPrefix || "/"),
+                                item: "https://sheethub.web.id" + (linkPrefix || "/"),
                             },
                             {
                                 "@type": "ListItem",
                                 position: 2,
                                 name: dictionary.tags.allTagsTitle,
-                                item: `https://snipgeek.com${linkPrefix}/tags`,
+                                item: `https://sheethub.web.id${linkPrefix}/tags`,
                             },
                         ],
                     }),

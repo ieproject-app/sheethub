@@ -25,8 +25,8 @@ export async function generateMetadata({
     fallbackTitle: locale === "id" ? "Kontak" : "Contact",
     fallbackDescription:
       locale === "id"
-        ? "Hubungi SnipGeek untuk pertanyaan, masukan, kolaborasi, atau hal lain terkait konten."
-        : "Get in touch with SnipGeek for questions, feedback, collaboration, or content-related inquiries.",
+        ? "Hubungi SheetHub untuk pertanyaan, masukan, kolaborasi, atau hal lain terkait konten."
+        : "Get in touch with SheetHub for questions, feedback, collaboration, or content-related inquiries.",
   });
 }
 

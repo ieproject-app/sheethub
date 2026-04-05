@@ -81,7 +81,7 @@ export default async function TagPage({
   );
 
   const linkPrefix = getLinkPrefix(locale);
-  const canonicalUrl = `https://snipgeek.com${linkPrefix}/tags/${tag}`;
+  const canonicalUrl = `https://sheethub.web.id${linkPrefix}/tags/${tag}`;
   const displayTag = decodedTag.toUpperCase();
 
   return (
@@ -109,13 +109,13 @@ export default async function TagPage({
                 "@type": "ListItem",
                 position: 1,
                 name: dictionary.home.breadcrumbHome,
-                item: "https://snipgeek.com" + (linkPrefix || "/"),
+                item: "https://sheethub.web.id" + (linkPrefix || "/"),
               },
               {
                 "@type": "ListItem",
                 position: 2,
                 name: dictionary.tags.allTagsTitle,
-                item: `https://snipgeek.com${linkPrefix}/tags`,
+                item: `https://sheethub.web.id${linkPrefix}/tags`,
               },
               {
                 "@type": "ListItem",

@@ -1,7 +1,7 @@
 import { ImageResponse } from 'next/og'
 import type { Locale } from '@/i18n-config'
 
-export const alt = 'SnipGeek - Windows dan Ubuntu: Tutorial, Troubleshooting, dan Update Penting'
+export const alt = 'SheetHub - Excel dan Google Sheets: Tutorial, Rumus, dan Update Cepat'
 export const size = { width: 1200, height: 630 }
 export const contentType = 'image/png'
 
@@ -10,17 +10,17 @@ export default async function Image({ params }: { params: Promise<{ locale: Loca
   const isId = locale === 'id'
 
   const tagline = isId
-    ? 'Tutorial Windows & Ubuntu, Troubleshooting, dan Update Penting'
-    : 'Windows & Ubuntu Tutorials, Troubleshooting, and Important Updates'
+    ? 'Tutorial Excel & Google Sheets, Rumus Praktis, dan Update Cepat'
+    : 'Excel and Google Sheets tutorials, practical formulas, and quick updates'
 
-  const accent = '#0488c7'
-  const accentDark = '#036da0'
+  const accent = '#0F9D58'
+  const accentDark = '#217346'
 
   return new ImageResponse(
     (
       <div
         style={{
-          background: 'linear-gradient(135deg, #0f172a 0%, #1a2744 60%, #0f172a 100%)',
+          background: 'linear-gradient(135deg, #102315 0%, #163d25 58%, #102315 100%)',
           width: '100%',
           height: '100%',
           display: 'flex',
@@ -54,7 +54,7 @@ export default async function Image({ params }: { params: Promise<{ locale: Loca
             width: 480,
             height: 480,
             borderRadius: '50%',
-            background: `rgba(4, 136, 199, 0.07)`,
+            background: `rgba(15, 157, 88, 0.08)`,
             display: 'flex',
           }}
         />
@@ -68,7 +68,7 @@ export default async function Image({ params }: { params: Promise<{ locale: Loca
             width: 560,
             height: 560,
             borderRadius: '50%',
-            background: `rgba(4, 136, 199, 0.04)`,
+            background: `rgba(33, 115, 70, 0.08)`,
             display: 'flex',
           }}
         />
@@ -84,7 +84,7 @@ export default async function Image({ params }: { params: Promise<{ locale: Loca
               alignItems: 'center',
               justifyContent: 'center',
               background: `linear-gradient(135deg, ${accent}, ${accentDark})`,
-              boxShadow: `0 8px 40px rgba(4, 136, 199, 0.5)`,
+              boxShadow: `0 8px 40px rgba(15, 157, 88, 0.45)`,
             }}
           >
             <span style={{ fontSize: 48, fontWeight: 900, color: 'white' }}>S</span>
@@ -97,7 +97,7 @@ export default async function Image({ params }: { params: Promise<{ locale: Loca
               letterSpacing: '-2px',
             }}
           >
-            SnipGeek
+            SheetHub
           </span>
         </div>
 
@@ -118,15 +118,15 @@ export default async function Image({ params }: { params: Promise<{ locale: Loca
 
         {/* Topic chips */}
         <div style={{ display: 'flex', gap: 14 }}>
-          {['Windows', 'Ubuntu', 'Tutorial', 'Tools'].map((tag) => (
+          {['Excel', 'Google Sheets', 'Formula', 'Automation'].map((tag) => (
             <div
               key={tag}
               style={{
                 padding: '10px 24px',
                 borderRadius: 100,
-                background: 'rgba(4, 136, 199, 0.13)',
-                border: '1px solid rgba(4, 136, 199, 0.35)',
-                color: '#38bdf8',
+                background: 'rgba(15, 157, 88, 0.2)',
+                border: '1px solid rgba(15, 157, 88, 0.45)',
+                color: '#86efac',
                 fontSize: 20,
                 fontWeight: 600,
                 display: 'flex',
@@ -151,7 +151,7 @@ export default async function Image({ params }: { params: Promise<{ locale: Loca
             fontWeight: 700,
           }}
         >
-          snipgeek.com
+          sheethub.web.id
         </div>
 
         {/* Bottom accent bar */}

@@ -400,7 +400,7 @@ export function DownloadClient({
       </main>
 
       <footer className="mt-8 opacity-20 text-center">
-        <p className="text-[8px] font-black uppercase tracking-[0.3em]">© SNIPGEEK SECURE DELIVERY</p>
+        <p className="text-[8px] font-black uppercase tracking-[0.3em]">© SHEETHUB SECURE DELIVERY</p>
       </footer>
     </div>
   );

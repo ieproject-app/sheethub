@@ -19,6 +19,8 @@ export interface SearchParams {
   pageTextItems: TextItem[];
 }
 
+type SearchStrategy = (params: SearchParams) => SearchResult[];
+
 const SIGNATURE_KEYWORDS = [
     'hormat saya', 'sincerely', 'regards', 'best regards', 'yours truly',
     'tertanda', 'signed',
@@ -191,9 +193,9 @@ function structuralSearch({ name, pageNumber, pageTextItems }: Omit<SearchParams
 
 // --- Main Export ---
 
-export const searchStrategies: Record<SearchMode, (params: any) => SearchResult[]> & { reconstructTextFromItems: typeof reconstructTextFromItems } = {
-  fast: fastSearch,
-  accurate: accurateSearch,
-  structural: structuralSearch,
+export const searchStrategies: Record<SearchMode, SearchStrategy> & { reconstructTextFromItems: typeof reconstructTextFromItems } = {
+    fast: (params) => fastSearch(params),
+    accurate: (params) => accurateSearch(params),
+    structural: (params) => structuralSearch(params),
   reconstructTextFromItems: reconstructTextFromItems,
 };

@@ -6,7 +6,7 @@ import { X, Globe } from "lucide-react";
 import { cn } from "@/lib/utils";
 import type { Dictionary } from "@/lib/get-dictionary";
 
-const DISMISS_KEY = "snipgeek-locale-suggestion-dismissed";
+const DISMISS_KEY = "sheethub-locale-suggestion-dismissed";
 const ONE_YEAR_SECONDS = 31536000;
 
 type TranslationEntry = {
@@ -72,7 +72,8 @@ export function LocaleSuggestionBanner({
     if (dismissed || preferredLocaleCookie === "en") return;
     if (!hasIndonesianPreference()) return;
 
-    setVisible(true);
+    const timer = window.setTimeout(() => setVisible(true), 0);
+    return () => window.clearTimeout(timer);
   }, [locale]);
 
   const handleDismiss = () => {

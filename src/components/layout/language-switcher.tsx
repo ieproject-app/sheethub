@@ -34,7 +34,7 @@ export function LanguageSwitcher(props: {
   const handleLocaleChange = (locale: Locale) => {
     if (locale === currentLocale) return;
     setPreferredLocaleCookie(locale);
-    localStorage.removeItem("snipgeek-pending-notify");
+    localStorage.removeItem("sheethub-pending-notify");
     router.push(redirectedPathName(locale), { scroll: false });
   };
 

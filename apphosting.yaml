@@ -4,25 +4,31 @@ runConfig:
 
 env:
   - variable: NEXT_PUBLIC_FIREBASE_API_KEY
-    secret: FIREBASE_API_KEY
+    value: "AIzaSyCItw_Kf9VZ8kacI9DpwI1oOef1vgrTI1M"
     availability:
       - BUILD
       - RUNTIME
 
   - variable: NEXT_PUBLIC_FIREBASE_PROJECT_ID
-    value: "studio-8697076532-14512"
+    value: "sheethub-next"
     availability:
       - BUILD
       - RUNTIME
 
   - variable: NEXT_PUBLIC_FIREBASE_APP_ID
-    value: "1:910122792787:web:183c7da1ae114ac74ad3a6"
+    value: "1:965836423112:web:a3e4763eca0e1a46378afd"
     availability:
       - BUILD
       - RUNTIME
 
   - variable: NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN
-    value: "studio-8697076532-14512.firebaseapp.com"
+    value: "sheethub-next.firebaseapp.com"
+    availability:
+      - BUILD
+      - RUNTIME
+
+  - variable: NEXT_PUBLIC_ENABLE_LOGIN
+    value: "false"
     availability:
       - BUILD
       - RUNTIME

@@ -87,7 +87,7 @@ function ArticleSelectorCard() {
                   Total {articleStats.draft} draft · {staleDraftCount} stale (&ge;30d)
                 </p>
                 <div className="mt-2 flex flex-wrap gap-1.5">
-                  {urgentDrafts.map((article: any) => {
+                  {urgentDrafts.map((article) => {
                     const ageDays = getDraftAgeDays(article.date);
                     const isStale = ageDays !== null && ageDays >= 30;
 
@@ -128,7 +128,7 @@ function ArticleSelectorCard() {
                   No articles found.
                 </p>
               )}
-              {filteredArticles.map((article: any) => (
+              {filteredArticles.map((article) => (
                 <button
                   key={article.slug}
                   onClick={() => setSelectedSlug(article.slug)}
@@ -201,12 +201,12 @@ function WorkflowContextCard() {
             <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
               <div className="space-y-1.5">
                 <p className="text-[9px] font-black uppercase tracking-wider text-muted-foreground">{dictionary.seriesPhaseLabel}</p>
-                <Select value={seriesPhase} onValueChange={(v) => setSeriesPhase(v as any)}>
+                <Select value={seriesPhase} onValueChange={(v) => setSeriesPhase(v as typeof seriesPhase)}>
                   <SelectTrigger className="h-9 border-primary/10 bg-background/50 text-xs">
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
-                    {seriesPhaseOptions.map((p: any) => (
+                    {seriesPhaseOptions.map((p) => (
                       <SelectItem key={p.value} value={p.value}>{p.label}</SelectItem>
                     ))}
                   </SelectContent>
@@ -273,7 +273,7 @@ function WorkflowContextCard() {
                 <Input
                   value={newsAngle}
                   onChange={(e) => setNewsAngle(e.target.value)}
-                  placeholder={isIndonesianLocale ? "Contoh: fokus ke dampak untuk daily Ubuntu user" : "Example: focus on impact for daily Ubuntu users"}
+                  placeholder={isIndonesianLocale ? "Contoh: fokus ke dampak untuk tim yang pakai Google Sheets setiap hari" : "Example: focus on impact for teams using Google Sheets daily"}
                   className="h-9 border-primary/10 bg-background/50 text-xs"
                 />
               </div>
@@ -291,7 +291,7 @@ function WorkflowContextCard() {
             <div className="space-y-3">
               <div className="space-y-1.5">
                 <p className="text-[9px] font-black uppercase tracking-wider text-muted-foreground">{dictionary.notesIntentLabel}</p>
-                <Select value={noteIntent} onValueChange={(v) => setNoteIntent(v as any)}>
+                <Select value={noteIntent} onValueChange={(v) => setNoteIntent(v as typeof noteIntent)}>
                   <SelectTrigger className="h-9 border-primary/10 bg-background/50 text-xs">
                     <SelectValue />
                   </SelectTrigger>
@@ -304,8 +304,8 @@ function WorkflowContextCard() {
               </div>
               <p className="text-[10px] text-muted-foreground">
                 {isIndonesianLocale
-                  ? "Catatan diarahkan ke _notes/{locale}/{YYYY-H1 atau YYYY-H2}/ berdasarkan tanggal artikel."
-                  : "Notes are routed to _notes/{locale}/{YYYY-H1 or YYYY-H2}/ based on the article date."}
+                  ? "Catatan diarahkan langsung ke _notes/{locale}/ tanpa subfolder tambahan."
+                  : "Notes are routed directly to _notes/{locale}/ without extra subfolders."}
               </p>
             </div>
           )}
@@ -412,7 +412,7 @@ function TechnicalTabsCard() {
                    <div className="mt-3 grid grid-cols-2 gap-2">
                       <div className="space-y-1">
                         <p className="text-[9px] font-black uppercase tracking-wider text-muted-foreground">Mode</p>
-                        <Select value={captionMode} onValueChange={setCaptionMode as any}>
+                        <Select value={captionMode} onValueChange={(v) => setCaptionMode(v as typeof captionMode)}>
                           <SelectTrigger className="h-8 border-primary/10 bg-background/60 text-[10px]">
                             <SelectValue />
                           </SelectTrigger>
@@ -425,7 +425,7 @@ function TechnicalTabsCard() {
                       </div>
                       <div className="space-y-1">
                         <p className="text-[9px] font-black uppercase tracking-wider text-muted-foreground">Alignment</p>
-                        <Select value={captionAlignment} onValueChange={setCaptionAlignment as any}>
+                        <Select value={captionAlignment} onValueChange={(v) => setCaptionAlignment(v as typeof captionAlignment)}>
                           <SelectTrigger className="h-8 border-primary/10 bg-background/60 text-[10px]">
                             <SelectValue />
                           </SelectTrigger>
@@ -438,7 +438,7 @@ function TechnicalTabsCard() {
                       </div>
                       <div className="space-y-1">
                         <p className="text-[9px] font-black uppercase tracking-wider text-muted-foreground">Coverage</p>
-                        <Select value={captionCoverage} onValueChange={setCaptionCoverage as any}>
+                        <Select value={captionCoverage} onValueChange={(v) => setCaptionCoverage(v as typeof captionCoverage)}>
                           <SelectTrigger className="h-8 border-primary/10 bg-background/60 text-[10px]">
                             <SelectValue />
                           </SelectTrigger>
@@ -463,9 +463,9 @@ function TechnicalTabsCard() {
 
             {showDownloads && (
               <TabsContent value="downloads" className="space-y-3 m-0 border-none outline-none">
-                 {downloadItems.map((item: any, index: number) => (
+                 {downloadItems.map((item, index: number) => (
                    <div key={item.id} className="flex items-center gap-2 rounded-lg border border-primary/5 bg-background/30 p-2">
-                     <Select value={item.type} onValueChange={(val) => updateDownloadItem(item.id, { type: val as any, value: "" })}>
+                     <Select value={item.type} onValueChange={(val) => updateDownloadItem(item.id, { type: val as "id" | "url", value: "" })}>
                        <SelectTrigger className="h-7 w-15 border-primary/10 text-[9px]">
                          <SelectValue />
                        </SelectTrigger>

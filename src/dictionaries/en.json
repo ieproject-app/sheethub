@@ -14,8 +14,8 @@
     "viewProfile": "View My Profile"
   },
   "home": {
-    "title": "SnipGeek - Windows dan Ubuntu: Tutorial, Troubleshooting, dan Update Penting",
-    "description": "Windows and Ubuntu tutorials, troubleshooting guides, and important updates for daily users.",
+    "title": "SheetHub - Excel and Google Sheets: Tutorials, Formulas, and Quick Updates",
+    "description": "Excel and Google Sheets tutorials, practical formula guides, and quick updates for daily workflows.",
     "featuredPosts": "Featured Posts",
     "latestPosts": "Latest Posts",
     "viewAllPosts": "View All Posts",
@@ -39,8 +39,8 @@
     "description": "Personal technical snippets and quick references."
   },
   "about": {
-    "title": "About Iwan & SnipGeek",
-    "description": "The story behind SnipGeek, why it exists, and the practical mindset behind the work.",
+    "title": "About Iwan & SheetHub",
+    "description": "The story behind SheetHub, why it exists, and the practical mindset behind the work.",
     "experience": "Experience Highlights",
     "skills": "Core Strengths",
     "education": "Education",
@@ -48,186 +48,48 @@
     "downloadResume": "Download Full Resume",
     "getInTouch": "Let's Connect",
     "summary": "Signature Summary",
-    "story": "About SnipGeek",
+    "story": "About SheetHub",
     "workflow": "Device & Workflow",
     "philosophy": "Writing Philosophy"
   },
   "tools": {
     "title": "Tools",
-    "description": "A collection of helper tools for my workflow.",
-    "public_section": "Public Tools",
-    "internal_section": "Internal Tools",
-    "wip": "This page is under construction.",
-    "internal": "Internal",
+    "description": "Focused spreadsheet helpers and internal editorial utilities for SheetHub.",
+    "hero_kicker": "Excel-first workspace",
+    "hero_title": "Small tools for cleaner spreadsheets and faster execution.",
+    "hero_body": "This workspace now stays intentionally narrow: practical utilities for spreadsheet-driven operations and one internal prompt workflow for SheetHub editorial production.",
+    "hero_scope_label": "Primary focus",
+    "hero_scope_value": "Excel imports, spreadsheet cleanup, and repeatable label output",
+    "hero_access_label": "Access model",
+    "hero_access_value": "Internal team tools with controlled Google login",
+    "hero_workflow_label": "Workflow fit",
+    "hero_workflow_value": "Daily spreadsheet handling, lightweight ops, and content planning",
+    "spreadsheet_section_title": "Spreadsheet Tools",
+    "spreadsheet_section_desc": "Utilities that still depend on structured rows, workbook imports, or spreadsheet-shaped operational data.",
+    "editorial_section_title": "Editorial Tools",
+    "editorial_section_desc": "Development-only helpers used to plan SheetHub spreadsheet content and editorial direction.",
+    "login_title": "Member Login Required",
+    "login_desc": "Sign in with your SheetHub account to access internal spreadsheet utilities and controlled editorial workflows.",
+    "login_button": "Continue with Google",
+    "restricted_label": "Restricted",
+    "verifying_access": "Verifying Access...",
     "open_tool": "Open Tool",
     "coming_soon": "Coming Soon",
-    "new_badge": "New",
     "tool_list": {
-      "bios_keys": {
-        "title": "BIOS & Boot Menu Keys",
-        "description": "Find the correct BIOS/UEFI setup keys and Boot Menu shortcuts for all major laptop and motherboard brands."
-      },
       "ai_prompt_generator": {
-        "title": "AI Article Prompt Generator",
-        "description": "Create a structured prompt to request a new article with complete details."
-      },
-      "number_to_words": {
-        "title": "Number to Words Generator",
-        "description": "Convert numbers into their written-out form in Indonesian."
-      },
-      "random_name": {
-        "title": "Random Name Picker",
-        "description": "Randomly select a name from a list, perfect for giveaways."
-      },
-      "employee_history": {
-        "title": "Employee History",
-        "description": "A private log for tracking employee work history and performance."
-      },
-      "number_generator": {
-        "title": "Number Generator",
-        "description": "Generate unique sequential numbers for internal tracking purposes."
-      },
-      "spin_wheel": {
-        "title": "Spin Wheel",
-        "description": "An interactive randomizer wheel. Add any list of entries and spin to pick a winner. Includes raffle mode, templates, and sound effects."
-      },
-      "image_crop": {
-        "title": "Image Crop",
-        "description": "Crop to 16:9 and export as WebP for hero banners."
-      },
-      "compress_pdf": {
-        "title": "Compress PDF",
-        "description": "Reduce the file size of your PDF documents without significant quality loss."
-      },
-      "signatories_index": {
-        "title": "Signatories Index",
-        "description": "Manage and search a centralized list of document signers."
+        "title": "AI Spreadsheet Content Prompt Generator",
+        "description": "Create a structured prompt for spreadsheet-focused articles, notes, and editorial planning."
       },
       "address_label": {
-        "title": "Address Label",
-        "description": "Generate professional shipping address labels for envelopes and packages."
+        "title": "Address Label from Spreadsheet",
+        "description": "Import and export Excel address books, then generate clean PDF shipping labels."
       }
-    },
-    "image_crop": {
-      "invalidImageFile": "Please upload a valid image file.",
-      "downloaded": "Downloaded: {filename} ({size})",
-      "dropTitle": "Drop image here",
-      "dropDescription": "or click to browse - PNG, JPG, and WebP supported.",
-      "pasteHint": "You can also Ctrl+V / Cmd+V to paste",
-      "outputBadge": "Output: 16:9 .webp",
-      "original": "Original",
-      "ratio": "Ratio",
-      "target": "Target 16:9",
-      "already169": "Already 16:9",
-      "horizontal": "Horizontal",
-      "vertical": "Vertical",
-      "noAdjustment": "no adjustment",
-      "center": "Center",
-      "webpQuality": "WebP Quality",
-      "qualityHigh": "Lossless-class",
-      "qualityBalanced": "Balanced",
-      "qualitySmall": "Small size",
-      "defaultLabel": "85% default",
-      "outputLabel": "Output:",
-      "clientSideInfo": "100% client-side, no upload.",
-      "downloadButton": "Download WebP",
-      "loadAnother": "Load Another Image",
-      "dragHint": "Drag to reposition",
-      "removeImage": "Remove image",
-      "previewAlt": "Crop preview",
-      "howTo": [
-        {
-          "step": "01",
-          "title": "Upload Image",
-          "desc": "Drop or pick any image from screenshots or files."
-        },
-        {
-          "step": "02",
-          "title": "Drag to Reposition",
-          "desc": "Click and drag the preview directly to position the 16:9 crop window."
-        },
-        {
-          "step": "03",
-          "title": "Download WebP",
-          "desc": "Get a perfectly cropped .webp ready to use in your articles."
-        }
-      ]
-    },
-    "random_name": {
-      "title": "Random Name Picker",
-      "description": "Randomly select a name from a list, perfect for giveaways.",
-      "enterNames": "Enter Names",
-      "namesPlaceholder": "Enter names, one per line...",
-      "namesEntered": "names entered",
-      "import": "Import",
-      "settings": "Settings",
-      "numberOfWinners": "Number of Winners",
-      "separator": "Separator",
-      "removeWinners": "Remove winners from pool",
-      "soundEffects": "Sound effects",
-      "advancedSettings": "Advanced Settings",
-      "animationDuration": "Animation Duration (ms)",
-      "pickWinners": "Pick Winners",
-      "reset": "Reset",
-      "saveList": "Save List",
-      "present": "Present",
-      "exportWinners": "Export Winners",
-      "allParticipants": "All Participants",
-      "search": "Search...",
-      "pickHistory": "Pick History",
-      "noHistoryYet": "No history yet",
-      "saveListTitle": "Save List",
-      "saveListDescription": "Enter a name for this list to save it for later use.",
-      "listName": "List name...",
-      "cancel": "Cancel",
-      "save": "Save",
-      "savedLists": "Saved Lists",
-      "noSavedLists": "No saved lists",
-      "loadList": "Load List",
-      "names": "names",
-      "winnersWillAppearHere": "Winners will appear here",
-      "exitPresentationMode": "Exit presentation mode",
-      "winnerRevealSingle": "Winner",
-      "winnerRevealPlural": "Winners",
-      "readyToPick": "Ready to Pick",
-      "startPicking": "Start Picking",
-      "pickAgain": "Pick Again",
-      "starting": "Starting...",
-      "picking": "Picking...",
-      "notEnoughNames": "Not enough names",
-      "notEnoughNamesDesc": "Only {count} names available for selection.",
-      "noNames": "No names",
-      "noNamesDesc": "Please enter at least one name.",
-      "listSaved": "List saved successfully!",
-      "listLoaded": "Loaded",
-      "listDeleted": "List deleted",
-      "winnersExported": "Winners exported successfully!",
-      "fileImported": "File imported successfully!",
-      "shuffle": "Shuffle",
-      "clearAll": "Clear All",
-      "clearAllConfirmTitle": "Clear Everything?",
-      "clearAllConfirmDescription": "This will remove all names, winners, and selection history. This cannot be undone.",
-      "confirmClear": "Yes, Clear Everything",
-      "totalLabel": "Total",
-      "selectedLabel": "Selected",
-      "availableLabel": "Available",
-      "pickedTimes": "\u00d7{count}",
-      "noNamesYet": "No names entered yet",
-      "searchParticipants": "Search participants\u2026",
-      "winnersTab": "Winners",
-      "participantsTab": "Participants",
-      "historyTab": "History",
-      "countdownDuration": "Countdown (s)",
-      "startingIn": "Starting in",
-      "allCleared": "All Cleared",
-      "less": "Less",
-      "export": "Export"
     },
     "systemNotReady": {
       "title": "System Not Ready",
       "description": "The application cannot detect the Firebase API Key from your dashboard.",
       "step1": "Step 1: Connect & Save",
-      "step1Desc": "Select the SnipGeek repository in the Deployment tab and click Save.",
+      "step1Desc": "Select the SheetHub repository in the Deployment tab and click Save.",
       "step2": "Step 2: Start Rollout (Required)",
       "step2Desc": "Go to the Rollouts tab and click Start Rollout to inject the latest variables.",
       "step3": "Step 3: Check Prefix",
@@ -339,7 +201,7 @@
     "seriesTargetLabel": "Target Reader",
     "seriesToneLabel": "Tone Hint",
     "newsSourceUrlsLabel": "Source URL(s)",
-    "newsAngleLabel": "SnipGeek Angle",
+    "newsAngleLabel": "SheetHub Angle",
     "tipsStandaloneLabel": "Standalone Mode",
     "notesIntentLabel": "Note Intent",
     "notesIntentFinding": "Finding",

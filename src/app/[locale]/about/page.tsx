@@ -55,7 +55,7 @@ export async function generateMetadata({
       },
     },
     openGraph: {
-      siteName: "SnipGeek",
+      siteName: "SheetHub",
       title: dictionary.about.title,
       description: dictionary.about.description,
     },

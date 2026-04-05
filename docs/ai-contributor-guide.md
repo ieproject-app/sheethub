@@ -1,6 +1,6 @@
 # AI Contributor Guide
 
-This document defines the expected workflows, boundaries, and conventions for AI-assisted contributions in the SnipGeek project.
+This document defines the expected workflows, boundaries, and conventions for AI-assisted contributions in the SheetHub project.
 
 Its main goal is to keep content, routes, and project structure consistent over time.
 
@@ -8,7 +8,7 @@ Its main goal is to keep content, routes, and project structure consistent over 
 
 ## 1. Core Principles
 
-When contributing to SnipGeek, always follow these principles:
+When contributing to SheetHub, always follow these principles:
 
 1. **Do not invent new structure unless necessary**
    - Prefer existing folders, patterns, and conventions.
@@ -233,7 +233,7 @@ Recommended fields:
 ---
 title: Privacy Policy
 seoTitle: Privacy Policy
-description: SnipGeek privacy policy and data handling overview.
+description: SheetHub privacy policy and data handling overview.
 lastUpdated: 2025-07-01
 badgeLabel: Official Document
 icon: Shield
@@ -326,7 +326,7 @@ When a new OS version releases, update this table and the More menu in `layout-h
 
 ## 10. i18n Rules
 
-SnipGeek uses locale routing with:
+SheetHub uses locale routing with:
 - `en` as default locale
 - `id` as Indonesian locale
 

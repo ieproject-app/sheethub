@@ -181,7 +181,7 @@ export const downloadLinks: Record<string, DownloadInfo> = {
     platform: 'font'
   },
   'font-koleksi-lengkap': {
-    fileName: 'Complete Font Collection by SnipGeek',
+    fileName: 'Complete Font Collection by SheetHub',
     fileSize: '30 MB',
     externalUrl: 'https://www.dropbox.com/scl/fi/v66ge1e5n0v3gq3q3q3q3/koleksi-font-irweb.rar?rlkey=example&dl=1',
     platform: 'font'

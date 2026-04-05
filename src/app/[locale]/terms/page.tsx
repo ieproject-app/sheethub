@@ -24,7 +24,7 @@ export async function generateMetadata({
     locale,
     fallbackTitle: "Terms of Service",
     fallbackDescription:
-      "SnipGeek terms of service — rules for using our site, tools, and content.",
+      "SheetHub terms of service — rules for using our site, tools, and content.",
     robots: { index: true, follow: true },
   });
 }
@@ -60,8 +60,8 @@ export default async function TermsPage({
       maxWidthClassName="max-w-3xl"
       footerNote={
         locale === "id"
-          ? "Dengan terus menggunakan SnipGeek, Anda dianggap menyetujui ketentuan yang berlaku."
-          : "By continuing to use SnipGeek, you are considered to have accepted the applicable terms."
+          ? "Dengan terus menggunakan SheetHub, Anda dianggap menyetujui ketentuan yang berlaku."
+          : "By continuing to use SheetHub, you are considered to have accepted the applicable terms."
       }
     />
   );

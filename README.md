@@ -1,8 +1,8 @@
-# SnipGeek
+# SheetHub
 
 > A modern, minimalist tech blog and internal toolkit — built with Next.js 16, React 19, and Tailwind CSS v4.
 
-SnipGeek is a bilingual (EN/ID) content platform for publishing technical articles, short notes, and running internal web-based tools. It uses the Next.js App Router with a `[locale]` dynamic segment for full i18n support, MDX for rich content, and Firebase for authentication and data storage.
+SheetHub is a bilingual (EN/ID) content platform for publishing technical articles, short notes, and running internal web-based tools. It uses the Next.js App Router with a `[locale]` dynamic segment for full i18n support, MDX for rich content, and Firebase for authentication and data storage.
 
 ---
 
@@ -64,7 +64,7 @@ SnipGeek is a bilingual (EN/ID) content platform for publishing technical articl
 
 ```bash
 npm install
-npm run dev        # starts on http://localhost:9003 (Turbopack)
+npm run dev        # starts on http://localhost:3000 (Turbopack)
 ```
 
 ### Other Scripts
@@ -80,7 +80,7 @@ npm run lint       # ESLint
 
 ## 🔧 Firebase Configuration
 
-SnipGeek uses Firebase for Auth and Firestore (internal tools). Firebase config is loaded **exclusively from environment variables** — never hardcoded.
+SheetHub uses Firebase for Auth and Firestore (internal tools). Firebase config is loaded **exclusively from environment variables** — never hardcoded.
 
 ### Local Development (`.env.local`)
 
@@ -93,7 +93,7 @@ NEXT_PUBLIC_FIREBASE_PROJECT_ID=your_project_id
 NEXT_PUBLIC_FIREBASE_APP_ID=your_app_id
 
 # Optional: restrict internal tools to specific Google accounts/domains
-# Example: alice@snipgeek.com,bob@gmail.com,@telkomakses.co.id
+# Example: alice@sheethub.web.id,bob@gmail.com,@telkomakses.co.id
 NEXT_PUBLIC_INTERNAL_TOOL_ALLOWLIST=
 ```
 
@@ -134,7 +134,7 @@ src/
 │   ├── blog/                   # article-meta.tsx, article-share.tsx, article-related.tsx, article-toc.tsx, article-tags.tsx
 │   ├── home/                   # home-hero.tsx, home-latest.tsx, home-topics.tsx, home-tutorials.tsx, home-updates.tsx
 │   ├── ui/                     # Shadcn/UI primitives + custom (SnipTooltip, Skeleton, …)
-│   └── icons/                  # Custom SVG icons (XLogo, TikTokLogo, SnipGeekLogo)
+│   └── icons/                  # Custom SVG icons (XLogo, TikTokLogo, SheetHubLogo)
 ├── dictionaries/
 │   ├── en.json                 # English strings
 │   └── id.json                 # Indonesian strings (must always be in sync with en.json)
@@ -324,12 +324,12 @@ All application code in this repository (under `src/`, config files, etc.) is li
 See the [`LICENSE`](./LICENSE) file for the full terms.
 
 ### Content — All Rights Reserved
-All written content, articles, and notes — including everything under `_posts/`, `_notes/`, and `_pages/` — are the exclusive intellectual property of **SnipGeek (snipgeek.com)**.
+All written content, articles, and notes — including everything under `_posts/`, `_notes/`, and `_pages/` — are the exclusive intellectual property of **SheetHub (sheethub.web.id)**.
 
 You may **NOT** reproduce, republish, or create derivative works from this content without explicit written permission.
 
-For inquiries: hello@snipgeek.com
+For inquiries: hello@sheethub.web.id
 
 ---
 
-*SnipGeek &copy; 2026 — Iwan Efendi. All Rights Reserved.*
+*SheetHub &copy; 2026 — Iwan Efendi. All Rights Reserved.*

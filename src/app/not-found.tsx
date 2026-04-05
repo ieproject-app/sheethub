@@ -75,10 +75,10 @@ export default function NotFound() {
       suppressHydrationWarning
     >
       <head suppressHydrationWarning>
-        <title>404 - Page Not Found | SnipGeek</title>
+        <title>404 - Page Not Found | SheetHub</title>
         <meta
           name="description"
-          content="Sorry, the page you're looking for doesn't exist. Find tutorials and technical notes at SnipGeek."
+          content="Sorry, the page you're looking for doesn't exist. Find tutorials and technical notes at SheetHub."
         />
       </head>
       <body className="font-sans antialiased bg-background text-foreground">

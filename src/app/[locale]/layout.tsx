@@ -70,30 +70,30 @@ export async function generateMetadata({
   const dictionary = await getDictionary(locale);
   const homepageTitle =
     dictionary.home.title ||
-    "SnipGeek - Windows dan Ubuntu: Tutorial, Troubleshooting, dan Update Penting";
+    "SheetHub - Excel dan Google Sheets: Tutorial, Rumus, dan Update Cepat";
   const homepageDescription =
     dictionary.home.description ||
-    "Windows and Ubuntu tutorials, troubleshooting guides, and important updates for daily users.";
+    "Excel and Google Sheets tutorials, practical formula guides, and quick updates for daily workflows.";
 
   return {
-    metadataBase: new URL("https://snipgeek.com"),
+    metadataBase: new URL("https://sheethub.web.id"),
     title: {
       default: homepageTitle,
-      template: "%s | SnipGeek",
+      template: "%s | SheetHub",
     },
     description: homepageDescription,
     keywords: [
-      "Tech Blog",
-      "Next.js",
-      "Programming",
-      "Windows",
-      "Web Development",
-      "Tutorials",
-      "SnipGeek",
+      "Excel",
+      "Google Sheets",
+      "Spreadsheet",
+      "Formula",
+      "Automation",
+      "Template",
+      "SheetHub",
     ],
     authors: [{ name: "Iwan Efendi" }],
     creator: "Iwan Efendi",
-    publisher: "SnipGeek",
+    publisher: "SheetHub",
     icons: {
       icon: [
         {
@@ -118,8 +118,8 @@ export async function generateMetadata({
     openGraph: {
       type: "website",
       locale: openGraphLocaleMap[locale],
-      url: `https://snipgeek.com${canonicalPath === "/" ? "" : canonicalPath}`,
-      siteName: "SnipGeek",
+      url: `https://sheethub.web.id${canonicalPath === "/" ? "" : canonicalPath}`,
+      siteName: "SheetHub",
       title: homepageTitle,
       description: homepageDescription,
     },

@@ -24,7 +24,7 @@ export function HomeClient({
   locale: string;
 }) {
   const linkPrefix = locale === "en" ? "" : `/${locale}`;
-  const windowsUbuntuTags = new Set(["windows", "ubuntu", "linux", "dual-boot"]);
+  const spreadsheetTags = new Set(["excel", "google-sheets", "spreadsheet", "formula", "template"]);
 
   const allPosts = useMemo(() => {
     return [...initialPosts].sort(
@@ -47,27 +47,27 @@ export function HomeClient({
   // --- Deduplication: each section only shows articles not yet shown above ---
   const seenSlugs = new Set<string>();
 
-  // --- Featured Posts: 2 Linux + 2 Windows 11 ---
-  const linuxTags = new Set(["linux", "ubuntu"]);
-  const windowsTags = new Set(["windows", "windows-11"]);
+  // --- Featured Posts: 2 Excel + 2 Google Sheets ---
+  const excelTags = new Set(["excel", "microsoft-excel", "spreadsheet"]);
+  const sheetsTags = new Set(["google-sheets", "sheets", "spreadsheet"]);
   
-  const featuredLinuxPosts = allPosts
+  const featuredExcelPosts = allPosts
     .filter((post) => 
       post.frontmatter.published && 
       post.frontmatter.featured &&
-      post.frontmatter.tags?.some((tag: string) => linuxTags.has(tag.toLowerCase()))
+      post.frontmatter.tags?.some((tag: string) => excelTags.has(tag.toLowerCase()))
     )
     .slice(0, 2);
   
-  const featuredWindowsPosts = allPosts
+  const featuredSheetsPosts = allPosts
     .filter((post) => 
       post.frontmatter.published && 
       post.frontmatter.featured &&
-      post.frontmatter.tags?.some((tag: string) => windowsTags.has(tag.toLowerCase()))
+      post.frontmatter.tags?.some((tag: string) => sheetsTags.has(tag.toLowerCase()))
     )
     .slice(0, 2);
   
-  const featuredPosts = [...featuredLinuxPosts, ...featuredWindowsPosts];
+  const featuredPosts = [...featuredExcelPosts, ...featuredSheetsPosts];
   featuredPosts.forEach((p) => seenSlugs.add(p.slug));
 
   const latestPosts = allPosts
@@ -77,38 +77,34 @@ export function HomeClient({
     .slice(0, 6);
   latestPosts.forEach((p) => seenSlugs.add(p.slug));
 
-  // --- Manual Tutorial Posts for Modular Learning ---
-  const manualTutorialSlugs = [
-    "how-to-create-windows-11-bootable-usb-rufus",
-    "clean-install-windows-11-step-by-step-guide", 
-    "to-do-after-install-windows11"
-  ];
-  
   const manualTutorialPosts = allPosts.filter(
-    (post) => post.frontmatter.published && manualTutorialSlugs.includes(post.slug)
-  );
+    (post) =>
+      post.frontmatter.published &&
+      post.frontmatter.tags?.some((tag: string) => tag.toLowerCase() === "tutorial") &&
+      post.frontmatter.tags?.some((tag: string) => spreadsheetTags.has(tag.toLowerCase())),
+  ).slice(0, 6);
   manualTutorialPosts.forEach((p) => seenSlugs.add(p.slug));
 
-  const topicTag = "Windows";
+  const topicTag = "Excel";
   const topicPosts = allPosts
     .filter(
       (post) =>
         post.frontmatter.published &&
         !seenSlugs.has(post.slug) &&
         post.frontmatter.tags?.some(
-          (tag: string) => windowsUbuntuTags.has(tag.toLowerCase()),
+          (tag: string) => spreadsheetTags.has(tag.toLowerCase()),
         ),
     )
     .slice(0, 8);
   topicPosts.forEach((p) => seenSlugs.add(p.slug));
 
-  const updateTag = "Ubuntu";
+  const updateTag = "Google Sheets";
   const primaryUpdatePosts = allPosts
     .filter(
       (post) =>
         post.frontmatter.published &&
         !seenSlugs.has(post.slug) &&
-        post.frontmatter.tags?.some((tag: string) => windowsUbuntuTags.has(tag.toLowerCase())) &&
+        post.frontmatter.tags?.some((tag: string) => spreadsheetTags.has(tag.toLowerCase())) &&
         ((post.frontmatter.category || "").toLowerCase().includes("update") ||
           post.frontmatter.tags?.some((tag: string) => {
             const normalized = tag.toLowerCase();
@@ -121,7 +117,7 @@ export function HomeClient({
     (post) =>
       post.frontmatter.published &&
       !seenSlugs.has(post.slug) &&
-      post.frontmatter.tags?.some((tag: string) => windowsUbuntuTags.has(tag.toLowerCase())),
+      post.frontmatter.tags?.some((tag: string) => spreadsheetTags.has(tag.toLowerCase())),
   );
 
   const updatePosts = [
@@ -131,20 +127,20 @@ export function HomeClient({
     ),
   ].slice(0, 6);
 
-  const focusTopicsTitle = locale === "id" ? "Sorotan Windows & Ubuntu" : "Windows & Ubuntu Highlights";
-  const updatesTitle = locale === "id" ? "Update Penting Sistem" : "Important System Updates";
+  const focusTopicsTitle = locale === "id" ? "Sorotan Excel & Google Sheets" : "Excel & Google Sheets Highlights";
+  const updatesTitle = locale === "id" ? "Update Penting Spreadsheet" : "Important Spreadsheet Updates";
   const updatesViewMore = locale === "id" ? "lihat update" : "view updates";
-  const notesTitle = locale === "id" ? "Catatan Teknis Terbaru" : "Latest Technical Notes";
+  const notesTitle = locale === "id" ? "Update Cepat Excel & Google Sheets" : "Quick Excel & Google Sheets Updates";
   const notesViewMore = locale === "id" ? "Selengkapnya" : "View Notes";
   const transitionEyebrow = locale === "id" ? "Catatan Redaksi" : "Editorial Note";
-  const transitionTitle = locale === "id" ? "Masuk Ke Alur Yang Lebih Fokus" : "Entering A More Focused Flow";
+  const transitionTitle = locale === "id" ? "Masuk Ke Alur Spreadsheet Yang Lebih Fokus" : "Entering A More Focused Spreadsheet Flow";
   const transitionSubtitle = locale === "id"
     ? "Ringkasan singkat sebelum berlanjut ke section berikutnya"
     : "A short context before continuing to the next sections";
   const transitionDescription = locale === "id"
-    ? "Bagian selanjutnya disusun dari praktik ke konteks: tutorial, sorotan topik, update penting, lalu catatan teknis ringkas. Tujuannya agar urutan baca lebih natural, bukan sekadar feed acak."
-    : "The next sections are arranged from practice to context: tutorials, topic highlights, key updates, and concise technical notes. This keeps the reading order intentional instead of feeling like a random feed.";
-  const tutorialTitle = locale === "id" ? "Panduan Instalasi Windows 11" : "Windows 11 Installation Guide";
+    ? "Bagian selanjutnya disusun dari praktik ke konteks: tutorial rumus, sorotan template, update penting fitur spreadsheet, lalu catatan teknis ringkas. Tujuannya agar urutan baca lebih natural dan langsung bisa dipraktikkan."
+    : "The next sections are arranged from practical to contextual: formula tutorials, template highlights, key spreadsheet updates, and concise technical notes. This keeps the reading flow intentional and immediately actionable.";
+  const tutorialTitle = locale === "id" ? "Panduan Formula & Otomasi Spreadsheet" : "Spreadsheet Formula & Automation Guide";
   const tutorialViewMore = locale === "id" ? "lihat panduan lengkap" : "view complete guide";
   const transitionCta = locale === "id" ? "Lanjut ke Tutorial" : "Continue to Tutorials";
 
@@ -180,7 +176,7 @@ export function HomeClient({
           viewMoreText={tutorialViewMore}
           dictionary={dictionary}
           locale={locale}
-          tag="Installation Guide"
+          tag="Spreadsheet Guide"
         />
       )}
 

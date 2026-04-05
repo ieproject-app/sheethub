@@ -57,7 +57,7 @@ export default async function NotesPage({
             "@type": "CollectionPage",
             name: dictionary.notes.title,
             description: dictionary.notes.description,
-            url: `https://snipgeek.com${linkPrefix}/notes`,
+            url: `https://sheethub.web.id${linkPrefix}/notes`,
           }),
         }}
       />
@@ -72,13 +72,13 @@ export default async function NotesPage({
                 "@type": "ListItem",
                 position: 1,
                 name: dictionary.home.breadcrumbHome,
-                item: "https://snipgeek.com" + (linkPrefix || "/"),
+                item: "https://sheethub.web.id" + (linkPrefix || "/"),
               },
               {
                 "@type": "ListItem",
                 position: 2,
                 name: dictionary.navigation.notes,
-                item: `https://snipgeek.com${linkPrefix}/notes`,
+                item: `https://sheethub.web.id${linkPrefix}/notes`,
               },
             ],
           }),

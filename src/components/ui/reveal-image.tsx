@@ -29,39 +29,30 @@ export function RevealImage({
   sizes,
   ...props
 }: RevealImageProps) {
-  const [isLoaded, setIsLoaded] = useState(false);
-  const [hasMounted, setHasMounted] = useState(false);
-  const [shouldHold, setShouldHold] = useState(holdUntilLoaded);
+  const srcKey = String(props.src);
+  const [loadedSrc, setLoadedSrc] = useState<string | null>(null);
 
   useEffect(() => {
-    setHasMounted(true);
-  }, []);
-
-  useEffect(() => {
-    setIsLoaded(false);
-  }, [props.src]);
-
-  useEffect(() => {
-    if (!initialVisitOnly) {
-      setShouldHold(holdUntilLoaded);
-      return;
-    }
-
-    if (typeof window === "undefined") {
-      setShouldHold(holdUntilLoaded);
-      return;
-    }
-
-    const visitKey = "snipgeek-initial-visit-complete";
-    const hasVisited = window.sessionStorage.getItem(visitKey) === "1";
-    setShouldHold(holdUntilLoaded && !hasVisited);
-    if (!hasVisited) {
+    if (!initialVisitOnly || typeof window === "undefined") return;
+    const visitKey = "sheethub-initial-visit-complete";
+    if (window.sessionStorage.getItem(visitKey) !== "1") {
       window.sessionStorage.setItem(visitKey, "1");
     }
+  }, [initialVisitOnly]);
+
+  const shouldHold = useMemo(() => {
+    if (!initialVisitOnly) return holdUntilLoaded;
+    if (typeof window === "undefined") return holdUntilLoaded;
+
+    const visitKey = "sheethub-initial-visit-complete";
+    const hasVisited = window.sessionStorage.getItem(visitKey) === "1";
+    return holdUntilLoaded && !hasVisited;
   }, [holdUntilLoaded, initialVisitOnly]);
 
+  const isLoaded = loadedSrc === srcKey;
+
   const shouldHideImage = shouldHold && !isLoaded;
-  const shouldShowPlaceholder = !isLoaded && (!hasMounted || shouldHold || showSkeleton);
+  const shouldShowPlaceholder = !isLoaded && (shouldHold || showSkeleton);
 
   const mergedImageClassName = useMemo(
     () =>
@@ -97,7 +88,7 @@ export function RevealImage({
         priority={priority}
         loading={loading}
         sizes={sizes}
-        onLoad={() => setIsLoaded(true)}
+        onLoad={() => setLoadedSrc(srcKey)}
         {...props}
         style={{
           ...(props.style ?? {}),

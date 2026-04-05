@@ -20,7 +20,7 @@ interface ArticleShareProps {
 }
 
 // TODO: Replace with your actual production domain
-const productionUrl = "https://snipgeek.com";
+const productionUrl = "https://sheethub.web.id";
 
 export function ArticleShare({ title }: ArticleShareProps) {
   const pathname = usePathname();

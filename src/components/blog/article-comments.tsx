@@ -1,14 +1,14 @@
 "use client";
 
 import Giscus from "@giscus/react";
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useMemo, useRef } from "react";
 import { MessageSquare, ShieldCheck, ExternalLink } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useThemeMode } from "@/hooks/use-theme-mode";
 
-const productionHostname = "snipgeek.com";
+const productionHostname = "sheethub.web.id";
 
-const GISCUS_REPO = "ieproject-app/SnipGeek" as const;
+const GISCUS_REPO = "ieproject-app/SheetHub" as const;
 const GISCUS_REPO_ID = process.env.NEXT_PUBLIC_GISCUS_REPO_ID || "";
 const GISCUS_CATEGORY = "Comments";
 const GISCUS_CATEGORY_ID = process.env.NEXT_PUBLIC_GISCUS_CATEGORY_ID || "";
@@ -24,27 +24,26 @@ interface ArticleCommentsProps {
 
 export function ArticleComments({ article, type, locale }: ArticleCommentsProps) {
   const [giscusVisible, setGiscusVisible] = useState(false);
-  const [mounted, setMounted] = useState(false);
-  const [isProductionDomain, setIsProductionDomain] = useState(false);
   const commentsRef = useRef<HTMLDivElement>(null);
   const { resolvedTheme } = useThemeMode();
 
   const giscusTheme = resolvedTheme === "dark" ? "dark_dimmed" : "light";
-
-  useEffect(() => {
-    setMounted(true);
+  const isProductionDomain = useMemo(() => {
+    if (typeof window === "undefined") return false;
 
     const isProduction = process.env.NODE_ENV === "production";
+    const host = window.location.hostname;
     const isCorrectDomain =
-      typeof window !== "undefined" &&
-      (window.location.hostname === productionHostname ||
-        window.location.hostname.endsWith("." + productionHostname) ||
-        window.location.hostname.includes("firebaseapp.com") ||
-        window.location.hostname.includes("web.app") ||
-        window.location.hostname.includes("hosted.app"));
+      host === productionHostname ||
+      host.endsWith("." + productionHostname) ||
+      host.includes("firebaseapp.com") ||
+      host.includes("web.app") ||
+      host.includes("hosted.app");
 
-    setIsProductionDomain(isProduction && isCorrectDomain);
+    return isProduction && isCorrectDomain;
+  }, []);
 
+  useEffect(() => {
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting) {
@@ -86,7 +85,7 @@ export function ArticleComments({ article, type, locale }: ArticleCommentsProps)
   };
 
   // ─── Skeleton (before mounted OR waiting for intersection) ───────────────
-  if (!mounted || !giscusVisible) {
+  if (!giscusVisible) {
     return (
       <section
         ref={commentsRef}

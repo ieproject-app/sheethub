@@ -13,7 +13,7 @@ interface LayoutBreadcrumbsProps {
 }
 
 /**
- * LayoutBreadcrumbs - A minimalist navigation component for SnipGeek.
+ * LayoutBreadcrumbs - A minimalist navigation component for SheetHub.
  * Shows hierarchy up to category/tag level.
  */
 export function LayoutBreadcrumbs({ segments, className }: LayoutBreadcrumbsProps) {

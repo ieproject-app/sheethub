@@ -1,4 +1,4 @@
-# SnipGeek Final Decision Document
+# SheetHub Final Decision Document
 
 Status: Final
 Date: 2026-03-18
@@ -18,7 +18,7 @@ Windows dan Ubuntu: Tutorial, Troubleshooting, dan Update Penting
 
 Positioning:
 
-SnipGeek is a practical Windows and Ubuntu publication. Content must prioritize real user outcomes over trend chasing, and should be directly actionable for daily users.
+SheetHub is a practical Windows and Ubuntu publication. Content must prioritize real user outcomes over trend chasing, and should be directly actionable for daily users.
 
 Editorial promise:
 
@@ -58,18 +58,18 @@ Do not:
 
 ### B. News / Update
 Purpose:
-Turn external OS/news updates into SnipGeek-native practical analysis.
+Turn external OS/news updates into SheetHub-native practical analysis.
 
 Mandatory input:
 
 - 1 to 3 source URLs (required)
-- SnipGeek angle (recommended, strongly encouraged)
+- SheetHub angle (recommended, strongly encouraged)
 
 Output expectations:
 
 - extract important facts only
 - explain practical impact for Windows/Ubuntu daily users
-- include SnipGeek take (what matters, what to monitor, what to do now)
+- include SheetHub take (what matters, what to monitor, what to do now)
 
 Do:
 

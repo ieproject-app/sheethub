@@ -58,20 +58,20 @@ export const cvData: Record<string, CVData> = {
     email: "iwan.efndi@gmail.com",
     role: "Procurement Specialist, Technical Writer & Workflow Builder",
     summary:
-      "I build SnipGeek as a practical, story-driven space for clear documentation, useful writing, and technology that solves real problems. My background spans telecommunications, administration, procurement, and IT troubleshooting, which shapes how I approach both digital workflows and editorial work. I am especially interested in turning messy, repetitive processes into systems that are simpler, more structured, and easier to trust.",
+      "I build SheetHub as a practical, story-driven space for clear documentation, useful writing, and technology that solves real problems. My background spans telecommunications, administration, procurement, and IT troubleshooting, which shapes how I approach both digital workflows and editorial work. I am especially interested in turning messy, repetitive processes into systems that are simpler, more structured, and easier to trust.",
     profile: {
       badge: "Founder Story",
       panelLabel: "Positioning",
       statement:
-        "I build SnipGeek as a place for technical documentation that feels clearer, more honest, and more useful for real-world users.",
+        "I build SheetHub as a place for technical documentation that feels clearer, more honest, and more useful for real-world users.",
       companyLabel: "PT Telkom Akses",
       locationLabel: "Indonesia",
       experienceIntro:
         "Selected roles that shaped how I work today: from field operations, safety, and troubleshooting to cleaner administrative systems and practical workflows.",
       founderLabel: "Founder",
-      brandLabel: "SnipGeek",
+      brandLabel: "SheetHub",
       storyCardDescription:
-        "SnipGeek was built from a practical need: preserve useful technical knowledge and make it easier to revisit over time.",
+        "SheetHub was built from a practical need: preserve useful technical knowledge and make it easier to revisit over time.",
       workflowCardDescription:
         "My workflow is simple: use the right tool for the job, without forcing one system to solve every task.",
       philosophyCardDescription:
@@ -199,20 +199,20 @@ export const cvData: Record<string, CVData> = {
     email: "iwan.efndi@gmail.com",
     role: "Spesialis Pengadaan, Penulis Teknis & Perancang Workflow",
     summary:
-      "Saya membangun SnipGeek sebagai ruang yang praktis dan berorientasi cerita untuk dokumentasi yang jelas, tulisan yang berguna, dan teknologi yang benar-benar menyelesaikan masalah nyata. Latar belakang saya berada di persimpangan telekomunikasi, administrasi, pengadaan, dan troubleshooting IT, dan itu membentuk cara saya membangun alur kerja digital sekaligus menulis. Saya sangat tertarik mengubah proses yang berantakan dan berulang menjadi sistem yang lebih sederhana, lebih rapi, dan lebih bisa diandalkan.",
+      "Saya membangun SheetHub sebagai ruang yang praktis dan berorientasi cerita untuk dokumentasi yang jelas, tulisan yang berguna, dan teknologi yang benar-benar menyelesaikan masalah nyata. Latar belakang saya berada di persimpangan telekomunikasi, administrasi, pengadaan, dan troubleshooting IT, dan itu membentuk cara saya membangun alur kerja digital sekaligus menulis. Saya sangat tertarik mengubah proses yang berantakan dan berulang menjadi sistem yang lebih sederhana, lebih rapi, dan lebih bisa diandalkan.",
     profile: {
       badge: "Cerita Founder",
       panelLabel: "Posisi & Arah",
       statement:
-        "Saya membangun SnipGeek sebagai ruang untuk dokumentasi teknis yang lebih jujur, lebih rapi, dan lebih berguna bagi pengguna nyata.",
+        "Saya membangun SheetHub sebagai ruang untuk dokumentasi teknis yang lebih jujur, lebih rapi, dan lebih berguna bagi pengguna nyata.",
       companyLabel: "PT Telkom Akses",
       locationLabel: "Indonesia",
       experienceIntro:
         "Sorotan peran utama yang membentuk cara saya bekerja: mulai dari pekerjaan lapangan, keselamatan, troubleshooting, hingga sistem administrasi dan workflow yang lebih rapi.",
       founderLabel: "Founder",
-      brandLabel: "SnipGeek",
+      brandLabel: "SheetHub",
       storyCardDescription:
-        "SnipGeek dibangun dari kebutuhan nyata: menyimpan pengetahuan teknis yang benar-benar membantu dan tetap berguna seiring waktu.",
+        "SheetHub dibangun dari kebutuhan nyata: menyimpan pengetahuan teknis yang benar-benar membantu dan tetap berguna seiring waktu.",
       workflowCardDescription:
         "Pendekatan saya sederhana: gunakan alat yang tepat untuk pekerjaan yang tepat, tanpa memaksakan satu sistem untuk semua kebutuhan.",
       philosophyCardDescription:

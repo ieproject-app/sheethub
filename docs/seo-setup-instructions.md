@@ -17,7 +17,7 @@
 ### 🔧 Need Your Action:
 
 #### 1. Google Search Console Verification
-Anda sudah menjadi pemilik terverifikasi di Google Search Console, jadi tidak ada tindakan lebih lanjut yang diperlukan untuk verifikasi. Pastikan properti `https://snipgeek.com` terdaftar dan terverifikasi di akun Anda.
+Anda sudah menjadi pemilik terverifikasi di Google Search Console, jadi tidak ada tindakan lebih lanjut yang diperlukan untuk verifikasi. Pastikan properti `https://sheethub.web.id` terdaftar dan terverifikasi di akun Anda.
 
 #### 2. Mengelola Indeksasi Halaman Tools
 Jika ada halaman tools yang tidak ingin diindeks, Anda memiliki beberapa opsi:
@@ -60,7 +60,7 @@ export default function robots(): MetadataRoute.Robots {
         disallow: ['/api/', '/_next/', '/tools/compress-pdf', '/tools/employee-history'],
       },
     ],
-    sitemap: 'https://snipgeek.com/sitemap.xml',
+    sitemap: 'https://sheethub.web.id/sitemap.xml',
   };
 }
 ```
@@ -129,7 +129,7 @@ Add JSON-LD structured data for:
 
 ## Next Steps
 1. Complete verification process
-2. Submit sitemap in GSC: `https://snipgeek.com/sitemap.xml`
+2. Submit sitemap in GSC: `https://sheethub.web.id/sitemap.xml`
 3. Request indexing for important pages
 4. Monitor performance for 2-3 weeks
 5. Adjust strategy based on GSC insights

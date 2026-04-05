@@ -24,7 +24,7 @@ export async function generateMetadata({
     locale,
     fallbackTitle: "Privacy Policy",
     fallbackDescription:
-      "SnipGeek privacy policy — covering cookies, analytics, and how we handle your data.",
+      "SheetHub privacy policy — covering cookies, analytics, and how we handle your data.",
     robots: { index: true, follow: true },
   });
 }
@@ -60,8 +60,8 @@ export default async function PrivacyPage({
       maxWidthClassName="max-w-3xl"
       footerNote={
         locale === "id"
-          ? "Kebijakan ini berlaku untuk SnipGeek dan seluruh halamannya."
-          : "This policy applies to SnipGeek and all of its pages."
+          ? "Kebijakan ini berlaku untuk SheetHub dan seluruh halamannya."
+          : "This policy applies to SheetHub and all of its pages."
       }
     />
   );
