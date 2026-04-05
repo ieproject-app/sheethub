@@ -2,7 +2,7 @@
 
 > A modern, minimalist tech blog and internal toolkit — built with Next.js 16, React 19, and Tailwind CSS v4.
 
-SheetHub is a bilingual (EN/ID) content platform for publishing technical articles, short notes, and running internal web-based tools. It uses the Next.js App Router with a `[locale]` dynamic segment for full i18n support, MDX for rich content, and Firebase for authentication and data storage.
+SheetHub is a bilingual (EN/ID) content platform for publishing technical articles, short notes, and running web-based tools. It uses the Next.js App Router with a `[locale]` dynamic segment for full i18n support, MDX for rich content, and Firebase/App Hosting for deployment and optional app services.
 
 ---
 
@@ -39,11 +39,13 @@ SheetHub is a bilingual (EN/ID) content platform for publishing technical articl
 - Accessible from the header at any time
 
 ### 🛠️ Tools
+Current direction: content-first rollout. Public pages stay fully accessible, while login-gated flows are temporarily isolated.
+
 | Tool | Access | Status |
 |---|---|---|
-| AI Article Prompt Generator | Internal | ✅ Live |
-| Employee History (Riwayat Karyawan) | Internal | ✅ Live |
-| Number Generator | Internal | ✅ Live |
+| AI Article Prompt Generator | Internal | Temporarily Isolated |
+| Employee History (Riwayat Karyawan) | Internal | Temporarily Isolated |
+| Number Generator | Internal | Temporarily Isolated |
 | Number to Words | Public | 🚧 Coming Soon |
 | Random Name Generator | Public | 🚧 Coming Soon |
 
@@ -80,7 +82,7 @@ npm run lint       # ESLint
 
 ## 🔧 Firebase Configuration
 
-SheetHub uses Firebase for Auth and Firestore (internal tools). Firebase config is loaded **exclusively from environment variables** — never hardcoded.
+SheetHub uses Firebase App Hosting and optional Firebase app services. Firebase config is loaded **exclusively from environment variables** — never hardcoded.
 
 ### Local Development (`.env.local`)
 
@@ -91,24 +93,27 @@ NEXT_PUBLIC_FIREBASE_API_KEY=your_api_key
 NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN=your_project.firebaseapp.com
 NEXT_PUBLIC_FIREBASE_PROJECT_ID=your_project_id
 NEXT_PUBLIC_FIREBASE_APP_ID=your_app_id
+NEXT_PUBLIC_ENABLE_LOGIN=false
 
 # Optional: restrict internal tools to specific Google accounts/domains
 # Example: alice@sheethub.web.id,bob@gmail.com,@telkomakses.co.id
 NEXT_PUBLIC_INTERNAL_TOOL_ALLOWLIST=
 ```
 
+`NEXT_PUBLIC_ENABLE_LOGIN=false` keeps login-related flows isolated while the site focuses on public content rollout.
+
 If `NEXT_PUBLIC_INTERNAL_TOOL_ALLOWLIST` is empty, internal tools remain accessible to any authenticated Google account (legacy behavior). If set, only matching emails/domains can access non-public tools.
 
 ### Production (Google Cloud — `apphosting.yaml`)
 
-The project is deployed via **Firebase App Hosting**. Environment variables for production are injected through `apphosting.yaml` using the Secret Manager bypass pattern.
+The project is deployed via **Firebase App Hosting**. Environment variables for production are injected through `apphosting.yaml`.
 
-> ⚠️ **Do NOT remove or modify the `value` / `availability` fields** in `apphosting.yaml`. This is the only mechanism that ensures keys are available during the Cloud Build step.
+Current production setup uses project `sheethub-next` and keeps login disabled by default with `NEXT_PUBLIC_ENABLE_LOGIN=false`.
 
-**Deployment steps:**
+**Deployment steps (3 steps):**
 1. `git push` to `main`
 2. Open Firebase Console → **App Hosting** → **Rollouts**
-3. Click **"Start Rollout"** whenever `apphosting.yaml` is changed
+3. Click **"Start Rollout"** and verify rollout + custom domain health after build finishes
 
 ---
 
@@ -288,7 +293,7 @@ The following HTTP headers are applied to all routes via `next.config.ts`:
 | Fonts | Bricolage Grotesque, Plus Jakarta Sans, Lora, JetBrains Mono |
 | Content | MDX via `next-mdx-remote` v6 |
 | Syntax Highlighting | Shiki (`github-dark` theme) |
-| Auth & DB | Firebase v11 (Auth + Firestore) |
+| Auth & DB | Firebase v11 (Auth/Firestore ready, currently login-gated flows disabled by feature flag) |
 | Animations | Framer Motion + CSS View Transitions API |
 | i18n | Custom middleware + `@formatjs/intl-localematcher` |
 | Ads | Google AdSense (`lazyOnload` strategy) |
@@ -300,6 +305,8 @@ The following HTTP headers are applied to all routes via `next.config.ts`:
 ## 📋 Firebase Singleton Pattern
 
 All Firebase services are initialised once via `src/firebase/config.ts` using a `memoizedServices` pattern. **Never** call `getAuth()` or `getFirestore()` directly outside the provider.
+
+Note: for the current content-first phase, login-gated features are intentionally isolated. Keep auth-related code paths feature-flagged and non-blocking for public pages.
 
 ```typescript
 // ✅ Always guard against null before Firestore operations
