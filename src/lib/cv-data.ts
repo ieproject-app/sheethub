@@ -58,12 +58,12 @@ export const cvData: Record<string, CVData> = {
     email: "iwan.efndi@gmail.com",
     role: "Procurement Specialist, Technical Writer & Workflow Builder",
     summary:
-      "I build SheetHub as a practical, story-driven space for clear documentation, useful writing, and technology that solves real problems. My background spans telecommunications, administration, procurement, and IT troubleshooting, which shapes how I approach both digital workflows and editorial work. I am especially interested in turning messy, repetitive processes into systems that are simpler, more structured, and easier to trust.",
+      "SheetHub is built as a practical knowledge base for Excel and Google Sheets users who need clear guidance and repeatable workflows. The platform focuses on documentation that can be applied quickly in real tasks, from formula usage and data cleanup to automation-oriented routines. Its editorial direction is simple: useful first, clear by default, and consistent over time.",
     profile: {
       badge: "Founder Story",
       panelLabel: "Positioning",
       statement:
-        "I build SheetHub as a place for technical documentation that feels clearer, more honest, and more useful for real-world users.",
+        "SheetHub is positioned as a practical reference for spreadsheet-driven work: concise, reliable, and ready for daily use.",
       companyLabel: "PT Telkom Akses",
       locationLabel: "Indonesia",
       experienceIntro:
@@ -71,11 +71,11 @@ export const cvData: Record<string, CVData> = {
       founderLabel: "Founder",
       brandLabel: "SheetHub",
       storyCardDescription:
-        "SheetHub was built from a practical need: preserve useful technical knowledge and make it easier to revisit over time.",
+        "SheetHub was built to preserve practical spreadsheet knowledge so teams can revisit proven steps without repeating trial-and-error.",
       workflowCardDescription:
-        "My workflow is simple: use the right tool for the job, without forcing one system to solve every task.",
+        "The workflow principle is pragmatic: use focused tools, keep steps traceable, and avoid unnecessary complexity.",
       philosophyCardDescription:
-        "I prefer writing that is clear, honest, and genuinely useful over content that only looks polished on the surface.",
+        "Writing follows a utility-first approach: clear structure, direct examples, and practical outcomes over decorative wording.",
       resumeDescription:
         "For a more formal and concise professional reference, you can download my full resume below.",
       stats: [
@@ -199,12 +199,12 @@ export const cvData: Record<string, CVData> = {
     email: "iwan.efndi@gmail.com",
     role: "Spesialis Pengadaan, Penulis Teknis & Perancang Workflow",
     summary:
-      "Saya membangun SheetHub sebagai ruang yang praktis dan berorientasi cerita untuk dokumentasi yang jelas, tulisan yang berguna, dan teknologi yang benar-benar menyelesaikan masalah nyata. Latar belakang saya berada di persimpangan telekomunikasi, administrasi, pengadaan, dan troubleshooting IT, dan itu membentuk cara saya membangun alur kerja digital sekaligus menulis. Saya sangat tertarik mengubah proses yang berantakan dan berulang menjadi sistem yang lebih sederhana, lebih rapi, dan lebih bisa diandalkan.",
+      "SheetHub dibangun sebagai basis pengetahuan praktis untuk pengguna Excel dan Google Sheets yang membutuhkan panduan jelas dan workflow yang bisa diulang. Platform ini berfokus pada dokumentasi yang cepat diterapkan untuk pekerjaan nyata, mulai dari rumus, perapian data, hingga rutinitas yang lebih otomatis. Arah editorialnya sederhana: utamakan manfaat, jelas secara struktur, dan konsisten dari waktu ke waktu.",
     profile: {
       badge: "Cerita Founder",
       panelLabel: "Posisi & Arah",
       statement:
-        "Saya membangun SheetHub sebagai ruang untuk dokumentasi teknis yang lebih jujur, lebih rapi, dan lebih berguna bagi pengguna nyata.",
+        "SheetHub diposisikan sebagai referensi praktis untuk pekerjaan berbasis spreadsheet: ringkas, andal, dan siap dipakai harian.",
       companyLabel: "PT Telkom Akses",
       locationLabel: "Indonesia",
       experienceIntro:
@@ -212,11 +212,11 @@ export const cvData: Record<string, CVData> = {
       founderLabel: "Founder",
       brandLabel: "SheetHub",
       storyCardDescription:
-        "SheetHub dibangun dari kebutuhan nyata: menyimpan pengetahuan teknis yang benar-benar membantu dan tetap berguna seiring waktu.",
+        "SheetHub dibangun untuk menyimpan pengetahuan spreadsheet yang praktis agar tim bisa mengulang langkah yang terbukti tanpa trial-and-error berulang.",
       workflowCardDescription:
-        "Pendekatan saya sederhana: gunakan alat yang tepat untuk pekerjaan yang tepat, tanpa memaksakan satu sistem untuk semua kebutuhan.",
+        "Prinsip alur kerjanya pragmatis: pakai alat yang fokus, jaga langkah tetap terukur, dan hindari kompleksitas yang tidak perlu.",
       philosophyCardDescription:
-        "Saya lebih memilih tulisan yang jelas, jujur, dan bisa dipakai daripada konten yang sekadar terlihat rapi di permukaan.",
+        "Gaya penulisan mengikuti pendekatan utility-first: struktur jelas, contoh langsung, dan hasil yang bisa diterapkan.",
       resumeDescription:
         "Untuk referensi profesional yang lebih ringkas dan formal, Anda bisa mengunduh resume lengkap saya di bawah ini.",
       stats: [

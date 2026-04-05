@@ -542,7 +542,7 @@ export function usePromptLogic({
   const [showGrids, setShowGrids] = useState(false);
   const [showGallery, setShowGallery] = useState(false);
   const [showSpecs, setShowSpecs] = useState(false);
-  const [isIdOnly, setIsIdOnly] = useState(false);
+  const [isIdOnly, setIsIdOnly] = useState(locale === "id");
   const [captionMode, setCaptionMode] = useState<"off" | "auto" | "manual">("auto");
   const [captionAlignment, setCaptionAlignment] = useState<"left" | "center" | "right">("center");
   const [captionCoverage, setCaptionCoverage] = useState<"selective" | "all">("selective");
@@ -1052,7 +1052,9 @@ export function usePromptLogic({
         setShowGrids(!!p.showGrids);
         setShowGallery(!!p.showGallery);
         setShowSpecs(!!p.showSpecs);
-        setIsIdOnly(!!p.isIdOnly);
+        setIsIdOnly(
+          p.isIdOnly !== undefined ? !!p.isIdOnly : locale === "id",
+        );
         setCaptionMode(p.captionMode === "off" || p.captionMode === "manual" ? p.captionMode : "auto");
         setCaptionAlignment(
           p.captionAlignment === "left" || p.captionAlignment === "right"
@@ -1093,7 +1095,7 @@ export function usePromptLogic({
         if (typeof d.selectedSlug === "string") setSelectedSlug(d.selectedSlug);
       } catch { }
     }
-  }, []);
+  }, [locale]);
 
   useEffect(() => {
     if (!mounted) return;
@@ -1207,6 +1209,11 @@ export function usePromptLogic({
             ? "TIPS & TRICKS"
             : "NOTES / CATATAN";
     const outputFormat = contentType === "notes" ? "TECHNICAL NOTE" : "BLOG POST";
+    const languageModeLabel = isIdOnly
+      ? "INDONESIAN (DEFAULT)"
+      : locale === "id"
+        ? "INDONESIAN-FIRST (offer EN only if clearly requested)"
+        : "INDONESIAN-FIRST with optional EN adaptation for non-Indonesian audiences";
     const captionAlignmentClass =
       captionAlignment === "left"
         ? "text-left"
@@ -1223,7 +1230,7 @@ export function usePromptLogic({
     prompt += `- Action: ${isModify ? "MODIFY EXISTING" : "CREATE NEW"}\n`;
     prompt += `- Format: ${outputFormat}\n`;
     prompt += `- Workflow Type: ${contentTypeLabel}\n`;
-    prompt += `- Language: ${isIdOnly ? "INDONESIAN ONLY" : "BILINGUAL (ID/EN)"}\n\n`;
+    prompt += `- Language: ${languageModeLabel}\n\n`;
 
     prompt += `**2. METADATA BRIEF**\n`;
     if (isModify && selectedSlug) {
@@ -1418,6 +1425,14 @@ export function usePromptLogic({
     prompt += `- Word-count is not fixed; ensure coverage is complete and non-repetitive for the topic complexity.\n`;
     prompt += `- If the topic is likely to age quickly, include a short freshness note (version/date context) in the narrative.\n`;
 
+    prompt += `\n**9A. FORMULA REGION COMPATIBILITY (MANDATORY FOR EXCEL/GOOGLE SHEETS)**\n`;
+    prompt += `- Default tutorial language is Indonesian, with Indonesian spreadsheet habits as the primary reference.\n`;
+    prompt += `- Use semicolon (;) separator as the default formula example for Indonesian locale workflows.\n`;
+    prompt += `- For each key formula, provide a compatibility note that separator may need conversion between ';' and ','.\n`;
+    prompt += `- Add a short troubleshooting block: if formula fails, verify app locale/region settings, then re-test with alternate separator.\n`;
+    prompt += `- When relevant, mention decimal/list separator mismatch risk (comma vs dot decimals can affect parsing behavior).\n`;
+    prompt += `- If and only if audience is clearly non-Indonesian, offer an optional international variant using comma (,) separator.\n`;
+
     prompt += `\n**10. READABILITY & PARAGRAPH RHYTHM (MANDATORY)**\n`;
     prompt += `- Target desktop readability: keep most body paragraphs around 3-4 lines in standard article width.\n`;
     prompt += `- Paragraph length target: ideally 45-85 words (soft cap 90 words).\n`;
@@ -1495,6 +1510,7 @@ export function usePromptLogic({
       prompt += `Set the hero image as frontmatter heroImage/banner and do not render it again in article body unless explicitly requested. `;
     }
     prompt += `Ensure all metadata (slugs, translation keys, alt texts) are generated automatically. Tags must never contain spaces and must never produce %20 in URLs. Any tag that would produce %20 is invalid and must be rewritten into lowercase kebab-case (e.g., excel-formula, google-sheets, pivot-table, data-validation). Always include 1 platform tag (excel/google-sheets/spreadsheet/automation/template) and 1 context tag when relevant (e.g., formula, dashboard, lookup, reporting). Minimum 3 tags, maximum 6 tags per article. `;
+    prompt += `For spreadsheet formulas, treat Indonesian locale as default: provide main examples using ';', then explicitly mention ';' <-> ',' fallback checks so readers can recover quickly if formulas fail due to region settings. `;
     prompt += `Run a final self-check against the readability rhythm rules and the QA checklist before returning final MDX. `;
     prompt += `Ensure the output is genuinely helpful, intent-focused, and clearly better than a generic rewrite.`;
 

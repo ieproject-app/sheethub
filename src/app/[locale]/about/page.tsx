@@ -6,7 +6,7 @@ import { MDXRemote } from "next-mdx-remote/rsc";
 import { mdxComponents } from "@/components/mdx-components";
 import remarkGfm from "remark-gfm";
 import rehypeShiki from "@shikijs/rehype";
-import { cvData, type Experience } from "@/lib/cv-data";
+import { cvData } from "@/lib/cv-data";
 import { getDictionary } from "@/lib/get-dictionary";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -15,15 +15,11 @@ import {
   GraduationCap,
   Award,
   Mail,
-  ChevronRight,
-  FileText,
   MapPin,
   Sparkles,
   Laptop,
   PenLine,
-  ArrowRight,
 } from "lucide-react";
-import { DownloadButton } from "@/components/mdx-components";
 import { ScrollReveal } from "@/components/ui/scroll-reveal";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { MotionDiv, MotionSpan } from "@/components/ui/client-motion";
@@ -75,11 +71,11 @@ export default async function AboutPage({
   const { content } = await getPageContent("about", locale);
   const dictionary = await getDictionary(locale);
   const data = cvData[locale] || cvData.en;
-  const authorAvatar = "/images/profile/profile.png";
+  const authorAvatar = "/images/profile/sheethub-round.svg";
   const learningRole =
     locale === "id"
-      ? "Terus belajar, merapikan proses, dan membangun hal-hal yang berguna."
-      : "Always learning, refining workflows, and building useful things.";
+      ? "Platform konten praktis untuk Excel, Google Sheets, dan alur kerja yang bisa langsung dipakai."
+      : "A practical content platform for Excel, Google Sheets, and workflows you can apply immediately.";
 
   return (
     <div className="w-full">
@@ -184,9 +180,9 @@ export default async function AboutPage({
                           }}
                         />
                         <Avatar className="relative h-14 w-14 shadow-2xl ring-2 ring-primary/20 ring-offset-2 ring-offset-background sm:h-24 sm:w-24 sm:ring-4 sm:ring-offset-4">
-                          <AvatarImage src={authorAvatar} alt={data.name} />
+                          <AvatarImage src={authorAvatar} alt={data.profile.brandLabel} />
                           <AvatarFallback className="text-xl font-bold">
-                            IE
+                            SH
                           </AvatarFallback>
                         </Avatar>
                       </div>
@@ -197,7 +193,7 @@ export default async function AboutPage({
                         {data.profile.panelLabel}
                       </p>
                       <h2 className="mt-2 font-display text-2xl font-black tracking-tight text-primary">
-                        {data.name}
+                        {data.profile.brandLabel}
                       </h2>
                       <p className="mt-2 text-xs font-semibold leading-relaxed text-muted-foreground sm:text-sm">
                         {learningRole}
@@ -346,9 +342,9 @@ export default async function AboutPage({
                         }}
                       />
                       <Avatar className="relative h-12 w-12 shadow-xl ring-2 ring-primary/20 ring-offset-2 ring-offset-background sm:h-20 sm:w-20 sm:ring-4 sm:ring-offset-4">
-                        <AvatarImage src={authorAvatar} alt={data.name} />
+                        <AvatarImage src={authorAvatar} alt={data.profile.brandLabel} />
                         <AvatarFallback className="text-lg font-bold">
-                          IE
+                          SH
                         </AvatarFallback>
                       </Avatar>
                     </div>
@@ -359,7 +355,7 @@ export default async function AboutPage({
                       {data.profile.panelLabel}
                     </p>
                     <h3 className="mt-3 font-display text-lg font-black tracking-tight text-primary">
-                      {data.name}
+                      {data.profile.brandLabel}
                     </h3>
                     <p className="mt-1 text-sm font-semibold text-muted-foreground">
                       {learningRole}
@@ -373,70 +369,6 @@ export default async function AboutPage({
             </div>
           </section>
         </ScrollReveal>
-
-        <section className="mb-20">
-          <ScrollReveal direction="left">
-            <SectionHeading title={dictionary.about.experience} />
-          </ScrollReveal>
-
-          <div className="mt-8 rounded-3xl border border-primary/10 bg-card/25 p-6 sm:p-8">
-            <div className="mb-8 max-w-3xl">
-              <p className="text-sm leading-relaxed text-muted-foreground">
-                {data.profile.experienceIntro}
-              </p>
-            </div>
-
-            <div className="relative px-2 sm:px-0">
-              <div className="absolute top-0 bottom-0 left-5 w-px -translate-x-1/2 bg-linear-to-b from-transparent via-primary/20 to-transparent sm:left-1/2" />
-
-              <div className="space-y-10">
-                {data.experiences.map((exp, index) => {
-                  const isLeft = index % 2 === 0;
-
-                  return (
-                    <div
-                      key={`${exp.title}-${exp.period}`}
-                      className="group relative"
-                    >
-                      <ScrollReveal
-                        delay={index * 0.08}
-                        direction={isLeft ? "left" : "right"}
-                      >
-                        <div className="flex w-full flex-col sm:flex-row sm:items-center">
-                          <div className="hidden sm:block sm:w-1/2 sm:pr-10">
-                            {isLeft && (
-                              <ExperienceCard exp={exp} align="right" />
-                            )}
-                          </div>
-
-                          <div className="absolute top-8 left-5 z-10 flex -translate-x-1/2 -translate-y-1/2 items-center justify-center sm:top-1/2 sm:left-1/2">
-                            <div className="relative">
-                              <div className="absolute inset-0 scale-150 rounded-full bg-primary/10 group-hover:bg-primary/20" />
-                              <div className="relative flex h-10 w-10 items-center justify-center rounded-full border-2 border-primary/40 bg-background shadow-xl transition-all duration-300 group-hover:scale-110 group-hover:border-primary">
-                                <Briefcase className="h-4 w-4 text-primary" />
-                              </div>
-                            </div>
-                          </div>
-
-                          <div className="w-full pl-14 sm:w-1/2 sm:pl-10">
-                            {!isLeft && (
-                              <div className="hidden sm:block">
-                                <ExperienceCard exp={exp} align="left" />
-                              </div>
-                            )}
-                            <div className="block sm:hidden">
-                              <ExperienceCard exp={exp} align="left" />
-                            </div>
-                          </div>
-                        </div>
-                      </ScrollReveal>
-                    </div>
-                  );
-                })}
-              </div>
-            </div>
-          </div>
-        </section>
 
         <section className="mb-16">
           <ScrollReveal direction="right">
@@ -546,30 +478,6 @@ export default async function AboutPage({
           </section>
         </div>
 
-        <ScrollReveal direction="up" distance={40}>
-          <section className="relative overflow-hidden rounded-3xl border border-primary/15 bg-linear-to-br from-primary/8 via-background to-accent/8 p-10 text-center md:p-14">
-            <div className="pointer-events-none absolute -top-20 left-1/2 h-40 w-80 -translate-x-1/2 rounded-full bg-primary/10 blur-3xl" />
-            <div className="relative z-10 mx-auto max-w-2xl">
-              <div className="mb-6 inline-flex h-16 w-16 items-center justify-center rounded-2xl border border-primary/20 bg-primary/10">
-                <FileText className="h-8 w-8 text-primary" />
-              </div>
-              <h2 className="font-display text-3xl font-black tracking-tight text-primary">
-                {dictionary.about.downloadResume}
-              </h2>
-              <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
-                {data.profile.resumeDescription}
-              </p>
-              <div className="mt-6 flex justify-center">
-                <DownloadButton id="cv-iwan-efendi" />
-              </div>
-              <div className="mt-6 inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-widest text-muted-foreground">
-                <span>{data.profile.founderLabel}</span>
-                <ArrowRight className="h-3.5 w-3.5" />
-                <span>{data.profile.brandLabel}</span>
-              </div>
-            </div>
-          </section>
-        </ScrollReveal>
       </main>
     </div>
   );
@@ -622,46 +530,5 @@ function MiniStat({ label, value }: { label: string; value: string }) {
       </p>
       <p className="mt-1 text-sm font-semibold text-primary">{value}</p>
     </div>
-  );
-}
-
-function ExperienceCard({
-  exp,
-  align,
-}: {
-  exp: Experience;
-  align: "left" | "right";
-}) {
-  const isRight = align === "right";
-
-  return (
-    <Card className="w-full rounded-xl border-primary/10 bg-card/60 backdrop-blur transition-all duration-300 hover:-translate-y-1 hover:shadow-lg hover:shadow-primary/5">
-      <CardHeader className={`p-5 pb-3 ${isRight ? "text-right" : ""}`}>
-        <time className="mb-1 block text-[11px] font-bold uppercase tracking-widest text-muted-foreground">
-          {exp.period}
-        </time>
-        <CardTitle className="font-display text-base font-bold leading-tight text-primary md:text-lg">
-          {exp.title}
-        </CardTitle>
-        <p className="mt-0.5 text-sm font-semibold text-accent">
-          {exp.company}
-        </p>
-      </CardHeader>
-      <CardContent className="px-5 pb-5">
-        <ul className={`space-y-2 ${isRight ? "flex flex-col items-end" : ""}`}>
-          {exp.description.map((item, i) => (
-            <li
-              key={`${exp.title}-${i}`}
-              className={`flex items-start gap-1.5 text-sm text-foreground/65 ${isRight ? "flex-row-reverse" : ""}`}
-            >
-              <ChevronRight
-                className={`mt-0.5 h-3 w-3 shrink-0 text-primary/60 ${isRight ? "rotate-180" : ""}`}
-              />
-              <span className={isRight ? "text-right" : ""}>{item}</span>
-            </li>
-          ))}
-        </ul>
-      </CardContent>
-    </Card>
   );
 }

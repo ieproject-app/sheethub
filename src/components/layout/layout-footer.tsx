@@ -19,6 +19,7 @@ import { TikTokLogo } from "@/components/icons/tiktok-logo";
 import { ScrollReveal } from "@/components/ui/scroll-reveal";
 import { SnipTooltip } from "@/components/ui/snip-tooltip";
 import { getLinkPrefix } from "@/lib/utils";
+import { FEATURE_FLAGS } from "@/lib/feature-flags";
 
 export function LayoutFooter({
   locale,
@@ -30,6 +31,7 @@ export function LayoutFooter({
   translationsMap: TranslationsMap;
 }) {
   const linkPrefix = getLinkPrefix(locale);
+  const shouldShowTools = FEATURE_FLAGS.toolsEnabled;
 
   const footerNavItems = [
     {
@@ -54,8 +56,8 @@ export function LayoutFooter({
     },
   ];
 
-  const authorName = "Iwan Efendi";
-  const authorAvatar = "/images/profile/profile.png";
+  const authorName = "SheetHub";
+  const authorAvatar = "/images/profile/sheethub-round.svg";
 
   const socialLinks = [
     {
@@ -179,27 +181,29 @@ export function LayoutFooter({
             
             <div className="flex flex-col items-center justify-center gap-5 text-center">
               {/* Utility links */}
-              <nav className="flex flex-wrap items-center justify-center gap-x-6 gap-y-3">
-                <Link
-                  href={`${linkPrefix}/tools`}
-                  className="group flex items-center gap-2 text-[11px] font-black uppercase tracking-widest text-primary/60 hover:text-accent transition-all duration-300"
-                >
-                  <Terminal className="h-3.5 w-3.5 transition-transform group-hover:scale-120 group-hover:rotate-12" />
-                  <span>{dictionary.navigation.tools || "Tools"}</span>
-                </Link>
-                {process.env.NODE_ENV === "development" && (
-                  <>
-                    <div className="w-1 h-1 rounded-full bg-primary/20" />
-                    <Link
-                      href={`${linkPrefix}/tools/prompt-generator`}
-                      className="group flex items-center gap-2 text-[11px] font-black uppercase tracking-widest text-primary/60 hover:text-accent transition-all duration-300"
-                    >
-                      <Sparkles className="h-3.5 w-3.5 transition-transform group-hover:scale-120 group-hover:rotate-12 text-accent" />
-                      <span>AI Generator</span>
-                    </Link>
-                  </>
-                )}
-              </nav>
+              {shouldShowTools && (
+                <nav className="flex flex-wrap items-center justify-center gap-x-6 gap-y-3">
+                  <Link
+                    href={`${linkPrefix}/tools`}
+                    className="group flex items-center gap-2 text-[11px] font-black uppercase tracking-widest text-primary/60 hover:text-accent transition-all duration-300"
+                  >
+                    <Terminal className="h-3.5 w-3.5 transition-transform group-hover:scale-120 group-hover:rotate-12" />
+                    <span>{dictionary.navigation.tools || "Tools"}</span>
+                  </Link>
+                  {process.env.NODE_ENV === "development" && (
+                    <>
+                      <div className="w-1 h-1 rounded-full bg-primary/20" />
+                      <Link
+                        href={`${linkPrefix}/tools/prompt-generator`}
+                        className="group flex items-center gap-2 text-[11px] font-black uppercase tracking-widest text-primary/60 hover:text-accent transition-all duration-300"
+                      >
+                        <Sparkles className="h-3.5 w-3.5 transition-transform group-hover:scale-120 group-hover:rotate-12 text-accent" />
+                        <span>AI Generator</span>
+                      </Link>
+                    </>
+                  )}
+                </nav>
+              )}
 
               <nav className="flex flex-wrap items-center justify-center gap-x-6 gap-y-3 px-6 py-2.5 rounded-full bg-muted/20 border border-primary/5 backdrop-blur-sm">
                 {footerNavItems.map((item) => (

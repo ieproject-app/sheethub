@@ -18,7 +18,7 @@ import { NotificationProvider } from "@/hooks/use-notification";
 import { getDictionary } from "@/lib/get-dictionary";
 
 import {
-  Bricolage_Grotesque,
+  Manrope,
   Plus_Jakarta_Sans,
   Lora,
   JetBrains_Mono,
@@ -27,7 +27,7 @@ import { cn } from "@/lib/utils";
 import { FirebaseProviderWrapper } from "@/components/layout/firebase-provider-wrapper";
 import { LocaleSuggestionBanner } from "@/components/layout/locale-suggestion-banner";
 
-const fontDisplay = Bricolage_Grotesque({
+const fontDisplay = Manrope({
   subsets: ["latin"],
   variable: "--gf-display",
   weight: ["400", "500", "600", "700", "800"],

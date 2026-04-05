@@ -10,8 +10,8 @@
     "terms": "Terms"
   },
   "footer": {
-    "authorBio": "A passionate developer exploring the web and sharing findings along the way.",
-    "viewProfile": "View My Profile"
+    "authorBio": "SheetHub is built to deliver practical Excel and Google Sheets guidance, with concise notes and workflows that are ready to use.",
+    "viewProfile": "About SheetHub"
   },
   "home": {
     "title": "SheetHub - Excel and Google Sheets: Tutorials, Formulas, and Quick Updates",
@@ -39,8 +39,8 @@
     "description": "Personal technical snippets and quick references."
   },
   "about": {
-    "title": "About Iwan & SheetHub",
-    "description": "The story behind SheetHub, why it exists, and the practical mindset behind the work.",
+    "title": "About SheetHub",
+    "description": "How SheetHub is built: the purpose, editorial direction, and practical approach behind every guide.",
     "experience": "Experience Highlights",
     "skills": "Core Strengths",
     "education": "Education",

@@ -1,17 +1,12 @@
 "use client";
 
-import Giscus from "@giscus/react";
+import { DiscussionEmbed } from "disqus-react";
 import { useState, useEffect, useMemo, useRef } from "react";
 import { MessageSquare, ShieldCheck, ExternalLink } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
-import { useThemeMode } from "@/hooks/use-theme-mode";
 
 const productionHostname = "sheethub.web.id";
-
-const GISCUS_REPO = "ieproject-app/SheetHub" as const;
-const GISCUS_REPO_ID = process.env.NEXT_PUBLIC_GISCUS_REPO_ID || "";
-const GISCUS_CATEGORY = "Comments";
-const GISCUS_CATEGORY_ID = process.env.NEXT_PUBLIC_GISCUS_CATEGORY_ID || "";
+const DISQUS_SHORTNAME = process.env.NEXT_PUBLIC_DISQUS_SHORTNAME || "gsheets";
 
 interface ArticleCommentsProps {
   article: {
@@ -23,11 +18,9 @@ interface ArticleCommentsProps {
 }
 
 export function ArticleComments({ article, type, locale }: ArticleCommentsProps) {
-  const [giscusVisible, setGiscusVisible] = useState(false);
+  const [commentsVisible, setCommentsVisible] = useState(false);
   const commentsRef = useRef<HTMLDivElement>(null);
-  const { resolvedTheme } = useThemeMode();
 
-  const giscusTheme = resolvedTheme === "dark" ? "dark_dimmed" : "light";
   const isProductionDomain = useMemo(() => {
     if (typeof window === "undefined") return false;
 
@@ -47,7 +40,7 @@ export function ArticleComments({ article, type, locale }: ArticleCommentsProps)
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting) {
-          setGiscusVisible(true);
+          setCommentsVisible(true);
           observer.disconnect();
         }
       },
@@ -61,7 +54,10 @@ export function ArticleComments({ article, type, locale }: ArticleCommentsProps)
     return () => observer.disconnect();
   }, []);
 
-  const canonicalUrl = `https://${productionHostname}/${type}/${article.slug}`;
+  const localePrefix = locale === "en" ? "" : `/${locale}`;
+  const canonicalUrl = `https://${productionHostname}${localePrefix}/${type}/${article.slug}`;
+  const disqusIdentifier = `${type}:${locale}:${article.slug}`;
+  const disqusLanguage = locale === "id" ? "id" : "en";
 
   const i18n = {
     discussion: locale === "id" ? "Diskusi" : "Discussion",
@@ -84,8 +80,7 @@ export function ArticleComments({ article, type, locale }: ArticleCommentsProps)
     openLive: locale === "id" ? "Buka versi live" : "Open live version",
   };
 
-  // ─── Skeleton (before mounted OR waiting for intersection) ───────────────
-  if (!giscusVisible) {
+  if (!commentsVisible) {
     return (
       <section
         ref={commentsRef}
@@ -130,20 +125,15 @@ export function ArticleComments({ article, type, locale }: ArticleCommentsProps)
             i18n={i18n}
             productionHostname={productionHostname}
           />
-        ) : GISCUS_REPO_ID && GISCUS_CATEGORY_ID ? (
-          <Giscus
-            repo={GISCUS_REPO}
-            repoId={GISCUS_REPO_ID}
-            category={GISCUS_CATEGORY}
-            categoryId={GISCUS_CATEGORY_ID}
-            mapping="pathname"
-            strict="0"
-            reactionsEnabled="0"
-            emitMetadata="0"
-            inputPosition="bottom"
-            theme={giscusTheme}
-            lang="id"
-            loading="lazy"
+        ) : DISQUS_SHORTNAME.trim() ? (
+          <DiscussionEmbed
+            shortname={DISQUS_SHORTNAME}
+            config={{
+              url: canonicalUrl,
+              identifier: disqusIdentifier,
+              title: article.title,
+              language: disqusLanguage,
+            }}
           />
         ) : (
           <EnvMissingNotice />
@@ -212,10 +202,9 @@ function DevPlaceholder({
 function EnvMissingNotice() {
   return (
     <div className="rounded-2xl border border-amber-500/20 bg-amber-500/5 p-6 text-sm text-amber-600">
-      <p className="font-bold">Giscus env vars missing</p>
+      <p className="font-bold">Disqus shortname is missing</p>
       <p className="mt-1 text-xs opacity-70">
-        Set <code>NEXT_PUBLIC_GISCUS_REPO_ID</code> and{" "}
-        <code>NEXT_PUBLIC_GISCUS_CATEGORY_ID</code> in your .env.local
+        Set <code>NEXT_PUBLIC_DISQUS_SHORTNAME</code> in your .env.local
       </p>
     </div>
   );

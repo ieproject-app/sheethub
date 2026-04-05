@@ -3,10 +3,13 @@ import { getSortedPostsData } from "@/lib/posts";
 import { getSortedNotesData } from "@/lib/notes";
 import { shouldIndexTag } from "@/lib/tags";
 import { i18n } from "@/i18n-config";
+import { FEATURE_FLAGS } from "@/lib/feature-flags";
 
 const DOMAIN = "https://sheethub.web.id";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
+  const shouldShowTools = FEATURE_FLAGS.toolsEnabled;
+
   const routes = [
     "",
     "/blog",
@@ -16,7 +19,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     "/privacy",
     "/terms",
     "/disclaimer",
-    "/tools",
+    ...(shouldShowTools ? ["/tools"] : []),
   ];
 
   // Tools routes yang ingin diindeks
