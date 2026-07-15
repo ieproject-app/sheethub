@@ -1,0 +1,212 @@
+---
+title: "Excel vs Google Sheets: Key Formula Differences You Need to Know"
+date: "2026-07-14"
+description: "Excel and Google Sheets have key formula differences. Learn which functions work in both and how to avoid errors."
+published: true
+featured: true
+heroImage: "default-og"
+tags: ["excel", "google-sheets", "comparison", "formulas", "guide"]
+category: "Comparison"
+---
+
+You built a spreadsheet in Excel. It works perfectly. Then you open it in Google Sheets and half the formulas break. Or the other way around — you built something in Sheets, exported it to Excel, and suddenly nothing works.
+
+This happens because Excel and Google Sheets are **not the same**. They look similar, but their formula engines have real differences that matter.
+
+Here is exactly what you need to know before moving between the two.
+
+<Callout variant="info" title="The Short Version">
+  Excel has more advanced functions. Google Sheets has better collaboration and web-native features. For 80% of everyday formulas (SUM, IF, VLOOKUP, basic math), they work identically. The trouble lives in the remaining 20%.
+</Callout>
+
+---
+
+## Why This Matters
+
+The difference between Excel and Sheets is not just about preference. It affects:
+
+- **Formula portability** — Can you send this spreadsheet to someone using the other tool?
+- **Performance** — Same formula, different speed on each platform
+- **Features** — Some functions only exist in one platform
+- **Data limits** — Sheets caps at 10 million cells; Excel at 1.7 million per worksheet
+
+If you work in both platforms, knowing the differences saves you hours of debugging.
+
+---
+
+## Functions That Work in Both
+
+Most basic functions behave identically:
+
+| Category | Functions |
+|----------|-----------|
+| Math | SUM, AVERAGE, COUNT, MAX, MIN, ROUND, ABS |
+| Lookup | VLOOKUP, HLOOKUP, INDEX, MATCH |
+| Logic | IF, AND, OR, NOT, IFERROR, IFNA, SWITCH |
+| Text | LEFT, RIGHT, MID, LEN, FIND, REPLACE, TEXT, CONCATENATE |
+| Date | TODAY, NOW, YEAR, MONTH, DAY, DATE, DATEDIF |
+| Stats | COUNTIF, COUNTIFS, SUMIF, SUMIFS, AVERAGEIF, AVERAGEIFS |
+
+If you stick to these, your formulas will work in both tools without changes.
+
+---
+
+## Functions Exclusive to Excel
+
+These do not exist in Google Sheets:
+
+| Function | What It Does |
+|----------|-------------|
+| XLOOKUP | Modern lookup (replaces VLOOKUP) |
+| XMATCH | Modern position finder |
+| FILTER | Dynamic array filter |
+| SORT | Dynamic array sort |
+| UNIQUE | Extract unique values |
+| SEQUENCE | Generate number sequences |
+| RANDARRAY | Generate random arrays |
+| LAMBDA | Custom function builder |
+| LET | Assign names within formulas |
+| GROUPBY | Pivot-like aggregation (new) |
+| PIVOTBY | Cross-tabulation (new) |
+| TEXTBEFORE / TEXTAFTER | Advanced text extraction |
+| TEXTSPLIT | Split text into columns |
+| VSTACK / HSTACK | Dynamic array stacking |
+| TAKE / DROP | Array trimming |
+| CHOOSECOLS / CHOOSEROWS | Array reshaping |
+| EXPAND | Array expansion |
+
+<Callout variant="warning" title="XLOOKUP Is the Most Common Trap">
+  If you use XLOOKUP in Excel and share the file with a Sheets user, every XLOOKUP formula returns a `#NAME?` error. Google Sheets does not have XLOOKUP. Use INDEX-MATCH for cross-platform compatibility.
+</Callout>
+
+---
+
+## Functions Exclusive to Google Sheets
+
+These do not exist in Excel:
+
+| Function | What It Does |
+|----------|-------------|
+| QUERY | SQL-like query language |
+| ARRAYFORMULA | Force array calculation |
+| GOOGLETRANSLATE | Translate text |
+| GOOGLEFINANCE | Stock prices and currency rates |
+| IMAGE | Display an image in a cell |
+| IMPORTRANGE | Import data from another sheet |
+| IMPORTHTML | Import data from HTML tables |
+| IMPORTXML | Import data from XML feeds |
+| IMPORTDATA | Import CSV/TSV from URL |
+| SPLIT | Split text by delimiter (simpler than TEXTSPLIT) |
+| FLATTEN | Flatten arrays into single column |
+
+**The most painful one for Excel users moving to Sheets:** QUERY. It is Sheets' superpower. You can filter, group, sort, and aggregate in one formula. Nothing equivalent exists in Excel.
+
+```
+=QUERY(A1:D100, "SELECT B, SUM(C) GROUP BY B ORDER BY SUM(C) DESC LABEL SUM(C) 'Total'", 1)
+```
+
+---
+
+## Same Name, Different Behavior
+
+These are the **silent traps** — functions that exist in both but behave differently:
+
+| Function | Excel | Google Sheets |
+|----------|-------|---------------|
+| **RAND** | Recalculates on every edit | Recalculates on every edit (same) |
+| **RANDBETWEEN** | Same | Same |
+| **SUMIF** | Range and sum_range can be different sizes | Same |
+| **COUNTIF** | Supports `>=5` syntax | Same |
+| **VLOOKUP** | Approximate match is default | Exact match is default |
+| **IFS** | Returns #N/A if no match | Returns #N/A if no match (same) |
+| **SWITCH** | Returns #N/A if no match | Returns #N/A if no match (same) |
+| **DATE** | Converts year, month, day to serial | Same |
+| **DATEDIF** | Documented but hidden | Works the same |
+| **FILTER** | **Exists** (dynamic array) | **Does not exist with that name** — use QUERY or FILTER |
+| **ARRAYFORMULA** | Not needed (dynamic arrays built-in) | Required for array operations outside QUERY |
+
+<Callout variant="warning" title="VLOOKUP Default Match — Silent Killer">
+  When you omit the last argument in VLOOKUP, Excel defaults to TRUE (approximate match). Google Sheets defaults to FALSE (exact match). If you share a VLOOKUP formula between platforms without specifying the fourth argument, you get different results. Always include FALSE.
+</Callout>
+
+---
+
+## Performance Differences
+
+| Scenario | Excel | Google Sheets |
+|----------|-------|---------------|
+| 100,000 rows × 20 columns | ✅ Fast | ⚠️ Moderate |
+| Heavy array formulas | ✅ Optimized natively | ⚠️ May slow down |
+| QUERY on 50k rows | ❌ No QUERY | ✅ Fast |
+| Volatile functions (RAND, NOW) | Slows recalc | Same |
+| Multiple IMPORTRANGE | ❌ No IMPORTRANGE | Slows sheet loading |
+| Pivot Table on 500k rows | ✅ Fast | ❌ 10M cell limit |
+
+**The rule of thumb:** Excel handles larger datasets better. Sheets handles real-time collaboration and web data better.
+
+---
+
+## Pro Tips
+
+**Know your audience.** If you share spreadsheets, use the lowest common denominator functions. INDEX-MATCH works everywhere. XLOOKUP and QUERY do not.
+
+**Use ARRAYFORMULA in Sheets for legacy compatibility.** Modern Excel does not need it, but Sheets does for some array operations:
+
+```
+=ARRAYFORMULA(IF(A2:A100 > 100, "High", "Low"))
+```
+
+**Beware of IMPORTRANGE latency.** Every IMPORTRANGE call fetches data from the source sheet. Multiple calls can slow your workbook. Combine them into one QUERY if possible.
+
+**Date serial numbers differ.** Excel's date system starts at January 1, 1900 (serial 1). Google Sheets uses the same system for compatibility. Dates should transfer correctly between the two.
+
+**Test before sharing.** Before sending a spreadsheet to someone using the other platform, spot-check 5-10 formulas. The ones that break are almost always exclusive functions or different default behaviors.
+
+---
+
+## Common Mistakes
+
+**Assuming dynamic arrays work in Sheets.** Excel's dynamic arrays (spill behavior) do not exist in Sheets. An Excel formula that spills results into adjacent cells will not do so in Sheets. You need ARRAYFORMULA or direct cell references.
+
+**Using `@` implicit intersection in Excel.** When you see `@` in an Excel formula (e.g., `=@VLOOKUP(...)`), it forces single-cell behavior. Google Sheets does not support this syntax. Remove `@` when moving formulas.
+
+**Forgetting that Sheets has no LAMBDA.** If you built custom LAMBDA functions in Excel for complex logic, they break in Sheets. Rewrite them as named functions or script-based custom functions using Google Apps Script.
+
+**Assuming similar shortcut behaviors.** Keyboard shortcuts for navigation and selection are mostly the same, but formula-specific shortcuts differ. `<Kbd>Ctrl</Kbd> + <Kbd>Shift</Kbd> + <Kbd>Enter</Kbd>` (array formulas) works differently — Sheets uses ARRAYFORMULA wrapper instead.
+
+---
+
+## Related Functions
+
+- **[QUERY Function Guide](/blog/query-function-google-sheets-guide)** — The complete guide to Google Sheets' most powerful function
+- **[GROUPBY Function Guide](/blog/groupby-function-excel-guide)** — Excel's new aggregation formula
+- **[VLOOKUP vs XLOOKUP](/blog/vlookup-vs-xlookup-comparison-guide)** — Why modern Excel is moving beyond VLOOKUP
+- **[INDEX-MATCH Guide](/blog/index-match-formula-guide)** — The cross-platform lookup solution
+
+---
+
+## FAQ
+
+**Can I use the same Excel file in Google Sheets without problems?**
+
+For simple files (SUM, IF, VLOOKUP, basic formatting), yes. For files using dynamic arrays, XLOOKUP, LAMBDA, or complex macros — expect breakage. Always test critical files.
+
+**Which platform has more functions?**
+
+Excel, by a significant margin. Microsoft has been adding 10-20 new functions per year, many of which (LAMBDA, GROUPBY, dynamic arrays) have no Sheets equivalent.
+
+**Which platform is better for collaboration?**
+
+Google Sheets, and it is not close. Real-time co-authoring, comments, version history, and sharing are built into Sheets. Excel's collaboration features have improved but still lag behind.
+
+**Can I use macros in Google Sheets?**
+
+Kind of. Sheets uses Google Apps Script (JavaScript-based), not VBA. Simple macros can be converted, but complex ones need to be rewritten. There is no Record Macro feature in Sheets.
+
+**How do I move a spreadsheet from Excel to Sheets without breaking formulas?**
+
+Open the Excel file in Google Drive — Sheets converts it automatically. Then check every cell with a green triangle (warning indicator). Those are formulas that did not convert cleanly. Fix them one by one.
+
+**Is one platform faster than the other?**
+
+Excel is faster for raw calculation speed on large datasets. Sheets is faster for real-time updates, web data import, and collaborative workflows. Choose based on your primary use case.

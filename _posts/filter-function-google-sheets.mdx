@@ -1,0 +1,178 @@
+---
+title: "FILTER Function in Google Sheets: Complete Guide"
+date: "2026-07-14"
+description: "Learn FILTER function in Google Sheets. Extract data matching your conditions with simple step-by-step examples."
+published: true
+featured: false
+heroImage: "default-og"
+tags: ["google-sheets", "formulas", "filter", "tutorial"]
+category: "Google Sheets"
+---
+
+You have a spreadsheet with 10,000 rows. You only want to see the rows where the region is East and the amount is over $500. You could sort, hide, or delete — but that is slow and destructive.
+
+FILTER does it instantly in one formula. It returns only the rows that match your conditions, and it updates automatically when your data changes.
+
+---
+
+## Why This Matters
+
+FILTER is one of the most practical functions in Google Sheets. Unlike QUERY, it uses plain English conditions — no SQL required. Unlike sorting and hiding, it is non-destructive. Your original data stays untouched.
+
+---
+
+## FILTER — The Basics
+
+### Syntax
+
+```
+=FILTER(range, condition1, [condition2], ...)
+```
+
+| Argument | Description |
+|----------|-------------|
+| `range` | The data to return |
+| `condition1` | A TRUE/FALSE array (your first filter) |
+| `condition2` | Optional. Additional filters (AND logic) |
+
+### Simple Example
+
+**Return all rows where region is East:**
+
+```
+=FILTER(A2:D100, B2:B100="East")
+```
+
+FILTER spills the result automatically into the cells below and to the right.
+
+---
+
+## Single Condition Filters
+
+**Numeric filter — amount over 500:**
+
+```
+=FILTER(A2:D100, C2:C100>500)
+```
+
+**Text filter — product is Widget A:**
+
+```
+=FILTER(A2:D100, A2:A100="Widget A")
+```
+
+**Date filter — orders after January 1, 2026:**
+
+```
+=FILTER(A2:D100, D2:D100>DATE(2026,1,1))
+```
+
+---
+
+## Multiple Conditions (AND)
+
+Separate conditions with commas — all must be TRUE:
+
+```
+=FILTER(A2:D100, B2:B100="East", C2:C100>500)
+```
+
+This returns rows where region is East AND amount > 500.
+
+---
+
+## OR Conditions
+
+Use `+` between conditions for OR:
+
+```
+=FILTER(A2:D100, (B2:B100="East") + (B2:B100="West"))
+```
+
+This returns rows where region is East OR West.
+
+---
+
+## FILTER with Other Functions
+
+**Count filtered results:**
+
+```
+=COUNTA(FILTER(A2:A100, B2:B100="East"))
+```
+
+**Sum filtered amounts:**
+
+```
+=SUM(FILTER(C2:C100, B2:B100="East"))
+```
+
+**Average of filtered results:**
+
+```
+=AVERAGE(FILTER(C2:C100, B2:B100="East"))
+```
+
+---
+
+## FILTER vs QUERY
+
+| Feature | FILTER | QUERY |
+|---------|--------|-------|
+| Syntax | Simple, English-like | SQL-like |
+| Multiple conditions | Comma-separated | WHERE clause |
+| GROUP BY | Not supported | Supported |
+| ORDER BY | Not supported | Supported |
+| Learning curve | Low | Medium |
+
+**Use FILTER** for simple extractions. **Use QUERY** when you need grouping, sorting, or aggregation.
+
+---
+
+## Pro Tips
+
+**Return specific columns only.** Instead of returning the whole range, specify just the columns:
+
+```
+=FILTER({A2:A100, C2:C100}, B2:B100="East")
+```
+
+**Use with SORT to order results:**
+
+```
+=SORT(FILTER(A2:D100, B2:B100="East"), 3, TRUE)
+```
+
+**Handle empty results with IFERROR:**
+
+```
+=IFERROR(FILTER(A2:D100, B2:B100="East"), "No matching data")
+```
+
+---
+
+## Common Mistakes
+
+**Range size mismatch.** Every condition range must be the same size as the data range. If your data has 99 rows but your condition has 100, you get an error.
+
+**Using AND inside FILTER.** FILTER conditions already use AND logic when comma-separated. You do not need to wrap them in an AND function.
+
+**Forgetting to lock ranges.** When copying FILTER formulas, use absolute references ($A$2:$A$100) or named ranges to prevent shifting.
+
+---
+
+## Related Functions
+
+- **[QUERY Function](/blog/query-function-google-sheets-guide)** — More powerful alternative for complex data extraction
+- **[SUMIF vs SUMIFS](/blog/sumif-vs-sumifs-vs-sumproduct-comparison)** — Sum values in filtered data
+- **[VLOOKUP vs XLOOKUP](/blog/vlookup-vs-xlookup-comparison-guide)** — Look up individual values instead of filtering
+
+---
+
+## FAQ
+
+**Does FILTER exist in Excel?** Yes, FILTER is available in Excel for Microsoft 365. It works similarly but with slightly different syntax.
+
+**Can FILTER return data to another sheet?** Yes. Just put the FILTER formula in any sheet. It references the original range wherever it is.
+
+**Why is my FILTER returning #N/A?** The most common cause is range mismatch — check that every condition range is the same size as the data range.

@@ -1,0 +1,209 @@
+---
+title: "SPLIT, TEXT, and Text Functions in Google Sheets"
+date: "2026-07-14"
+description: "Learn SPLIT and text functions in Google Sheets. Split text, extract characters, and format data with examples."
+published: true
+featured: false
+heroImage: "default-og"
+tags: ["google-sheets", "formulas", "split", "text-functions", "tutorial"]
+category: "Google Sheets"
+---
+
+You import data from another system and it arrives in one column: "John Smith | jsmith@email.com | (555) 123-4567 | East Region."
+
+You need the name in column A, email in B, phone in C, region in D. Manually splitting 500 rows takes forever. SPLIT does it instantly.
+
+---
+
+## SPLIT — Divide Text Into Columns
+
+### Syntax
+
+```
+=SPLIT(text, delimiter, [split_by_each], [remove_empty_text])
+```
+
+### Examples
+
+**Split by space:**
+
+```
+=SPLIT(A1, " ")
+```
+
+**Split by comma:**
+
+```
+=SPLIT(A1, ",")
+```
+
+**Split by pipe (|):**
+
+```
+=SPLIT(A1, "|")
+```
+
+### Real Scenario
+
+Full name "John Smith" → First and last name:
+
+```
+=SPLIT(A1, " ")
+```
+
+Returns `John` in one cell, `Smith` in the next.
+
+---
+
+## TEXT Function — Format Numbers as Text
+
+### Syntax
+
+```
+=TEXT(number, format)
+```
+
+### Examples
+
+**Format as currency:**
+
+```
+=TEXT(1234.5, "$#,##0.00")  →  $1,234.50
+```
+
+**Format as date:**
+
+```
+=TEXT(A1, "mmmm d, yyyy")   →  July 14, 2026
+```
+
+**Format as percentage:**
+
+```
+=TEXT(0.15, "0%")           →  15%
+```
+
+---
+
+## LEFT, RIGHT, MID — Extract Characters
+
+**First 3 characters:**
+
+```
+=LEFT(A1, 3)
+```
+
+**Last 4 characters:**
+
+```
+=RIGHT(A1, 4)
+```
+
+**Middle characters (start at position 5, take 3):**
+
+```
+=MID(A1, 5, 3)
+```
+
+---
+
+## LEN, TRIM, CLEAN — Clean Text
+
+**Count characters:**
+
+```
+=LEN(A1)
+```
+
+**Remove extra spaces:**
+
+```
+=TRIM(A1)
+```
+
+**Remove non-printable characters:**
+
+```
+=CLEAN(A1)
+```
+
+---
+
+## UPPER, LOWER, PROPER — Change Case
+
+```
+=UPPER(A1)    →  JOHN SMITH
+=LOWER(A1)    →  john smith
+=PROPER(A1)   →  John Smith
+```
+
+---
+
+## CONCATENATE and JOIN — Combine Text
+
+**Ampersand (&) is the simplest:**
+
+```
+=A1 & " " & B1
+```
+
+**With TEXT function for formatting:**
+
+```
+=A1 & " sold " & TEXT(C1, "$#,##0") & " worth of products"
+```
+
+**JOIN with delimiter:**
+
+```
+=JOIN(", ", A1:D1)
+```
+
+---
+
+## Pro Tips
+
+**Combine SPLIT with TRANSPOSE to split into rows instead of columns:**
+
+```
+=TRANSPOSE(SPLIT(A1, ","))
+```
+
+**Use TRIM before SPLIT to handle inconsistent spacing:**
+
+```
+=SPLIT(TRIM(A1), " ")
+```
+
+**Extract email from "Name &lt;email&gt;":**
+
+```
+=TRIM(MID(A1, FIND("<", A1)+1, FIND(">", A1) - FIND("<", A1) - 1))
+```
+
+---
+
+## Common Mistakes
+
+**Forgetting that SPLIT spills.** Make sure cells to the right are empty, otherwise you get a #REF! error.
+
+**Numbers become text.** SPLIT outputs text, even if the content looks like a number. Use VALUE() to convert back: `=VALUE(A1)`.
+
+**SPLIT is Sheets-only.** SPLIT does not exist in Excel. Use Text to Columns (Data tab) or TEXTSPLIT (Excel 365).
+
+---
+
+## Related Functions
+
+- **[QUERY Function](/blog/query-function-google-sheets-guide)** — Process cleaned text data with SQL-like queries
+- **[FILTER Function](/blog/filter-function-google-sheets)** — Filter your cleaned and structured data
+
+---
+
+## FAQ
+
+**Does SPLIT work in Excel?** No. Excel has TEXTSPLIT (Microsoft 365) or Text to Columns (all versions). SPLIT is Google Sheets only.
+
+**Can I split text into rows instead of columns?** Yes, wrap with TRANSPOSE: `=TRANSPOSE(SPLIT(A1, ","))`.
+
+**How do I keep leading zeros?** Format the cell as "Plain Text" before entering data, or use: `=TEXT(A1, "00000")` for ZIP codes.

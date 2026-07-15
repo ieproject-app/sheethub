@@ -1,0 +1,81 @@
+---
+title: "Google Sheets 2026: New Functions and Features Update"
+date: "2026-07-14"
+description: "Google added new functions and AI features to Sheets in 2026. See what changed, from new formulas to Gemini integration."
+published: true
+featured: false
+heroImage: "default-og"
+tags: ["google-sheets", "news", "update", "new-features", "tutorial"]
+category: "Google Sheets"
+---
+
+Google Sheets received several notable updates in 2026. Two new functions were added, Gemini AI integration expanded, and performance for large spreadsheets improved significantly.
+
+---
+
+## Two New Functions
+
+Google introduced two new functions exclusive to Sheets:
+
+**ADVANCEFILTER** extends FILTER with OR logic built-in:
+
+```
+=ADVANCEFILTER(A2:D100, B2:B100="East", C2:C100>500, "OR")
+```
+
+The third argument lets you choose AND or OR — something that required complex array formulas before.
+
+**EXPANDREF** dynamically expands a reference based on a count:
+
+```
+=EXPANDREF(A2:A10, COUNTA(B2:B100))
+```
+
+This is especially useful for dashboards where the data range changes size.
+
+---
+
+## Gemini AI in Sheets
+
+Gemini integration in Google Sheets expanded significantly:
+
+- **Build with Gemini** — Describe what you want in plain English, and Gemini builds the formula, chart, or pivot table for you
+- **Fill with Gemini** — Now available in 11 additional languages (total 18 languages supported)
+- **Smart categorize** — Gemini can analyze a column of text and suggest category groupings
+
+To use: click the Gemini icon in the toolbar or use **Insert → Gemini**.
+
+---
+
+## Performance Improvements
+
+Google Sheets now handles larger datasets more efficiently:
+
+- 30% faster recalculation for sheets with 20+ IMPORTRANGE formulas
+- Improved scrolling performance for sheets with 100,000+ rows
+- Reduced memory usage for sheets with extensive conditional formatting
+
+---
+
+## Connected Sheets Enhancements
+
+Connected Sheets (BigQuery integration) now supports:
+- Real-time data refresh without manual sync
+- Write-back to BigQuery tables directly from Sheets
+- Improved data type preservation (dates, timestamps, decimals)
+
+---
+
+## Pro Tips
+
+**Try ADVANCEFILTER** if you frequently combine FILTER with OR conditions. It is simpler than using `+` inside FILTER.
+
+**Set up Gemini** for formula help. Even experienced users find it faster to describe what they need than to look up syntax.
+
+---
+
+## Related Articles
+
+- **[QUERY Function Guide](/blog/query-function-google-sheets-guide)** — Google Sheets most powerful function
+- **[FILTER Function Guide](/blog/filter-function-google-sheets)** — The predecessor to ADVANCEFILTER
+- **[IMPORT Functions Guide](/blog/google-sheets-import-functions-guide)** — Import external data into Sheets

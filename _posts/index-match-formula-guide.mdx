@@ -1,0 +1,242 @@
+---
+title: "How to Use INDEX-MATCH in Excel: Complete Guide"
+date: "2026-07-14"
+description: "Learn INDEX and MATCH in Excel. Step-by-step guide to left lookups, two-way lookups, and advanced scenarios."
+published: true
+featured: false
+heroImage: "default-og"
+tags: ["excel", "formulas", "index-match", "lookup", "tutorial"]
+category: "Formulas & Functions"
+---
+
+You know the feeling. You need a value from a column to the left of your lookup column. VLOOKUP cannot do it. XLOOKUP can, but maybe you are on an older Excel version. Or maybe you just want a formula that does not break when someone inserts a column.
+
+INDEX-MATCH has been solving these problems for years. It works in every Excel version ever made. It handles left lookups naturally. It is faster on large datasets than VLOOKUP. And once you understand how the two functions fit together, you will find yourself reaching for it even when simpler options exist — because it is simply more flexible.
+
+Here is how it works.
+
+<Callout variant="tip" title="Pro Tip">
+  Even if you use XLOOKUP daily, knowing INDEX-MATCH is still valuable for legacy workbooks and two-way lookups.
+</Callout>
+
+---
+
+## Why This Matters
+
+Here is a common scenario. You have an employee table and need to look up a value that sits to the left of your lookup column. VLOOKUP simply cannot do that. INDEX-MATCH can — and it works in every Excel version ever made.
+
+Here is how the two functions fit together.
+
+<Callout variant="info" title="Why This Matters">
+  Lookup functions are the backbone of data analysis. Every time you need to match customer IDs, pull prices, or enrich datasets, you are reaching for a lookup function. Using the wrong one costs time and introduces errors.
+</Callout>
+
+---
+
+## How INDEX-MATCH Works
+
+- **MATCH** finds the position of a value in a range (returns a row number)
+- **INDEX** returns a value from a specific row and column position
+
+You use MATCH to find the row, then feed that row into INDEX to get the value.
+
+### MATCH Syntax
+
+```
+=MATCH(lookup_value, lookup_array, match_type)
+```
+
+| Argument | Description |
+|----------|-------------|
+| `lookup_value` | The value to find |
+| `lookup_array` | The range to search (one column or row) |
+| `match_type` | 0 (exact), 1 (less than), -1 (greater than) |
+
+MATCH returns the position. For example, `=MATCH("P102", A2:A100, 0)` returns `3` if "P102" is the third item.
+
+### INDEX Syntax
+
+```
+=INDEX(array, row_num, column_num)
+```
+
+| Argument | Description |
+|----------|-------------|
+| `array` | The range containing the return value |
+| `row_num` | The row position (1-based) |
+| `column_num` | Optional. The column position |
+
+INDEX returns the value at the specified position. For example, `=INDEX(C2:C100, 3)` returns the third row of column C.
+
+### Putting Them Together
+
+```
+=INDEX(return_range, MATCH(lookup_value, lookup_range, 0))
+```
+
+MATCH finds the row. INDEX uses it to return the value.
+
+### Left Lookup Example
+
+Look up an employee name (column C) and return their department (column B — to the left):
+
+```
+=INDEX(B2:B100, MATCH("Jane Smith", C2:C100, 0))
+```
+
+MATCH finds "Jane Smith" in column C and returns position 7. INDEX takes row 7 from column B. VLOOKUP cannot do this. INDEX-MATCH can.
+
+### Standard Lookup Example
+
+Look up "P102" in column A and return a value from column C:
+
+```
+=INDEX(C2:C100, MATCH("P102", A2:A100, 0))
+```
+
+If someone inserts a new column between A and C, this formula still works because the return range is explicit. VLOOKUP would break.
+
+---
+
+## Two-Way Lookups (Index-Match-Match)
+
+This is where INDEX-MATCH really shines. A two-way lookup finds a value at the intersection of a specific row **and** column — like looking up a pricing matrix.
+
+You need the price of "Beta" in "Q2 2026":
+
+```
+| Product | Q1 2026 | Q2 2026 | Q3 2026 |
+|---------|---------|---------|---------|
+| Alpha   | 100     | 110     | 120     |
+| Beta    | 200     | 210     | 220     |
+```
+
+```
+=INDEX(B2:D4, MATCH("Beta", A2:A4, 0), MATCH("Q2 2026", B1:D1, 0))
+```
+
+<Steps>
+<Step>
+`MATCH("Beta", A2:A4, 0)` → finds "Beta" in column A → returns **row 3**
+</Step>
+<Step>
+`MATCH("Q2 2026", B1:D1, 0)` → finds "Q2 2026" in header → returns **column 2**
+</Step>
+<Step>
+`INDEX(B2:D4, 3, 2)` → returns the value at row 3, column 2 → **210**
+</Step>
+</Steps>
+
+Neither VLOOKUP nor XLOOKUP handles this with a single formula. This alone is why I still teach INDEX-MATCH to every analyst I work with.
+
+---
+
+## INDEX-MATCH vs XLOOKUP: What Changed?
+
+So you might be wondering: "If XLOOKUP can do left lookups and is simpler, do I still need INDEX-MATCH?"
+
+Short answer: it depends. I still use INDEX-MATCH regularly, and here is when I reach for it over XLOOKUP.
+
+| Scenario | Best Choice |
+|----------|-------------|
+| Simple lookup, modern Excel | XLOOKUP |
+| Left lookup, modern Excel | XLOOKUP |
+| **Two-way (matrix) lookup** | **INDEX-MATCH** |
+| Legacy Excel (2019 or earlier) | INDEX-MATCH |
+| Very large datasets (100k+ rows) | INDEX-MATCH (often faster) |
+| Dynamic array workflows | XLOOKUP or FILTER |
+| Column-insert-safe formulas | Both (XLOOKUP simpler) |
+
+INDEX-MATCH is no longer the default choice for every lookup. But for two-way lookups, legacy compatibility, and performance-critical spreadsheets, it is still the better tool.
+
+---
+
+## Pro Tips
+
+**Use exact match unless you have a reason not to.** The third argument of MATCH should be `0` (exact match) in 90% of cases. MATCH with match_type=1 or -1 requires the lookup array to be sorted, and forgetting to sort gives wrong results.
+
+**Combine with named ranges.** Instead of writing `=INDEX(C2:C100, MATCH(B2, A2:A100, 0))`, define a named range:
+
+```
+=INDEX(EmployeeNames, MATCH(B2, EmployeeIDs, 0))
+```
+
+This makes the formula readable and eliminates off-by-one errors when the data range changes.
+
+**Use MATCH to validate data existence.** MATCH alone is useful for checking whether a value exists in a list. If it returns #N/A, the value is not there:
+
+```
+=IF(ISNUMBER(MATCH(B2, A2:A100, 0)), "Found", "Not found")
+```
+
+**Lock your ranges.** When copying INDEX-MATCH down a column, lock the lookup and return ranges with `$`:
+
+```
+=INDEX($C$2:$C$100, MATCH($B2, $A$2:$A$100, 0))
+```
+
+The row reference on the lookup value ($B2) stays unlocked so it changes as you drag down, but the ranges stay fixed.
+
+---
+
+## Common Mistakes
+
+<Callout variant="warning" title="Common Mistake">
+  **Range mismatch.** The lookup range in MATCH and the return range in INDEX must have the same starting row. If you search in rows 2-100 but return from rows 1-100, the positions will be off by one. Always align them.
+</Callout>
+
+```
+✅ =INDEX(C2:C100, MATCH(B2, A2:A100, 0))
+❌ =INDEX(C1:C100, MATCH(B2, A2:A100, 0))  // Off by one!
+```
+
+**Missing match_type.** The default match_type in MATCH is 1 (approximate), not 0 (exact). If you forget the third argument, MATCH assumes the data is sorted and may return wrong results. Always include `0` for exact match.
+
+**Forgetting absolute references.** When you copy an INDEX-MATCH formula to other cells, the ranges shift unless they are locked with `$`. Use named ranges or Excel Tables (Ctrl+T) to avoid this entirely.
+
+**Nesting too deep.** INDEX-MATCH inside INDEX-MATCH inside IF statements becomes hard to read. For complex lookups, consider breaking the logic into helper columns or using LET and LAMBDA for modern Excel.
+
+---
+
+## Related Functions
+
+<DownloadButton id="indexmatch-example-template" />
+
+If you found this guide useful, you might also like:
+
+- **[VLOOKUP vs XLOOKUP](/blog/vlookup-vs-xlookup-comparison-guide)** — A detailed comparison of all three lookup functions with real-world examples
+- **[SUMIF vs SUMIFS](/blog/sumif-vs-sumifs-vs-sumproduct-comparison)** — Conditional sums with single and multiple criteria
+- **[GROUPBY Function](/blog/groupby-function-excel-guide)** — Modern Excel's aggregation formula for dynamic reports
+- **[Excel vs Google Sheets](/blog/excel-vs-google-sheets-formula-differences)** — How INDEX-MATCH compares across platforms
+
+---
+
+## FAQ
+
+**Is INDEX-MATCH faster than VLOOKUP?**
+
+On large datasets, yes. VLOOKUP processes the whole table array, while INDEX-MATCH only touches the lookup column and the return column. Benchmarks show it can be 2-3x faster on datasets with 50,000+ rows.
+
+**Is INDEX-MATCH obsolete now that XLOOKUP exists?**
+
+Not at all. INDEX-MATCH is still the best choice for two-way (matrix) lookups, for legacy Excel compatibility, and for some performance-sensitive spreadsheets. Learn both, and pick the right tool for each situation.
+
+**Can INDEX-MATCH return multiple values?**
+
+No, INDEX-MATCH returns a single value. For multiple results, use FILTER or combine INDEX-MATCH with array formulas in older Excel versions.
+
+**How do I handle errors in INDEX-MATCH?**
+
+Wrap the formula in IFERROR:
+
+```
+=IFERROR(INDEX(C2:C100, MATCH(B2, A2:A100, 0)), "Not found")
+```
+
+**Does INDEX-MATCH work in Google Sheets?**
+
+Yes. INDEX and MATCH exist in Google Sheets with identical syntax. The patterns in this guide work in both platforms.
+
+**What if MATCH finds multiple matches?**
+
+MATCH returns the position of the first match only. To get multiple matches, use FILTER (modern Excel) or an array formula (older versions).

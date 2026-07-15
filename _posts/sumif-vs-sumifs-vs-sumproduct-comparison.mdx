@@ -1,0 +1,288 @@
+---
+title: "SUMIF vs SUMIFS vs SUMPRODUCT: Which One Should You Use?"
+date: "2026-07-14"
+description: "Compare SUMIF, SUMIFS, and SUMPRODUCT in Excel. Learn differences and when to use each function with examples."
+published: true
+featured: false
+heroImage: "default-og"
+tags: ["excel", "formulas", "sumif", "sumifs", "sumproduct", "comparison", "tutorial"]
+category: "Comparison"
+---
+
+You have a spreadsheet full of sales data. Somewhere in those thousands of rows is the number you need: total revenue for a specific product, in a specific region, for a specific month.
+
+Three functions can get you there. But picking the wrong one means either a brittle formula that breaks when your data grows, or a slow workbook that takes seconds to recalculate.
+
+Here is how each one works, and exactly when to reach for each.
+
+<Callout variant="tip" title="Quick Answer">
+  Use **SUMIF** for one condition, **SUMIFS** for multiple conditions, and **SUMPRODUCT** for conditional sums that simple SUMIFS cannot handle — like weighted averages or OR logic.
+</Callout>
+
+---
+
+## Why This Matters
+
+Conditional sums are everywhere in real work: total sales by region, hours by project, expenses by category. Pick the wrong function and you either overcomplicate a simple task (using SUMPRODUCT for a single condition) or hit a wall when your logic gets complex (SUMIF with multiple conditions).
+
+The good news: once you understand the small differences between them, you will instinctively grab the right one every time.
+
+---
+
+## SUMIF — One Condition Only
+
+SUMIF adds values that meet a single condition.
+
+### Syntax
+
+```
+=SUMIF(range, criteria, [sum_range])
+```
+
+| Argument | Description |
+|----------|-------------|
+| `range` | The range to check against your condition |
+| `criteria` | The condition (number, text, or expression) |
+| `sum_range` | Optional. The range to sum. If omitted, `range` is summed |
+
+### Examples
+
+**Sum all orders from the East region:**
+
+```
+=SUMIF(B2:B100, "East", C2:C100)
+```
+
+**Sum all orders over $500:**
+
+```
+=SUMIF(C2:C100, ">500")
+```
+
+Notice the third argument is optional here. When you omit it, SUMIF sums the same range it checks.
+
+**Sum all orders except a specific product:**
+
+```
+=SUMIF(A2:A100, "<>Product X", C2:C100)
+```
+
+<Callout variant="warning" title="Common Mistake">
+  SUMIF's `range` and `sum_range` must be the same size. If `range` is A2:A100 and `sum_range` is C2:C50, Excel does not error — it just returns wrong results silently. Always verify your ranges match.
+</Callout>
+
+---
+
+## SUMIFS — Multiple Conditions
+
+SUMIFS does what SUMIF does, but with multiple criteria. It was introduced in Excel 2007 and is available in every modern version.
+
+### Syntax
+
+```
+=SUMIFS(sum_range, criteria_range1, criteria1, [criteria_range2, criteria2], ...)
+```
+
+| Argument | Description |
+|----------|-------------|
+| `sum_range` | The range to sum (**first** argument — different from SUMIF!) |
+| `criteria_range1` | The first range to check |
+| `criteria1` | The first condition |
+| `criteria_range2, criteria2` | Optional. Additional pairs |
+
+**Notice the argument order.** SUMIFS puts `sum_range` first. SUMIF puts it third. This is the most common source of errors when people switch between the two.
+
+### Examples
+
+**Sum orders from the East region, for Product A:**
+
+```
+=SUMIFS(C2:C100, B2:B100, "East", A2:A100, "Product A")
+```
+
+**Sum orders between $100 and $500:**
+
+```
+=SUMIFS(C2:C100, C2:C100, ">=100", C2:C100, "<=500")
+```
+
+Yes, you can use the same column as both sum and criteria range. Just make sure the sizes match.
+
+**Sum orders from 2026:**
+
+```
+=SUMIFS(C2:C100, D2:D100, ">=1/1/2026", D2:D100, "<=12/31/2026")
+```
+
+<Callout variant="tip" title="Pro Tip">
+  You can add up to 127 condition pairs in SUMIFS. In practice, if you need more than 5-6, consider using a helper column or SUMPRODUCT instead — the formula becomes hard to read and maintain.
+</Callout>
+
+---
+
+## SUMPRODUCT — The Heavy Hitter
+
+SUMPRODUCT multiplies arrays together and sums the result. It is more flexible than SUMIFS, but also more complex.
+
+### Syntax
+
+```
+=SUMPRODUCT(array1, [array2], [array3], ...)
+```
+
+The classic pattern for conditional sums:
+
+```
+=SUMPRODUCT((condition_range1=condition1) * (condition_range2=condition2) * sum_range)
+```
+
+Each condition is an array of TRUE/FALSE. Multiplying them converts TRUE to 1 and FALSE to 0. Multiplying by the sum_range zeros out the rows that do not match.
+
+### Examples
+
+**SUMPRODUCT equivalent of SUMIFS with two conditions:**
+
+```
+=SUMPRODUCT((B2:B100="East") * (A2:A100="Product A") * C2:C100)
+```
+
+This does the same thing as `=SUMIFS(C2:C100, B2:B100, "East", A2:A100, "Product A")` but uses array math instead of built-in logic.
+
+**OR logic — sum if East OR West:**
+
+```
+=SUMPRODUCT(((B2:B100="East") + (B2:B100="West")) * C2:C100)
+```
+
+The `+` acts as OR. This is impossible with SUMIFS alone.
+
+**Weighted average:**
+
+```
+=SUMPRODUCT(B2:B100, C2:C100) / SUM(C2:C100)
+```
+
+This gives you the weighted average of values in B, weighted by values in C. No other conditional sum function can do this directly.
+
+<Callout variant="warning" title="Performance Warning">
+  SUMPRODUCT calculates every cell individually. On a small dataset (a few thousand rows), it is instant. On 100,000+ rows, it can slow your workbook down noticeably. For large datasets, prefer SUMIFS — it is optimized for speed.
+</Callout>
+
+---
+
+## Comparison: Which Should You Use?
+
+| Scenario | Best Function |
+|----------|---------------|
+| One condition | SUMIF |
+| Multiple conditions (AND) | SUMIFS |
+| OR logic (East OR West) | SUMPRODUCT |
+| Weighted average | SUMPRODUCT |
+| Complex array math | SUMPRODUCT |
+| Large dataset (50k+ rows) | SUMIFS (faster) |
+| Conditional sum with wildcards | SUMIF / SUMIFS |
+| Conditional sum using other functions inside | SUMPRODUCT |
+
+**General rule:** Start with SUMIFS. If it cannot handle your logic, move to SUMPRODUCT. If you only have one condition, drop down to SUMIF for cleaner code.
+
+---
+
+## Real-World Example
+
+Say you run a small online store. You export orders to Excel every week: column A has product name, B has category, C has region, D has order amount.
+
+**How much did you sell in the East region?**
+
+```
+=SUMIF(C2:C500, "East", D2:D500)
+```
+
+**How much from Electronics in the East?**
+
+```
+=SUMIFS(D2:D500, B2:B500, "Electronics", C2:C500, "East")
+```
+
+**What is the average order value by category, with East/West split?**
+
+```
+=SUMPRODUCT((B2:B500="Electronics") * (C2:C500="East") * D2:D500) / COUNTIFS(B2:B500, "Electronics", C2:C500, "East")
+```
+
+This one formula does what would take three separate steps with SUMIFS plus a manual count.
+
+---
+
+## Pro Tips
+
+**Use wildcards with SUMIF and SUMIFS.** The `?` matches any single character, and `*` matches any sequence:
+
+```
+=SUMIF(A2:A100, "*Widget*", C2:C100)
+```
+
+**Test with a small range first.** Before running a conditional sum on 10,000 rows, test it on 10 rows. Verify the logic gives the correct total, then expand the range.
+
+**Avoid full-column references.** `=SUMIF(A:A, "East", C:C)` works, but it forces Excel to process over 1 million rows. Use defined ranges like `A2:A10000` instead.
+
+**Use SUMIFS for date ranges.** Date criteria in SUMIFS are intuitive once you know the pattern:
+
+```
+=SUMIFS(C2:C100, D2:D100, ">"&DATE(2026,1,1))
+```
+
+---
+
+## Common Mistakes
+
+**Reversing argument order.** SUMIF puts `sum_range` third. SUMIFS puts it first. Muscle memory from one function causes errors in the other. Double-check before hitting Enter.
+
+**Range size mismatch.** All ranges in SUMIFS must be the same size. If your sum_range is 100 rows but a criteria_range is 99 rows, you get a `#VALUE!` error.
+
+**Using `+` instead of `*` in SUMPRODUCT.** In conditional sums, you want AND logic — all conditions must be true. `*` (multiplication) gives you AND. `+` (addition) gives you OR. Use `*` unless you specifically want OR.
+
+**Forgetting to coerce TRUE/FALSE.** In older Excel versions, you need `--` (double negative) to convert TRUE/FALSE to 1/0:
+
+```
+=SUMPRODUCT(--(B2:B100="East"), --(A2:A100="Product A"), C2:C100)
+```
+
+Modern Excel handles this automatically, but the `--` pattern still works and is more explicit.
+
+---
+
+## Related Functions
+
+<DownloadButton id="sumif-example-template" />
+
+- **[VLOOKUP vs XLOOKUP](/blog/vlookup-vs-xlookop-comparison-guide)** — Look up values that match your conditions
+- **[GROUPBY Function](/blog/groupby-function-excel-guide)** — Modern Excel's aggregation formula for dynamic reports
+- **[INDEX-MATCH Guide](/blog/index-match-formula-guide)** — Combine INDEX-MATCH with conditional sums for advanced data analysis
+
+---
+
+## FAQ
+
+**Can SUMIFS replace SUMIF completely?**
+
+Yes, for single conditions. `=SUMIFS(C2:C100, B2:B100, "East")` works the same as `=SUMIF(B2:B100, "East", C2:C100)`. But SUMIF reads more naturally for simple cases.
+
+**Why does my SUMPRODUCT return 0?**
+
+Most likely your conditions are not matching anything. Check for extra spaces, inconsistent data types (text vs number), or partial matches that need wildcards.
+
+**Does SUMPRODUCT work in Google Sheets?**
+
+Yes. SUMPRODUCT exists in Google Sheets with identical syntax.
+
+**Which one is fastest?**
+
+SUMIFS. It is optimized for conditional aggregation and uses internal indexing. SUMPRODUCT evaluates every cell, every time. On 50,000 rows, SUMIFS can be 5-10x faster.
+
+**Can I nest SUMIF inside another function?**
+
+Yes. SUMIF, SUMIFS, and SUMPRODUCT all work inside other formulas. A common pattern is checking the result before dividing:
+
+```
+=IF(SUMIFS(C2:C100, B2:B100, "East")>0, total/SUMIFS(C2:C100, B2:B100, "East"), 0)
+```

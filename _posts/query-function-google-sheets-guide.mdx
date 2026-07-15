@@ -1,0 +1,280 @@
+---
+title: "Google Sheets QUERY Function: Complete Guide for Excel Users"
+date: "2026-07-14"
+description: "Learn Google Sheets QUERY with SQL syntax. Guide for Excel users switching to Sheets — SELECT, WHERE, GROUP BY."
+published: true
+featured: true
+heroImage: "default-og"
+tags: ["google-sheets", "formulas", "query-function", "tutorial", "beginner"]
+category: "Google Sheets"
+---
+
+You know Excel. You have been using VLOOKUP, SUMIFS, and Pivot Tables for years. Then someone puts you on a Google Sheets project, and you see a function called QUERY. The syntax looks like nothing you have seen before.
+
+```
+=QUERY(A1:D100, "SELECT B, SUM(D) WHERE C > 100 GROUP BY B LABEL SUM(D) ''")
+```
+
+SQL inside a spreadsheet? It feels alien at first. But here is the thing — QUERY is one of the most powerful functions in Google Sheets, and once you understand the basics, you will wonder how you lived without it.
+
+<Callout variant="tip" title="Excel Users, This Is for You">
+  QUERY is not a replacement for everything you know. It is a **new tool** for tasks that are awkward or impossible with standard formulas. Think of it as a built-in database query engine inside your spreadsheet.
+</Callout>
+
+---
+
+## Why This Matters for Excel Refugees
+
+The hardest part about learning QUERY is unlearning what you know. In Excel, you split logic across multiple cells. With QUERY, you write one formula that does the work of a dozen.
+
+Here is a comparison that clicked for me:
+
+| Task | Excel Approach | Google Sheets QUERY |
+|------|---------------|-------------------|
+| Filter + sum by category | SUMIFS or Pivot Table | `SELECT category, SUM(amount) GROUP BY category` |
+| Filter data to another sheet | Advanced Filter or FILTER | `SELECT * WHERE status = 'Active'` |
+| Combine multiple conditions | Nested IFs or SUMPRODUCT | `WHERE condition1 AND condition2` |
+| Sort dynamically | SORT or manual sorting | `ORDER BY amount DESC` |
+
+That last column is the same query language used by databases. If you ever work with SQL, you have a head start.
+
+---
+
+## The Anatomy of a QUERY
+
+```
+=QUERY(data, query, [headers])
+```
+
+| Argument | Required | Description |
+|----------|----------|-------------|
+| `data` | Yes | The cell range to query (like a table in Excel) |
+| `query` | Yes | The query string written in **Google Visualization API Query Language** |
+| `headers` | No | The number of header rows (default is 1) |
+
+The magic is in the `query` argument. Here is a quick reference:
+
+| Keyword | What It Does | Excel Equivalent |
+|---------|-------------|-----------------|
+| `SELECT` | Picks columns | Choosing which columns to show |
+| `WHERE` | Filters rows | Filter or IF condition |
+| `GROUP BY` | Aggregates by category | Pivot Table rows |
+| `ORDER BY` | Sorts results | Sort A-Z or Z-A |
+| `LABEL` | Renames columns | Custom headers |
+| `LIMIT` | Max rows returned | — |
+| `OFFSET` | Skip rows | — |
+| `PIVOT` | Cross-tabulation | Pivot Table columns |
+
+---
+
+## SELECT — Picking Columns
+
+This is the simplest query. It selects which columns to show and optionally renames them.
+
+**Show all columns:**
+
+```
+=QUERY(A1:D100, "SELECT *", 1)
+```
+
+**Show specific columns by letter:**
+
+```
+=QUERY(A1:D100, "SELECT A, C, D", 1)
+```
+
+Column references use spreadsheet column letters (A, B, C...) or `Col1`, `Col2` notation:
+
+```
+=QUERY(A1:D100, "SELECT Col1, Col3", 1)
+```
+
+<Callout variant="info" title="Why Col1 Instead of A?">
+  When you use `Col1`, `Col2` notation, the numbering is relative to the data range, not the spreadsheet. If your data starts in column D, `Col1` refers to D, `Col2` to E, and so on. This makes formulas more portable.
+</Callout>
+
+**Rename columns with LABEL:**
+
+```
+=QUERY(A1:D100, "SELECT A, B, C LABEL A 'Product', B 'Category', C 'Price'", 1)
+```
+
+Useful for generating clean reports without manually editing headers.
+
+---
+
+## WHERE — Filtering Rows
+
+WHERE filters your data, similar to how you would use FILTER in Excel or a WHERE clause in SQL.
+
+**Numeric conditions:**
+
+```
+=QUERY(A1:D100, "SELECT A, B, C WHERE C > 500", 1)
+```
+
+**Text conditions — use single quotes:**
+
+```
+=QUERY(A1:D100, "SELECT A, B, C WHERE B = 'East'", 1)
+```
+
+**Date conditions — use `date` keyword:**
+
+```
+=QUERY(A1:D100, "SELECT A, B, C WHERE D > date '2026-01-01'", 1)
+```
+
+**Multiple conditions with AND/OR:**
+
+```
+=QUERY(A1:D100, "SELECT A, B, C WHERE B = 'East' AND C > 500", 1)
+```
+
+```
+=QUERY(A1:D100, "SELECT A, B, C WHERE B = 'East' OR B = 'West'", 1)
+```
+
+**NULL checks:**
+
+```
+=QUERY(A1:D100, "SELECT A, B, C WHERE C IS NOT NULL", 1)
+```
+
+---
+
+## GROUP BY — Aggregation
+
+This is where QUERY really shines. Instead of writing SUMIFS for every category, you can do it in one line.
+
+**Total sales by region:**
+
+```
+=QUERY(A1:D100, "SELECT B, SUM(C) GROUP BY B", 1)
+```
+
+This replaces: a list of `=SUMIF(B:B, "East", C:C)`, `=SUMIF(B:B, "West", C:C)` — one per region. With QUERY, you get all regions automatically.
+
+**Multiple aggregations:**
+
+```
+=QUERY(A1:D100, "SELECT B, SUM(C), AVG(C), COUNT(C) GROUP BY B", 1)
+```
+
+Returns: region, total sales, average sale, number of orders.
+
+**With ORDER BY to sort results:**
+
+```
+=QUERY(A1:D100, "SELECT B, SUM(C) GROUP BY B ORDER BY SUM(C) DESC", 1)
+```
+
+Best-selling region at the top.
+
+<Callout variant="warning" title="GROUP BY Rule">
+  Every column in SELECT must either appear in GROUP BY or be wrapped in an aggregation function (SUM, AVG, COUNT, MAX, MIN). If you SELECT a column without grouping or aggregating it, QUERY throws an error.
+</Callout>
+
+---
+
+## PIVOT — Cross-Tabulation
+
+PIVOT is the QUERY equivalent of columns in an Excel Pivot Table. It creates one column per unique value.
+
+**Sales by region, broken down by product category (columns):**
+
+```
+=QUERY(A1:D100, "SELECT B, SUM(D) GROUP BY B PIVOT C", 1)
+```
+
+Where:
+- A = Product ID
+- B = Region
+- C = Category
+- D = Sales Amount
+
+This creates a table with regions as rows and categories as columns — a complete cross-tabulation in one formula.
+
+---
+
+## Pro Tips
+
+**QUERY inside other functions.** QUERY output can be used as input to other functions:
+
+```
+=SUM(QUERY(A1:D100, "SELECT C WHERE B = 'East'", 0))
+```
+
+This sums column C for "East" rows — like SUMIF but with QUERY's flexible filtering.
+
+**Use cell references in your query.** Concatenate cell values into the query string:
+
+```
+=QUERY(A1:D100, "SELECT A, B, C WHERE B = '"&F1&"'", 1)
+```
+
+Now changing F1 changes the criteria without editing the formula.
+
+**IMPORT the query for dashboard-style reports.** QUERY combined with IMPORTRANGE pulls data from other sheets:
+
+```
+=QUERY(IMPORTRANGE("sheet_url", "Sheet1!A1:D100"), "SELECT * WHERE C > 100", 1)
+```
+
+**Format dates properly.** QUERY expects dates in `yyyy-mm-dd` format. If your dates look different, use TEXT to reformat:
+
+```
+=QUERY(A1:D100, "SELECT A, B WHERE D > date '"&TEXT(F1, "yyyy-mm-dd")&"'", 1)
+```
+
+---
+
+## Common Mistakes
+
+**Mixing data types in a column.** QUERY expects consistent types. If a column has text in one row and numbers in another, QUERY either ignores the mixed values or errors. Clean your data first.
+
+**Forgetting the header argument.** The third argument (headers) defaults to 1. If your data has no headers, use 0. If you have 2 header rows, use 2. Getting this wrong shifts your data by the wrong number of rows.
+
+**Using `SELECT *` on large datasets.** It works, but it returns every column — including intermediate calculation columns you may not need. Be explicit: `SELECT A, B, C` instead of `SELECT *`.
+
+**SQL syntax errors.** QUERY uses a custom language similar to SQL but not identical. Common gotchas:
+- String values need single quotes, not double: `WHERE B = 'East'` not `WHERE B = "East"`
+- Column identifiers use letters or Col1/Col2, not names
+- The entire query must be a single string — use `&` to concatenate dynamic values
+
+---
+
+## Related Functions
+
+- **[VLOOKUP vs XLOOKUP](/blog/vlookup-vs-xlookup-comparison-guide)** — Learn how lookups work in Excel vs Google Sheets
+- **[SUMIF vs SUMIFS vs SUMPRODUCT](/blog/sumif-vs-sumifs-vs-sumproduct-comparison)** — Conditional sums in both platforms
+- **[INDEX-MATCH Guide](/blog/index-match-formula-guide)** — The other essential multi-condition tool
+- **[GROUPBY Function](/blog/groupby-function-excel-guide)** — Excel's version of grouped aggregation
+
+---
+
+## FAQ
+
+**Is QUERY faster than multiple SUMIF formulas?**
+
+For aggregated reports, yes. QUERY processes data in one pass, while multiple SUMIFs scan the data multiple times. On a dataset with 10,000 rows and 50 categories, QUERY can be 5-10x faster.
+
+**Can QUERY replace Pivot Tables?**
+
+For many cases, yes. QUERY gives you more control over the output format and can be updated instantly by changing a cell reference. Pivot Tables still win for interactive exploration (drag-and-drop fields).
+
+**Does QUERY work in Excel?**
+
+No. QUERY is exclusive to Google Sheets. Excel has Power Query, which is similar but uses a different language (M-language). The concepts transfer, but the syntax does not.
+
+**Why does my QUERY return a #VALUE! error?**
+
+Most likely a data type mismatch. Check that all values in the column are the same type. Also check that your query string syntax is valid — missing quotes or commas are the most common cause.
+
+**Can I use QUERY with multiple sheets?**
+
+Yes. Use `{}` to combine ranges: `=QUERY({Sheet1!A1:D100; Sheet2!A1:D100}, "SELECT * WHERE Col3 IS NOT NULL", 1)`
+
+**How do I sort by a column in descending order?**
+
+Use `ORDER BY ColX DESC`. For ascending, just `ORDER BY ColX` or add `ASC`.

@@ -1,0 +1,217 @@
+---
+title: "VLOOKUP vs XLOOKUP: Which One Should You Use in Excel?"
+date: "2026-07-14"
+description: "Compare VLOOKUP and XLOOKUP in Excel. Learn key differences, limitations, and when to use each with real examples."
+published: true
+featured: true
+tags: ["excel", "formulas", "vlookup", "xlookup", "comparison", "tutorial"]
+category: "Formulas & Functions"
+heroImage: "default-og"
+---
+
+If you have ever needed to find a value in an Excel table based on a lookup key, you have almost certainly used VLOOKUP. For decades, it was the go-to function for vertical lookups. Then Microsoft introduced XLOOKUP, and suddenly VLOOKUP started showing its age.
+
+But here is the question that still comes up in forums and team chats every single day: should you switch to XLOOKUP or stick with VLOOKUP?
+
+The short answer: **use XLOOKUP for new workbooks**. But VLOOKUP is not dead yet, and knowing both will make you a more effective spreadsheet user. This guide walks through both functions, compares them head to head, and gives you practical rules for choosing the right tool.
+
+---
+
+## Why This Matters
+
+<Callout variant="info" title="Why This Matters">
+  Lookup functions are the backbone of data analysis. Every time you pull a price, match an ID, or enrich a dataset, you are using a lookup function. Pick the wrong one and you introduce errors that are hard to debug. VLOOKUP has known limitations — broken column references, silent approximate match errors, #REF! when columns shift. XLOOKUP fixes all of them.
+</Callout>
+
+---
+
+## What is VLOOKUP?
+
+VLOOKUP stands for "Vertical Lookup." It searches for a value in the first column of a table and returns a value from the same row in a column you specify.
+
+### Syntax
+
+
+
+| Argument | Required | Description |
+|---|---|---|
+| `lookup_value` | Yes | The value to search for in the first column |
+| `table_array` | Yes | The range containing the data |
+| `col_index_num` | Yes | The column number to return from (1-based, relative to table_array) |
+| `range_lookup` | No | FALSE for exact match, TRUE (default) for approximate match |
+
+### Example
+
+Suppose you have an inventory table in range A2:C10 with Product ID, Product Name, and Price. You want to find the price of product "P102":
+
+```
+=VLOOKUP("P102", A2:C10, 3, FALSE)
+```
+
+This searches column A for "P102", moves to the third column of the range (Price), and returns the matching value.
+
+**The trap:** if someone inserts a new column between A and C, your `col_index_num` of 3 now points to the wrong column. You need to manually update the formula. This is one of the most common VLOOKUP frustrations.
+
+---
+
+## What is XLOOKUP?
+
+XLOOKUP is Microsoft's modern replacement, introduced in 2020 for Microsoft 365 and Excel 2021. It searches a range for a value and returns a value from another range - with no column index numbers and no artificial restrictions.
+
+### Syntax
+
+
+
+| Argument | Required | Description |
+|---|---|---|
+| `lookup_value` | Yes | The value to search for |
+| `lookup_array` | Yes | The range to search in |
+| `return_array` | Yes | The range to return values from |
+| `if_not_found` | No | Custom message if no match is found |
+| `match_mode` | No | 0 (exact), -1 (exact or next smaller), 1 (exact or next larger), 2 (wildcard) |
+| `search_mode` | No | 1 (first-to-last), -1 (last-to-first), 2 (binary ascending), -2 (binary descending) |
+
+### Example
+
+Using the same inventory table:
+
+```
+=XLOOKUP("P102", A2:A10, C2:C10, "Not found")
+```
+
+This looks for "P102" in column A, returns the matching value from column C, and shows "Not found" if there is no match.
+
+**The improvement:** notice how each range is specified independently. Inserting new columns between A and C does not break this formula. The lookup and return ranges are separate references, not fragile column numbers.
+
+---
+
+## VLOOKUP vs XLOOKUP: Key Differences
+
+Here are the most important differences at a glance:
+
+| Feature | VLOOKUP | XLOOKUP |
+|---|---|---|
+| Lookup column position | Must be the first column of the range | Any column, anywhere |
+| Return value | Column index number (fragile) | Direct range reference (stable) |
+| Default match mode | Approximate (TRUE) | Exact (0) - safer default |
+| Error handling | Returns #N/A | Supports custom `if_not_found` message |
+| Left lookup | Not possible without INDEX/MATCH | Works natively |
+| Column insert safety | Breaks (index shifts) | No effect |
+| Search direction | Top-to-bottom only | Top-to-bottom or bottom-to-top |
+| Wildcard support | Yes | Yes (with match_mode=2) |
+| Spill/array output | No | Yes, can return multiple values |
+| Compatibility | All Excel versions | Microsoft 365, Excel 2021+ |
+
+---
+
+## When to Use VLOOKUP
+
+<Callout variant="info" title="VLOOKUP Still Makes Sense When">
+  **Sharing with legacy Excel users.** If your workbook needs to work on Excel 2019 or earlier, XLOOKUP is not available. VLOOKUP (or INDEX/MATCH) is your only option.
+
+  **Quick ad-hoc lookups.** For a fast one-off formula on a small, stable table, VLOOKUP gets the job done with less typing.
+
+  **Existing spreadsheets.** If you are maintaining a workbook that already uses VLOOKUP extensively, rewriting everything may not be worth the effort.
+</Callout>
+
+**For all other cases, prefer XLOOKUP.**
+
+---
+
+## When to Use XLOOKUP
+
+Use XLOOKUP whenever you are starting a new workbook or adding new formulas to an existing one on Microsoft 365 or Excel 2021+.
+
+XLOOKUP is the better choice when:
+
+- Your lookup column is not the leftmost column in the table
+- You need to return a value from a column to the left of the lookup column
+- You want to avoid broken formulas after column inserts or deletions
+- You want a friendly message instead of ugly #N/A errors
+- You need to search from the bottom up (most recent record first)
+- You want to return multiple matching values
+
+---
+
+## Pro Tips
+
+<Callout variant="tip" title="Pro Tip">
+  **Use named ranges or Excel Tables.** Instead of writing raw range references, convert your data to a table (<Kbd>Ctrl</Kbd> + <Kbd>T</Kbd>) and use structured references:
+
+  ```excel
+  =XLOOKUP(B2, products[ID], products[Price], "Not found")
+  ```
+
+  This makes formulas self-documenting and immune to range shifts.
+</Callout>
+
+**Combine with other functions.** XLOOKUP can nest inside IF, SUMIFS, or FILTER to build powerful data pipelines. For example, to look up a value only if a condition is met:
+
+```
+=IF(C2="Active", XLOOKUP(B2, IDs, Prices, "N/A"), "Inactive")
+```
+
+**Use match_mode=-1 for bracket lookups.** When you need to find a tax rate based on income brackets or a discount tier based on order volume, approximate match is essential:
+
+```
+=XLOOKUP(A2, bracket_lower, bracket_rate, , -1)
+```
+
+**Prefer exact match.** Unless you explicitly need approximate matching (tax brackets, tiered pricing, etc.), always use exact match to avoid the silent errors that VLOOKUP default approximate mode causes.
+
+---
+
+## Common Mistakes
+
+**Mismatched data types.** If you look up a number but the lookup column contains text (or vice versa), the match fails. Use the TRIM function and ensure consistent formatting:
+
+```
+=XLOOKUP(TEXT(A2, "0"), TEXT(range, "0"), return_range)
+```
+
+**Partial match when you need exact.** VLOOKUP defaults to approximate match. If you forget the fourth argument, you get incorrect results silently. XLOOKUP defaults to exact match, which is safer, but always verify your `match_mode` argument.
+
+**Forgetting to lock ranges.** When copying lookup formulas down a column, make sure your lookup and return arrays use absolute references (`:) or structured table references. Relative ranges shift as you drag the formula and break the lookup.
+
+**Assuming data is sorted.** VLOOKUP approximate match requires the lookup column to be sorted ascending. If it is not, you will get wrong results. XLOOKUP with match_mode=0 does not require sorting.
+
+---
+
+## Related Functions
+
+<DownloadButton id="vlookup-example-template" />
+
+Now that you understand VLOOKUP and XLOOKUP, these related functions can extend your lookup capabilities:
+
+- **[INDEX / MATCH](/blog/index-match-formula-guide)** - The classic alternative to VLOOKUP that supports left lookups and is compatible with all Excel versions
+- **[SUMIF vs SUMIFS](/blog/sumif-vs-sumifs-vs-sumproduct-comparison)** - Returns all matching values, not just the first one
+- **[QUERY Function](/blog/query-function-google-sheets-guide)** - The Google Sheets equivalent for data filtering
+- **[Excel vs Google Sheets](/blog/excel-vs-google-sheets-formula-differences)** - Compare how lookups work across both platforms
+
+---
+
+## FAQ
+
+**Can XLOOKUP replace VLOOKUP completely?**
+
+Yes, in modern Excel versions. XLOOKUP handles everything VLOOKUP can do and more. The only exception is compatibility with legacy Excel versions (2019 and earlier).
+
+**Does XLOOKUP work in Google Sheets?**
+
+No. XLOOKUP is exclusive to Microsoft Excel (Microsoft 365 and Excel 2021+). Google Sheets uses its own functions like VLOOKUP, INDEX/MATCH, and FILTER.
+
+**Why does VLOOKUP return wrong values sometimes?**
+
+The most common cause is the default approximate match mode. When you omit the fourth argument (range_lookup), VLOOKUP uses TRUE (approximate match), which requires the first column to be sorted. If it is not sorted, you get unpredictable results. Always use FALSE for exact match unless you specifically need approximate matching.
+
+**Is XLOOKUP faster than VLOOKUP?**
+
+For most datasets, the difference is negligible. For very large datasets (100k+ rows), XLOOKUP can be faster because it avoids the column index indirection and processes only the lookup and return ranges instead of the entire table array.
+
+**Can I return multiple values with XLOOKUP?**
+
+Yes. XLOOKUP can return an array if you provide a multi-column return range, and the result will spill into adjacent cells automatically if you are on a supported Excel version.
+
+**What if my lookup value appears multiple times?**
+
+VLOOKUP returns the first match only. XLOOKUP also returns the first match by default, but you can set search_mode to -1 to get the last match. For all matches, use the FILTER function instead.

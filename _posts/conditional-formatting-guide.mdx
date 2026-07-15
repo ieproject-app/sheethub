@@ -1,0 +1,148 @@
+---
+title: "Conditional Formatting in Excel: Complete Visual Guide"
+date: "2026-07-14"
+description: "Learn conditional formatting in Excel. Highlight cells, color scales, data bars, and custom rules step by step."
+published: true
+featured: false
+heroImage: "default-og"
+tags: ["excel", "formatting", "conditional-formatting", "tutorial"]
+category: "Formatting & Layout"
+---
+
+You have a spreadsheet with 5,000 rows of sales data. Somewhere in that sea of numbers are the high performers, the outliers, the errors. Finding them manually is like looking for a needle in a haystack.
+
+Conditional formatting applies colors, icons, and data bars automatically based on your rules. High values turn green. Low values turn red. Errors highlight themselves. Your data tells its own story.
+
+---
+
+## Why This Matters
+
+Formulas calculate. Conditional formatting reveals. A properly formatted sheet lets you spot trends, outliers, and problems at a glance — without reading a single number.
+
+---
+
+## Highlight Cell Rules
+
+**Greater than, Less than, Between:**
+
+1. Select your data range
+2. **Home** → **Conditional Formatting** → **Highlight Cells Rules**
+3. Choose: Greater Than, Less Than, Between, Equal To, or Text that Contains
+4. Set your value and formatting color
+
+**Example:** Highlight all sales over $1,000 in green.
+
+---
+
+## Top / Bottom Rules
+
+Find your best and worst performers:
+
+- **Top 10 Items** — Highlight the top values
+- **Bottom 10%** — Highlight the bottom percentile
+- **Above Average** — Values above the average
+- **Below Average** — Values below the average
+
+**Example:** Highlight the top 10% of sales reps in green, bottom 10% in red.
+
+---
+
+## Data Bars
+
+Data bars add a horizontal bar inside each cell — like a bar chart inside your table:
+
+1. Select range → **Conditional Formatting** → **Data Bars**
+2. Choose gradient or solid fill
+
+Larger values get longer bars. At a glance, you see which products sell the most.
+
+---
+
+## Color Scales
+
+Color scales use a gradient across your data:
+
+1. Select range → **Conditional Formatting** → **Color Scales**
+2. Choose a 2-color or 3-color scale
+
+**Example:** Green (high) → Yellow (middle) → Red (low). Your entire table becomes a heat map.
+
+---
+
+## Icon Sets
+
+Add icons (traffic lights, flags, stars) to each cell based on its value:
+
+1. Select range → **Conditional Formatting** → **Icon Sets**
+2. Choose directional, shapes, indicators, or ratings
+
+**Example:** Green checkmark for completed, yellow for in progress, red for overdue.
+
+---
+
+## Custom Rules with Formulas
+
+For conditions that the built-in rules cannot handle:
+
+1. Select range → **Conditional Formatting** → **New Rule** → **Use a formula**
+2. Enter your formula (must return TRUE/FALSE)
+
+**Highlight entire row if region is East:**
+
+```
+=$B2="East"
+```
+
+**Highlight rows where order value > $1,000 AND region is West:**
+
+```
+=AND($C2>1000, $B2="West")
+```
+
+**The $ before the column letter is critical.** It locks the column so the rule applies to the whole row.
+
+---
+
+## Managing Rules
+
+- **View rules:** Conditional Formatting → Manage Rules
+- **Edit rules:** Double-click the rule in the manager
+- **Delete rules:** Select and click Delete
+- **Priority:** Rules at the top take precedence
+
+---
+
+## Pro Tips
+
+**Use conditional formatting with Tables.** Rules automatically expand as you add rows to an Excel Table.
+
+**Copy formatting with Format Painter.** Select a formatted cell → click Format Painter → apply to other cells.
+
+**Combine multiple rules.** Apply a data bar AND an icon set to the same range for richer visualization.
+
+---
+
+## Common Mistakes
+
+**Too many rules.** More than 5-6 rules on the same range makes the sheet slow to calculate. Consolidate where possible.
+
+**No $ in formula rules.** For highlighting entire rows, the column reference must be absolute ($B2) while the row is relative.
+
+**Formatting overrides values.** Conditional formatting changes appearance, not the underlying data. Sorting and filtering still work on actual values.
+
+---
+
+## Related Functions
+
+- **[IF, Nested IF, IFS](/blog/if-nested-ifs-ifs-guide)** — Create formula-based conditions for your formatting rules
+- **[Data Validation](/blog/data-validation-dropdown-guide)** — Control what data enters your formatted ranges
+
+---
+
+## FAQ
+
+**Does conditional formatting work in Google Sheets?** Yes. Format → Conditional formatting. The interface differs but the concepts are the same.
+
+**Can I copy conditional formatting to another sheet?** Yes. Copy the formatted cells → Paste Special → Formats.
+
+**Why is my conditional formatting not working?** Check that your formula returns TRUE/FALSE, the range is correct, and there are no conflicting rules with higher priority.

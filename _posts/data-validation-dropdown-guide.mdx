@@ -1,0 +1,146 @@
+---
+title: "Data Validation & Dropdown Lists in Excel: Complete Guide"
+date: "2026-07-14"
+description: "Create dropdown lists and validate data in Excel. Step-by-step guide to data validation rules and error alerts."
+published: true
+featured: false
+heroImage: "default-og"
+tags: ["excel", "productivity", "data-validation", "dropdown", "tutorial"]
+category: "Productivity"
+---
+
+You send a spreadsheet to your team. Someone types "East" in the Region column. Someone else types "east." Another person types "E."
+
+Now your pivot table shows three different values for the same region.
+
+Data validation solves this. It controls what people can enter into a cell — a dropdown list, a number range, a date limit. If they try to enter something invalid, Excel stops them.
+
+---
+
+## Why This Matters
+
+Data validation is not about restrictions. It is about consistency. A dropdown list prevents typos. A date range prevents impossible entries. An error message tells the user exactly what to do instead of leaving them guessing.
+
+---
+
+## Creating a Dropdown List
+
+**Step 1:** Select the cell(s) where you want the dropdown.
+
+**Step 2:** Go to **Data** → **Data Validation** → **Data Validation**.
+
+**Step 3:** Under Allow, select **List**.
+
+**Step 4:** In Source, type your options separated by commas:
+
+```
+East, West, North, South
+```
+
+Or select a range on the sheet:
+
+```
+=$F$1:$F$4
+```
+
+**Step 5:** Click **OK**. A dropdown arrow appears in the selected cells.
+
+---
+
+## Dynamic Dropdowns with Tables
+
+If your list changes over time, use an Excel Table:
+
+1. Convert your list to a Table (**Ctrl+T**)
+2. In Source, reference the Table column: `=Table1[Region]`
+3. As you add items to the Table, the dropdown updates automatically
+
+---
+
+## Dependent Dropdowns
+
+A dropdown that changes based on another cell's value:
+
+**Category selected:** "Fruits" → second dropdown shows: Apple, Banana, Orange
+
+**Category selected:** "Vegetables" → second dropdown shows: Carrot, Broccoli, Spinach
+
+Use `INDIRECT` to link them:
+
+```
+=INDIRECT(A1)
+```
+
+Where A1 contains the category name, and you have named ranges matching each category (Fruits = Apple, Banana, Orange).
+
+---
+
+## Other Validation Types
+
+| Type | Use Case | Example |
+|------|----------|---------|
+| Whole Number | Age, quantity, count | Between 1 and 100 |
+| Decimal | Price, percentage | Between 0 and 1 |
+| Date | Order date, birth date | After 1/1/2024 |
+| Time | Shift start, appointment | Between 9:00 AM and 5:00 PM |
+| Text Length | ZIP code, phone number | Exactly 5 characters |
+| Custom | Complex conditions | `=ISTEXT(A1)` |
+
+---
+
+## Input Messages & Error Alerts
+
+**Input Message:** Shows a tooltip when the cell is selected:
+
+```
+Please select a region from the dropdown list.
+```
+
+**Error Alert:** Shows when someone enters invalid data:
+
+```
+Style: Stop
+Title: Invalid Region
+Message: Please select East, West, North, or South.
+```
+
+---
+
+## Pro Tips
+
+**Use Custom validation with formulas.** Highlight duplicates, prevent blank entries, or validate based on another column:
+
+```
+=COUNTIF($A$2:$A$100, A2)=1
+```
+
+**Copy validation to other cells.** Copy a cell with validation, then Paste Special → Validation.
+
+**Circle invalid data.** Go to **Data** → **Data Validation** → **Circle Invalid Data** to highlight existing errors.
+
+---
+
+## Common Mistakes
+
+**Dropdown not showing.** Check that the cell is not in a merged cell group. Merged cells often break dropdowns.
+
+**List source issues.** If your source range includes blank cells, the dropdown shows blanks. Use a dynamic range or Table.
+
+**Validation not working on paste.** Data validation is removed when someone pastes data into the cell. Use VBA or Protect Sheet to prevent this.
+
+---
+
+## Related Functions
+
+- **[IF, Nested IF, IFS](/blog/if-nested-ifs-ifs-guide)** — Build logic around validated data
+- **[VLOOKUP vs XLOOKUP](/blog/vlookup-vs-xlookup-comparison-guide)** — Look up values from validated dropdown selections
+
+---
+
+## FAQ
+
+**Can I create a dropdown in Google Sheets?** Yes. Data → Data validation → Add rule → Dropdown.
+
+**How do I remove data validation?** Select the cells → Data → Data Validation → Clear All.
+
+**Can I make a dropdown that searches as I type?** Not with basic data validation. Use a ComboBox ActiveX control or Power Apps for searchable dropdowns.

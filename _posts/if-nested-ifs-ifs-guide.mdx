@@ -1,0 +1,164 @@
+---
+title: "IF, Nested IF, and IFS: When to Use What in Excel"
+date: "2026-07-14"
+description: "Learn IF, nested IF, and IFS in Excel. Know when to use each for decision-making formulas with examples."
+published: true
+featured: false
+heroImage: "default-og"
+tags: ["excel", "formulas", "if", "ifs", "nested-if", "comparison", "tutorial"]
+category: "Comparison"
+---
+
+The IF function is the most basic decision-making tool in Excel. It checks a condition and returns one value if TRUE, another if FALSE.
+
+But what happens when you have more than two outcomes? Three tiers? Five categories? This is where nested IF and IFS come in — and picking the wrong one makes your formula unreadable.
+
+---
+
+## Why This Matters
+
+Every spreadsheet eventually needs logic. Bonus tiers, grading scales, discount brackets, status labels. The way you structure your IF logic determines whether your formula is maintainable or a nightmare.
+
+---
+
+## IF — The Basics
+
+### Syntax
+
+```
+=IF(logical_test, value_if_true, value_if_false)
+```
+
+### Example
+
+**Pass or fail:**
+
+```
+=IF(A1>=70, "Pass", "Fail")
+```
+
+**If order > $500, mark as "High Value":**
+
+```
+=IF(C2>500, "High Value", "Standard")
+```
+
+---
+
+## Nested IF — Multiple Outcomes
+
+When you need more than two outcomes, you nest IF functions inside each other.
+
+### Example
+
+**Grade based on score:**
+
+```
+=IF(A1>=90, "A", IF(A1>=80, "B", IF(A1>=70, "C", IF(A1>=60, "D", "F"))))
+```
+
+Each IF handles one condition. If FALSE, it moves to the next IF.
+
+### Limit
+
+Excel allows up to 64 nested IFs, but beyond 3-4 the formula becomes unreadable:
+
+```
+=IF(A1="East", "Region 1", IF(A1="West", "Region 2", IF(A1="North", "Region 3", IF(A1="South", "Region 4", IF(A1="Central", "Region 5", "Other")))))
+```
+
+At this point, IFS or SWITCH is better.
+
+---
+
+## IFS — Multiple Conditions Without Nesting
+
+IFS was introduced in Excel 2019 and Microsoft 365. It lets you specify multiple conditions without nesting.
+
+### Syntax
+
+```
+=IFS(logical_test1, value_if_true1, logical_test2, value_if_true2, ...)
+```
+
+### Example
+
+```
+=IFS(A1>=90, "A", A1>=80, "B", A1>=70, "C", A1>=60, "D", TRUE, "F")
+```
+
+The `TRUE` at the end acts as a catch-all else.
+
+### Same example with IFS vs nested IF:
+
+**Nested IF:**
+```
+=IF(A1="East", 100, IF(A1="West", 200, IF(A1="North", 300, 0)))
+```
+
+**IFS (cleaner):**
+```
+=IFS(A1="East", 100, A1="West", 200, A1="North", 300, TRUE, 0)
+```
+
+---
+
+## IF vs IFS vs Nested IF
+
+| Scenario | Best Function |
+|----------|---------------|
+| Simple TRUE/FALSE | IF |
+| 2-3 conditions | Nested IF |
+| 4+ conditions | IFS |
+| Database lookup style | SWITCH |
+| Complex AND/OR logic | IF + AND/OR |
+
+---
+
+## Pro Tips
+
+**Use IFS for grading logic.** It scales better than nested IF and is easier to audit.
+
+**Combine IF with AND/OR:**
+
+```
+=IF(AND(B2="East", C2>500), "Priority", "Standard")
+```
+
+**Use SWITCH for exact matches:**
+
+```
+=SWITCH(A1, "East", 100, "West", 200, "North", 300, 0)
+```
+
+SWITCH is even cleaner than IFS when checking a single value against multiple possibilities.
+
+---
+
+## Common Mistakes
+
+**Forgetting the catch-all.** When using IFS, if no condition is TRUE and there is no else, Excel returns #N/A. Always add `TRUE, "fallback"` as the last pair.
+
+**Overlapping conditions.** In IFS, the first TRUE condition wins. If `A1>=80` comes before `A1>=90`, anyone with 85 gets the "B" result before reaching "A". Order matters: put the most specific condition first.
+
+**Using IF where lookup is better.** If you find yourself writing `=IF(A1="East",...IF(A1="West",...))` for more than 5 categories, use XLOOKUP or SWITCH instead.
+
+---
+
+## Related Functions
+
+- **[SUMIF vs SUMIFS](/blog/sumif-vs-sumifs-vs-sumproduct-comparison)** — Conditional sums using similar logic patterns
+- **[VLOOKUP vs XLOOKUP](/blog/vlookup-vs-xlookup-comparison-guide)** — Replaces long IF chains with lookup tables
+- **[INDEX-MATCH Guide](/blog/index-match-formula-guide)** — Advanced lookups for complex conditions
+
+---
+
+## FAQ
+
+**Is IFS available in all Excel versions?** No. IFS requires Excel 2019 or Microsoft 365. For older versions, use nested IF.
+
+**What is the maximum number of IFs I can nest?** 64 in modern Excel. In practice, if you need more than 5, use IFS or a lookup table.
+
+**Can I use AND/OR inside IF?** Yes. AND requires all conditions TRUE; OR requires at least one TRUE.
+
+**Does IF work in Google Sheets?** Yes, IF, IFS, and SWITCH all work identically in Google Sheets.

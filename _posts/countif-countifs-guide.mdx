@@ -1,0 +1,172 @@
+---
+title: "COUNTIF & COUNTIFS: Beginner to Pro"
+date: "2026-07-14"
+description: "Learn COUNTIF and COUNTIFS in Excel. Count cells by single or multiple conditions with step-by-step examples."
+published: true
+featured: false
+heroImage: "default-og"
+tags: ["excel", "formulas", "countif", "countifs", "tutorial"]
+category: "Formulas & Functions"
+---
+
+Counting cells in Excel sounds simple. Until you need to count only the cells that meet a specific condition. Or two conditions. Or conditions across different columns.
+
+This is where COUNTIF and COUNTIFS come in. One is for a single condition. The other handles multiple. Here is exactly how both work, with examples you can use today.
+
+---
+
+## Why This Matters
+
+You have a list of orders. You need to know: How many came from the East region? How many exceeded $500? How many were both from the East AND over $500?
+
+Without COUNTIF, you would filter manually or write complex array formulas. With COUNTIF and COUNTIFS, you get the answer in one line.
+
+---
+
+## COUNTIF — One Condition
+
+COUNTIF counts cells that meet a single condition.
+
+### Syntax
+
+```
+=COUNTIF(range, criteria)
+```
+
+| Argument | Description |
+|----------|-------------|
+| `range` | The range to check against your condition |
+| `criteria` | The condition — number, text, expression, or cell reference |
+
+### Examples
+
+**Count orders from the East region:**
+
+```
+=COUNTIF(B2:B100, "East")
+```
+
+**Count orders over $500:**
+
+```
+=COUNTIF(C2:C100, ">500")
+```
+
+**Count orders for Product A:**
+
+```
+=COUNTIF(A2:A100, "Product A")
+```
+
+**Count orders except Product A:**
+
+```
+=COUNTIF(A2:A100, "<>Product A")
+```
+
+**Use a cell reference as criteria:**
+
+```
+=COUNTIF(B2:B100, E1)
+```
+
+### Wildcards
+
+COUNTIF supports wildcards for partial matches:
+
+```
+=COUNTIF(A2:A100, "Widget*")   // Starts with Widget
+=COUNTIF(A2:A100, "?idget")    // Any single char followed by idget
+```
+
+---
+
+## COUNTIFS — Multiple Conditions
+
+COUNTIFS does what COUNTIF does, but with multiple criteria all at once.
+
+### Syntax
+
+```
+=COUNTIFS(criteria_range1, criteria1, [criteria_range2, criteria2], ...)
+```
+
+All conditions must be TRUE for a cell to be counted (AND logic).
+
+### Examples
+
+**Count orders from East region for Product A:**
+
+```
+=COUNTIFS(B2:B100, "East", A2:A100, "Product A")
+```
+
+**Count orders between $100 and $500:**
+
+```
+=COUNTIFS(C2:C100, ">=100", C2:C100, "<=500")
+```
+
+**Count orders from 2026:**
+
+```
+=COUNTIFS(D2:D100, ">=1/1/2026", D2:D100, "<=12/31/2026")
+```
+
+---
+
+## COUNTIF vs COUNTIFS
+
+| Scenario | Function |
+|----------|----------|
+| Count one condition | COUNTIF |
+| Count multiple conditions (ALL must match) | COUNTIFS |
+| Count OR conditions | COUNTIF + COUNTIF (add two) |
+
+For OR logic, simply add two COUNTIF results:
+
+```
+=COUNTIF(B2:B100, "East") + COUNTIF(B2:B100, "West")
+```
+
+---
+
+## Pro Tips
+
+**Use COUNTIFS even for one condition.** It works fine and makes future upgrades easier — just add another pair without changing the function name.
+
+**Avoid full-column references.** `=COUNTIF(A:A, "East")` works but processes over 1 million rows. Use `A2:A10000` instead.
+
+**Combine with SUMPRODUCT for OR logic inside one formula:**
+
+```
+=SUMPRODUCT(--((B2:B100="East") + (B2:B100="West") > 0))
+```
+
+---
+
+## Common Mistakes
+
+**Text vs number mismatch.** COUNTIF treats "100" (text) and 100 (number) differently. Make sure your criteria matches the data type.
+
+**Wildcard confusion.** `*` matches any sequence. `?` matches one character. `~*` matches a literal asterisk.
+
+**COUNTIFS range mismatch.** All criteria ranges must be the same size. Mismatched ranges return #VALUE!.
+
+---
+
+## Related Functions
+
+- **[SUMIF vs SUMIFS](/blog/sumif-vs-sumifs-vs-sumproduct-comparison)** — The sum version of COUNTIF and COUNTIFS
+- **[VLOOKUP vs XLOOKUP](/blog/vlookup-vs-xlookup-comparison-guide)** — Look up values that match your counting criteria
+- **[IF Function](/blog/if-nested-ifs-ifs-guide)** — Combine with COUNTIF for conditional logic
+
+---
+
+## FAQ
+
+**Can COUNTIFS replace COUNTIF?** Yes, for single conditions. COUNTIFS is actually newer and more flexible.
+
+**Does COUNTIF work in Google Sheets?** Yes, COUNTIF and COUNTIFS work identically in both platforms.
+
+**Why is my COUNTIF returning 0?** Check for extra spaces, inconsistent data types, or wrong wildcard usage.

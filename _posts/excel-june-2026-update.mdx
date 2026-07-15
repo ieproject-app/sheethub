@@ -1,0 +1,75 @@
+---
+title: "Excel June 2026 Update: All New Features Explained"
+date: "2026-07-14"
+description: "Microsoft added new features to Excel in June 2026. See what changed, from new functions to performance improvements."
+published: true
+featured: false
+heroImage: "default-og"
+tags: ["excel", "news", "update", "new-features", "tutorial"]
+category: "Formulas & Functions"
+---
+
+Microsoft pushed a significant update to Excel in June 2026. Several new features, functions, and performance improvements rolled out to Microsoft 365 subscribers. Here is what changed and why it matters for your daily work.
+
+---
+
+## New Functions: GROUPBY and PIVOTBY
+
+The biggest news is the general availability of GROUPBY and PIVOTBY — two functions that let you create aggregated reports with formulas instead of Pivot Tables.
+
+**GROUPBY** groups data by one or more columns and applies an aggregation:
+
+```
+=GROUPBY(Products[Category], Products[Sales], SUM)
+```
+
+**PIVOTBY** adds column grouping for cross-tabulation:
+
+```
+=PIVOTBY(Products[Region], Products[Category], Products[Sales], SUM)
+```
+
+These functions spill results dynamically and update instantly when source data changes — no refresh button needed.
+
+---
+
+## Performance Improvements
+
+Microsoft redesigned the calculation engine for array formulas. Spreadsheets with multiple GROUPBY, FILTER, and SORT formulas now calculate up to 40% faster compared to the January 2026 release.
+
+The improvement is most noticeable on datasets with 50,000+ rows. Users reported that complex dashboards that previously took 8-10 seconds to recalculate now complete in under 5 seconds.
+
+---
+
+## Updated Function Arguments
+
+Several existing functions received argument updates:
+
+**XLOOKUP** now supports a `search_algorithm` parameter that lets you choose between binary search and linear search for large datasets.
+
+**TEXTBEFORE** and **TEXTAFTER** gained an `instance_num` parameter that accepts negative numbers — `-1` finds the last occurrence instead of the first.
+
+---
+
+## Excel for Web Improvements
+
+The web version of Excel now supports:
+- Real-time co-authoring with formula suggestions
+- Inline images in cells (previously desktop-only)
+- Local file autosave to OneDrive without manual upload
+
+---
+
+## Pro Tips
+
+**Update your templates.** If you use Pivot Tables for reporting, test GROUPBY as a replacement. The formula approach is faster and more portable.
+
+**Check your Excel version.** These features require Microsoft 365 (version 2506 or later). Go to File → Account → About Excel to check.
+
+---
+
+## Related Articles
+
+- **[GROUPBY Function Guide](/blog/groupby-function-excel-guide)** — Complete guide to Excel's new aggregation function
+- **[XLOOKUP Complete Guide](/blog/xlookup-complete-guide)** — XLOOKUP with the new search_algorithm parameter
+- **[Google Sheets Updates](/blog/google-sheets-2026-update)** — What Google added to Sheets this year

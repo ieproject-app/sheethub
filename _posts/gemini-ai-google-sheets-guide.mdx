@@ -1,0 +1,104 @@
+---
+title: "Gemini AI in Google Sheets: Complete Guide to AI-Powered Spreadsheets"
+date: "2026-07-14"
+description: "Google Gemini AI is now integrated into Google Sheets. Build formulas, create charts, and analyze data using natural language."
+published: true
+featured: false
+heroImage: "default-og"
+tags: ["google-sheets", "gemini", "ai", "news", "update", "tutorial", "new-features"]
+category: "Google Sheets"
+---
+
+Google Sheets has AI built-in now. Gemini can write formulas, create charts, suggest formatting, and even categorize your data — all from a natural language description.
+
+This is not a separate add-on. It is part of Sheets, available from the toolbar.
+
+---
+
+## What Gemini Can Do in Sheets
+
+| Feature | What It Does | How to Use |
+|---------|-------------|------------|
+| Build with Gemini | Creates formulas, charts, pivot tables from description | Click Gemini icon → describe what you need |
+| Fill with Gemini | Auto-fills column based on pattern detection | Right-click → Fill with Gemini |
+| Smart categorize | Suggests category groupings for text data | Select column → Gemini → Categorize |
+| Data analysis | Summarizes trends and outliers | Insert → Gemini → Analyze |
+
+---
+
+## Build Formulas with Gemini
+
+The most powerful feature: describe what you want in plain English, and Gemini writes the formula.
+
+**Example:** "Calculate the total sales for each region, only for products in the Electronics category."
+
+Gemini generates:
+
+```
+=QUERY(A1:D1000, "SELECT B, SUM(D) WHERE C = 'Electronics' GROUP BY B LABEL SUM(D) ''", 1)
+```
+
+No need to remember QUERY syntax. Just describe the result you want.
+
+---
+
+## Fill with Gemini
+
+Sheets can detect patterns in your data and fill the rest of the column:
+
+1. Enter a few examples in a column
+2. Right-click → **Fill with Gemini**
+3. Sheets analyzes your examples and fills the remaining rows
+
+This works for:
+- Categorizing products based on descriptions
+- Extracting information from text
+- Standardizing data formats
+
+---
+
+## Smart Categorize
+
+For columns with many unique text values, Gemini can suggest logical groupings:
+
+| Before (Raw) | After (Categorized) |
+|-------------|-------------------|
+| Widget A | Electronics |
+| Deluxe Widget | Electronics |
+| Basic Widget | Electronics |
+| Cleaning Cloth | Accessories |
+| Microfiber Cloth | Accessories |
+
+No formulas needed. Gemini analyzes the text and suggests categories.
+
+---
+
+## Data Analysis
+
+Gemini can analyze your data and highlight key insights:
+
+Select a range → **Insert → Gemini → Analyze**
+
+It returns:
+- Summary statistics
+- Notable trends
+- Potential outliers
+- Suggested visualizations
+
+---
+
+## Pro Tips
+
+**Be specific in your descriptions.** "Show sales by region" gives a basic result. "Show total sales by region for Q2 2026, sorted highest to lowest, excluding returns" gives exactly what you need.
+
+**Review AI-generated formulas.** Gemini is powerful but not perfect. Always verify complex formulas before relying on them.
+
+**Combine with IMPORTRANGE.** Gemini can write formulas that reference data from other sheets using IMPORTRANGE — something that requires exact syntax otherwise.
+
+---
+
+## Related Articles
+
+- **[QUERY Function Guide](/blog/query-function-google-sheets-guide)** — The most common Gemini-generated formula
+- **[Google Sheets 2026 Update](/blog/google-sheets-2026-update)** — Other new features in Sheets
+- **[SPLIT and TEXT Functions](/blog/split-text-functions-google-sheets)** — Clean data before analyzing with Gemini

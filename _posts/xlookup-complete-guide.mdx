@@ -1,0 +1,155 @@
+---
+title: "XLOOKUP Function in Excel: Complete Guide with Examples"
+date: "2026-07-14"
+description: "Learn XLOOKUP in Excel with examples. Left lookups, error handling, multiple values, and advanced scenarios."
+published: true
+featured: false
+heroImage: "default-og"
+tags: ["excel", "formulas", "xlookup", "lookup", "tutorial"]
+category: "Formulas & Functions"
+---
+
+XLOOKUP is Excel's modern replacement for VLOOKUP, HLOOKUP, and INDEX-MATCH. It was introduced in 2020 for Microsoft 365, and it fixes every frustration that made VLOOKUP painful.
+
+No more column index numbers. No more fragile ranges. No more #N/A with no explanation. XLOOKUP handles left lookups, returns arrays, and lets you specify what to show when nothing is found.
+
+---
+
+## Why This Matters
+
+If you are still using VLOOKUP, you are making your work harder than it needs to be. XLOOKUP does everything VLOOKUP can do, plus things VLOOKUP simply cannot. Learning it takes five minutes, and it will make every spreadsheet you build from now on more reliable.
+
+---
+
+## XLOOKUP Syntax
+
+```
+=XLOOKUP(lookup_value, lookup_array, return_array, [if_not_found], [match_mode], [search_mode])
+```
+
+| Argument | Required | Description |
+|----------|----------|-------------|
+| `lookup_value` | Yes | The value to find |
+| `lookup_array` | Yes | The range to search in |
+| `return_array` | Yes | The range to return from |
+| `if_not_found` | No | Custom message if no match |
+| `match_mode` | No | 0=exact, -1=exact or smaller, 1=exact or larger, 2=wildcard |
+| `search_mode` | No | 1=first to last, -1=last to first |
+
+---
+
+## Basic Examples
+
+**Find price of Product P102:**
+
+```
+=XLOOKUP("P102", A2:A100, C2:C100)
+```
+
+**Find price, with custom error message:**
+
+```
+=XLOOKUP("P102", A2:A100, C2:C100, "Not found")
+```
+
+**Find price with approximate match (tax bracket):**
+
+```
+=XLOOKUP(75000, A2:A10, B2:B10, , -1)
+```
+
+---
+
+## Left Lookup
+
+XLOOKUP searches any column, in any direction:
+
+```
+=XLOOKUP(B2, C2:C100, A2:A100)
+```
+
+This finds B2 in column C and returns the matching value from column A — a left lookup. VLOOKUP cannot do this.
+
+---
+
+## Return Multiple Columns
+
+XLOOKUP can return an entire row or multiple columns:
+
+```
+=XLOOKUP(B2, A2:A100, B2:D100)
+```
+
+The result spills into three adjacent cells.
+
+---
+
+## Last Match
+
+Find the most recent order for a product:
+
+```
+=XLOOKUP(B2, A2:A100, C2:C100, , , -1)
+```
+
+The last argument (-1) tells XLOOKUP to search from the bottom up.
+
+---
+
+## XLOOKUP vs VLOOKUP
+
+| Feature | VLOOKUP | XLOOKUP |
+|---------|---------|---------|
+| Left lookup | ❌ | ✅ |
+| Custom error message | ❌ (naked #N/A) | ✅ |
+| Return multiple values | ❌ | ✅ |
+| Search bottom-to-top | ❌ | ✅ |
+| Default match | Approximate (TRUE) | Exact (0) |
+| Column insert safe | ❌ | ✅ |
+| Works in all Excel versions | ✅ | ❌ (365/2021+) |
+
+---
+
+## Pro Tips
+
+**Use XLOOKUP with Tables.** Convert data to a Table (Ctrl+T) for self-documenting formulas:
+
+```
+=XLOOKUP(B2, products[ID], products[Price], "N/A")
+```
+
+**Combine with IF for conditional lookups:**
+
+```
+=IF(C2="Active", XLOOKUP(B2, IDs, Prices, "N/A"), "Inactive")
+```
+
+**Use XMATCH for positional lookups.** XMATCH returns the position instead of the value — useful for INDEX-MATCH fans who want modern syntax.
+
+---
+
+## Common Mistakes
+
+**Range mismatch.** The lookup_array and return_array must be the same size, but they do not have to start in the same column. Unlike VLOOKUP, the lookup column does not need to be the first column.
+
+**Forgetting if_not_found.** Without it, XLOOKUP returns #N/A for missing values. Add a custom message: `=XLOOKUP(B2, A2:A100, C2:C100, "Not available")`.
+
+**Argument order confusion.** XLOOKUP asks for `lookup_array` (where to search) before `return_array` (what to return). This is the opposite of INDEX-MATCH.
+
+---
+
+## Related Functions
+
+- **[VLOOKUP vs XLOOKUP](/blog/vlookup-vs-xlookup-comparison-guide)** — Side-by-side comparison of both functions
+- **[INDEX-MATCH Guide](/blog/index-match-formula-guide)** — The traditional alternative for complex lookups
+- **[FILTER Function](/blog/filter-function-google-sheets)** — Return all matches instead of the first one
+
+---
+
+## FAQ
+
+**Does XLOOKUP work in Google Sheets?** No. XLOOKUP is Excel-only. Google Sheets has similar functions (FILTER, VLOOKUP, INDEX-MATCH) but not XLOOKUP.
+
+**Does XLOOKUP work in Excel 2019?** No. XLOOKUP requires Microsoft 365 or Excel 2021+.
+
+**Can XLOOKUP return multiple values?** Yes, if the return_array covers multiple columns, XLOOKUP spills the results.

@@ -1,0 +1,245 @@
+---
+title: "GROUPBY Function in Excel: The End of Manual Pivot Tables?"
+date: "2026-07-14"
+description: "Excel's new GROUPBY function creates reports with one formula. Learn how it works and when to use it."
+published: true
+featured: false
+heroImage: "default-og"
+tags: ["excel", "formulas", "groupby", "pivot-table", "tutorial"]
+category: "Formulas & Functions"
+---
+
+Microsoft did something quietly revolutionary in 2025. They released GROUPBY and PIVOTBY — two functions that do what Pivot Tables do, but with a formula.
+
+Not a macro. Not a Power Query step. A formula.
+
+If you have ever rebuilt a Pivot Table because the source data changed, or wished your aggregated report updated the instant you typed a new row, this is for you.
+
+<Callout variant="info" title="What's New">
+  GROUPBY and PIVOTBY are available in Excel for Microsoft 365 (Insiders Beta from 2024, general release 2025). They are part of Excel's ongoing shift toward **formula-based data transformation** — the same direction that gave us FILTER, SORT, UNIQUE, and LAMBDA.
+</Callout>
+
+---
+
+## Why This Matters
+
+Pivot Tables are powerful. They are also frustrating:
+
+- They do not update automatically when source data changes
+- You cannot easily use the result in another formula
+- Refreshing breaks formatting, column widths, and custom calculations
+- They feel heavy for simple aggregations
+
+GROUPBY fixes all of that. It is a single formula that creates an aggregated table, spills the result automatically, and recalculates instantly when data changes. No refresh button. No broken layouts.
+
+---
+
+## GROUPBY — The Basics
+
+### Syntax
+
+```
+=GROUPBY(row_fields, values, function, [field_headers], [total_depth], [sort_order], [filter_array])
+```
+
+| Argument | Required | What It Does |
+|----------|----------|--------------|
+| `row_fields` | Yes | The column(s) to group by (like rows in a Pivot Table) |
+| `values` | Yes | The column(s) to aggregate |
+| `function` | Yes | The aggregation: SUM, AVERAGE, COUNT, MAX, MIN, etc. |
+| `field_headers` | No | 0 = none, 1 = headers, 2 = no header detection, 3 = auto-detect |
+| `total_depth` | No | 0 = no totals, 1 = grand total, -1 = subtotals at top |
+| `sort_order` | No | Sort by column and direction |
+| `filter_array` | No | Filter rows before grouping |
+
+### The Simplest Example
+
+You have sales data: Product, Region, Amount. You want total sales by region:
+
+```
+=GROUPBY(B2:B100, C2:C100, SUM)
+```
+
+That is it. Three arguments, one formula, and you get a clean table of regions with their totals. No drag-and-drop, no refresh, no formatting battles.
+
+<Callout variant="tip" title="The Function Argument">
+  Notice that `SUM` has no parentheses. GROUPBY takes a **function reference**, not a formula. You pass `SUM`, `AVERAGE`, `COUNT`, `MAX`, `MIN`, or any LAMBDA that accepts an array and returns a single value.
+</Callout>
+
+---
+
+## GROUPBY vs Pivot Table
+
+| Feature | Pivot Table | GROUPBY |
+|---------|-------------|---------|
+| Updates automatically | ❌ Needs refresh | ✅ Instant on data change |
+| Formula-friendly | ❌ Cannot reference in formulas | ✅ Spills into cells |
+| Setup time | 10-30 seconds | 10 seconds |
+| Learning curve | Moderate | Low (if you know formulas) |
+| Multiple aggregations | ✅ Drag fields | ✅ Multiple values argument |
+| Group by multiple columns | ✅ | ✅ Row array |
+| Custom calculations | ✅ Calculated fields | ✅ LAMBDA in function |
+| Formatting control | ✅ Extensive | ⚠️ Via cell formatting |
+| Slicers / timelines | ✅ | ❌ Manual filters |
+| Chart integration | ✅ Pivot Charts | ⚠️ Standard charts |
+
+**The verdict:** GROUPBY replaces about 70% of what people use Pivot Tables for. The remaining 30% — complex calculated fields, slicers, and presentation-heavy reports — still belong in Pivot Tables.
+
+---
+
+## Multiple Aggregations
+
+You can pass multiple values to aggregate in different ways:
+
+```
+=GROUPBY(B2:B100, {C2:C100, D2:D100}, {SUM, AVERAGE})
+```
+
+This returns: Region, Total Sales, Average Sale — side by side. One formula.
+
+---
+
+## Multiple Grouping Columns
+
+Pass an array for row_fields to group by more than one column:
+
+```
+=GROUPBY({A2:A100, B2:B100}, C2:C100, SUM)
+```
+
+This groups by Product AND Region — like having two row fields in a Pivot Table.
+
+<Callout variant="warning" title="Watch the Array Size">
+  When using multiple row fields or multiple values, they must be arrays of the same shape. `{A2:A100, B2:B100}` works because both are single-column ranges. Mixing a single column with a multi-column range gives unexpected results.
+</Callout>
+
+---
+
+## Sort and Filter
+
+**Sort by the aggregated value:**
+
+```
+=GROUPBY(B2:B100, C2:C100, SUM, , , 3)
+```
+
+The `sort_order` argument is a column index (1 = first column, 2 = second, etc.) or negative for descending. `3` sorts by the aggregated total (column 3) ascending. `-3` would sort descending.
+
+**Filter before grouping:**
+
+```
+=GROUPBY(B2:B100, C2:C100, SUM, , , , D2:D100 > DATE(2026, 1, 1))
+```
+
+The `filter_array` must be TRUE/FALSE and the same size as your data rows. Only rows where the filter is TRUE are included in the grouping.
+
+---
+
+## PIVOTBY — The Column Counterpart
+
+PIVOTBY is GROUPBY's sibling. It adds column grouping — like putting a field in the Columns area of a Pivot Table.
+
+```
+=PIVOTBY(row_fields, column_fields, values, function)
+```
+
+**Sales by Region (rows) and Product Category (columns):**
+
+```
+=PIVOTBY(B2:B100, A2:A100, C2:C100, SUM)
+```
+
+This creates a cross-tabulation: regions as rows, categories as columns, sales as values. All in one formula.
+
+---
+
+## When NOT to Use GROUPBY
+
+GROUPBY is powerful, but it is not a Pivot Table killer for every scenario.
+
+| Scenario | Stick With Pivot Tables |
+|----------|------------------------|
+| Complex calculated fields | Pivot Tables have a dedicated UI |
+| Slicers and timelines | GROUPBY has no built-in filtering UI |
+| Presentation-ready reports | Pivot Tables offer more formatting control |
+| Very large datasets (100k+ rows) | Pivot Tables use Excel's data model (faster) |
+| Interactive exploration | Drag-and-drop is still easier than editing formulas |
+
+**The honest truth:** GROUPBY replaces about 70% of what people do with Pivot Tables. The remaining 30% — complex calculated fields, slicers, presentation-heavy reports — still belong in the traditional tool. Use GROUPBY for speed and automation. Use Pivot Tables for analysis and presentation.
+
+---
+
+## Pro Tips
+
+**Use LAMBDA for custom aggregations.** The function argument accepts any LAMBDA:
+
+```
+=GROUPBY(B2:B100, C2:C100, LAMBDA(x, MEDIAN(x)))
+```
+
+This gives you median sales by region — something that requires a workaround in Pivot Tables.
+
+**Combine with other dynamic array functions.** GROUPBY spills automatically, so you can wrap it:
+
+```
+=SORT(GROUPBY(B2:B100, C2:C100, SUM), 2, -1)
+```
+
+This groups by region, sums sales, then sorts by total descending.
+
+**Use field_headers=3 for auto-detection.** It tries to detect header rows automatically. If your data has clean headers in the first row, this saves one argument.
+
+**Structure your data as a table first.** GROUPBY works best when your source data is a proper Excel Table (Ctrl+T). Named references make formulas readable:
+
+```
+=GROUPBY(tblSales[Region], tblSales[Amount], SUM)
+```
+
+---
+
+## Common Mistakes
+
+**Wrong function reference.** `=GROUPBY(B2:B100, C2:C100, SUM())` — note the parentheses. This tries to evaluate SUM immediately instead of passing the function reference. Use `SUM` without parentheses.
+
+**Mismatched array sizes.** All row_fields, values, and filter_array must have the same number of rows. If one range is 101 rows and another is 100, you get a `#VALUE!` error.
+
+**Forgetting that GROUPBY spills.** Do not put anything in cells where the GROUPBY result will spill. Excel shows `#SPILL!` if the output area is blocked. Clear the cells below and to the right of your formula.
+
+**Assuming it works in older Excel.** GROUPBY requires Microsoft 365 (or Excel for the web). Excel 2021, 2019, and earlier do not support this function.
+
+---
+
+## Related Functions
+
+- **[SUMIF vs SUMIFS vs SUMPRODUCT](/blog/sumif-vs-sumifs-vs-sumproduct-comparison)** — The older way to do conditional aggregation
+- **[QUERY Function Guide](/blog/query-function-google-sheets-guide)** — Google Sheets users get a similar feature with QUERY
+- **[VLOOKUP vs XLOOKUP](/blog/vlookup-vs-xlookup-comparison-guide)** — How modern Excel functions are replacing legacy ones
+- **[Excel vs Google Sheets](/blog/excel-vs-google-sheets-formula-differences)** — How GROUPBY compares across platforms
+
+---
+
+## FAQ
+
+**Is GROUPBY available in all Excel versions?**
+
+No. GROUPBY requires Microsoft 365 (desktop or web). It is not in Excel 2021, 2019, or earlier.
+
+**Can GROUPBY create calculated fields like Pivot Tables?**
+
+Not directly. But you can add a calculated column to your source data, or use LAMBDA for custom aggregations in the function argument.
+
+**Does GROUPBY support percentage of total?**
+
+Not natively. But you can calculate it: divide each group total by `SUM(values)` in a separate formula.
+
+**Can I use GROUPBY with external data?**
+
+Yes, as long as the data is in your workbook. GROUPBY works with data from Power Query (Get & Transform), as long as the result is loaded to a range or table.
+
+**What happened to the old GROUPBY function?**
+
+Excel had a different GROUPBY in older versions for grouped worksheets. This new GROUPBY is unrelated and replaces that functionality with a dynamic array approach.
+
+**How many rows can GROUPBY handle?**
+
+Thousands — easily. For very large datasets (100k+ rows), Pivot Tables may still perform better because they use Excel's internal data model. Test with your data size.

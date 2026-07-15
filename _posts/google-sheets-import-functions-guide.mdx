@@ -1,0 +1,189 @@
+---
+title: "Google Sheets IMPORT Functions: IMPORTRANGE, IMPORTHTML, IMPORTXML"
+date: "2026-07-14"
+description: "Learn Google Sheets IMPORT functions. IMPORTRANGE, IMPORTHTML, IMPORTXML, and IMPORTDATA for external data."
+published: true
+featured: false
+heroImage: "default-og"
+tags: ["google-sheets", "formulas", "import", "importrange", "tutorial"]
+category: "Google Sheets"
+---
+
+Most spreadsheet data lives inside your sheet. But what if the data you need is in another sheet? Or on a website? Or in a CSV file on a server?
+
+Google Sheets has four IMPORT functions that pull external data into your spreadsheet. They update automatically, so your data stays current without manual copying.
+
+---
+
+## Why This Matters
+
+Importing data manually is error-prone. You copy, paste, format, repeat. If the source changes, your copy is outdated. IMPORT functions keep everything synced automatically.
+
+---
+
+## IMPORTRANGE — From Another Sheet
+
+Import data from a different Google Sheet.
+
+### Syntax
+
+```
+=IMPORTRANGE(spreadsheet_url, range_string)
+```
+
+### Example
+
+```
+=IMPORTRANGE("https://docs.google.com/spreadsheets/d/abc123", "Sheet1!A1:C100")
+```
+
+**First time:** Sheets asks you to Allow Access. Click it. After that, data syncs automatically.
+
+**Use with QUERY for filtered imports:**
+
+```
+=QUERY(IMPORTRANGE("url", "Sheet1!A1:C100"), "SELECT * WHERE Col2 > 500")
+```
+
+---
+
+## IMPORTHTML — From a Web Table
+
+Import a table or list from any web page.
+
+### Syntax
+
+```
+=IMPORTHTML(url, query, index)
+```
+
+### Example
+
+```
+=IMPORTHTML("https://en.wikipedia.org/wiki/List_of_countries_by_GDP", "table", 1)
+```
+
+Imports the first table from the Wikipedia page.
+
+| Argument | Description |
+|----------|-------------|
+| `url` | Full URL of the web page |
+| `query` | "table" for HTML tables, "list" for HTML lists |
+| `index` | Which table/list on the page (1 = first, 2 = second, etc.) |
+
+---
+
+## IMPORTXML — From Structured Data
+
+Import data from XML, HTML, or RSS feeds using XPath queries.
+
+### Syntax
+
+```
+=IMPORTXML(url, xpath_query)
+```
+
+### Example
+
+```
+=IMPORTXML("https://example.com", "//h1")
+```
+
+Returns all H1 headings from the page.
+
+**Get all links from a page:**
+
+```
+=IMPORTXML("https://example.com", "//a/@href")
+```
+
+**Get page title:**
+
+```
+=IMPORTXML("https://example.com", "//title")
+```
+
+---
+
+## IMPORTDATA — From CSV/TSV
+
+Import a CSV or TSV file directly from a URL.
+
+### Syntax
+
+```
+=IMPORTDATA(url)
+```
+
+### Example
+
+```
+=IMPORTDATA("https://example.com/data.csv")
+```
+
+No parsing needed — Sheets automatically splits the data into columns.
+
+---
+
+## Comparison
+
+| Function | Best For | Update Frequency |
+|----------|----------|-----------------|
+| IMPORTRANGE | Other Google Sheets | Every hour, or on change |
+| IMPORTHTML | Web tables and lists | ~Every 2 hours |
+| IMPORTXML | Structured web data | ~Every 2 hours |
+| IMPORTDATA | CSV/TSV files | ~Every hour |
+
+Import functions recalculate periodically. For real-time data, use Google Apps Script.
+
+---
+
+## Pro Tips
+
+**Wrap in IFERROR to handle temporary failures:**
+
+```
+=IFERROR(IMPORTRANGE("url", "Sheet1!A1:C100"), "Waiting for data...")
+```
+
+**Use cell references for URLs.** Put the URL in a cell and reference it:
+
+```
+=IMPORTRANGE(A1, "Sheet1!A1:C100")
+```
+
+Now you can change the URL without editing the formula.
+
+**Combine with QUERY for large imports:**
+
+```
+=QUERY(IMPORTRANGE("url", "Sheet1!A1:C10000"), "SELECT * WHERE Col1 IS NOT NULL")
+```
+
+---
+
+## Common Mistakes
+
+**Permission errors.** IMPORTRANGE requires access to the source sheet. Click Allow Access the first time, or ensure both sheets are in the same Google account.
+
+**HTML structure changes.** IMPORTHTML and IMPORTXML break when the source website changes its layout. There is no fix except updating the formula.
+
+**Rate limits.** Import functions can be slow if too many are used in one sheet. Google limits import frequency to prevent abuse.
+
+---
+
+## Related Functions
+
+- **[QUERY Function](/blog/query-function-google-sheets-guide)** — Filter and process your imported data
+- **[FILTER Function](/blog/filter-function-google-sheets)** — Filter imported data by conditions
+- **[SPLIT Function](/blog/split-text-functions-google-sheets)** — Clean up imported text data
+
+---
+
+## FAQ
+
+**Can I import from an Excel file?** Not directly. Upload the Excel file to Google Drive first, then use IMPORTRANGE to reference it.
+
+**Why is my IMPORTHTML returning #N/A?** The page structure may have changed, or the table index is wrong. Try different index numbers (1, 2, 3...) to find the right table.
+
+**How often do IMPORT functions refresh?** Approximately every 1-2 hours. For immediate refresh, make a small edit to the sheet or use Google Apps Script.
