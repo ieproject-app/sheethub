@@ -3,13 +3,11 @@
 import React from "react";
 import Link from "next/link";
 import { ChevronRight } from "lucide-react";
-import { PlaceHolderImages } from "@/lib/placeholder-images";
 import { cn } from "@/lib/utils";
 import { RelativeTime } from "@/components/ui/relative-time";
 import { AddToReadingListButton } from "@/components/layout/add-to-reading-list-button";
 import { CategoryBadge } from "@/components/layout/category-badge";
 import { ScrollReveal } from "@/components/ui/scroll-reveal";
-import { RevealImage } from "@/components/ui/reveal-image";
 import { getMulticolorSeed, getMulticolorTheme } from "@/lib/multicolor";
 import type { Post, PostFrontmatter } from "@/lib/posts";
 import type { Dictionary } from "@/lib/get-dictionary";
@@ -17,81 +15,54 @@ import type { Dictionary } from "@/lib/get-dictionary";
 interface HomeLatestProps {
     posts: Post<PostFrontmatter>[];
     dictionary: Dictionary;
-    locale: string;
-    linkPrefix: string;
 }
 
 export const HomeLatest = ({
     posts,
     dictionary,
-    locale,
-    linkPrefix,
 }: HomeLatestProps) => {
     const renderLatestCard = (post: Post<PostFrontmatter>, index: number) => {
-        const heroImageValue = post.frontmatter.heroImage;
-        let heroImageSrc: string | undefined;
-        let heroImageHint: string | undefined;
-
-        if (heroImageValue) {
-            if (heroImageValue.startsWith("http") || heroImageValue.startsWith("/")) {
-                heroImageSrc = heroImageValue;
-                heroImageHint = post.frontmatter.imageAlt || post.frontmatter.title;
-            } else {
-                const placeholder = PlaceHolderImages.find(
-                    (p) => p.id === heroImageValue,
-                );
-                if (placeholder) {
-                    heroImageSrc = placeholder.imageUrl;
-                    heroImageHint = placeholder.imageHint;
-                }
-            }
-        }
+        const firstLetter = post.frontmatter.title.trim().charAt(0).toUpperCase();
+        const multicolor = getMulticolorTheme(
+            getMulticolorSeed(post.slug, post.frontmatter.category, post.frontmatter.title),
+        );
 
         const item = {
             slug: post.slug,
             title: post.frontmatter.title,
             description: post.frontmatter.description,
-            href: `${linkPrefix}/blog/${post.slug}`,
+            href: `/blog/${post.slug}`,
             type: "blog" as const,
         };
-        const multicolor = getMulticolorTheme(
-            getMulticolorSeed(post.slug, post.frontmatter.category, post.frontmatter.title),
-        );
 
         return (
             <ScrollReveal key={post.slug} direction="up" delay={index * 0.1}>
                 <div className="group relative transition-all duration-500 hover:-translate-y-1">
                     <Link
-                        href={`${linkPrefix}/blog/${post.slug}`}
+                        href={`/blog/${post.slug}`}
                         className="block"
                         aria-label={`Read more about ${post.frontmatter.title}`}
                     >
+                        {/* First-letter gradient card header — 8:5 (shorter) */}
                         <div className={cn(
-                            "relative w-full aspect-8/5 overflow-hidden rounded-xl mb-4 shadow-sm transition-all duration-500 border border-primary/5 ring-1 ring-transparent",
+                            "relative w-full aspect-[8/5] overflow-hidden rounded-xl mb-4 shadow-sm transition-all duration-500 border border-primary/5 ring-1 ring-transparent flex items-center justify-center bg-gradient-to-b",
+                            multicolor.gradient,
                             multicolor.hoverRing,
                             multicolor.hoverShadow,
                         )}>
-                            {heroImageSrc && (
-                                <RevealImage
-                                    src={heroImageSrc}
-                                    alt={post.frontmatter.imageAlt || post.frontmatter.title}
-                                    fill
-                                    className="transition-transform duration-700 group-hover:scale-110"
-                                    wrapperClassName="absolute inset-0"
-                                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 33vw, 300px"
-                                    holdUntilLoaded={index < 3}
-                                    initialVisitOnly={index < 3}
-                                    showSkeleton
-                                    data-ai-hint={heroImageHint}
-                                />
-                            )}
-                            <div className={cn("absolute inset-0 bg-linear-to-t opacity-0 transition-opacity duration-500 group-hover:opacity-100", multicolor.overlayGradient)} />
+                            <div className={cn(
+                                "absolute inset-0 bg-linear-to-t opacity-0 transition-opacity duration-500 group-hover:opacity-100",
+                                multicolor.overlayGradient,
+                            )} />
                             <div className={cn("absolute bottom-0 left-0 right-0 h-0.75 opacity-0 transition-opacity duration-500 group-hover:opacity-100", multicolor.accentBar)} />
+                            <span className="font-display text-5xl sm:text-6xl font-extrabold text-white/95 tracking-tight">
+                                {firstLetter || "S"}
+                            </span>
                             <AddToReadingListButton
                                 item={item}
                                 dictionary={dictionary}
                                 showText={false}
-                                className="absolute top-3 right-3 z-10 text-white bg-black/30 hover:bg-black/50 hover:text-white opacity-0 group-hover:opacity-100 [@media(hover:none)]:opacity-100 transition-opacity"
+                                className="absolute top-3 right-3 z-10 text-white bg-black/25 hover:bg-black/45 hover:text-white opacity-0 group-hover:opacity-100 [@media(hover:none)]:opacity-100 transition-opacity"
                             />
                         </div>
 
@@ -103,7 +74,6 @@ export const HomeLatest = ({
                         </h3>
                         <RelativeTime
                             date={post.frontmatter.date}
-                            locale={locale}
                             className="text-[10px] font-medium text-muted-foreground block opacity-60"
                         />
                     </Link>
@@ -130,7 +100,7 @@ export const HomeLatest = ({
                 className="flex justify-center"
             >
                 <Link
-                    href={`${linkPrefix}/blog`}
+                    href={`/blog`}
                     className="flex items-center gap-2 bg-accent/5 px-3 py-1.5 rounded-full border border-accent/30 hover:bg-accent/10 transition-all group"
                 >
                     <div className="flex items-center gap-1 pr-2.5 border-r border-accent/20">

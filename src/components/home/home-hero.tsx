@@ -4,7 +4,6 @@ import * as React from "react";
 import Link from "next/link";
 import { Post, PostFrontmatter } from "@/lib/posts";
 import { Dictionary } from "@/lib/get-dictionary";
-import { PlaceHolderImages } from "@/lib/placeholder-images";
 import { cn } from "@/lib/utils";
 import { RelativeTime } from "@/components/ui/relative-time";
 import { AddToReadingListButton } from "@/components/layout/add-to-reading-list-button";
@@ -13,7 +12,6 @@ import {
     CategoryBadge,
     simplifyCategoryLabel,
 } from "@/components/layout/category-badge";
-import { RevealImage } from "@/components/ui/reveal-image";
 import { getMulticolorSeed, getMulticolorTheme } from "@/lib/multicolor";
 import {
     Carousel,
@@ -25,16 +23,9 @@ import {
 interface HomeHeroProps {
     posts: Post<PostFrontmatter>[];
     dictionary: Dictionary;
-    locale: string;
-    linkPrefix: string;
 }
 
-/**
- * HomeHero - A sophisticated 4-column staggered gallery grid using the colorful badge system.
- * Mobile: Embla carousel (1 card per slide) matching HomeTutorials design.
- * Desktop (sm+): Original 4-column staggered grid.
- */
-export function HomeHero({ posts, dictionary, locale, linkPrefix }: HomeHeroProps) {
+export function HomeHero({ posts, dictionary }: HomeHeroProps) {
     const [api, setApi] = React.useState<CarouselApi>();
     const [selectedIndex, setSelectedIndex] = React.useState(0);
     const [scrollSnaps, setScrollSnaps] = React.useState<number[]>([]);
@@ -64,47 +55,91 @@ export function HomeHero({ posts, dictionary, locale, linkPrefix }: HomeHeroProp
 
     if (posts.length === 0) return null;
 
-    // Build per-post data once, reused by both mobile carousel and desktop grid
     const postData = posts.map((post, index) => {
-        const heroImageValue = post.frontmatter.heroImage;
-        let heroImageSrc: string | undefined;
-        let heroImageHint: string | undefined;
-
-        if (heroImageValue) {
-            if (heroImageValue.startsWith("http") || heroImageValue.startsWith("/")) {
-                heroImageSrc = heroImageValue;
-                heroImageHint = post.frontmatter.imageAlt || post.frontmatter.title;
-            } else {
-                const placeholder = PlaceHolderImages.find((p) => p.id === heroImageValue);
-                if (placeholder) {
-                    heroImageSrc = placeholder.imageUrl;
-                    heroImageHint = placeholder.imageHint;
-                }
-            }
-        }
-
         const rawCategory = post.frontmatter.category || "Tutorial";
         const simplifiedCategory = simplifyCategoryLabel(rawCategory);
         const multicolor = getMulticolorTheme(
             getMulticolorSeed(post.slug, simplifiedCategory, post.frontmatter.title),
         );
+        const firstLetter = post.frontmatter.title.trim().charAt(0).toUpperCase();
 
         const item = {
             slug: post.slug,
             title: post.frontmatter.title,
             description: post.frontmatter.description,
-            href: `${linkPrefix}/blog/${post.slug}`,
+            href: `/blog/${post.slug}`,
             type: "blog" as const,
         };
 
-        return { post, index, heroImageSrc, heroImageHint, rawCategory, multicolor, item };
+        return { post, index, rawCategory, multicolor, item, firstLetter };
     });
+
+    const renderGradientCard = (
+        firstLetter: string,
+        multicolor: ReturnType<typeof getMulticolorTheme>,
+        item: { slug: string; title: string; description: string; href: string; type: "blog" },
+        rawCategory: string,
+        title: string,
+        date: string,
+        href: string,
+        isDesktopGrid = false,
+    ) => (
+        <article className={cn(
+            "relative bg-card rounded-xl border border-primary/5 transition-all duration-500 flex flex-col group/card overflow-hidden shadow-md ring-1 ring-transparent",
+            "hover:-translate-y-1.5 hover:border-primary/10",
+            multicolor.hoverRing,
+            multicolor.hoverShadow,
+            isDesktopGrid ? "" : "h-full",
+        )}>
+            <Link href={href} className="flex h-full flex-col" aria-label={`Read ${title}`}>
+                {/* First-letter gradient — aspect-3/2 (shorter) */}
+                <div className={cn(
+                    "relative aspect-3/2 overflow-hidden rounded-t-xl bg-gradient-to-b flex items-center justify-center",
+                    multicolor.gradient,
+                )}>
+                    <div className={cn("absolute inset-0 bg-linear-to-t opacity-0 transition-opacity duration-500 group-hover/card:opacity-100", multicolor.overlayGradient)} />
+                    <div className={cn("absolute bottom-0 left-0 right-0 h-0.75 opacity-0 transition-opacity duration-500 group-hover/card:opacity-100", multicolor.accentBar)} />
+                    <span className="font-display text-5xl sm:text-6xl font-extrabold text-white/95 tracking-tight">
+                        {firstLetter || "S"}
+                    </span>
+                    <AddToReadingListButton
+                        item={item}
+                        dictionary={dictionary}
+                        showText={false}
+                        className="absolute top-2 right-2 z-10 text-white bg-black/25 hover:bg-black/45 hover:text-white opacity-0 group-hover/card:opacity-100 [@media(hover:none)]:opacity-100 transition-opacity"
+                    />
+                </div>
+
+                {/* Content */}
+                <div className="p-5 flex flex-col gap-2 flex-1">
+                    <div>
+                        <CategoryBadge category={rawCategory} size="xs" className="shadow-sm" />
+                    </div>
+                    <h3 className={cn("font-display text-xl font-bold leading-snug text-primary transition-colors duration-300", multicolor.hoverTitle)}>
+                        {title}
+                    </h3>
+                    <div className="flex items-center justify-between mt-auto">
+                        <RelativeTime
+                            date={date}
+                            className="text-[10px] font-bold uppercase tracking-tighter text-muted-foreground/60"
+                        />
+                        <div className={cn(
+                            "flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest transition-all duration-300",
+                            multicolor.readingButtonTone,
+                        )}>
+                            READ <ArrowRight className="h-3.5 w-3.5" />
+                        </div>
+                    </div>
+                </div>
+            </Link>
+        </article>
+    );
 
     return (
         <section className="py-12 sm:py-16 bg-card border-b border-primary/5">
             <div className="container max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
-                {/* ── MOBILE: Carousel (hidden on sm+) ── */}
+                {/* ── MOBILE: Carousel ── */}
                 <div className="sm:hidden">
                     <Carousel
                         setApi={setApi}
@@ -112,89 +147,21 @@ export function HomeHero({ posts, dictionary, locale, linkPrefix }: HomeHeroProp
                         className="w-full"
                     >
                         <CarouselContent className="-ml-4">
-                            {postData.map(({ post, index, heroImageSrc, heroImageHint, rawCategory, multicolor, item }) => (
+                            {postData.map(({ post, firstLetter, multicolor, item, rawCategory }) => (
                                 <CarouselItem key={post.slug} className="pl-4 pb-4 pt-1">
-                                    <article
-                                        className={cn(
-                                            "relative bg-card rounded-xl border border-primary/5 transition-all duration-500 flex flex-col group/card overflow-hidden shadow-md ring-1 ring-transparent",
-                                            multicolor.hoverRing,
-                                            multicolor.hoverShadow,
-                                        )}
-                                    >
-                                        <Link
-                                            href={`${linkPrefix}/blog/${post.slug}`}
-                                            className="block group"
-                                            aria-label={`Read ${post.frontmatter.title}`}
-                                        >
-                                            {/* Image */}
-                                            <div className="relative aspect-[3/2] overflow-hidden rounded-t-xl">
-                                                {heroImageSrc && (
-                                                    <RevealImage
-                                                        src={heroImageSrc}
-                                                        alt={post.frontmatter.imageAlt || post.frontmatter.title}
-                                                        fill
-                                                        className="transition-transform duration-700 group-hover:scale-[1.06]"
-                                                        wrapperClassName="absolute inset-0"
-                                                        sizes="(max-width: 640px) calc(100vw - 32px), 50vw"
-                                                        priority={index < 4}
-                                                        holdUntilLoaded={index < 4}
-                                                        initialVisitOnly={index < 4}
-                                                        showSkeleton
-                                                        data-ai-hint={heroImageHint}
-                                                    />
-                                                )}
-                                                <div className={cn("absolute inset-0 bg-linear-to-t opacity-0 transition-opacity duration-500 group-hover/card:opacity-100", multicolor.overlayGradient)} />
-                                                <div className={cn("absolute bottom-0 left-0 right-0 h-0.75 opacity-0 transition-opacity duration-500 group-hover/card:opacity-100", multicolor.accentBar)} />
-                                                <AddToReadingListButton
-                                                    item={item}
-                                                    dictionary={dictionary}
-                                                    showText={false}
-                                                    className="absolute top-2 right-2 z-20 text-white bg-black/30 hover:bg-black/50 hover:text-white opacity-0 group-hover/card:opacity-100 [@media(hover:none)]:opacity-100 transition-opacity"
-                                                />
-                                            </div>
-
-                                            {/* Caption */}
-                                            <div className="p-5 flex flex-col gap-2">
-                                                <div>
-                                                    <CategoryBadge
-                                                        category={rawCategory}
-                                                        size="xs"
-                                                        className="shadow-sm"
-                                                    />
-                                                </div>
-                                                <h3 className={cn("font-display text-xl font-bold leading-snug text-primary transition-colors duration-300", multicolor.hoverTitle)}>
-                                                    {post.frontmatter.title}
-                                                </h3>
-                                                <div className="flex items-center justify-between mt-1">
-                                                    <RelativeTime
-                                                        date={post.frontmatter.date}
-                                                        locale={locale}
-                                                        className="text-[10px] font-bold uppercase tracking-tighter text-muted-foreground/60"
-                                                    />
-                                                    <div
-                                                        className={cn(
-                                                            "flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest transition-all duration-300",
-                                                            multicolor.readingButtonTone,
-                                                        )}
-                                                    >
-                                                        READ <ArrowRight className="h-3.5 w-3.5" />
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </Link>
-                                    </article>
+                                    {renderGradientCard(firstLetter, multicolor, item, rawCategory, post.frontmatter.title, post.frontmatter.date, `/blog/${post.slug}`)}
                                 </CarouselItem>
                             ))}
                         </CarouselContent>
 
-                        {/* Carousel controls: prev/next + dots */}
+                        {/* Carousel controls */}
                         <div className="mt-4 flex items-center gap-2">
                             <button
                                 type="button"
                                 onClick={() => api?.scrollPrev()}
                                 disabled={!canScrollPrev}
                                 className="h-8 w-8 rounded-full border border-primary/20 text-primary/70 hover:text-primary hover:border-primary/40 disabled:opacity-35 disabled:cursor-not-allowed inline-flex items-center justify-center transition-colors"
-                                aria-label={locale === "id" ? "Slide sebelumnya" : "Previous slide"}
+                                aria-label="Previous slide"
                             >
                                 <ChevronLeft className="h-4 w-4" />
                             </button>
@@ -221,7 +188,7 @@ export function HomeHero({ posts, dictionary, locale, linkPrefix }: HomeHeroProp
                                 onClick={() => api?.scrollNext()}
                                 disabled={!canScrollNext}
                                 className="h-8 w-8 rounded-full border border-primary/20 text-primary/70 hover:text-primary hover:border-primary/40 disabled:opacity-35 disabled:cursor-not-allowed inline-flex items-center justify-center transition-colors"
-                                aria-label={locale === "id" ? "Slide berikutnya" : "Next slide"}
+                                aria-label="Next slide"
                             >
                                 <ChevronRight className="h-4 w-4" />
                             </button>
@@ -229,9 +196,9 @@ export function HomeHero({ posts, dictionary, locale, linkPrefix }: HomeHeroProp
                     </Carousel>
                 </div>
 
-                {/* ── DESKTOP: Original 4-column staggered grid (hidden on mobile) ── */}
+                {/* ── DESKTOP: 4-column staggered grid ── */}
                 <div className="hidden sm:grid grid-cols-2 lg:grid-cols-4 gap-8 items-start">
-                    {postData.map(({ post, index, heroImageSrc, heroImageHint, rawCategory, multicolor, item }) => {
+                    {postData.map(({ post, index, firstLetter, multicolor, item, rawCategory }) => {
                         const isStaggered = index % 2 !== 0;
                         return (
                             <div
@@ -241,84 +208,7 @@ export function HomeHero({ posts, dictionary, locale, linkPrefix }: HomeHeroProp
                                     isStaggered && "lg:mt-10",
                                 )}
                             >
-                                <Link href={`${linkPrefix}/blog/${post.slug}`} className="block" aria-label={`Read ${post.frontmatter.title}`}>
-                                    <article className="space-y-5">
-                                        {/* Image Block */}
-                                        <div
-                                            className={cn(
-                                                "relative aspect-[3/2] rounded-xl overflow-hidden bg-muted shadow-md group-hover:-translate-y-2 transition-all duration-500 ring-1 ring-transparent",
-                                                multicolor.hoverRing,
-                                                multicolor.hoverShadow,
-                                            )}
-                                        >
-                                            <div
-                                                className={cn("absolute bottom-0 left-0 right-0 h-0.75 z-30 transition-opacity duration-500 opacity-0 group-hover:opacity-100", multicolor.accentBar)}
-                                            />
-                                            <div
-                                                className={cn(
-                                                    "absolute inset-0 bg-linear-to-t opacity-0 group-hover:opacity-100 transition-opacity duration-500 z-10",
-                                                    multicolor.overlayGradient,
-                                                )}
-                                            />
-                                            {heroImageSrc && (
-                                                <RevealImage
-                                                    src={heroImageSrc}
-                                                    alt={post.frontmatter.imageAlt || post.frontmatter.title}
-                                                    fill
-                                                    className="transition-transform duration-1000 ease-out group-hover:scale-[1.06]"
-                                                    wrapperClassName="absolute inset-0"
-                                                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 25vw"
-                                                    priority={index < 4}
-                                                    holdUntilLoaded={index < 4}
-                                                    initialVisitOnly={index < 4}
-                                                    showSkeleton
-                                                    data-ai-hint={heroImageHint}
-                                                />
-                                            )}
-                                        </div>
-
-                                        {/* Caption Block */}
-                                        <div className="px-1 space-y-3">
-                                            <div>
-                                                <CategoryBadge
-                                                    category={rawCategory}
-                                                    size="xs"
-                                                    className="shadow-sm"
-                                                />
-                                            </div>
-
-                                            <h3 className="font-display text-xl font-bold leading-snug text-primary group-hover:text-accent transition-colors duration-300">
-                                                {post.frontmatter.title}
-                                            </h3>
-
-                                            <div className="flex items-center justify-between">
-                                                <RelativeTime
-                                                    date={post.frontmatter.date}
-                                                    locale={locale}
-                                                    className="text-[10px] font-bold uppercase tracking-tighter text-muted-foreground/60"
-                                                />
-
-                                                <div className="flex items-center gap-2">
-                                                    <AddToReadingListButton
-                                                        item={item}
-                                                        dictionary={dictionary}
-                                                        showText={false}
-                                                        className="h-8 w-8 rounded-full border-none bg-primary/[0.03] text-muted-foreground hover:text-primary hover:bg-primary/10 transition-all opacity-0 group-hover:opacity-100 [@media(hover:none)]:opacity-100 [@media(hover:none)]:translate-x-0 -translate-x-2 group-hover:translate-x-0"
-                                                    />
-                                                    <div
-                                                        className={cn(
-                                                            "flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest transition-all duration-300",
-                                                            multicolor.readingButtonTone,
-                                                            "group-hover:bg-primary/5",
-                                                        )}
-                                                    >
-                                                        READ <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5" />
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </article>
-                                </Link>
+                                {renderGradientCard(firstLetter, multicolor, item, rawCategory, post.frontmatter.title, post.frontmatter.date, `/blog/${post.slug}`, true)}
                             </div>
                         );
                     })}

@@ -3,35 +3,18 @@
 import Link from "next/link";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
-import { cn } from "@/lib/utils";
 import type { Dictionary } from "@/lib/get-dictionary";
-import { LanguageSwitcher } from "./language-switcher";
-import type { TranslationsMap } from "@/lib/posts";
 import {
-  Facebook,
-  Youtube,
-  Instagram,
   User2,
-  Terminal,
-  Sparkles,
 } from "lucide-react";
-import { TikTokLogo } from "@/components/icons/tiktok-logo";
 import { ScrollReveal } from "@/components/ui/scroll-reveal";
-import { SnipTooltip } from "@/components/ui/snip-tooltip";
-import { getLinkPrefix } from "@/lib/utils";
-import { FEATURE_FLAGS } from "@/lib/feature-flags";
 
 export function LayoutFooter({
-  locale,
   dictionary,
-  translationsMap,
 }: {
-  locale: string;
   dictionary: Dictionary;
-  translationsMap: TranslationsMap;
 }) {
-  const linkPrefix = getLinkPrefix(locale);
-  const shouldShowTools = FEATURE_FLAGS.toolsEnabled;
+  const linkPrefix = "";
 
   const footerNavItems = [
     {
@@ -58,30 +41,6 @@ export function LayoutFooter({
 
   const authorName = "SheetHub";
   const authorAvatar = "/images/profile/sheethub-round.svg";
-
-  const socialLinks = [
-    {
-      icon: <Facebook className="h-5 w-5" />,
-      href: "https://www.facebook.com/iwan.efendi.777",
-      label: "Facebook",
-    },
-    {
-      icon: <Youtube className="h-5 w-5" />,
-      href: "https://www.youtube.com/@iwantools",
-      label: "YouTube",
-    },
-    {
-      icon: <Instagram className="h-5 w-5" />,
-      href: "https://www.instagram.com/iwnefnd/",
-      label: "Instagram",
-    },
-    {
-      icon: <TikTokLogo className="h-5 w-5" />,
-      href: "https://www.tiktok.com/@iwantools",
-      label: "TikTok",
-    },
-  ];
-
   return (
     <footer className="relative w-full mt-16 sm:mt-24">
       {/* Sub-Footer Section */}
@@ -125,86 +84,13 @@ export function LayoutFooter({
                 <span>{dictionary.footer.viewProfile}</span>
               </Link>
             </div>
-
-            {/* Social Links */}
-            <ul
-              className="flex items-center justify-center gap-4 mt-8"
-              aria-label="Social links"
-            >
-              {socialLinks.map((social) => {
-                const brandStyles: Record<string, string> = {
-                  Facebook:
-                    "hover:shadow-[0_0_20px_rgba(59,89,152,0.5)] hover:bg-[#3b5998]",
-                  YouTube:
-                    "hover:shadow-[0_0_20px_rgba(255,0,0,0.5)] hover:bg-[#ff0000]",
-                  Instagram:
-                    "hover:shadow-[0_0_20px_rgba(225,48,108,0.5)] hover:bg-[#e1306c]",
-                  TikTok:
-                    "hover:shadow-[0_0_20px_rgba(0,242,234,0.5)] hover:bg-[#00f2ea] hover:text-black",
-                };
-                const brandStyle =
-                  brandStyles[social.label] ||
-                  "hover:bg-accent hover:text-primary";
-
-                return (
-                  <li key={social.label}>
-                    <SnipTooltip label={social.label} side="top">
-                      <a
-                        href={social.href}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        title={social.label}
-                        className={cn(
-                          "relative inline-flex p-3 rounded-full bg-primary/90 text-primary-foreground shadow-md transition-all duration-300 ease-in-out",
-                          "hover:-translate-y-1 hover:scale-105",
-                          brandStyle,
-                        )}
-                        aria-label={social.label}
-                      >
-                        {social.icon}
-                      </a>
-                    </SnipTooltip>
-                  </li>
-                );
-              })}
-            </ul>
           </ScrollReveal>
 
           <div className="flex flex-col justify-center items-center gap-6 text-sm text-primary/80 border-t border-primary/10 pt-12 mt-12">
             <div className="flex items-center gap-4">
-              <LanguageSwitcher
-                translationsMap={translationsMap}
-                dictionary={dictionary}
-                variant="minimal"
-              />
             </div>
             
             <div className="flex flex-col items-center justify-center gap-5 text-center">
-              {/* Utility links */}
-              {shouldShowTools && (
-                <nav className="flex flex-wrap items-center justify-center gap-x-6 gap-y-3">
-                  <Link
-                    href={`${linkPrefix}/tools`}
-                    className="group flex items-center gap-2 text-[11px] font-black uppercase tracking-widest text-primary/60 hover:text-accent transition-all duration-300"
-                  >
-                    <Terminal className="h-3.5 w-3.5 transition-transform group-hover:scale-120 group-hover:rotate-12" />
-                    <span>{dictionary.navigation.tools || "Tools"}</span>
-                  </Link>
-                  {process.env.NODE_ENV === "development" && (
-                    <>
-                      <div className="w-1 h-1 rounded-full bg-primary/20" />
-                      <Link
-                        href={`${linkPrefix}/tools/prompt-generator`}
-                        className="group flex items-center gap-2 text-[11px] font-black uppercase tracking-widest text-primary/60 hover:text-accent transition-all duration-300"
-                      >
-                        <Sparkles className="h-3.5 w-3.5 transition-transform group-hover:scale-120 group-hover:rotate-12 text-accent" />
-                        <span>AI Generator</span>
-                      </Link>
-                    </>
-                  )}
-                </nav>
-              )}
-
               <nav className="flex flex-wrap items-center justify-center gap-x-6 gap-y-3 px-6 py-2.5 rounded-full bg-muted/20 border border-primary/5 backdrop-blur-sm">
                 {footerNavItems.map((item) => (
                   <Link

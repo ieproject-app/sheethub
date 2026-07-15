@@ -2,7 +2,6 @@
 
 import React, { useMemo } from "react";
 import Link from "next/link";
-import { PlaceHolderImages } from "@/lib/placeholder-images";
 import { AddToReadingListButton } from "@/components/layout/add-to-reading-list-button";
 import { StickyNote } from "lucide-react";
 import { formatRelativeTime } from "@/lib/utils";
@@ -28,7 +27,6 @@ type RelatedContentItem = {
 
 type ArticleRelatedProps = {
   type: "blog" | "note";
-  locale: string;
   currentSlug: string;
   currentTags?: string[];
   currentCategory?: string;
@@ -42,14 +40,13 @@ type ArticleRelatedProps = {
  */
 export function ArticleRelated({
   type,
-  locale,
   currentSlug,
   currentTags = [],
   currentCategory,
   initialRelatedContent,
   dictionary,
 }: ArticleRelatedProps) {
-  const linkPrefix = locale === "en" ? "" : `/${locale}`;
+  const linkPrefix = "";
   const normalizedCurrentTags = useMemo(
     () => Array.from(new Set(currentTags.map((tag) => tag.toLowerCase().trim()).filter(Boolean))),
     [currentTags],
@@ -57,7 +54,7 @@ export function ArticleRelated({
   const normalizedCurrentCategory = currentCategory?.toLowerCase().trim();
 
   const formatDate = (date: Date) => {
-    return new Intl.DateTimeFormat(locale, {
+    return new Intl.DateTimeFormat("en-US", {
       day: "numeric",
       month: "short",
       year: "numeric",
@@ -118,22 +115,12 @@ export function ArticleRelated({
   const renderCard = (item: RelatedContentItem) => {
     const isBlog = type === "blog";
     const heroImageValue = item.frontmatter.heroImage;
-    let heroImageSrc: string | undefined;
-    let heroImageHint: string | undefined;
+    let heroImageSrc = "";
+    let heroImageHint = item.frontmatter.imageAlt || item.frontmatter.title || "";
 
-    if (isBlog && heroImageValue) {
-      if (heroImageValue.startsWith("http") || heroImageValue.startsWith("/")) {
-        heroImageSrc = heroImageValue;
-        heroImageHint = item.frontmatter.imageAlt || item.frontmatter.title;
-      } else {
-        const placeholder = PlaceHolderImages.find(
-          (p) => p.id === heroImageValue,
-        );
-        if (placeholder) {
-          heroImageSrc = placeholder.imageUrl;
-          heroImageHint = placeholder.imageHint;
-        }
-      }
+    if (heroImageValue && (heroImageValue.startsWith("http") || heroImageValue.startsWith("/"))) {
+      heroImageSrc = heroImageValue;
+      heroImageHint = item.frontmatter.imageAlt || item.frontmatter.title;
     }
 
     const readingListItem = {
@@ -145,6 +132,7 @@ export function ArticleRelated({
     };
 
     if (isBlog) {
+      const hasImage = !!heroImageSrc;
       const multicolor = getMulticolorTheme(
         getMulticolorSeed(item.slug, item.frontmatter.category, item.frontmatter.title),
       );
@@ -155,12 +143,12 @@ export function ArticleRelated({
           className="group relative transition-all duration-500 hover:-translate-y-1"
         >
           <Link href={readingListItem.href} className="block">
-            <div className={cn(
-              "relative w-full aspect-8/5 overflow-hidden rounded-xl mb-4 shadow-sm transition-all duration-500 border border-primary/5 ring-1 ring-transparent",
-              multicolor.hoverRing,
-              multicolor.hoverShadow,
-            )}>
-              {heroImageSrc ? (
+            {hasImage ? (
+              <div className={cn(
+                "relative w-full aspect-8/5 overflow-hidden rounded-xl mb-4 shadow-sm transition-all duration-500 border border-primary/5 ring-1 ring-transparent",
+                multicolor.hoverRing,
+                multicolor.hoverShadow,
+              )}>
                 <RevealImage
                   src={heroImageSrc}
                   alt={item.frontmatter.imageAlt || item.frontmatter.title}
@@ -172,27 +160,44 @@ export function ArticleRelated({
                   showSkeleton
                   data-ai-hint={heroImageHint}
                 />
-              ) : (
-                <StickyNote className="h-12 w-12 text-primary/20 transition-transform duration-700 group-hover:scale-110" />
-              )}
-              <div className={cn("absolute inset-0 bg-linear-to-t opacity-0 transition-opacity duration-500 group-hover:opacity-100", multicolor.overlayGradient)} />
-              <div className={cn("absolute bottom-0 left-0 right-0 h-0.75 opacity-0 transition-opacity duration-500 group-hover:opacity-100", multicolor.accentBar)} />
-              <AddToReadingListButton
-                item={readingListItem}
-                showText={false}
-                dictionary={dictionary}
-                className="absolute top-3 right-3 z-10 text-white bg-black/30 hover:bg-black/50 hover:text-white opacity-0 group-hover:opacity-100 [@media(hover:none)]:opacity-100 transition-opacity"
-              />
-            </div>
+                <div className={cn("absolute inset-0 bg-linear-to-t opacity-0 transition-opacity duration-500 group-hover:opacity-100", multicolor.overlayGradient)} />
+                <div className={cn("absolute bottom-0 left-0 right-0 h-0.75 opacity-0 transition-opacity duration-500 group-hover:opacity-100", multicolor.accentBar)} />
+                <AddToReadingListButton
+                  item={readingListItem}
+                  showText={false}
+                  dictionary={dictionary}
+                  className="absolute top-3 right-3 z-10 text-white bg-black/30 hover:bg-black/50 hover:text-white opacity-0 group-hover:opacity-100 [@media(hover:none)]:opacity-100 transition-opacity"
+                />
+              </div>
+            ) : (
+              <div className={cn(
+                "relative w-full aspect-[8/5] overflow-hidden rounded-xl mb-4 shadow-sm transition-all duration-500 border border-primary/5 ring-1 ring-transparent flex items-center justify-center bg-gradient-to-b",
+                multicolor.gradient,
+                multicolor.hoverRing,
+                multicolor.hoverShadow,
+              )}>
+                <div className={cn("absolute inset-0 bg-linear-to-t opacity-0 transition-opacity duration-500 group-hover:opacity-100", multicolor.overlayGradient)} />
+                <div className={cn("absolute bottom-0 left-0 right-0 h-0.75 opacity-0 transition-opacity duration-500 group-hover:opacity-100", multicolor.accentBar)} />
+                <span className="font-display text-5xl sm:text-6xl font-extrabold text-white/95 tracking-tight">
+                  {item.frontmatter.title.trim().charAt(0).toUpperCase() || "S"}
+                </span>
+                <AddToReadingListButton
+                  item={readingListItem}
+                  showText={false}
+                  dictionary={dictionary}
+                  className="absolute top-3 right-3 z-10 text-white bg-black/25 hover:bg-black/45 hover:text-white opacity-0 group-hover:opacity-100 [@media(hover:none)]:opacity-100 transition-opacity"
+                />
+              </div>
+            )}
 
             <div className="mb-2">
               <CategoryBadge category={item.frontmatter.category} type={type} size="xs" />
             </div>
-            <h3 className={cn("font-display text-lg sm:text-base font-semibold tracking-tight text-primary transition-colors leading-tight mb-2", multicolor.hoverTitle)}>
+            <h3 className="font-display text-lg sm:text-base font-semibold tracking-tight text-primary transition-colors leading-tight mb-2">
               {item.frontmatter.title}
             </h3>
             <time className="text-[10px] font-medium text-muted-foreground block opacity-60">
-              {formatRelativeTime(new Date(item.frontmatter.date), locale)}
+              {formatRelativeTime(new Date(item.frontmatter.date))}
             </time>
           </Link>
         </div>
@@ -268,7 +273,7 @@ export function ArticleRelated({
         <h2
           className="text-3xl font-black font-display tracking-tighter leading-tight text-primary mb-12 text-center"
         >
-          {dictionary.post.relatedContent}
+          {dictionary?.post?.relatedContent || "Related Articles"}
         </h2>
       </ScrollReveal>
       <div className="grid grid-cols-1 md:grid-cols-3 gap-x-8 gap-y-12">

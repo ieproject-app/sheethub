@@ -1,11 +1,11 @@
 "use client";
 
 import Link from "next/link";
-import Image from "next/image";
 import { ChevronRight } from "lucide-react";
-import { PlaceHolderImages } from "@/lib/placeholder-images";
 import { AddToReadingListButton } from "@/components/layout/add-to-reading-list-button";
 import type { Dictionary } from "@/lib/get-dictionary";
+import { cn } from "@/lib/utils";
+import { getMulticolorSeed, getMulticolorTheme } from "@/lib/multicolor";
 
 import { ScrollReveal } from "@/components/ui/scroll-reveal";
 
@@ -16,7 +16,7 @@ interface TopicPost {
     description: string;
     category?: string;
     date: string;
-    heroImage: string;
+    heroImage?: string;
     imageAlt?: string;
   };
 }
@@ -26,44 +26,29 @@ interface HomeTopicsProps {
   title: string;
   viewAllText: string;
   dictionary: Dictionary;
-  locale: string;
-  linkPrefix: string;
   tag: string;
   viewAllHref?: string;
 }
 
-/**
- * HomeTopics - Standardized with pb-12 sm:pb-16 to prevent padding stacking.
- */
 export function HomeTopics({
   posts,
   title,
   viewAllText,
   dictionary,
-  locale,
-  linkPrefix,
   tag,
   viewAllHref,
 }: HomeTopicsProps) {
   const renderHorizontalCard = (post: TopicPost, index: number) => {
-    const heroImageValue = post.frontmatter.heroImage;
-    let heroImageSrc = "/images/blank/blank.webp";
-    if (heroImageValue) {
-      if (heroImageValue.startsWith("http") || heroImageValue.startsWith("/")) {
-        heroImageSrc = heroImageValue;
-      } else {
-        const placeholder = PlaceHolderImages.find(
-          (p) => p.id === heroImageValue,
-        );
-        if (placeholder) heroImageSrc = placeholder.imageUrl;
-      }
-    }
+    const firstLetter = post.frontmatter.title.trim().charAt(0).toUpperCase();
+    const multicolor = getMulticolorTheme(
+      getMulticolorSeed(post.slug, post.frontmatter.category, post.frontmatter.title),
+    );
 
     const item = {
       slug: post.slug,
       title: post.frontmatter.title,
       description: post.frontmatter.description,
-      href: `${linkPrefix}/blog/${post.slug}`,
+      href: `/blog/${post.slug}`,
       type: "blog" as const,
     };
 
@@ -71,39 +56,41 @@ export function HomeTopics({
       <ScrollReveal key={post.slug} direction="up" delay={index * 0.1}>
         <div className="group relative flex items-center gap-4 py-3 border-b border-primary/5 transition-all duration-300">
           <Link
-            href={`${linkPrefix}/blog/${post.slug}`}
+            href={`/blog/${post.slug}`}
             className="flex items-center gap-4 flex-1 min-w-0"
           >
-            <div className="relative w-30 h-20 sm:w-36 sm:h-24 shrink-0 overflow-hidden rounded-lg shadow-sm border border-primary/5">
-              <Image
-                src={heroImageSrc}
-                alt={post.frontmatter.imageAlt || post.frontmatter.title}
-                fill
-                className="object-cover transition-transform duration-500 group-hover:scale-110"
-                sizes="(max-width: 640px) 120px, 144px"
-              />
-              <AddToReadingListButton
-                item={item}
-                dictionary={dictionary}
-                showText={false}
-                className="absolute top-1 right-1 z-20 text-white bg-black/30 hover:bg-black/50 hover:text-white opacity-0 group-hover:opacity-100 [@media(hover:none)]:opacity-100 transition-opacity h-6 w-6"
-              />
+            {/* First-letter gradient box instead of image/icon */}
+            <div className={cn(
+              "shrink-0 w-12 h-12 rounded-lg bg-gradient-to-br flex items-center justify-center shadow-sm",
+              multicolor.gradient,
+            )}>
+              <span className="font-display text-lg font-extrabold text-white">
+                {firstLetter || "S"}
+              </span>
             </div>
+
             <div className="flex-1 min-w-0 flex flex-col justify-center">
               <h3 className="font-display text-[15px] sm:text-base font-medium text-primary leading-snug transition-colors group-hover:text-accent">
                 {post.frontmatter.title}
               </h3>
             </div>
           </Link>
+          <AddToReadingListButton
+            item={item}
+            dictionary={dictionary}
+            showText={false}
+            className="shrink-0 text-muted-foreground hover:text-primary opacity-0 group-hover:opacity-100 [@media(hover:none)]:opacity-100 transition-opacity"
+          />
         </div>
       </ScrollReveal>
     );
   };
 
+  if (posts.length === 0) return null;
+
   return (
     <section
       className="container max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 pb-12 sm:pb-16 overflow-hidden"
-      data-locale={locale}
     >
       <ScrollReveal direction="left">
         <div className="mb-8 text-left">
@@ -121,7 +108,7 @@ export function HomeTopics({
       <ScrollReveal direction="up" delay={0.3}>
         <footer className="mt-10 flex justify-center">
           <Link
-            href={viewAllHref || `${linkPrefix}/tags/${tag.toLowerCase()}`}
+            href={viewAllHref || `/tags/${tag.toLowerCase()}`}
             className="flex items-center gap-2 bg-accent/5 px-3 py-1.5 rounded-full border border-accent/30 hover:bg-accent/10 transition-all group"
           >
             <div className="flex items-center gap-1 pr-2.5 border-r border-accent/20">

@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect, useRef, useMemo } from "react";
-import { cn, getLinkPrefix } from "@/lib/utils";
+import { cn } from "@/lib/utils";
 import {
   Search,
   X,
@@ -16,24 +16,22 @@ import {
   Moon,
   SunMoon,
   Hash,
-  Cpu,
   GraduationCap,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Badge } from "@/components/ui/badge";
-import { usePathname, useParams, useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useReadingList } from "@/hooks/use-reading-list";
 import { useNotification } from "@/hooks/use-notification";
 import type { Dictionary } from "@/lib/get-dictionary";
 import { SheetHubLogo } from "@/components/icons/sheethub-logo";
-import { PlaceHolderImages } from "@/lib/placeholder-images";
 import NextLink from "next/link";
-import Image from "next/image";
 import {
   getBadgeStyle,
 } from "@/components/layout/category-badge";
+import { getMulticolorSeed, getMulticolorTheme } from "@/lib/multicolor";
 import { useThemeMode } from "@/hooks/use-theme-mode";
 import { SnipTooltip } from "@/components/ui/snip-tooltip";
 import {
@@ -46,7 +44,7 @@ type SearchableItem = {
   slug: string;
   title: string;
   description: string;
-  type: "blog" | "note";
+  type: "blog" | "blog";
   href: string;
   heroImage?: string;
   category?: string;
@@ -160,7 +158,6 @@ export function LayoutHeader({
   const searchInputRef = useRef<HTMLInputElement>(null);
   const headerRef = useRef<HTMLElement>(null);
   const pathname = usePathname();
-  const params = useParams();
   const router = useRouter();
   const prevCount = useRef(readingListItems.length);
 
@@ -168,8 +165,7 @@ export function LayoutHeader({
   const isMenuOpen = activeView === "menu";
   const isReadingListOpen = activeView === "readingList";
 
-  const currentLocale = (params.locale as string) || "en";
-  const linkPrefix = getLinkPrefix(currentLocale);
+  const linkPrefix = "";
 
   useEffect(() => {
     // eslint-disable-next-line react-hooks/set-state-in-effect
@@ -272,15 +268,6 @@ export function LayoutHeader({
     }, 320);
   };
 
-  const getResolvedImage = (item: SearchableItem) => {
-    if (!item.heroImage) return "/images/blank/blank.webp";
-    if (item.heroImage.startsWith("http") || item.heroImage.startsWith("/")) {
-      return item.heroImage;
-    }
-    const placeholder = PlaceHolderImages.find((p) => p.id === item.heroImage);
-    return placeholder?.imageUrl || "/images/blank/blank.webp";
-  };
-
   const quickPicks = useMemo(() => {
     return (searchableData || []).slice(0, 3);
   }, [searchableData]);
@@ -343,19 +330,27 @@ export function LayoutHeader({
     [],
   );
 
-  // ── Curated Featured Topics — update manually each year ──
-  const moreItems = useMemo(
+  // ── Curated category links for secondary nav ──
+  const secondaryCuratedLinks = useMemo(
     () => [
       { name: "Tutorial", href: "/tags/tutorial", icon: GraduationCap },
-      { name: "Formula", href: "/tags/formula", icon: Hash },
-      { name: "Templates", href: "/tags/template", icon: StickyNote },
-      { name: "Hardware", href: "/tags/hardware", icon: Cpu },
+      { name: "Formulas", href: "/tags/formulas", icon: Hash },
+    ],
+    [],
+  );
+
+  // ── More links (three-dot menu) ──
+  const moreItems = useMemo<{ name: string; href: string; icon: React.ComponentType<{ className?: string }> }[]>(
+    () => [
+      { name: "All Articles", href: "/blog", icon: BookOpen },
+      { name: "Categories", href: "/category", icon: Hash },
+      { name: "Topics", href: "/tags", icon: Hash },
     ],
     [],
   );
 
   const { reservedNavHrefs, reservedTagFamilies } = useMemo(() => {
-    const primaryNavItems = [...directLinks, ...moreItems];
+    const primaryNavItems = [...directLinks, ...moreItems, ...secondaryCuratedLinks];
     const hrefs = new Set<string>();
     const tagFamilies = new Set<string>();
 
@@ -375,7 +370,7 @@ export function LayoutHeader({
       reservedNavHrefs: hrefs,
       reservedTagFamilies: tagFamilies,
     };
-  }, [directLinks, moreItems]);
+  }, [directLinks, moreItems, secondaryCuratedLinks]);
 
   const normalizedPath = useMemo(() => {
     if (!pathname) return "/";
@@ -409,12 +404,11 @@ export function LayoutHeader({
     }[] = [];
 
     const blogDetailPrefix = `${linkPrefix}/blog/`;
-    const noteDetailPrefix = `${linkPrefix}/notes/`;
     const isDetailPage =
       (normalizedPath.startsWith(blogDetailPrefix) &&
         !normalizedPath.slice(blogDetailPrefix.length).includes("/")) ||
-      (normalizedPath.startsWith(noteDetailPrefix) &&
-        !normalizedPath.slice(noteDetailPrefix.length).includes("/"));
+      (normalizedPath.startsWith(blogDetailPrefix) &&
+        !normalizedPath.slice(blogDetailPrefix.length).includes("/"));
 
     if (isDetailPage) {
       const currentItem = (searchableData || []).find(
@@ -480,10 +474,10 @@ export function LayoutHeader({
   const finalSecondaryLinks = useMemo(() => {
     const baseLinks = [
       { name: dictionary.navigation.blog, href: "/blog", icon: BookOpen },
-      { name: dictionary.navigation.notes, href: "/notes", icon: StickyNote },
+      ...secondaryCuratedLinks,
     ];
     return [...baseLinks, ...dynamicTagLinks];
-  }, [dictionary.navigation.blog, dictionary.navigation.notes, dynamicTagLinks]);
+  }, [dictionary.navigation.blog, secondaryCuratedLinks, dynamicTagLinks]);
 
   const getIsActivePath = (href: string) => {
     const localizedHref = `${linkPrefix}${href}` || "/";
@@ -497,7 +491,7 @@ export function LayoutHeader({
       name: item.name,
       href: item.href,
       position,
-      locale: currentLocale,
+      locale: "en",
       sourcePath: normalizedPath,
     };
     window.dispatchEvent(new CustomEvent("sheethub:secondary-nav-click", { detail }));
@@ -537,7 +531,7 @@ export function LayoutHeader({
                 : "opacity-100",
             )}
           >
-            {pathname !== "/" && pathname !== `/${currentLocale}` ? (
+            {pathname !== "/" ? (
               <NextLink
                 href="/"
                 className="flex items-center gap-3 group text-foreground hover:text-foreground transition-colors duration-300"
@@ -557,9 +551,7 @@ export function LayoutHeader({
                     Back to Home
                   </span>
                   <span className="font-sans text-[9px] font-bold uppercase tracking-[0.12em] text-muted-foreground/70 mt-0.5 group-hover:text-foreground/90 transition-colors">
-                    {(params.locale as string) === "en"
-                      ? "Return Home"
-                      : "Kembali"}
+                    {"Return Home"}
                   </span>
                 </div>
               </NextLink>
@@ -650,9 +642,7 @@ export function LayoutHeader({
             >
               <div className="relative z-110">
                 <SnipTooltip
-                  label={
-                    dictionary?.promptGenerator?.tooltips?.moreMenu ?? "More Menu"
-                  }
+                  label="More Menu"
                   side="bottom"
                 >
                   <DropdownMenuTrigger asChild>
@@ -749,10 +739,7 @@ export function LayoutHeader({
 
             {/* 2. Bookmark Icon */}
             <SnipTooltip
-              label={
-                dictionary?.promptGenerator?.tooltips?.readingList ??
-                "Reading List"
-              }
+              label="Reading List"
               side="bottom"
             >
               <Button
@@ -827,7 +814,7 @@ export function LayoutHeader({
 
             {/* 4. Search Icon */}
             <SnipTooltip
-              label={dictionary?.promptGenerator?.tooltips?.search ?? "Search"}
+              label="Search"
               side="bottom"
             >
               <Button
@@ -942,18 +929,11 @@ export function LayoutHeader({
                 </button>
               )}
             </div>
-            <ScrollArea className="max-h-[min(70vh,480px)]">
+            <ScrollArea className="max-h-[min(80vh,600px)]">
               <div className="p-2 space-y-1">
                 {readingListItems.length > 0 ? (
                   readingListItems.map((item) => {
-                    const dataItem = (searchableData || []).find(
-                      (d) => d.slug === item.slug,
-                    );
-                    const isNote = item.type === "note";
-                    const imgUrl =
-                      !isNote && dataItem
-                        ? getResolvedImage(dataItem as SearchableItem)
-                        : null;
+                    const isNote = item.type === "blog";
 
                     return (
                       <div
@@ -969,19 +949,14 @@ export function LayoutHeader({
                           className="flex items-center gap-3 flex-1 min-w-0"
                           onClick={() => setActiveView("none")}
                         >
-                          {/* Thumbnail: image for blog, icon placeholder for note */}
-                          <div className="w-13 h-9.75 relative rounded-md overflow-hidden bg-muted shrink-0 border border-border/50 flex items-center justify-center">
-                            {imgUrl ? (
-                              <Image
-                                src={imgUrl}
-                                alt=""
-                                fill
-                                className="object-cover"
-                                sizes="52px"
-                              />
-                            ) : (
-                              <StickyNote className="h-5 w-5 text-muted-foreground/40" />
-                            )}
+                          {/* Thumbnail: multicolor gradient with first letter */}
+                          <div className={cn(
+                            "w-13 h-9.75 relative rounded-md overflow-hidden shrink-0 border border-border/50 flex items-center justify-center bg-gradient-to-br",
+                            getMulticolorTheme(getMulticolorSeed(item.slug, item.title)).gradient,
+                          )}>
+                            <span className="font-display text-lg font-extrabold text-white/80">
+                              {(item.title || "S").charAt(0).toUpperCase()}
+                            </span>
                           </div>
 
                           <div className="flex-1 min-w-0 flex flex-col gap-1">
@@ -1065,7 +1040,7 @@ export function LayoutHeader({
                 : "opacity-0 scale-[0.97] -translate-y-1 pointer-events-none",
             )}
           >
-            <ScrollArea className="max-h-112.5">
+            <ScrollArea className="max-h-[min(80vh,600px)]">
               <div className="p-2">
                 {query.length > 1 ? (
                   <>
@@ -1076,7 +1051,6 @@ export function LayoutHeader({
                     {results.length > 0 ? (
                       <ul className="space-y-1 pt-1">
                         {results.map((item, idx) => {
-                          const resolvedHero = getResolvedImage(item);
                           return (
                             <li key={`${item.type}-${item.slug}`}>
                               <NextLink
@@ -1093,14 +1067,13 @@ export function LayoutHeader({
                                   setActiveIndex(-1);
                                 }}
                               >
-                                <div className="w-13 h-9.75 relative rounded-md overflow-hidden bg-muted shrink-0 border border-border/50">
-                                  <Image
-                                    src={resolvedHero}
-                                    alt=""
-                                    fill
-                                    className="object-cover"
-                                    sizes="52px"
-                                  />
+                                <div className={cn(
+                                  "w-13 h-9.75 relative rounded-md overflow-hidden shrink-0 border border-border/50 flex items-center justify-center bg-gradient-to-br",
+                                  getMulticolorTheme(getMulticolorSeed(item.slug, item.title)).gradient,
+                                )}>
+                                  <span className="font-display text-lg font-extrabold text-white/80">
+                                    {(item.title || "S").charAt(0).toUpperCase()}
+                                  </span>
                                 </div>
                                 <div className="flex-1 min-w-0">
                                   <h4 className="font-sans text-sm font-bold text-foreground line-clamp-2 group-hover:text-accent transition-colors leading-tight">
@@ -1135,7 +1108,6 @@ export function LayoutHeader({
                       </p>
                       <div className="px-2 space-y-1">
                         {quickPicks.map((item, idx) => {
-                          const resolvedHero = getResolvedImage(item);
                           return (
                             <NextLink
                               key={item.slug}
@@ -1152,14 +1124,13 @@ export function LayoutHeader({
                                 setActiveIndex(-1);
                               }}
                             >
-                              <div className="w-13 h-9.75 relative rounded-md overflow-hidden bg-muted shrink-0 border border-border/50">
-                                <Image
-                                  src={resolvedHero}
-                                  alt=""
-                                  fill
-                                  className="object-cover"
-                                  sizes="52px"
-                                />
+                              <div className={cn(
+                                "w-13 h-9.75 relative rounded-md overflow-hidden shrink-0 border border-border/50 flex items-center justify-center bg-gradient-to-br",
+                                getMulticolorTheme(getMulticolorSeed(item.slug, item.title)).gradient,
+                              )}>
+                                <span className="font-display text-lg font-extrabold text-white/80">
+                                  {(item.title || "S").charAt(0).toUpperCase()}
+                                </span>
                               </div>
                               <div className="flex-1 min-w-0">
                                 <h4 className="font-sans text-sm font-bold text-foreground line-clamp-2 group-hover:text-accent transition-colors leading-tight">
@@ -1178,11 +1149,11 @@ export function LayoutHeader({
                       </p>
                       <div className="flex flex-wrap gap-2">
                         {[
-                          "Windows",
-                          "Android",
-                          "Hardware",
+                          "Excel",
+                          "Google Sheets",
+                          "Formulas",
                           "Tutorial",
-                          "Tips",
+                          "VLOOKUP",
                         ].map((cat) => {
                           const style = getBadgeStyle(cat);
                           return (

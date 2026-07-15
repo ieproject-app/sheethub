@@ -11,21 +11,19 @@ import {
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { RelativeTime } from '@/components/ui/relative-time';
-import { PlaceHolderImages } from '@/lib/placeholder-images';
 import { AddToReadingListButton } from '@/components/layout/add-to-reading-list-button';
 import type { Dictionary } from '@/lib/get-dictionary';
 import { CategoryBadge } from '@/components/layout/category-badge';
 import { getMulticolorSeed, getMulticolorTheme } from '@/lib/multicolor';
 
 import { ScrollReveal } from '@/components/ui/scroll-reveal';
-import { RevealImage } from '@/components/ui/reveal-image';
 
 interface SliderPost {
   slug: string;
   frontmatter: {
     title: string;
     description: string;
-    heroImage: string;
+    heroImage?: string;
     imageAlt?: string;
     category?: string;
     date: string;
@@ -37,11 +35,10 @@ interface HomeTutorialsProps {
   title: string;
   viewMoreText: string;
   dictionary: Dictionary;
-  locale: string;
   tag?: string;
 }
 
-export function HomeTutorials({ posts, title, viewMoreText, dictionary, locale, tag }: HomeTutorialsProps) {
+export function HomeTutorials({ posts, title, viewMoreText, dictionary, tag }: HomeTutorialsProps) {
   const [api, setApi] = React.useState<CarouselApi>();
   const [selectedIndex, setSelectedIndex] = React.useState(0);
   const [scrollSnaps, setScrollSnaps] = React.useState<number[]>([]);
@@ -69,8 +66,9 @@ export function HomeTutorials({ posts, title, viewMoreText, dictionary, locale, 
     };
   }, [api]);
 
-  const linkPrefix = locale === 'en' ? '' : `/${locale}`;
-  const viewMoreHref = tag ? `${linkPrefix}/tags/${tag.toLowerCase()}` : `${linkPrefix}/blog`;
+  const viewMoreHref = tag ? `/tags/${tag.toLowerCase()}` : '/blog';
+
+  if (posts.length === 0) return null;
 
   return (
     <section className="pb-12 sm:pb-16 overflow-hidden">
@@ -95,37 +93,23 @@ export function HomeTutorials({ posts, title, viewMoreText, dictionary, locale, 
             }}
             className="w-full"
           >
-            <CarouselContent className="-ml-4 sm:-ml-6">
+            <CarouselContent className="-ml-4 sm:-ml-6 items-stretch">
               {posts.map((post) => {
-                const heroImageValue = post.frontmatter.heroImage;
-                let heroImageSrc = "/images/blank/blank.webp";
-                let heroImageHint = post.frontmatter.imageAlt || post.frontmatter.title;
-
-                if (heroImageValue) {
-                  if (heroImageValue.startsWith('http') || heroImageValue.startsWith('/')) {
-                    heroImageSrc = heroImageValue;
-                  } else {
-                    const placeholder = PlaceHolderImages.find(p => p.id === heroImageValue);
-                    if (placeholder) {
-                      heroImageSrc = placeholder.imageUrl;
-                      heroImageHint = placeholder.imageHint;
-                    }
-                  }
-                }
+                const firstLetter = post.frontmatter.title.trim().charAt(0).toUpperCase();
+                const multicolor = getMulticolorTheme(
+                  getMulticolorSeed(post.slug, post.frontmatter.category, post.frontmatter.title),
+                );
 
                 const item = {
                   slug: post.slug,
                   title: post.frontmatter.title,
                   description: post.frontmatter.description,
-                  href: `${linkPrefix}/blog/${post.slug}`,
+                  href: `/blog/${post.slug}`,
                   type: 'blog' as const,
                 };
-                const multicolor = getMulticolorTheme(
-                  getMulticolorSeed(post.slug, post.frontmatter.category, post.frontmatter.title),
-                );
 
                 return (
-                  <CarouselItem key={post.slug} className="pl-4 sm:pl-6 md:basis-1/2 lg:basis-1/3 pb-6 pt-2">
+                  <CarouselItem key={post.slug} className="pl-4 sm:pl-6 md:basis-1/2 lg:basis-1/3 pb-6 pt-2 flex">
                     <article className={cn(
                       "relative bg-card rounded-lg border border-primary/5 transition-all duration-500 h-full flex flex-col group/card overflow-hidden shadow-md ring-1 ring-transparent",
                       "hover:-translate-y-1.5 hover:border-primary/10",
@@ -133,31 +117,30 @@ export function HomeTutorials({ posts, title, viewMoreText, dictionary, locale, 
                       multicolor.hoverRing,
                       multicolor.hoverShadow,
                     )}>
-                      <Link href={`${linkPrefix}/blog/${post.slug}`} className="block h-full group">
-                        {/* Image container - Tuned to 8:5 for richer card height */}
-                        <div className="relative aspect-8/5 overflow-hidden z-10 rounded-t-lg">
-                          <RevealImage
-                            src={heroImageSrc}
-                            alt={post.frontmatter.imageAlt || post.frontmatter.title}
-                            fill
-                            className="transition-transform duration-700 group-hover:scale-110"
-                            wrapperClassName="absolute inset-0"
-                            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 33vw, 300px"
-                            holdUntilLoaded
-                            initialVisitOnly
-                            showSkeleton
-                            data-ai-hint={heroImageHint}
-                          />
-                          <div className={cn('absolute inset-0 bg-linear-to-t opacity-0 transition-opacity duration-500 group-hover/card:opacity-100', multicolor.overlayGradient)} />
-                          <div className={cn('absolute bottom-0 left-0 right-0 h-0.75 opacity-0 transition-opacity duration-500 group-hover/card:opacity-100', multicolor.accentBar)} />
+                      <Link href={`/blog/${post.slug}`} className="flex h-full flex-col">
+                        {/* Gradient header with first letter — 8:5 (shorter) */}
+                        <div className={cn(
+                          "relative aspect-[8/5] bg-gradient-to-b flex items-center justify-center overflow-hidden",
+                          multicolor.gradient,
+                        )}>
+                          <div className={cn(
+                            "absolute inset-0 bg-linear-to-t opacity-0 transition-opacity duration-500 group-hover/card:opacity-100",
+                            multicolor.overlayGradient,
+                          )} />
+                          <div className={cn("absolute bottom-0 left-0 right-0 h-0.75 opacity-0 transition-opacity duration-500 group-hover/card:opacity-100", multicolor.accentBar)} />
+                          <span className="font-display text-5xl sm:text-6xl font-extrabold text-white/95 tracking-tight">
+                            {firstLetter || "T"}
+                          </span>
                           <AddToReadingListButton
                             item={item}
                             dictionary={dictionary}
                             showText={false}
-                            className="absolute top-2 right-2 z-20 text-white bg-black/30 hover:bg-black/50 hover:text-white opacity-0 group-hover/card:opacity-100 transition-opacity"
+                            className="absolute top-2 right-2 z-10 text-white bg-black/25 hover:bg-black/45 hover:text-white opacity-0 group-hover/card:opacity-100 [@media(hover:none)]:opacity-100 transition-opacity"
                           />
                         </div>
-                        <div className="p-5 flex-1 flex flex-col z-10">
+
+                        {/* Content */}
+                        <div className="p-5 flex-1 flex flex-col">
                           <div className="mb-2">
                             <CategoryBadge category={post.frontmatter.category || 'Featured'} />
                           </div>
@@ -166,8 +149,7 @@ export function HomeTutorials({ posts, title, viewMoreText, dictionary, locale, 
                           </h3>
                           <RelativeTime
                             date={post.frontmatter.date}
-                            locale={locale}
-                            className="text-[10px] text-muted-foreground block font-medium opacity-60"
+                            className="text-[10px] text-muted-foreground block font-semibold mt-auto"
                           />
                         </div>
                       </Link>
@@ -184,7 +166,7 @@ export function HomeTutorials({ posts, title, viewMoreText, dictionary, locale, 
                   onClick={() => api?.scrollPrev()}
                   disabled={!canScrollPrev}
                   className="h-8 w-8 rounded-full border border-primary/20 text-primary/70 hover:text-primary hover:border-primary/40 disabled:opacity-35 disabled:cursor-not-allowed inline-flex items-center justify-center transition-colors"
-                  aria-label={locale === 'id' ? 'Slide sebelumnya' : 'Previous slide'}
+                  aria-label="Previous slide"
                 >
                   <ChevronLeft className="h-4 w-4" />
                 </button>
@@ -211,7 +193,7 @@ export function HomeTutorials({ posts, title, viewMoreText, dictionary, locale, 
                   onClick={() => api?.scrollNext()}
                   disabled={!canScrollNext}
                   className="h-8 w-8 rounded-full border border-primary/20 text-primary/70 hover:text-primary hover:border-primary/40 disabled:opacity-35 disabled:cursor-not-allowed inline-flex items-center justify-center transition-colors"
-                  aria-label={locale === 'id' ? 'Slide berikutnya' : 'Next slide'}
+                  aria-label="Next slide"
                 >
                   <ChevronRight className="h-4 w-4" />
                 </button>

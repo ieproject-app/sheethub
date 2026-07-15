@@ -2,7 +2,6 @@
 
 import * as React from 'react';
 import Link from 'next/link';
-import Image from 'next/image';
 import {
   Carousel,
   CarouselContent,
@@ -10,9 +9,11 @@ import {
 } from '@/components/ui/carousel';
 import { ChevronRight } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { PlaceHolderImages } from '@/lib/placeholder-images';
+import { RelativeTime } from '@/components/ui/relative-time';
 import { AddToReadingListButton } from '@/components/layout/add-to-reading-list-button';
+import { CategoryBadge } from '@/components/layout/category-badge';
 import type { Dictionary } from '@/lib/get-dictionary';
+import { getMulticolorSeed, getMulticolorTheme } from '@/lib/multicolor';
 
 import { ScrollReveal } from '@/components/ui/scroll-reveal';
 
@@ -21,7 +22,7 @@ interface SliderPost {
   frontmatter: {
     title: string;
     description: string;
-    heroImage: string;
+    heroImage?: string;
     imageAlt?: string;
     category?: string;
     date: string;
@@ -33,14 +34,14 @@ interface HomeUpdatesProps {
   title: string;
   viewMoreText: string;
   dictionary: Dictionary;
-  locale: string;
   tag?: string;
   viewMoreHref?: string;
 }
 
-export function HomeUpdates({ posts, title, viewMoreText, dictionary, locale, tag, viewMoreHref }: HomeUpdatesProps) {
-  const linkPrefix = locale === 'en' ? '' : `/${locale}`;
-  const finalViewMoreHref = viewMoreHref || (tag ? `${linkPrefix}/tags/${tag.toLowerCase()}` : `${linkPrefix}/blog`);
+export function HomeUpdates({ posts, title, viewMoreText, dictionary, tag, viewMoreHref }: HomeUpdatesProps) {
+  const finalViewMoreHref = viewMoreHref || (tag ? `/tags/${tag.toLowerCase()}` : '/blog');
+
+  if (posts.length === 0) return null;
 
   return (
     <section className="pb-12 sm:pb-16 overflow-hidden">
@@ -64,62 +65,64 @@ export function HomeUpdates({ posts, title, viewMoreText, dictionary, locale, ta
             }}
             className="w-full"
           >
-            <CarouselContent className="-ml-4 sm:-ml-6">
+            <CarouselContent className="-ml-4 sm:-ml-6 items-stretch">
               {posts.map((post) => {
-                const heroImageValue = post.frontmatter.heroImage;
-                let heroImageSrc = "/images/blank/blank.webp";
-                let heroImageHint = post.frontmatter.imageAlt || post.frontmatter.title;
-
-                if (heroImageValue) {
-                  if (heroImageValue.startsWith('http') || heroImageValue.startsWith('/')) {
-                    heroImageSrc = heroImageValue;
-                  } else {
-                    const placeholder = PlaceHolderImages.find(p => p.id === heroImageValue);
-                    if (placeholder) {
-                      heroImageSrc = placeholder.imageUrl;
-                      heroImageHint = placeholder.imageHint;
-                    }
-                  }
-                }
+                const firstLetter = post.frontmatter.title.trim().charAt(0).toUpperCase();
+                const multicolor = getMulticolorTheme(
+                  getMulticolorSeed(post.slug, post.frontmatter.category, post.frontmatter.title),
+                );
 
                 const item = {
                   slug: post.slug,
                   title: post.frontmatter.title,
                   description: post.frontmatter.description,
-                  href: `${linkPrefix}/blog/${post.slug}`,
+                  href: `/blog/${post.slug}`,
                   type: 'blog' as const,
                 };
 
                 return (
-                  <CarouselItem key={post.slug} className="pl-4 sm:pl-6 md:basis-1/2 py-2">
-                    <article className={cn(
-                      "bg-card/50 rounded-lg overflow-hidden border border-primary/5 p-3 transition-all duration-500 h-full flex gap-4 shadow-sm group",
-                      "hover:-translate-y-1 hover:bg-card hover:border-primary/10"
-                    )}>
-                      <Link href={`${linkPrefix}/blog/${post.slug}`} className="contents">
-                        {/* Thumbnail Container - Responsive 3:2 for denser visual balance */}
-                        <div className="relative w-30 h-20 sm:w-36 sm:h-24 shrink-0 overflow-hidden rounded-lg shadow-sm border border-primary/5 mt-0.5">
-                          <Image
-                            src={heroImageSrc}
-                            alt={post.frontmatter.imageAlt || post.frontmatter.title}
-                            fill
-                            className="object-cover transition-transform duration-700 group-hover:scale-110"
-                            sizes="(max-width: 640px) 120px, 144px"
-                            data-ai-hint={heroImageHint}
-                          />
+                  <CarouselItem key={post.slug} className="pl-4 sm:pl-6 md:basis-1/2 lg:basis-1/3 py-2 flex">
+                    <article
+                      className={cn(
+                        "group relative bg-card/80 rounded-md overflow-hidden border border-primary/10 ring-1 ring-transparent shadow-md transition-all duration-400 hover:-translate-y-1 h-full flex flex-col w-full",
+                        multicolor.hoverRing,
+                        multicolor.hoverShadow,
+                      )}
+                    >
+                      <Link href={`/blog/${post.slug}`} className="flex h-full flex-col">
+                        {/* Gradient header with first letter */}
+                        <div className={cn(
+                          "relative aspect-[3/4] bg-gradient-to-b flex items-center justify-center",
+                          multicolor.gradient,
+                        )}>
+                          <div className={cn(
+                            "absolute inset-0 bg-linear-to-t opacity-0 transition-opacity duration-500 group-hover:opacity-100",
+                            multicolor.overlayGradient,
+                          )} />
+                          <div className={cn("absolute bottom-0 left-0 right-0 h-0.75 opacity-0 transition-opacity duration-500 group-hover:opacity-100", multicolor.accentBar)} />
+                          <span className="font-display text-5xl sm:text-6xl font-extrabold text-white/95 tracking-tight">
+                            {firstLetter || "S"}
+                          </span>
                           <AddToReadingListButton
                             item={item}
                             dictionary={dictionary}
                             showText={false}
-                            className="absolute top-1 right-1 z-20 text-white bg-black/30 hover:bg-black/50 hover:text-white opacity-0 group-hover:opacity-100 [@media(hover:none)]:opacity-100 transition-opacity h-6 w-6"
+                            className="absolute top-2 right-2 z-10 text-white bg-black/25 hover:bg-black/45 hover:text-white opacity-0 group-hover:opacity-100 [@media(hover:none)]:opacity-100 transition-opacity"
                           />
                         </div>
 
-                        {/* Content Area */}
-                        <div className="flex-1 min-w-0 py-1 flex flex-col justify-center">
-                          <h3 className="font-display text-[15px] sm:text-base font-medium text-primary leading-snug transition-colors group-hover:text-accent">
+                        {/* Content */}
+                        <div className="p-4 sm:p-5 flex-1 flex flex-col">
+                          <div className="mb-2 line-clamp-1">
+                            <CategoryBadge category={post.frontmatter.category || 'Update'} />
+                          </div>
+                          <h3 className={cn("font-display text-base font-semibold text-primary leading-snug transition-colors mb-2", multicolor.hoverTitle)}>
                             {post.frontmatter.title}
                           </h3>
+                          <RelativeTime
+                            date={post.frontmatter.date}
+                            className="text-[10px] font-semibold text-foreground/70 block mt-auto"
+                          />
                         </div>
                       </Link>
                     </article>
@@ -128,7 +131,7 @@ export function HomeUpdates({ posts, title, viewMoreText, dictionary, locale, ta
               })}
             </CarouselContent>
 
-            {/* Controls - Redesigned Style */}
+            {/* Controls */}
             <div className="mt-6 flex justify-center">
               <Link
                 href={finalViewMoreHref}

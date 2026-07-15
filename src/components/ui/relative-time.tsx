@@ -15,8 +15,8 @@
  *     (e.g. "3 days ago") via useEffect. This update never conflicts with SSR.
  *
  * Usage:
- *   // Instead of: {formatRelativeTime(new Date(post.frontmatter.date), locale)}
- *   <RelativeTime date={post.frontmatter.date} locale={locale} />
+ *   // Instead of: {formatRelativeTime(new Date(post.frontmatter.date))}
+ *   <RelativeTime date={post.frontmatter.date} />
  */
 
 import { useState, useEffect } from 'react';
@@ -25,18 +25,16 @@ import { formatRelativeTime } from '@/lib/utils';
 interface RelativeTimeProps {
   /** ISO date string or Date object */
   date: string | Date;
-  /** BCP 47 locale tag, e.g. "en" or "id" */
-  locale?: string;
   /** Optional className forwarded to the wrapping <time> element */
   className?: string;
 }
 
-export function RelativeTime({ date, locale = 'en', className }: RelativeTimeProps) {
+export function RelativeTime({ date, className }: RelativeTimeProps) {
   const parsedDate = typeof date === 'string' ? new Date(date) : date;
 
   // Static date string — identical on server and initial client render.
   const staticDate = parsedDate.toLocaleDateString(
-    locale === 'id' ? 'id-ID' : 'en-US',
+    'en-US',
     { day: 'numeric', month: 'short', year: 'numeric' },
   );
 
@@ -44,9 +42,9 @@ export function RelativeTime({ date, locale = 'en', className }: RelativeTimePro
 
   // After hydration, switch to the human-friendly relative string.
   useEffect(() => {
-    setDisplay(formatRelativeTime(parsedDate, locale));
+    setDisplay(formatRelativeTime(parsedDate));
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [date, locale]);
+  }, [date]);
 
   return (
     <time

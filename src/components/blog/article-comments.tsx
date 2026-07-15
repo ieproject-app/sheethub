@@ -1,7 +1,15 @@
 "use client";
 
-import { DiscussionEmbed } from "disqus-react";
+import dynamic from "next/dynamic";
 import { useState, useEffect, useMemo, useRef } from "react";
+
+// Disqus is a heavy third-party embed. Dynamically imported so its JS
+// never blocks the initial page render. The IntersectionObserver below
+// controls when this component actually renders (lazy on scroll).
+const DiscussionEmbed = dynamic(
+  () => import("disqus-react").then((mod) => mod.DiscussionEmbed),
+  { ssr: false, loading: () => null },
+);
 import { MessageSquare, ShieldCheck, ExternalLink } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
 
@@ -14,10 +22,9 @@ interface ArticleCommentsProps {
     title: string;
   };
   type: "blog" | "note";
-  locale: string;
 }
 
-export function ArticleComments({ article, type, locale }: ArticleCommentsProps) {
+export function ArticleComments({ article, type }: ArticleCommentsProps) {
   const [commentsVisible, setCommentsVisible] = useState(false);
   const commentsRef = useRef<HTMLDivElement>(null);
 
@@ -37,6 +44,8 @@ export function ArticleComments({ article, type, locale }: ArticleCommentsProps)
   }, []);
 
   useEffect(() => {
+    if (typeof window === "undefined") return;
+
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting) {
@@ -54,30 +63,20 @@ export function ArticleComments({ article, type, locale }: ArticleCommentsProps)
     return () => observer.disconnect();
   }, []);
 
-  const localePrefix = locale === "en" ? "" : `/${locale}`;
-  const canonicalUrl = `https://${productionHostname}${localePrefix}/${type}/${article.slug}`;
-  const disqusIdentifier = `${type}:${locale}:${article.slug}`;
-  const disqusLanguage = locale === "id" ? "id" : "en";
+  const canonicalUrl = `https://${productionHostname}/${type}/${article.slug}`;
+  const disqusIdentifier = `${type}:en:${article.slug}`;
 
   const i18n = {
-    discussion: locale === "id" ? "Diskusi" : "Discussion",
+    discussion: "Discussion",
     subtitle:
-      locale === "id"
-        ? "Bagikan pendapat atau pengalaman Anda tentang topik ini."
-        : "Share your thoughts or experience about this topic.",
+      "Share your thoughts or experience about this topic.",
     preparing:
-      locale === "id"
-        ? "Menyiapkan area komentar..."
-        : "Preparing the comments area...",
+      "Preparing the comments area...",
     liveOnly:
-      locale === "id"
-        ? "Komentar hanya tersedia di situs utama"
-        : "Comments are only available on the live site",
+      "Comments are only available on the live site",
     liveOnlyDesc:
-      locale === "id"
-        ? "Untuk menjaga thread tetap konsisten, area komentar hanya dimuat di domain produksi."
-        : "To keep threads consistent, the comments area only loads on the production domain.",
-    openLive: locale === "id" ? "Buka versi live" : "Open live version",
+      "To keep threads consistent, the comments area only loads on the production domain.",
+    openLive: "Open live version",
   };
 
   if (!commentsVisible) {
@@ -132,7 +131,7 @@ export function ArticleComments({ article, type, locale }: ArticleCommentsProps)
               url: canonicalUrl,
               identifier: disqusIdentifier,
               title: article.title,
-              language: disqusLanguage,
+              language: "en",
             }}
           />
         ) : (
