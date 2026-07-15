@@ -4,122 +4,17 @@
     "about": "About",
     "contact": "Contact",
     "notes": "Notes",
-    "tools": "Tools",
     "privacy": "Privacy Policy",
-    "disclaimer": "Disclaimer",
-    "terms": "Terms"
-  },
-  "footer": {
-    "authorBio": "SheetHub is built to deliver practical Excel and Google Sheets guidance, with concise notes and workflows that are ready to use.",
-    "viewProfile": "About SheetHub"
+    "terms": "Terms of Service",
+    "disclaimer": "Disclaimer"
   },
   "home": {
-    "title": "SheetHub - Excel and Google Sheets: Tutorials, Formulas, and Quick Updates",
-    "description": "Excel and Google Sheets tutorials, practical formula guides, and quick updates for daily workflows.",
-    "featuredPosts": "Featured Posts",
     "latestPosts": "Latest Posts",
-    "viewAllPosts": "View All Posts",
-    "specialTagSectionTitle": "Postingan",
-    "breadcrumbHome": "Home",
-    "sliderAndShadow": {
-      "title": "Looking for tutorials?",
-      "viewMore": "see more"
-    },
-    "softwareUpdateSlider": {
-      "title": "New software updates?",
-      "viewMore": "check updates"
-    }
+    "viewAllPosts": "View All Posts"
   },
-  "blog": {
-    "title": "Blog",
-    "description": "Deep dives into tech, tutorials, and development insights."
-  },
-  "notes": {
-    "title": "Notes",
-    "description": "Personal technical snippets and quick references."
-  },
-  "about": {
-    "title": "About SheetHub",
-    "description": "How SheetHub is built: the purpose, editorial direction, and practical approach behind every guide.",
-    "experience": "Experience Highlights",
-    "skills": "Core Strengths",
-    "education": "Education",
-    "certifications": "Licenses & Certifications",
-    "downloadResume": "Download Full Resume",
-    "getInTouch": "Let's Connect",
-    "summary": "Signature Summary",
-    "story": "About SheetHub",
-    "workflow": "Device & Workflow",
-    "philosophy": "Writing Philosophy"
-  },
-  "tools": {
-    "title": "Tools",
-    "description": "Focused spreadsheet helpers and internal editorial utilities for SheetHub.",
-    "hero_kicker": "Excel-first workspace",
-    "hero_title": "Small tools for cleaner spreadsheets and faster execution.",
-    "hero_body": "This workspace now stays intentionally narrow: practical utilities for spreadsheet-driven operations and one internal prompt workflow for SheetHub editorial production.",
-    "hero_scope_label": "Primary focus",
-    "hero_scope_value": "Excel imports, spreadsheet cleanup, and repeatable label output",
-    "hero_access_label": "Access model",
-    "hero_access_value": "Internal team tools with controlled Google login",
-    "hero_workflow_label": "Workflow fit",
-    "hero_workflow_value": "Daily spreadsheet handling, lightweight ops, and content planning",
-    "spreadsheet_section_title": "Spreadsheet Tools",
-    "spreadsheet_section_desc": "Utilities that still depend on structured rows, workbook imports, or spreadsheet-shaped operational data.",
-    "editorial_section_title": "Editorial Tools",
-    "editorial_section_desc": "Development-only helpers used to plan SheetHub spreadsheet content and editorial direction.",
-    "login_title": "Member Login Required",
-    "login_desc": "Sign in with your SheetHub account to access internal spreadsheet utilities and controlled editorial workflows.",
-    "login_button": "Continue with Google",
-    "restricted_label": "Restricted",
-    "verifying_access": "Verifying Access...",
-    "open_tool": "Open Tool",
-    "coming_soon": "Coming Soon",
-    "tool_list": {
-      "ai_prompt_generator": {
-        "title": "AI Spreadsheet Content Prompt Generator",
-        "description": "Create a structured prompt for spreadsheet-focused articles, notes, and editorial planning."
-      },
-      "address_label": {
-        "title": "Address Label from Spreadsheet",
-        "description": "Import and export Excel address books, then generate clean PDF shipping labels."
-      }
-    },
-    "systemNotReady": {
-      "title": "System Not Ready",
-      "description": "The application cannot detect the Firebase API Key from your dashboard.",
-      "step1": "Step 1: Connect & Save",
-      "step1Desc": "Select the SheetHub repository in the Deployment tab and click Save.",
-      "step2": "Step 2: Start Rollout (Required)",
-      "step2Desc": "Go to the Rollouts tab and click Start Rollout to inject the latest variables.",
-      "step3": "Step 3: Check Prefix",
-      "step3Desc": "Ensure variable names in the Environment tab start with NEXT_PUBLIC_.",
-      "footer": "Without a 'Start Rollout' process, the browser is not authorized to read secret keys for security reasons.",
-      "authorized": "Authorized",
-      "logout": "Sign Out",
-      "connecting": "Connecting to Cloud...",
-      "restrictedAccess": "Restricted Access",
-      "restrictedDesc": "The {tool} tool requires a registered Google account login to maintain system integrity.",
-      "loginWithGoogle": "Login with Google"
-    }
-  },
-  "employeeHistory": {
-    "searchTitle": "Search Employee Records",
-    "searchDescription": "Search by name, position, or group. You can also type a date (e.g., 20/05/2023) to see who was active on that day.",
-    "searchPlaceholder": "Enter name or date...",
-    "groupPlaceholder": "Filter by Group",
-    "allGroups": "All Groups",
-    "nameHeader": "Name",
-    "positionHeader": "Position",
-    "groupHeader": "Group",
-    "nikHeader": "NIK",
-    "startDateHeader": "Start Date",
-    "endDateHeader": "End Date",
-    "present": "Present",
-    "generatorTitle": "Document Signer Generator",
-    "generatorDescription": "Quickly identify the correct signers for specific document types based on a target date.",
-    "docTypePlaceholder": "Select Document Type",
-    "projectValuePlaceholder": "Project Value (IDR)"
+  "footer": {
+    "authorBio": "Practical Excel and Google Sheets tutorials, formula guides, and workflow notes built for daily use.",
+    "viewProfile": "About SheetHub"
   },
   "contact": {
     "title": "Contact",
@@ -139,13 +34,6 @@
     "prompt": "Search for articles by title or description.",
     "noResults": "No results found for",
     "resultsFound": "results found"
-  },
-  "localeSuggestion": {
-    "title": "Prefer reading in Bahasa Indonesia?",
-    "description": "We detected your browser prefers Indonesian. Switch to the Indonesian version for localized content and navigation.",
-    "switch": "Switch to Indonesian",
-    "stay": "Stay in English",
-    "dismiss": "Dismiss language suggestion"
   },
   "post": {
     "by": "By",
@@ -184,122 +72,12 @@
     "backHome": "Back to Home",
     "popularLinks": "Try these instead:"
   },
-  "promptGenerator": {
-    "title": "AI Content Prompt Generator",
-    "description": "Use this form to generate a structured prompt for requesting new or modified content.",
-    "modes": {
-      "create": "Create New",
-      "modify": "Modify Existing"
-    },
-    "contentTypeLabel": "Content Type",
-    "contentTypeSeries": "Series",
-    "contentTypeNews": "News/Update",
-    "contentTypeTips": "Tips & Tricks",
-    "contentTypeNotes": "Notes/Catatan",
-    "seriesPhaseLabel": "Series Phase",
-    "seriesArticleLabel": "Series Article",
-    "seriesTargetLabel": "Target Reader",
-    "seriesToneLabel": "Tone Hint",
-    "newsSourceUrlsLabel": "Source URL(s)",
-    "newsAngleLabel": "SheetHub Angle",
-    "tipsStandaloneLabel": "Standalone Mode",
-    "notesIntentLabel": "Note Intent",
-    "notesIntentFinding": "Finding",
-    "notesIntentReference": "Reference",
-    "notesIntentMiniFix": "Mini Fix",
-    "notesIntentObservation": "Observation",
-    "selectArticleLabel": "Target Article to Modify",
-    "selectArticlePlaceholder": "Select an existing article...",
-    "searchArticlePlaceholder": "Type to search articles by title or slug...",
-    "features": {
-      "title": "Optional Features",
-      "downloads": "Download Buttons",
-      "grids": "Image Grids",
-      "images": "Supporting Images"
-    },
-    "draftTitle": "Content Draft / Main Points",
-    "draftPlaceholder": "Paste your full content draft here...",
-    "originalContentTitle": "Original Content (The file you want to edit)",
-    "originalContentPlaceholder": "Paste the current full MDX content of the file here...",
-    "modInstructionsTitle": "Modification Instructions",
-    "modInstructionsPlaceholder": "What exactly do you want to change? (e.g., Update the intro, add a conclusion about design updates...)",
-    "quickActions": {
-      "label": "Quick Instructions:",
-      "narrative": "Refresh intro & conclusion",
-      "images": "Convert lists to Steps",
-      "metadata": "Add update date only",
-      "polish": "Polish narrative flow (Tone)"
-    },
-    "downloadLinks": {
-      "title": "Download Links",
-      "description": "Map [DOWNLOAD_X] placeholders to existing IDs from our database or enter new URLs.",
-      "addDownload": "Add Download Item",
-      "selectId": "Select an existing ID...",
-      "urlPlaceholder": "Paste the download URL here...",
-      "promptTitle": "Download Buttons",
-      "promptInstruction": "Please replace the [DOWNLOAD_X] placeholders in the draft with <DownloadButton> components using the corresponding settings below:"
-    },
-    "imageGrid": {
-      "title": "Image Grids (Sequential)",
-      "description": "Enter grid data one per line (format: cols | path1, path2...).",
-      "placeholder": "3 | /img1.webp, /img2.webp, /img3.webp",
-      "promptTitle": "Image Grids",
-      "promptInstruction": "Please group the following images using the <ImageGrid> component:"
-    },
-    "imagesTitle": "Image Details",
-    "imagesDescription": "The first line is ALWAYS for the hero image, separated by a `|` for the alt text.",
-    "imagesPlaceholder": "/images/blank/blank.webp | Hero alt text\n/images/articles/sub.webp | Sub alt text",
-    "imagesTitleNote": "Supporting Images (Optional)",
-    "imagesDescriptionNote": "Insert path and alt text for images to be embedded within the note's content.",
-    "imagesPlaceholderNote": "/images/notes/img.webp | Alt text",
-    "metadataTitle": "Metadata & Linking",
-    "articleTitleLabel": "Content Title",
-    "articleTitleDescription": "An English title is recommended. For best SEO, MUST be between 50-60 characters.",
-    "slugLabel": "URL Slug (English, Kebab-case)",
-    "slugPlaceholder": "how-to-install-rufus",
-    "publishDateLabel": "Publish Date",
-    "publishDateLabelModify": "Original Publish Date",
-    "statusLabel": "Status",
-    "publishSwitchLabel": "Publish Immediately",
-    "featuredSwitchLabel": "Mark as Featured",
-    "idOnlySwitchLabel": "ID Only",
-    "tagsLabel": "Tags",
-    "generatedPromptTitle": "Generated Prompt",
-    "copyButton": "Copy Prompt",
-    "copiedButton": "Copied!",
-    "promptBaseBlog": "Please create and publish a new blog article for me based on the following details. The English version must use the slug specified, and the Indonesian version must also use the EXACT SAME SLUG.",
-    "promptBaseBlogIdOnly": "Please create and publish a new blog article for me in INDONESIAN ONLY based on the following details.",
-    "promptBaseNote": "Please create and publish a new technical note for me based on the following details.",
-    "promptBaseNoteIdOnly": "Please create and publish a new technical note for me in INDONESIAN ONLY based on the following details.",
-    "modifyPromptBase": "Please MODIFY an existing content for me. IMPORTANT: You MUST keep the ORIGINAL SLUG AND ORIGINAL PUBLISH DATE. ONLY change what is requested in the instructions. DO NOT rewrite sections that are not related to the request. Keep all existing technical steps, code blocks, and images intact unless specified.",
-    "frontmatterDetails": "Frontmatter Details",
-    "titleLabel": "Title",
-    "titlePlaceholder": "SEO-friendly title (50-60 chars)",
-    "dateLabel": "Original Publish Date",
-    "supportingImagesLabel": "Supporting Images",
-    "supportingImagesLabelNote": "Images to insert",
-    "draftContentLabel": "Main Content/Draft",
-    "originalContentLabel": "Original Content to Modify",
-    "modInstructionsLabel": "Points of Change",
-    "categoryHintLabel": "Category Hint",
-    "categoryHintPlaceholder": "AI creates category…",
-    "finalInstruction": "Additional Instruction: 1. Confirm translationKey and English slug. 2. Title length MUST BE 50-60 characters. 3. STRICT MDX ADHERENCE: Use only supported components (<DownloadButton />, <ImageGrid />, standard Markdown tables). 4. React Compliance: ALWAYS use 'className'. 5. Image Alt Text: Generate high-quality SEO alt text if missing.",
-    "tooltips": {
-      "backToTop": "Back to Top",
-      "theme": "Switch Theme",
-      "moreMenu": "More Menu",
-      "readingList": "Reading List",
-      "search": "Search",
-      "languageEn": "English",
-      "languageId": "Indonesia"
-    }
-  },
   "notifications": {
     "themeLight": "Theme: Light",
     "themeDark": "Theme: Dark",
     "themeSystem": "Theme: System",
     "langEn": "Language: English",
-    "langId": "Language: Indonesia",
+    "langId": "Formatting: Regional",
     "readingListAdded": "Saved to Reading List",
     "readingListRemoved": "Removed from Reading List",
     "copied": "Copied to Clipboard",

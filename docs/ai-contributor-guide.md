@@ -6,6 +6,45 @@ Its main goal is to keep content, routes, and project structure consistent over 
 
 ---
 
+## Recovery Guardrail
+
+Before refactoring article loaders, treat localhost article access as a hard gate.
+
+The following routes must all work before considering the task complete:
+
+- `/`
+- `/blog`
+- `/blog/<slug>`
+
+### Required validation order for article-runtime changes
+
+1. stop the dev server
+2. remove `.next/dev`
+3. start the dev server again
+4. verify HTTP responses for homepage, blog list, and one known article slug
+5. only after localhost is healthy, run `npm run typecheck` and `npm run build`
+
+### Known pitfall
+
+If article data appears empty in localhost while direct disk reads still show valid `_posts` content, check path resolution in runtime loaders first.
+
+On Windows, `import.meta.url.pathname` is not a safe filesystem root by itself for Next runtime loaders. Use `fileURLToPath(import.meta.url)`.
+
+### Do not repeat this mistake
+
+Do not split article loading into multiple competing runtime loaders for:
+
+- homepage
+- blog list
+- blog detail
+- layout search data
+
+unless all of them are migrated together and revalidated together.
+
+If runtime becomes unstable, prefer restoring one stable article loader path first, then re-applying build-hygiene improvements afterward.
+
+---
+
 ## 1. Core Principles
 
 When contributing to SheetHub, always follow these principles:

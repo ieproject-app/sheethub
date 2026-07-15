@@ -52,7 +52,7 @@ export type CVData = {
   }[];
 };
 
-export const cvData: Record<string, CVData> = {
+export const cvData = {
   en: {
     name: "Iwan Efendi",
     email: "iwan.efndi@gmail.com",
@@ -170,7 +170,7 @@ export const cvData: Record<string, CVData> = {
       {
         name: "Systems & Troubleshooting",
         skills: [
-          "Hardware Troubleshooting",
+          "Troubleshooting Hardware",
           "Software Installation",
           "LAN Networking",
           "Operational Problem Solving",
@@ -194,145 +194,4 @@ export const cvData: Record<string, CVData> = {
       },
     ],
   },
-  id: {
-    name: "Iwan Efendi",
-    email: "iwan.efndi@gmail.com",
-    role: "Spesialis Pengadaan, Penulis Teknis & Perancang Workflow",
-    summary:
-      "SheetHub dibangun sebagai basis pengetahuan praktis untuk pengguna Excel dan Google Sheets yang membutuhkan panduan jelas dan workflow yang bisa diulang. Platform ini berfokus pada dokumentasi yang cepat diterapkan untuk pekerjaan nyata, mulai dari rumus, perapian data, hingga rutinitas yang lebih otomatis. Arah editorialnya sederhana: utamakan manfaat, jelas secara struktur, dan konsisten dari waktu ke waktu.",
-    profile: {
-      badge: "Cerita Founder",
-      panelLabel: "Posisi & Arah",
-      statement:
-        "SheetHub diposisikan sebagai referensi praktis untuk pekerjaan berbasis spreadsheet: ringkas, andal, dan siap dipakai harian.",
-      companyLabel: "PT Telkom Akses",
-      locationLabel: "Indonesia",
-      experienceIntro:
-        "Sorotan peran utama yang membentuk cara saya bekerja: mulai dari pekerjaan lapangan, keselamatan, troubleshooting, hingga sistem administrasi dan workflow yang lebih rapi.",
-      founderLabel: "Founder",
-      brandLabel: "SheetHub",
-      storyCardDescription:
-        "SheetHub dibangun untuk menyimpan pengetahuan spreadsheet yang praktis agar tim bisa mengulang langkah yang terbukti tanpa trial-and-error berulang.",
-      workflowCardDescription:
-        "Prinsip alur kerjanya pragmatis: pakai alat yang fokus, jaga langkah tetap terukur, dan hindari kompleksitas yang tidak perlu.",
-      philosophyCardDescription:
-        "Gaya penulisan mengikuti pendekatan utility-first: struktur jelas, contoh langsung, dan hasil yang bisa diterapkan.",
-      resumeDescription:
-        "Untuk referensi profesional yang lebih ringkas dan formal, Anda bisa mengunduh resume lengkap saya di bawah ini.",
-      stats: [
-        { label: "Fokus", value: "Teknologi Praktis" },
-        { label: "Arah", value: "Kejelasan Utama" },
-        { label: "Minat", value: "Otomasi" },
-        { label: "Gaya", value: "Tulisan Berguna" },
-      ],
-    },
-    experiences: [
-      {
-        title: "Staff Procurement & Partnership",
-        company: "PT Telkom Akses",
-        period: "Jan 2018 - Sekarang",
-        description: [
-          "Mengelola administrasi mitra kerja dan alur pengadaan dengan perhatian tinggi pada akurasi, kelengkapan, dan kepatuhan prosedural.",
-          "Membangun struktur pelaporan di Microsoft Excel, Google Sheets, dan SAP agar monitoring pekerjaan lebih jelas dan mudah ditelusuri.",
-          "Membantu mempercepat proses tagihan dan pembayaran melalui kontrol dokumen serta koordinasi lintas divisi.",
-          "Turut mengubah pekerjaan operasional menjadi sistem yang lebih rapi, lebih terukur, dan lebih minim gesekan.",
-        ],
-      },
-      {
-        title: "Teknisi Maintenance NE",
-        company: "Telkom Akses",
-        period: "Mei 2017 - Jan 2018",
-        description: [
-          "Menangani pemeliharaan dan monitoring perangkat jaringan untuk menjaga keandalan operasional di lapangan.",
-          "Melakukan inspeksi rutin, pengecekan tegangan, dan tindakan preventif untuk menekan risiko gangguan dan downtime.",
-          "Membangun kedisiplinan teknis melalui pengalaman langsung pada infrastruktur, troubleshooting, dan koordinasi tindak lanjut.",
-        ],
-      },
-      {
-        title: "Staff HSE",
-        company: "Telkom Akses",
-        period: "Nov 2016 - Mei 2017",
-        description: [
-          "Berfokus pada kesiapan keselamatan lapangan dengan membantu teknisi memahami dan menerapkan prosedur K3 dalam kondisi kerja nyata.",
-          "Memberikan arahan praktis tentang kerja di ketinggian, penggunaan tangga, teknik memanjat tiang, dan kewaspadaan terhadap bahaya listrik.",
-          "Memperkuat pendekatan saya terhadap sistem kerja melalui pemahaman bahwa pekerjaan yang baik bergantung pada kejelasan, disiplin, dan kesadaran risiko.",
-        ],
-      },
-      {
-        title: "Staff Capdev (Capital Development)",
-        company: "Telkom Akses",
-        period: "Jun 2016 - Nov 2016",
-        description: [
-          "Mendukung kesiapan tenaga kerja melalui pembekalan teknis, praktik langsung, dan pelatihan lapangan yang berorientasi kualitas.",
-          "Membantu menyamakan pemahaman instalasi FTTH dan LAN agar eksekusi di lapangan tetap konsisten dan aman.",
-          "Membangun pengalaman awal dalam menerjemahkan standar teknis menjadi panduan praktis yang benar-benar bisa diterapkan.",
-        ],
-      },
-      {
-        title: "Teknisi PT1 (Pasang Baru IndiHome)",
-        company: "Telkom Akses",
-        period: "Agt 2015 - Jun 2016",
-        description: [
-          "Bekerja langsung pada instalasi FTTH dari penarikan kabel hingga aktivasi layanan pelanggan IndiHome.",
-          "Mengembangkan pemahaman praktis tentang standar instalasi, redaman sinyal, dan kualitas eksekusi lapangan.",
-          "Peran ini menjadi bagian dari fondasi teknis yang membentuk cara saya menulis tentang teknologi praktis saat ini.",
-        ],
-      },
-      {
-        title: "Teknisi Komputer & Laptop",
-        company: "Computer Shop",
-        period: "Okt 2013 - Sep 2014",
-        description: [
-          "Melakukan instalasi, konfigurasi, dan perbaikan komputer, laptop, serta printer untuk kebutuhan pengguna sehari-hari.",
-          "Mendiagnosis masalah hardware dan software secara sistematis untuk menghasilkan solusi yang praktis dan efisien.",
-          "Pengalaman awal ini membentuk minat jangka panjang saya pada troubleshooting, dokumentasi yang berguna, dan dukungan IT dunia nyata.",
-        ],
-      },
-    ],
-    skills: [
-      {
-        name: "Workflow & Otomasi",
-        skills: [
-          "Microsoft Excel (Lanjut)",
-          "Google Sheets",
-          "Sistem SAP",
-          "Struktur Data Kerja",
-        ],
-      },
-      {
-        name: "Penulisan Teknis & Web",
-        skills: [
-          "Dokumentasi Teknis",
-          "NextJS / React",
-          "Penulisan Berorientasi Proses",
-          "Pengorganisasian Pengetahuan",
-        ],
-      },
-      {
-        name: "Sistem & Troubleshooting",
-        skills: [
-          "Troubleshooting Hardware",
-          "Instalasi Software",
-          "Jaringan LAN",
-          "Pemecahan Masalah Operasional",
-        ],
-      },
-    ],
-    education: [
-      {
-        school: "SMKN1 Jambi",
-        degree: "Sekolah Menengah Kejuruan",
-        year: "2013",
-      },
-    ],
-    certifications: [
-      {
-        name: "SIM C",
-        issuer: "Korlantas Polri",
-        period: "Aktif",
-        description:
-          "Mendukung mobilitas kerja lapangan untuk instalasi, inspeksi, dan monitoring jaringan.",
-      },
-    ],
-  },
-};
+} satisfies Record<"en", CVData>;

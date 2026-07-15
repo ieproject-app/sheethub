@@ -21,13 +21,6 @@ export const STORAGE_KEYS = {
    * Values: "light" | "dark" | "system"
    */
   THEME: "theme",
-
-  /**
-   * The user-preferred locale cookie key used by Next.js middleware
-   * to remember the chosen language across sessions.
-   * Values: "en" | "id"
-   */
-  LOCALE: "NEXT_LOCALE",
 } as const;
 
 export type StorageKey = (typeof STORAGE_KEYS)[keyof typeof STORAGE_KEYS];

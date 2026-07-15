@@ -1,13 +1,6 @@
-import type { Locale } from '@/i18n-config'
-
-const dictionaries = {
-  en: () => import('@/dictionaries/en.json').then((module) => module.default),
-  id: () => import('@/dictionaries/id.json').then((module) => module.default),
-}
-
-export const getDictionary = async (locale: Locale) => {
-  const load = dictionaries[locale] || dictionaries.en;
-  return load();
-};
-
-export type Dictionary = Awaited<ReturnType<typeof getDictionary>>
+/**
+ * Shared UI copy shape used across components.
+ * The site is English-only; this is a content object, not locale switching.
+ */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export type Dictionary = Record<string, any>;

@@ -2,33 +2,30 @@
 import { AddToReadingListButton } from '@/components/layout/add-to-reading-list-button';
 import { CategoryBadge } from '@/components/layout/category-badge';
 import type { PostFrontmatter } from '@/lib/posts';
-import type { NoteFrontmatter } from '@/lib/notes';
 import type { Dictionary } from '@/lib/get-dictionary';
 import type { ReadingListItem } from '@/hooks/use-reading-list';
 import Link from 'next/link';
 import { CalendarDays, Clock3 } from 'lucide-react';
-import { i18n } from '@/i18n-config';
 import { cn, formatRelativeTime } from '@/lib/utils';
 
 interface ArticleMetaProps {
-  frontmatter: PostFrontmatter | NoteFrontmatter;
+  frontmatter: PostFrontmatter;
   item: ReadingListItem;
-  locale: string;
   dictionary: Dictionary;
   readingTime?: number;
   isOverlay?: boolean;
   isCentered?: boolean;
 }
 
-export function ArticleMeta({ frontmatter, item, locale, dictionary, readingTime, isOverlay = false, isCentered = false }: ArticleMetaProps) {
-  const authorName = "Iwan Efendi";
+export function ArticleMeta({ frontmatter, item, dictionary, readingTime, isOverlay = false, isCentered = false }: ArticleMetaProps) {
+  const authorName = "SheetHub";
   const displayDate = frontmatter.updated || frontmatter.date;
   const isUpdated = !!frontmatter.updated;
-  const linkPrefix = locale === i18n.defaultLocale ? '' : `/${locale}`;
+  const linkPrefix = "";
 
-  const relativeTimeStr = formatRelativeTime(new Date(displayDate), locale);
-  const timeLabel = isUpdated ? (locale === 'id' ? 'Diperbarui ' : 'Updated ') : '';
-  const compactDateStr = new Date(displayDate).toLocaleDateString(locale, {
+  const relativeTimeStr = formatRelativeTime(new Date(displayDate));
+  const timeLabel = isUpdated ? 'Updated ' : '';
+  const compactDateStr = new Date(displayDate).toLocaleDateString("en-US", {
     day: 'numeric',
     month: 'short',
     year: 'numeric',

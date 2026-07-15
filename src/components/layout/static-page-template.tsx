@@ -56,7 +56,7 @@ export function LayoutStaticPageTemplate({
 }: StaticPageTemplateProps) {
   return (
     <div className="w-full">
-      <main
+      <div
         className={cn(
           "mx-auto px-4 pt-12 pb-24 sm:px-6 lg:px-8",
           maxWidthClassName,
@@ -123,7 +123,7 @@ export function LayoutStaticPageTemplate({
             </div>
           </ScrollReveal>
         ) : null}
-      </main>
+      </div>
     </div>
   );
 }

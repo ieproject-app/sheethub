@@ -2,6 +2,19 @@
 @plugin "tailwindcss-animate";
 @plugin "@tailwindcss/typography";
 
+/* ── Initial theme (flash prevention) ──────────────
+   Before React hydrates and applies the user's saved theme,
+   match the OS preference. JS will override this immediately
+   after hydration if the user has a different saved preference. */
+:root {
+  color-scheme: light dark;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    color-scheme: dark;
+  }
+}
+
 @theme {
     /* ── Font Families ────────────────────────────── */
     /* --gf-* variables are set by Next.js Google Fonts in layout.tsx */

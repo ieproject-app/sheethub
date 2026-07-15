@@ -1,9 +1,34 @@
 import { NextRequest, NextResponse } from "next/server";
-import { i18n } from "./i18n-config";
+
+/**
+ * Proxy/middleware for SheetHub.
+ *
+ * English-only site, so no locale routing. This middleware:
+ * - Redirects alternate hostnames (www, Firebase preview, etc.) to the canonical domain
+ * - Passes through API routes, Next.js internals, and static files
+ *
+ * No cookie-based redirects. Cookie-dependent redirects that get cached
+ * by the CDN without Vary: Cookie can poison Googlebot and kill indexing.
+ */
+
+const CANONICAL_HOST = "sheethub.web.id";
+
+// Hostname patterns that should redirect to the canonical domain.
+// Add any preview/alternate domains here.
+const alternateHostPattern =
+  /^www\.sheethub\.web\.id$|\.hosted\.app$|\.web\.app$/;
 
 export function proxy(request: NextRequest) {
-  const pathname = request.nextUrl.pathname;
-  const preferredLocale = request.cookies.get("NEXT_LOCALE")?.value;
+  const { pathname, host } = request.nextUrl;
+
+  // ── Canonical host redirect ─────────────────────────────────────────
+  // If the request comes from an alternate/preview domain, 308-redirect to
+  // the canonical domain preserving the full path and query string.
+  if (host !== CANONICAL_HOST && alternateHostPattern.test(host)) {
+    const url = new URL(pathname, `https://${CANONICAL_HOST}`);
+    url.search = request.nextUrl.search;
+    return NextResponse.redirect(url, 308);
+  }
 
   // Skip middleware for API routes, Next.js internal files, and static files
   if (
@@ -14,45 +39,12 @@ export function proxy(request: NextRequest) {
     return NextResponse.next();
   }
 
-  // Canonicalize default-locale paths: /en/* -> /*
-  if (pathname === `/${i18n.defaultLocale}`) {
-    return NextResponse.redirect(new URL("/", request.url), 308);
-  }
-
-  if (pathname.startsWith(`/${i18n.defaultLocale}/`)) {
-    const normalizedPath = pathname.replace(`/${i18n.defaultLocale}`, "") || "/";
-    return NextResponse.redirect(new URL(normalizedPath, request.url), 308);
-  }
-
-  const pathnameIsMissingLocale = i18n.locales.every(
-    (locale) =>
-      !pathname.startsWith(`/${locale}/`) && pathname !== `/${locale}`,
-  );
-
-  if (pathnameIsMissingLocale) {
-    if (preferredLocale && preferredLocale !== i18n.defaultLocale) {
-      return NextResponse.redirect(
-        new URL(
-          `/${preferredLocale}${pathname.startsWith("/") ? "" : "/"}${pathname}`,
-          request.url,
-        ),
-      );
-    }
-
-    return NextResponse.rewrite(
-      new URL(
-        `/${i18n.defaultLocale}${pathname.startsWith("/") ? "" : "/"}${pathname}`,
-        request.url,
-      ),
-    );
-  }
-
+  // Everything else passes through — English-only, no locale handling needed
   return NextResponse.next();
 }
 
 export const config = {
   matcher: [
-    // Skip all internal paths (_next)
     "/((?!_next|images|favicon.ico).*)",
   ],
 };

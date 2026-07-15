@@ -12,6 +12,54 @@ If there is a conflict between convenience and consistency, prefer **consistency
 
 ---
 
+## Runtime Recovery Note
+
+As of 2026-07-15, the public site runtime is English-only and article content is sourced from:
+
+- `_posts/`
+- `_pages/`
+
+There is no active locale route layer for public pages anymore.
+
+### Critical implementation detail for content loaders
+
+When resolving filesystem paths from runtime loaders under `src/lib/`, do **not** derive paths from `new URL(import.meta.url).pathname` directly on Windows.
+
+Use `fileURLToPath(import.meta.url)` first, then resolve from that filesystem path.
+
+Correct pattern:
+
+```ts
+import { fileURLToPath } from "url";
+import path from "path";
+
+const MODULE_DIR = path.dirname(fileURLToPath(import.meta.url));
+const PROJECT_ROOT = path.resolve(MODULE_DIR, "..", "..");
+```
+
+Why this matters:
+
+- using `.pathname` directly can break `_posts` and `_pages` resolution in Next runtime on Windows
+- the failure mode is subtle: build may still pass, but localhost can show `0 articles published` and article detail routes can return `404`
+- this specifically affected the article runtime path until the loader was corrected in `src/lib/content-engine.ts`
+
+### Runtime article rule
+
+For public article pages, keep one stable source of truth for post loading.
+
+Current runtime path:
+
+- `src/lib/content-engine.ts`
+- `src/lib/posts.ts`
+- `src/app/blog/page.tsx`
+- `src/app/blog/[slug]/page.tsx`
+- `src/app/page.tsx`
+- `src/app/layout.tsx`
+
+Do not introduce parallel article loaders for homepage, blog list, and blog detail unless there is a very strong reason and the full localhost flow is revalidated.
+
+---
+
 ## 1. Core Principles
 
 SheetHub is organized around a few clear boundaries:

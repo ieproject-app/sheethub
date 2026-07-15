@@ -81,12 +81,52 @@ const MULTICOLOR_THEMES: MulticolorTheme[] = [
     overlayGradient: "from-fuchsia-700/20 via-fuchsia-600/10 to-transparent dark:from-fuchsia-950/45 dark:via-fuchsia-900/20 dark:to-transparent",
     readingButtonTone: "text-fuchsia-600 dark:text-fuchsia-300",
   },
+  // ── 9. Teal ──────────────────────────────────────────────────────────────
+  {
+    gradient: "from-[#0d5e6b] via-[#147a8a] to-[#219aad]",
+    accentBar: "bg-teal-400",
+    hoverRing: "hover:ring-teal-500/30",
+    hoverShadow: "hover:shadow-[0_16px_36px_-20px_rgba(20,184,166,0.72)]",
+    hoverTitle: "group-hover:text-teal-700 dark:group-hover:text-teal-300",
+    overlayGradient: "from-teal-700/20 via-teal-600/10 to-transparent dark:from-teal-950/45 dark:via-teal-900/20 dark:to-transparent",
+    readingButtonTone: "text-teal-600 dark:text-teal-300",
+  },
+  // ── 10. Amber ─────────────────────────────────────────────────────────────
+  {
+    gradient: "from-[#92400e] via-[#b45309] to-[#d97706]",
+    accentBar: "bg-amber-400",
+    hoverRing: "hover:ring-amber-500/30",
+    hoverShadow: "hover:shadow-[0_16px_36px_-20px_rgba(245,158,11,0.72)]",
+    hoverTitle: "group-hover:text-amber-700 dark:group-hover:text-amber-300",
+    overlayGradient: "from-amber-700/20 via-amber-600/10 to-transparent dark:from-amber-950/45 dark:via-amber-900/20 dark:to-transparent",
+    readingButtonTone: "text-amber-600 dark:text-amber-300",
+  },
+  // ── 11. Violet ────────────────────────────────────────────────────────────
+  {
+    gradient: "from-[#4c1d95] via-[#5b21b6] to-[#7c3aed]",
+    accentBar: "bg-violet-400",
+    hoverRing: "hover:ring-violet-500/30",
+    hoverShadow: "hover:shadow-[0_16px_36px_-20px_rgba(139,92,246,0.72)]",
+    hoverTitle: "group-hover:text-violet-700 dark:group-hover:text-violet-300",
+    overlayGradient: "from-violet-700/20 via-violet-600/10 to-transparent dark:from-violet-950/45 dark:via-violet-900/20 dark:to-transparent",
+    readingButtonTone: "text-violet-600 dark:text-violet-300",
+  },
+  // ── 12. Pink ──────────────────────────────────────────────────────────────
+  {
+    gradient: "from-[#831843] via-[#9d174d] to-[#be185d]",
+    accentBar: "bg-pink-400",
+    hoverRing: "hover:ring-pink-500/30",
+    hoverShadow: "hover:shadow-[0_16px_36px_-20px_rgba(236,72,153,0.72)]",
+    hoverTitle: "group-hover:text-pink-700 dark:group-hover:text-pink-300",
+    overlayGradient: "from-pink-700/20 via-pink-600/10 to-transparent dark:from-pink-950/45 dark:via-pink-900/20 dark:to-transparent",
+    readingButtonTone: "text-pink-600 dark:text-pink-300",
+  },
 ];
 
 function hashSeed(input: string): number {
   if (!input) return 0;
 
-  let hash = 0;
+  let hash = 5381; // DJB2 initial value — ensures better distribution
   const normalized = input.toLowerCase();
   for (let i = 0; i < normalized.length; i += 1) {
     hash = (hash << 5) - hash + normalized.charCodeAt(i);

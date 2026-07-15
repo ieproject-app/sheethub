@@ -737,6 +737,7 @@ export const mdxComponents = {
   em: MdxEm,
   code: MdxCode,
   kbd: Kbd,
+  Kbd: Kbd,
   details: ({ children, className, ...props }: MdxElementProps) => (
     <details
       className={cn(

@@ -19,7 +19,6 @@ interface ArticleShareProps {
   imageUrl?: string;
 }
 
-// TODO: Replace with your actual production domain
 const productionUrl = "https://sheethub.web.id";
 
 export function ArticleShare({ title }: ArticleShareProps) {

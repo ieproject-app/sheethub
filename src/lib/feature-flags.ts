@@ -5,8 +5,4 @@ const asBoolean = (value: string | undefined, fallback = false) => {
 
 export const FEATURE_FLAGS = {
   loginEnabled: asBoolean(process.env.NEXT_PUBLIC_ENABLE_LOGIN, false),
-  toolsEnabled: asBoolean(
-    process.env.NEXT_PUBLIC_ENABLE_TOOLS,
-    process.env.NODE_ENV === "development",
-  ),
 } as const;

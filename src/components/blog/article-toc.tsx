@@ -8,13 +8,11 @@ import { ChevronRight, ListIcon } from "lucide-react";
 interface ArticleTOCProps {
   headings: Heading[];
   title: string;
-  locale?: string;
 }
 
 export function ArticleTOC({
   headings,
   title,
-  locale = "en",
 }: ArticleTOCProps) {
   const [isOpen, setIsOpen] = useState(false);
 
@@ -72,14 +70,7 @@ export function ArticleTOC({
               {title}
             </span>
             <span className="text-xs font-medium text-muted-foreground">
-              {headings.length}{" "}
-              {locale === "id"
-                ? headings.length === 1
-                  ? "bagian"
-                  : "bagian"
-                : headings.length === 1
-                  ? "section"
-                  : "sections"}
+              {headings.length} {headings.length === 1 ? "section" : "sections"}
             </span>
           </div>
         </div>

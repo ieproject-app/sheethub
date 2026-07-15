@@ -1,118 +1,63 @@
 import { MetadataRoute } from "next";
-import { getSortedPostsData } from "@/lib/posts";
-import { getSortedNotesData } from "@/lib/notes";
-import { shouldIndexTag } from "@/lib/tags";
-import { i18n } from "@/i18n-config";
-import { FEATURE_FLAGS } from "@/lib/feature-flags";
+import { getSitemapPostSummaries } from "@/lib/sitemap-posts";
+
+// Sitemap must always be fresh so Googlebot never reads a stale CDN-cached version.
+export const revalidate = 0;
 
 const DOMAIN = "https://sheethub.web.id";
 
+// Fixed date for static pages — update manually when page content changes
+const STATIC_LAST_MODIFIED = new Date("2026-07-01");
+
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const shouldShowTools = FEATURE_FLAGS.toolsEnabled;
-
-  const routes = [
-    "",
-    "/blog",
-    "/notes",
-    "/about",
-    "/contact",
-    "/privacy",
-    "/terms",
-    "/disclaimer",
-    ...(shouldShowTools ? ["/tools"] : []),
+  // --- 1. Static Routes ---
+  const staticRoutes = [
+    { url: DOMAIN, priority: 1, changefreq: "daily" as const },
+    { url: DOMAIN + "/blog", priority: 0.8, changefreq: "weekly" as const },
+    { url: DOMAIN + "/category", priority: 0.7, changefreq: "weekly" as const },
+    { url: DOMAIN + "/about", priority: 0.5, changefreq: "monthly" as const },
+    { url: DOMAIN + "/contact", priority: 0.5, changefreq: "monthly" as const },
+    { url: DOMAIN + "/privacy", priority: 0.5, changefreq: "monthly" as const },
+    { url: DOMAIN + "/terms", priority: 0.5, changefreq: "monthly" as const },
+    { url: DOMAIN + "/disclaimer", priority: 0.5, changefreq: "monthly" as const },
   ];
 
-  // Tools routes yang ingin diindeks
-  const toolRoutes: string[] = [];
+  const staticEntries: MetadataRoute.Sitemap = staticRoutes.map((route) => ({
+    url: route.url,
+    lastModified: STATIC_LAST_MODIFIED,
+    changeFrequency: route.changefreq,
+    priority: route.priority,
+  }));
 
-  // 1. Static Routes
-  const staticEntries: MetadataRoute.Sitemap = i18n.locales.flatMap(
-    (locale) => {
-      const localePrefix = locale === i18n.defaultLocale ? "" : `/${locale}`;
-      const mainRoutes = routes.map((route) => ({
-        url: `${DOMAIN}${localePrefix}${route}`,
-        lastModified: new Date(),
+  // --- 2. Blog Posts ---
+  const posts = await getSitemapPostSummaries();
+
+  const blogEntries: MetadataRoute.Sitemap = posts
+    .map((post) => {
+      const lastModified = safeDate(
+        post.frontmatter.updated || post.frontmatter.date,
+      );
+      if (!lastModified) return null;
+
+      return {
+        url: (DOMAIN + "/blog/" + post.slug).trim(),
+        lastModified,
         changeFrequency: "weekly" as const,
-        priority: route === "" ? 1 : route === "/tools" ? 0.9 : 0.8,
-      }));
-      
-      const toolPages = toolRoutes.map((tool) => ({
-        url: `${DOMAIN}${localePrefix}/tools/${tool}`,
-        lastModified: new Date(),
-        changeFrequency: "monthly" as const,
-        priority: 0.7,
-      }));
-      
-      return [...mainRoutes, ...toolPages];
-    },
-  );
+        priority: 0.8,
+      };
+    })
+    .filter((entry): entry is NonNullable<typeof entry> => entry !== null);
 
-  // 2. Blog Posts
-  const blogEntries = await Promise.all(
-    i18n.locales.map(async (locale) => {
-      const posts = await getSortedPostsData(locale);
-      const localePrefix = locale === i18n.defaultLocale ? "" : `/${locale}`;
+  return [...staticEntries, ...blogEntries];
+}
 
-      return posts.map((post) => ({
-        url: `${DOMAIN}${localePrefix}/blog/${post.slug}`,
-        lastModified: new Date(
-          post.frontmatter.updated || post.frontmatter.date,
-        ),
-        changeFrequency: "monthly" as const,
-        priority: 0.6,
-      }));
-    }),
-  );
-
-  // 3. Notes
-  const noteEntries = await Promise.all(
-    i18n.locales.map(async (locale) => {
-      const notes = await getSortedNotesData(locale);
-      const localePrefix = locale === i18n.defaultLocale ? "" : `/${locale}`;
-
-      return notes.map((note) => ({
-        url: `${DOMAIN}${localePrefix}/notes/${note.slug}`,
-        lastModified: new Date(
-          note.frontmatter.updated || note.frontmatter.date,
-        ),
-        changeFrequency: "monthly" as const,
-        priority: 0.5,
-      }));
-    }),
-  );
-
-  // 4. Tags (Selective indexing)
-  const tagEntries = await Promise.all(
-    i18n.locales.map(async (locale) => {
-      const posts = await getSortedPostsData(locale);
-      const notes = await getSortedNotesData(locale);
-      const allItems = [...posts, ...notes];
-
-      const tagCounts: Record<string, number> = {};
-      allItems.forEach((item) => {
-        item.frontmatter.tags?.forEach((tag: string) => {
-          const lowerTag = tag.toLowerCase();
-          tagCounts[lowerTag] = (tagCounts[lowerTag] || 0) + 1;
-        });
-      });
-
-      const localePrefix = locale === i18n.defaultLocale ? "" : `/${locale}`;
-
-      return Object.entries(tagCounts)
-        .filter(([tag, count]) => shouldIndexTag(tag, count))
-        .map(([tag]) => ({
-          url: `${DOMAIN}${localePrefix}/tags/${encodeURIComponent(tag)}`,
-          lastModified: new Date(),
-          changeFrequency: "weekly" as const,
-          priority: 0.4,
-        }));
-    }),
-  );
-
-  return [
-    ...staticEntries,
-    ...blogEntries.flat(),
-    ...noteEntries.flat(),
-    ...tagEntries.flat(),
-  ];
+function safeDate(value: string | Date | undefined | null): Date | null {
+  if (!value) return null;
+  if (value instanceof Date) {
+    return isNaN(value.getTime()) ? null : value;
+  }
+  const trimmed = String(value).trim();
+  if (!trimmed) return null;
+  const d = new Date(trimmed);
+  return isNaN(d.getTime()) ? null : d;
 }
