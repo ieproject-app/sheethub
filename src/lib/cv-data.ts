@@ -54,20 +54,20 @@ export type CVData = {
 
 export const cvData = {
   en: {
-    name: "Iwan Efendi",
-    email: "iwan.efndi@gmail.com",
-    role: "Procurement Specialist, Technical Writer & Workflow Builder",
+    name: "SheetHub",
+    email: "hermesthreads@gmail.com",
+    role: "Technical Writer & Workflow Builder",
     summary:
       "SheetHub is built as a practical knowledge base for Excel and Google Sheets users who need clear guidance and repeatable workflows. The platform focuses on documentation that can be applied quickly in real tasks, from formula usage and data cleanup to automation-oriented routines. Its editorial direction is simple: useful first, clear by default, and consistent over time.",
     profile: {
-      badge: "Founder Story",
+      badge: "About",
       panelLabel: "Positioning",
       statement:
         "SheetHub is positioned as a practical reference for spreadsheet-driven work: concise, reliable, and ready for daily use.",
-      companyLabel: "PT Telkom Akses",
+      companyLabel: "SheetHub",
       locationLabel: "Indonesia",
       experienceIntro:
-        "Selected roles that shaped how I work today: from field operations, safety, and troubleshooting to cleaner administrative systems and practical workflows.",
+        "Selected roles that shaped how SheetHub is built today: from field operations, safety, and troubleshooting to cleaner administrative systems and practical workflows.",
       founderLabel: "Founder",
       brandLabel: "SheetHub",
       storyCardDescription:
