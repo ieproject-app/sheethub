@@ -1,5 +1,7 @@
 import type { NextConfig } from "next";
 
+const canonicalHostPattern = "(?:www\\.sheethub\\.web\\.id|.*\\.hosted\\.app|.*\\.web\\.app)";
+
 const securityHeaders = [
   { key: "X-Content-Type-Options", value: "nosniff" },
   { key: "X-Frame-Options", value: "SAMEORIGIN" },
@@ -38,6 +40,20 @@ const nextConfig: NextConfig = {
   },
   async redirects() {
     return [
+      // Canonical host redirects. Keep these before content redirects so
+      // alternate/preview domains consolidate to sheethub.web.id.
+      {
+        source: "/",
+        has: [{ type: "host", value: canonicalHostPattern }],
+        destination: "https://sheethub.web.id/",
+        permanent: true,
+      },
+      {
+        source: "/:path*",
+        has: [{ type: "host", value: canonicalHostPattern }],
+        destination: "https://sheethub.web.id/:path*",
+        permanent: true,
+      },
       // ── Locale transition: bilingual → English-only ────────────────
       // Old /id/* URLs redirect to English equivalents
       {

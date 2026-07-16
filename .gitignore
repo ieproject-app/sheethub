@@ -38,3 +38,4 @@ serviceAccountKey.json
 /downloaded-logs-*.json
 # IDE settings
 .idea/
+.zcode/
