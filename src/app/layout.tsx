@@ -123,7 +123,10 @@ export const metadata: Metadata = {
     },
   },
   other: {
-    "google-site-verification": "vxaMP4zilkOIXF62345QJBaVBuClVZykomC-7IKCCMg",
+    "google-site-verification": [
+      "vxaMP4zilkOIXF62345QJBaVBuClVZykomC-7IKCCMg",
+      "pjUP2xWpYPYKBOj6PnKET6YkCRjVv51OKlG5_5kfxfk",
+    ],
     "msvalidate.01": "C277F538388FC1064B7236E24BE71E5C",
   },
 };
