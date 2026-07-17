@@ -1,0 +1,167 @@
+---
+title: "How to Open UTF-8 CSV Files in Excel Without Garbled Characters"
+date: "2026-07-17"
+description: "Open UTF-8 CSV files in Excel without garbled characters. Fix encoding issues with Power Query, Import Wizard, and BOM."
+published: true
+featured: false
+heroImage: "default-og"
+tags: ["excel", "csv", "utf-8", "data-import", "productivity", "tutorial"]
+category: "Productivity"
+---
+
+You exported a CSV from your CRM, and the names look like Ã± or æ±‰å­— instead of señor or 汉字. Opening UTF-8 encoded files in Excel has been a headache for years, especially if you work with international data.
+
+Excel finally has reliable workarounds — from the modern Power Query method to a quick [Google Sheets trick](/blog/google-sheets-import-functions-guide).
+
+## Why Does Excel Garble UTF-8 CSV?
+
+Excel defaults to the Windows-1252 (ANSI) encoding when opening CSV files with the old double-click approach. Windows-1252 only supports Western European characters, so anything outside that range — Japanese, Chinese, accented European letters, emoji — comes through as garbage.
+
+The encoding mismatch happens because CSV files have no standard way to declare their encoding. Unlike HTML or XML, a `.csv` file does not include a charset declaration. Excel guesses, and it guesses wrong for UTF-8.
+
+**Which versions are affected:**
+
+| Excel Version | Double-Click | Power Query | Import Wizard |
+|--------------|--------------|-------------|---------------|
+| Excel 365 | ❌ Garbled | ✅ UTF-8 | ✅ UTF-8 |
+| Excel 2024 | ❌ Garbled | ✅ UTF-8 | ✅ UTF-8 |
+| Excel 2021 | ❌ Garbled | ✅ UTF-8 | ✅ UTF-8 |
+| Excel 2019 | ❌ Garbled | ✅ UTF-8 | ❌ ANSI only |
+| Excel 2016 | ❌ Garbled | ⚠️ Partial | ❌ ANSI only |
+
+<Callout variant="tip" title="Why UTF-8 Matters">
+  UTF-8 is the standard encoding for web exports, CRMs, SaaS platforms, and modern databases. If your data comes from a cloud service, it is almost certainly UTF-8.
+</Callout>
+
+## Method 1: Power Query (Recommended)
+
+Power Query handles UTF-8 correctly and gives you preview before importing. This works in Excel 365, 2024, and 2021.
+
+<Steps>
+<Step>
+**Go to Data > Get Data > From File > From Text/CSV.** Excel opens a file picker. Select your CSV file.
+</Step>
+<Step>
+**Check the encoding in the preview window.** Power Query auto-detects the encoding. Verify it shows **UTF-8** in the file origin dropdown near the bottom-left of the preview.
+</Step>
+<Step>
+**Adjust settings if needed.** If the preview shows garbled text, change **File Origin** to **65001: Unicode (UTF-8)**. Also check the delimiter setting matches your file (comma, semicolon, or tab).
+</Step>
+<Step>
+**Choose how to load.** Click **Load** to add the data to a new worksheet, or **Transform Data** to clean the data in Power Query Editor before loading.
+</Step>
+</Steps>
+
+<Callout variant="warning" title="Set Once, Save Forever">
+  After importing via Power Query, save your workbook as an `.xlsx` file. The next time you open it, the data stays intact. Power Query also refreshes when you replace the source CSV with an updated file.
+</Callout>
+
+## Method 2: Import Wizard (Classic)
+
+The legacy Import Wizard works when Power Query is not available or when you want more control over column types.
+
+<Steps>
+<Step>
+**Go to Data > From Text/CSV.** This opens the same modern import dialog from Method 1. If you prefer the classic wizard, go to **Data > Get Data > Legacy Wizards > From Text (Legacy)** instead.
+</Step>
+<Step>
+**Set File Origin to 65001: Unicode (UTF-8).** This tells Excel to decode the file as UTF-8 instead of the default Windows-1252.
+</Step>
+<Step>
+**Choose the delimiter.** Select Comma, Semicolon, Tab, or Other depending on your CSV structure. The preview updates in real time so you can confirm the data looks correct.
+</Step>
+<Step>
+**Set column data types.** Click each column in the preview and set the data type (General, Text, Date). This prevents Excel from auto-converting things like product codes into dates.
+</Step>
+<Step>
+**Click Finish.** Choose whether to load the data to an existing worksheet or a new one.
+</Step>
+</Steps>
+
+## Method 3: Add a BOM (Byte Order Mark)
+
+If you regularly create CSV files from scripts or databases, adding a BOM at the start of the file tells Excel it is UTF-8 — even when you double-click.
+
+A BOM is a three-byte sequence (`EF BB BF`) placed at the very beginning of the file. Excel detects it and switches to UTF-8 automatically.
+
+**How to save CSV with BOM from different tools:**
+
+<details>
+<summary>VS Code or Notepad++</summary>
+
+- **VS Code:** File > Save with Encoding > UTF-8 with BOM
+- **Notepad++:** Encoding > Encode in UTF-8-BOM, then Save
+</details>
+
+<details>
+<summary>Python script</summary>
+
+```python
+import csv
+
+with open("output.csv", "w", encoding="utf-8-sig", newline="") as f:
+    writer = csv.writer(f)
+    writer.writerows(data)
+```
+
+The `utf-8-sig` encoding adds the BOM automatically.
+</details>
+
+<details>
+<summary>Google Sheets export</summary>
+
+Go to **File > Download > Comma-separated values (.csv)**. Google Sheets exports with UTF-8 encoding but does not add a BOM — use one of the other methods above for Sheets exports.
+</details>
+
+<Callout variant="warning" title="BOM Is Not Foolproof">
+  Some systems (Linux, older PHP scripts) treat the BOM as data. If your CSV is consumed by non-Microsoft tools, test with a small file first to make sure the BOM does not break parsing.
+</Callout>
+
+## Method 4: Google Sheets Workaround
+
+If Excel keeps garbling your CSV, use Google Sheets as a middleman. Sheets detects UTF-8 automatically.
+
+<Steps>
+<Step>
+**Open Google Sheets** and go to **File > Import > Upload**.
+</Step>
+<Step>
+**Select your CSV file.** Google Sheets reads the encoding and displays the data correctly.
+</Step>
+<Step>
+**Go to File > Download > Microsoft Excel (.xlsx).** The exported file keeps the correct encoding and opens properly in Excel.
+</Step>
+</Steps>
+
+Perfect for the occasional CSV import — no need to remember the Import Wizard settings.
+
+## Prevention Tips
+
+Once you fix a garbled CSV, these habits keep it from happening again:
+
+<Callout variant="tip" title="Export with UTF-8 by Default">
+  Most CRMs, analytics tools, and databases let you choose the export encoding. Always pick **UTF-8** over ANSI or Windows-1252. If UTF-8 with BOM is an option, select it.
+</Callout>
+
+- **Save your Excel file after importing.** Once the data is in `.xlsx` format, encoding is no longer an issue. The same principle applies to other [Excel data management features](/blog/data-validation-dropdown-guide) — once you set it up right, it stays right.
+- **Automate with Power Query.** Set up a Power Query connection to your CSV folder. Each time you add a new file, refresh the query.
+- **Test one row first.** Import a preview of your CSV before loading all rows. Most garbled data shows up immediately in the preview window.
+- **Use the same delimiter throughout.** If your CSV mixes commas and semicolons (some European exports use semicolons because comma is the decimal separator), Excel may misalign columns.
+
+| Problem | Solution |
+|---------|----------|
+| All text is garbled | Change File Origin to UTF-8 (65001) |
+| Only accented characters fail | Add BOM to the CSV file |
+| Data shifted one column right | Check delimiter — switch to Semicolon |
+| Dates show as numbers | Set column type to Date during import |
+
+## Summary
+
+| Method | Best For | Ease |
+|--------|----------|------|
+| Power Query | Regular imports, large files | ⭐⭐⭐⭐⭐ |
+| Import Wizard | One-off imports | ⭐⭐⭐⭐ |
+| Add BOM | CSV creators (script writers) | ⭐⭐⭐ |
+| Google Sheets | Rare imports, no-fuss fix | ⭐⭐⭐⭐⭐ |
+
+I default to Power Query for this — it handles UTF-8 natively, and once set up, refreshing with new CSVs takes seconds instead of headaches.

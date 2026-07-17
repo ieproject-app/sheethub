@@ -12,14 +12,24 @@ export function extractHeadings(content: string): Heading[] {
   const headings: Heading[] = [];
   let match;
 
+  const seen = new Map<string, number>();
+
   while ((match = headingRegex.exec(content)) !== null) {
     const level = match[1].length;
     const text = match[2].trim();
     // Create a slug-friendly ID
-    const id = text
+    let id = text
       .toLowerCase()
       .replace(/[^\w\s-]/g, '')
       .replace(/\s+/g, '-');
+
+    if (seen.has(id)) {
+      const count = seen.get(id)! + 1;
+      seen.set(id, count);
+      id = `${id}-${count}`;
+    } else {
+      seen.set(id, 0);
+    }
 
     headings.push({ id, text, level });
   }

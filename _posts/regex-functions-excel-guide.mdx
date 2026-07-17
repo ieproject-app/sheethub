@@ -1,0 +1,196 @@
+---
+title: "Excel REGEX Functions: REGEXTEST, REGEXEXTRACT, REGEXREPLACE"
+date: "2026-07-16"
+description: "Learn REGEX functions in Excel. Use REGEXTEST, REGEXEXTRACT, and REGEXREPLACE to match text patterns without VBA."
+published: true
+featured: false
+heroImage: "default-og"
+tags: ["excel", "formulas", "regex", "text-functions", "tutorial"]
+category: "Formulas & Functions"
+---
+
+Matching text patterns in Excel used to mean learning VBA or hunting for third-party add-ins. That changed with the introduction of native REGEX functions.
+
+Excel now includes three REGEX functions — **REGEXTEST**, **REGEXEXTRACT**, and **REGEXREPLACE** — that work just like any other [worksheet formula](/blog/xlookup-complete-guide). You can validate, extract, and clean text data using regular expressions directly in your cells, no coding required.
+
+## What Are REGEX Functions in Excel?
+
+REGEX (regular expressions) is a syntax for matching text patterns. Excel's REGEX functions let you use this power inside worksheet formulas.
+
+**Availability:**
+- Excel 365 (Current Channel) — fully available
+- Excel 2024 — fully available
+- Excel for the Web — fully available
+- Excel 2021 or earlier — not available (use VBA or Power Query instead)
+
+The functions were introduced gradually through Microsoft 365 updates starting in late 2024 and are now generally available for all current-channel subscribers.
+
+## REGEXTEST — Check If Text Matches a Pattern
+
+The simplest of the three. REGEXTEST returns `TRUE` if the text matches your pattern and `FALSE` if it doesn't.
+
+**Syntax:**
+```excel
+=REGEXTEST(text, pattern, [case_sensitivity])
+```
+
+**Parameters:**
+- `text` — the cell or string to check
+- `pattern` — your regex pattern (as text)
+- `case_sensitivity` — optional. `0` (default, case-sensitive) or `1` (case-insensitive)
+
+**Example 1 — Validate Email Format:**
+
+| A | B | Formula |
+|---|---|---|
+| user@example.com | TRUE | `=REGEXTEST(A2, "^[\\w.-]+@[\\w.-]+\\.\\w{2,}$")` |
+| not-an-email | FALSE | `=REGEXTEST(A3, "^[\\w.-]+@[\\w.-]+\\.\\w{2,}$")` |
+
+**Example 2 — Check for Phone Numbers:**
+```excel
+=REGEXTEST(A2, "\\(?\\d{3}\\)?[-.\\s]?\\d{3}[-.\\s]?\\d{4}")
+```
+Returns `TRUE` if the cell contains a US phone number pattern like (555) 123-4567 or 555.123.4567.
+
+**Practical use:** Combine REGEXTEST with conditional formatting to highlight rows with invalid data, or use it inside IF for data cleaning:
+```excel
+=IF(REGEXTEST(A2, "^[A-Z]{2}\\d{4}$"), "Valid code", "Invalid code")
+```
+
+## REGEXEXTRACT — Extract Text Matching a Pattern
+
+REGEXEXTRACT pulls out the portion of text that matches your pattern. This is the function you will use most often, especially for [text extraction](/blog/split-text-functions-google-sheets) tasks.
+
+**Syntax:**
+```excel
+=REGEXEXTRACT(text, pattern, [return_mode], [case_sensitivity])
+```
+
+**Parameters:**
+- `text` — the cell or string to search
+- `pattern` — your regex pattern
+- `return_mode` — optional. `0` (default, first match), `1` (all matches as array), `2` (capture groups)
+- `case_sensitivity` — optional. `0` (case-sensitive) or `1` (case-insensitive)
+
+**Example 1 — Extract Domain from Email:**
+
+| A | B | Formula |
+|---|---|---|
+| john@company.com | company.com | `=REGEXEXTRACT(A2, "@(.+)")` |
+
+**Example 2 — Extract Product Codes:**
+```excel
+=REGEXEXTRACT(A2, "PRD-\\d{4}")
+```
+If cell A2 contains "Order PRD-3842 shipped", this returns `PRD-3842`.
+
+**Example 3 — Extract All Matches (return_mode=1):**
+```excel
+=REGEXEXTRACT(A2, "\\d+", 1)
+```
+If cell A2 contains "Order 3842 contains 5 items", this returns `{3842, 5}` as a vertical array. You will need Excel's current-channel update for array return support.
+
+**Example 4 — Capture Groups (return_mode=2):**
+```excel
+=REGEXEXTRACT("John: 30, Jane: 25", "(\\w+): (\\d+)", 2)
+```
+Returns each capture group separately: "John" in one column, "30" in the next.
+
+## REGEXREPLACE — Replace Text Matching a Pattern
+
+REGEXREPLACE finds text that matches your pattern and replaces it with something else.
+
+**Syntax:**
+```excel
+=REGEXREPLACE(text, pattern, replacement, [occurrence], [case_sensitivity])
+```
+
+**Parameters:**
+- `text` — the cell or string to modify
+- `pattern` — your regex pattern
+- `replacement` — the new text (you can use `$1`, `$2` to reference capture groups)
+- `occurrence` — optional. `0` (default, replace all occurrences) or a number to replace only the Nth match
+- `case_sensitivity` — optional. `0` (case-sensitive) or `1` (case-insensitive)
+
+**Example 1 — Clean Phone Numbers:**
+```excel
+=REGEXREPLACE(A2, "[^\\d]", "")
+```
+Removes all non-digit characters from a phone number. Converts "(555) 123-4567" to "5551234567".
+
+**Example 2 — Standardize Date Format:**
+```excel
+=REGEXREPLACE(A2, "(\\d{1,2})/(\\d{1,2})/(\\d{4})", "$3-$1-$2")
+```
+Converts "3/14/2026" to "2026-3-14" (ISO format).
+
+**Example 3 — Replace First Occurrence Only:**
+```excel
+=REGEXREPLACE(A2, "old", "new", 1)
+```
+Replaces only the first "old" in the text, leaving later occurrences unchanged.
+
+## Putting It All Together: Clean Customer Data
+
+Say you have a column of messy customer entries:
+
+| Raw Data | Goal |
+|----------|------|
+| J0hn_D0e: 555-123-4567 (NY) | Extract clean name, phone, state |
+
+**Step 1 — Validate the entry format:**
+```excel
+=REGEXTEST(A2, "^\\w+: \\d{3}-\\d{3}-\\d{4} \\([A-Z]{2}\\)$")
+```
+
+**Step 2 — Extract name:**
+```excel
+=REGEXEXTRACT(A2, "^(\\w+)", 2)
+```
+Returns "J0hn_D0e".
+
+**Step 3 — Extract and clean phone:**
+```excel
+=REGEXREPLACE(REGEXEXTRACT(A2, "\\d{3}-\\d{3}-\\d{4}"), "-", "")
+```
+Returns "5551234567".
+
+**Step 4 — Extract state:**
+```excel
+=REGEXEXTRACT(A2, "\\(([A-Z]{2})\\)")
+```
+Returns "NY".
+
+All four formulas reference the same source cell and update automatically when your data changes.
+
+## Limitations and Tips
+
+### Performance
+REGEX functions are slower than basic text functions (LEFT, MID, FIND) on large datasets. For 10,000+ rows, use them sparingly or combine with LET to calculate once and reuse — a pattern also used by other [modern Excel functions](/blog/groupby-function-excel-guide) for performance:
+
+```excel
+=LET(
+    email, A2,
+    valid, REGEXTEST(email, "^[\\w.-]+@[\\w.-]+\\.\\w{2,}$"),
+    IF(valid, "OK", "Check")
+)
+```
+
+### Regex Syntax Differences
+Excel's REGEX engine follows the .NET regex syntax, which is similar to Perl but has some differences:
+- Use `\\d` for digits (double backslash inside Excel strings)
+- Use `\\w` for word characters
+- Use `$1`, `$2` for capture group references (not `\1`, `\2`)
+
+### Combine with Other Functions
+- **LET** — store your regex pattern once
+- **LAMBDA** — create custom regex functions you can reuse
+- **TRIM** — clean whitespace before regex processing
+
+## Conclusion
+
+Excel's native REGEX functions — REGEXTEST, REGEXEXTRACT, and REGEXREPLACE — turn complex text manipulation tasks into simple worksheet formulas. No VBA, no add-ins, no scripting.
+
+I use REGEXEXTRACT the most in my own work, especially when cleaning data exported from other systems. Being able to pull out exactly what I need with one formula saves me a ton of manual editing.
+
+**Try it now:** Open Excel, type a few sample strings, and test each REGEX function. The fastest way to learn is by experimenting with real text patterns.

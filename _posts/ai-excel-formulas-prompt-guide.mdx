@@ -1,0 +1,153 @@
+---
+title: "How to Use AI to Write Excel Formulas: Complete Prompt Guide"
+date: "2026-07-17"
+description: "Learn to use AI for Excel formulas. Prompt templates for VLOOKUP, REGEX, nested IF — and how to validate AI output."
+published: true
+featured: false
+heroImage: "default-og"
+tags: ["excel", "ai", "artificial-intelligence", "productivity", "tutorial"]
+category: "Productivity"
+---
+
+You know what VLOOKUP does. You understand how IF works. But typing the exact formula — especially with nested conditions, array syntax, or regex patterns — takes multiple attempts and debugging.
+
+AI tools like ChatGPT, Gemini, and Claude can write Excel formulas for you. The catch? You still need to know what you want, describe your data clearly, and validate the output.
+
+The trick is learning how to talk to AI so it gives you working formulas — faster than Googling or trial-and-error.
+
+## Why Describe Problems Instead of Copying Formulas
+
+Most Excel tutorials give you the final formula. Copy, paste, adjust column references — done. That works when your data matches the tutorial exactly.
+
+But real-world spreadsheets are messy. Column orders differ. Data types mix. Someone merged cells. When the formula breaks, you need to debug without the tutorial.
+
+Describing your problem to an AI is a different skill:
+
+| Approach | You Copy a Formula | You Describe to AI |
+|----------|-------------------|--------------------|
+| Setup cost | Low — paste and go | Medium — need to describe clearly |
+| Adaptability | Low — breaks if data differs | High — AI adjusts to your structure |
+| Learning | Low — you got the answer | High — you understand the logic |
+| Debugging | Hard — you did not write it | Easier — you know what you asked for |
+
+Learning formulas still matters. AI is a **force multiplier** — you learn the concept here, then let AI handle the syntax.
+
+## Step 1: Describe Your Data Structure
+
+Before you ask for a formula, know your columns. A clear data description is 80% of a good prompt.
+
+**Bad prompt:**
+> "Give me a VLOOKUP formula."
+
+AI does not know your column layout, what you are looking up, or where the result should go.
+
+**Good prompt:**
+> "I have a product list in Excel. Column A has product IDs like PRD-001, PRD-002. Column B has product names. In cell D1 I type a product ID. I want to find the matching product name from column B. Write a VLOOKUP formula."
+
+AI now has everything it needs: the lookup column (A), the return column (B), and the lookup value (D1).
+
+<Callout variant="tip" title="The Three-Part Rule">
+  Every AI prompt for Excel needs three things: **(1) what your data looks like**, **(2) what you want Excel to do**, and **(3) where the result should appear.**
+</Callout>
+
+## Step 2: Be Specific About the Output
+
+Formulas can return different things — a single value, a TRUE/FALSE check, a text transformation, or an array. Tell AI what you expect.
+
+**Prompt for a validation check:**
+> "In column A I have email addresses. I want column B to show TRUE if the email format is valid and FALSE if not. Use REGEXTEST."
+
+**Prompt for text extraction:**
+> "In column A I have full names like 'John Smith'. I want to extract just the first name into column B. Use a combination of LEFT and FIND."
+
+**Prompt for conditional logic:**
+> "In column A I have sales amounts. If the amount is over 1000, column B should say 'High'. If between 500 and 1000, 'Medium'. Below 500, 'Low'. Use nested IF."
+
+The more specific your output description, the fewer iterations you will need.
+
+## Step 3: Validate the Output Against What You Know
+
+AI can get Excel formulas wrong. It might use a function that does not exist in your Excel version, reference the wrong cells, or miss edge cases.
+
+This is where **understanding the concept** matters. If you read the [REGEX functions guide](/blog/regex-functions-excel-guide) on this site before asking AI, you know:
+- REGEXTEST returns TRUE/FALSE
+- REGEXEXTRACT returns the match
+- REGEXREPLACE replaces text
+
+So when AI gives you `=REGEXEXTRACT(A1, "\d+")` and you expected a TRUE/FALSE check, you know to correct it.
+
+<Callout variant="warning" title="Always Check Version Compatibility">
+  Some functions — REGEX, GROUPBY, PIVOTBY — are only available in Excel 365 and Excel 2024. If AI gives you a formula using these, double-check that your Excel version supports them. When in doubt, mention your version in the prompt: "I am using Excel 2021."
+</Callout>
+
+## Prompt Templates for Common Formula Types
+
+### Lookup Formulas
+
+> "I have [lookup values] in column [X]. I have a reference table in columns [A:B] where [A] has the matching key and [B] has the result. Write an XLOOKUP formula that finds the result for each value in column [X]."
+
+### Text Functions
+
+> "In column [A] I have [describe text data]. I want to [extract specific part / remove certain characters / split into columns]. Write a formula using [specific function: LEFT, MID, FIND, REGEXEXTRACT, etc.]."
+
+### Conditional Logic (IF / IFS)
+
+> "In column [A] I have [numeric values]. I need to categorize them: [condition 1 → result 1], [condition 2 → result 2], [otherwise → result 3]. Write a nested IF or IFS formula."
+
+### Data Cleaning
+
+> "In column [A] I have [describe messy data — extra spaces, mixed formats, etc.]. I want to clean it by [removing spaces / standardizing case / removing non-numeric characters]. Write a formula."
+
+## Step 4: Iterate and Refine
+
+Your first prompt rarely gives the perfect formula. Treat it as a conversation:
+
+1. **Try the formula.** Paste it into Excel and see if it works.
+2. **If it errors, copy the error message** back to the AI: "Your formula gives #N/A. I think the lookup value in D1 does not match exactly. How do I handle partial matches?"
+3. **If output looks wrong, describe the problem:** "The formula returns 'High' for 500, but it should return 'Medium'. Check the threshold logic."
+
+AI remembers the conversation context, so each refinement should be quicker than the first attempt.
+
+<details>
+<summary>Example: From bad to working formula in 2 iterations</summary>
+
+**Initial prompt:**
+"I have dates in column A. I want column B to show the month name."
+
+AI gives: `=TEXT(A1, "mmmm")` — works.
+
+**Refinement:**
+"Some cells in column A are empty. The formula should show nothing for empty cells."
+
+AI gives: `=IF(A1="", "", TEXT(A1, "mmmm"))` — works.
+
+**Second refinement:**
+"I also need the year: 'January 2026' format."
+
+AI gives: `=IF(A1="", "", TEXT(A1, "mmmm yyyy"))` — done.
+</details>
+
+## Common Pitfalls
+
+### 1. Assuming AI Knows Your Excel Version
+Always mention your Excel version if you use modern functions (365 exclusive).
+
+### 2. Vague Data Description
+"Column A has data" is not enough. Is it text, numbers, dates? How many rows? Are there blanks?
+
+### 3. Not Specifying Region Format
+If you use semicolons instead of commas in formulas (European locale), tell AI: "I use Excel with semicolon as formula separator."
+
+### 4. Trusting Without Testing
+AI formulas look plausible but may reference the wrong range, omit edge cases, or use a syntax that does not exist. Always test on sample data first.
+
+## Summary
+
+| Step | What to Do |
+|------|-----------|
+| 1 | Describe your data columns and their content |
+| 2 | State what output you expect — value, TRUE/FALSE, or text |
+| 3 | Read the concept first so you can validate AI output |
+| 4 | Iterate — copy errors back, refine, test again |
+
+I use this approach daily: read an article like [XLOOKUP complete guide](/blog/xlookup-complete-guide) to understand the function, then describe my specific data to AI. It cuts formula-writing time from minutes to seconds, and I learn the logic along the way.
