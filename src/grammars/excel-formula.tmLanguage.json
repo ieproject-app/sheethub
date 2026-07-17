@@ -1,0 +1,127 @@
+{
+  "name": "excel-formula",
+  "scopeName": "source.excel-formula",
+  "displayName": "Excel Formula",
+  "patterns": [
+    { "include": "#formula-start" },
+    { "include": "#functions" },
+    { "include": "#strings" },
+    { "include": "#numbers" },
+    { "include": "#cell-references" },
+    { "include": "#error-values" },
+    { "include": "#boolean" },
+    { "include": "#operators" }
+  ],
+  "repository": {
+    "formula-start": {
+      "match": "^(\\s*)(=)",
+      "captures": {
+        "1": { "name": "source.excel-formula" },
+        "2": { "name": "keyword.operator.excel.formula-start" }
+      }
+    },
+    "functions": {
+      "patterns": [
+        {
+          "match": "(?i)\\b(IF|IFS|IFERROR|IFNA|SWITCH|CHOOSE|AND|OR|NOT|XOR|LET|LAMBDA)\\b",
+          "name": "keyword.control.excel"
+        },
+        {
+          "match": "(?i)\\b(SUM|SUMIF|SUMIFS|SUMPRODUCT|SUBTOTAL|COUNT|COUNTA|COUNTBLANK|COUNTIF|COUNTIFS|AVERAGE|AVERAGEA|AVERAGEIF|AVERAGEIFS|MIN|MINIFS|MAX|MAXIFS|MEDIAN|MODE|STDEV\\.S|STDEV\\.P|STDEV|STDEVP|VAR\\.S|VAR\\.P|VAR|VARP|QUARTILE|PERCENTILE|PERCENTRANK|RANK|LARGE|SMALL|SKEW|KURT|TRIMMEAN|FORECAST|TREND|GROWTH|LINEST|LOGEST|INTERCEPT|SLOPE|RSQ|STEYX|PROB)\\b",
+          "name": "support.function.aggregate.excel"
+        },
+        {
+          "match": "(?i)\\b(VLOOKUP|HLOOKUP|XLOOKUP|LOOKUP|INDEX|MATCH|OFFSET|INDIRECT|ADDRESS|COLUMN|ROW|ROWS|COLUMNS|CHOOSECOLS|CHOOSEROWS|HSTACK|VSTACK|TOCOL|TOROW|WRAPCOLS|WRAPROWS|TAKE|DROP|SORT|SORTBY|FILTER|UNIQUE|SEQUENCE|RANDARRAY|SINGLE|TRANSPOSE|FLATTEN|EXPAND|GROUPBY|PIVOTBY|MAP|REDUCE|SCAN|BYROW|BYCOL|MAKEARRAY|ISOMITTED)\\b",
+          "name": "support.function.reference.excel"
+        },
+        {
+          "match": "(?i)\\b(LEFT|RIGHT|MID|LEN|FIND|SEARCH|REPLACE|SUBSTITUTE|TEXT|TEXTJOIN|TEXTSPLIT|CONCAT|CONCATENATE|TRIM|UPPER|LOWER|PROPER|VALUE|TEXTBEFORE|TEXTAFTER|REGEXEXTRACT|REGEXREPLACE|REGEXTEST|ARRAYTOTEXT|VALUETOTEXT|EXACT|REPT|CHAR|CODE|CLEAN|FIXED|DOLLAR|BAHTTEXT|NUMBERVALUE|ASC|JIS|PHONETIC|UNICODE|UNICHAR|SPLIT|REGEXMATCH|ARRAY_CONSTRAIN|ENCODEURL|HYPERLINK)\\b",
+          "name": "support.function.text.excel"
+        },
+        {
+          "match": "(?i)\\b(DATE|TIME|YEAR|MONTH|DAY|HOUR|MINUTE|SECOND|TODAY|NOW|EOMONTH|EDATE|DATEDIF|DATEVALUE|TIMEVALUE|WEEKDAY|WEEKNUM|WORKDAY|WORKDAY\\.INTL|NETWORKDAYS|NETWORKDAYS\\.INTL|YEARFRAC|DAYS|DAYS360|ISOWEEKNUM|DATEADD)\\b",
+          "name": "support.function.date.excel"
+        },
+        {
+          "match": "(?i)\\b(ISBLANK|ISNUMBER|ISTEXT|ISNONTEXT|ISLOGICAL|ISERROR|ISERR|ISNA|ISREF|ISFORMULA|ISEVEN|ISODD|TYPE|CELL|INFO|NA|ISOWEEKNUM|ISPMT|ISURL|DETECTLANGUAGE)\\b",
+          "name": "support.function.info.excel"
+        },
+        {
+          "match": "(?i)\\b(INT|ROUND|ROUNDUP|ROUNDDOWN|ABS|SQRT|POWER|EXP|LN|LOG|LOG10|MOD|FLOOR|CEILING|MROUND|TRUNC|EVEN|ODD|SIGN|PRODUCT|MULTINOMIAL|FACT|FACTDOUBLE|GCD|LCM|COMBIN|COMBINA|RAND|RANDBETWEEN|PI|RADIANS|DEGREES|SIN|COS|TAN|ASIN|ACOS|ATAN|ATAN2|SINH|COSH|TANH|ASINH|ACOSH|ATANH|AGGREGATE|ROMAN|ARABIC|SUMSQ|SUMX2MY2|SUMX2PY2|SUMXMY2)\\b",
+          "name": "support.function.math.excel"
+        },
+        {
+          "match": "(?i)\\b(FV|PV|PMT|NPER|RATE|IPMT|PPMT|NPV|IRR|MIRR|XIRR|XNPV|SLN|SYD|DB|DDB|VDB|CUMPRINC|CUMPMT|EFFECT|NOMINAL)\\b",
+          "name": "support.function.financial.excel"
+        },
+        {
+          "match": "(?i)\\b(ARRAYFORMULA|QUERY|IMPORTRANGE|GOOGLEFINANCE|GOOGLETRANSLATE|IMAGE|SORTN|TO_PURE_NUMBER|TO_TEXT|TO_DATE|TO_DATETIME|TO_DOLLARS|TO_PERCENT|SHEET|SHEETS)\\b",
+          "name": "support.function.sheets.excel"
+        },
+        {
+          "match": "(?i)\\b(BINOMDIST|BINOM\\.INV|BINOM\\.DIST|NORM\\.DIST|NORM\\.INV|NORM\\.S\\.DIST|NORM\\.S\\.INV|T\\.DIST|T\\.INV|T\\.DIST\\.2T|T\\.INV\\.2T|F\\.DIST|F\\.INV|F\\.DIST\\.RT|F\\.INV\\.RT|CHISQ\\.DIST|CHISQ\\.INV|CHISQ\\.DIST\\.RT|CHISQ\\.INV\\.RT|CHISQ\\.TEST|F\\.TEST|T\\.TEST|Z\\.TEST|CONFIDENCE\\.NORM|CONFIDENCE\\.T|HYPGEOM\\.DIST|NEGBINOM\\.DIST|POISSON\\.DIST|WEIBULL\\.DIST|GAMMA\\.DIST|GAMMA\\.INV|GAMMA\\.LN|EXPON\\.DIST|LOGNORM\\.DIST|LOGNORM\\.INV)\\b",
+          "name": "support.function.statistical.excel"
+        }
+      ]
+    },
+    "strings": {
+      "begin": "\"",
+      "end": "\"",
+      "name": "string.quoted.double.excel",
+      "patterns": [
+        {
+          "match": "\"\"",
+          "name": "constant.character.escape.quote.excel"
+        }
+      ]
+    },
+    "numbers": {
+      "match": "\\b\\d+(?:\\.\\d+)?%?\\b",
+      "name": "constant.numeric.excel"
+    },
+    "cell-references": {
+      "patterns": [
+        {
+          "match": "(?i)(\\$?[A-Z]+\\$?\\d+(?::\\$?[A-Z]+\\$?\\d+)?)",
+          "name": "variable.parameter.excel"
+        }
+      ]
+    },
+    "error-values": {
+      "match": "#N/A|#REF!|#VALUE!|#DIV/0!|#NAME\\?|#NULL!|#NUM!|#SPILL!|#CALC!|#FIELD!|#CONNECT!|#BUSY!",
+      "name": "invalid.illegal.excel"
+    },
+    "boolean": {
+      "match": "(?i)\\b(TRUE|FALSE)\\b",
+      "name": "constant.language.boolean.excel"
+    },
+    "operators": {
+      "patterns": [
+        {
+          "match": ">=|<=|<>|>|<=",
+          "name": "keyword.operator.comparison.excel"
+        },
+        {
+          "match": "(?<!=)=(?!=)",
+          "name": "keyword.operator.comparison.excel"
+        },
+        {
+          "match": "[+\\-*/^&%]",
+          "name": "keyword.operator.math.excel"
+        },
+        {
+          "match": ":",
+          "name": "keyword.operator.range.excel"
+        },
+        {
+          "match": ",",
+          "name": "punctuation.separator.argument.excel"
+        },
+        {
+          "match": ";",
+          "name": "punctuation.separator.argument.excel"
+        }
+      ]
+    }
+  }
+}

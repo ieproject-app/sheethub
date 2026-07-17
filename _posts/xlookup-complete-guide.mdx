@@ -23,7 +23,7 @@ If you are still using VLOOKUP, you are making your work harder than it needs to
 
 ## XLOOKUP Syntax
 
-```
+```excel
 =XLOOKUP(lookup_value, lookup_array, return_array, [if_not_found], [match_mode], [search_mode])
 ```
 
@@ -42,19 +42,19 @@ If you are still using VLOOKUP, you are making your work harder than it needs to
 
 **Find price of Product P102:**
 
-```
+```excel
 =XLOOKUP("P102", A2:A100, C2:C100)
 ```
 
 **Find price, with custom error message:**
 
-```
+```excel
 =XLOOKUP("P102", A2:A100, C2:C100, "Not found")
 ```
 
 **Find price with approximate match (tax bracket):**
 
-```
+```excel
 =XLOOKUP(75000, A2:A10, B2:B10, , -1)
 ```
 
@@ -64,7 +64,7 @@ If you are still using VLOOKUP, you are making your work harder than it needs to
 
 XLOOKUP searches any column, in any direction:
 
-```
+```excel
 =XLOOKUP(B2, C2:C100, A2:A100)
 ```
 
@@ -76,7 +76,7 @@ This finds B2 in column C and returns the matching value from column A — a lef
 
 XLOOKUP can return an entire row or multiple columns:
 
-```
+```excel
 =XLOOKUP(B2, A2:A100, B2:D100)
 ```
 
@@ -88,7 +88,7 @@ The result spills into three adjacent cells.
 
 Find the most recent order for a product:
 
-```
+```excel
 =XLOOKUP(B2, A2:A100, C2:C100, , , -1)
 ```
 
@@ -114,13 +114,13 @@ The last argument (-1) tells XLOOKUP to search from the bottom up.
 
 **Use XLOOKUP with Tables.** Convert data to a Table (Ctrl+T) for self-documenting formulas:
 
-```
+```excel
 =XLOOKUP(B2, products[ID], products[Price], "N/A")
 ```
 
 **Combine with IF for conditional lookups:**
 
-```
+```excel
 =IF(C2="Active", XLOOKUP(B2, IDs, Prices, "N/A"), "Inactive")
 ```
 

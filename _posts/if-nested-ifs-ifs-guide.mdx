@@ -25,7 +25,7 @@ Every spreadsheet eventually needs logic. Bonus tiers, grading scales, discount 
 
 ### Syntax
 
-```
+```excel
 =IF(logical_test, value_if_true, value_if_false)
 ```
 
@@ -33,13 +33,13 @@ Every spreadsheet eventually needs logic. Bonus tiers, grading scales, discount 
 
 **Pass or fail:**
 
-```
+```excel
 =IF(A1>=70, "Pass", "Fail")
 ```
 
 **If order > $500, mark as "High Value":**
 
-```
+```excel
 =IF(C2>500, "High Value", "Standard")
 ```
 
@@ -53,7 +53,7 @@ When you need more than two outcomes, you nest IF functions inside each other.
 
 **Grade based on score:**
 
-```
+```excel
 =IF(A1>=90, "A", IF(A1>=80, "B", IF(A1>=70, "C", IF(A1>=60, "D", "F"))))
 ```
 
@@ -63,7 +63,7 @@ Each IF handles one condition. If FALSE, it moves to the next IF.
 
 Excel allows up to 64 nested IFs, but beyond 3-4 the formula becomes unreadable:
 
-```
+```excel
 =IF(A1="East", "Region 1", IF(A1="West", "Region 2", IF(A1="North", "Region 3", IF(A1="South", "Region 4", IF(A1="Central", "Region 5", "Other")))))
 ```
 
@@ -77,13 +77,13 @@ IFS was introduced in Excel 2019 and Microsoft 365. It lets you specify multiple
 
 ### Syntax
 
-```
+```excel
 =IFS(logical_test1, value_if_true1, logical_test2, value_if_true2, ...)
 ```
 
 ### Example
 
-```
+```excel
 =IFS(A1>=90, "A", A1>=80, "B", A1>=70, "C", A1>=60, "D", TRUE, "F")
 ```
 
@@ -92,12 +92,12 @@ The `TRUE` at the end acts as a catch-all else.
 ### Same example with IFS vs nested IF:
 
 **Nested IF:**
-```
+```excel
 =IF(A1="East", 100, IF(A1="West", 200, IF(A1="North", 300, 0)))
 ```
 
 **IFS (cleaner):**
-```
+```excel
 =IFS(A1="East", 100, A1="West", 200, A1="North", 300, TRUE, 0)
 ```
 
@@ -121,13 +121,13 @@ The `TRUE` at the end acts as a catch-all else.
 
 **Combine IF with AND/OR:**
 
-```
+```excel
 =IF(AND(B2="East", C2>500), "Priority", "Standard")
 ```
 
 **Use SWITCH for exact matches:**
 
-```
+```excel
 =SWITCH(A1, "East", 100, "West", 200, "North", 300, 0)
 ```
 

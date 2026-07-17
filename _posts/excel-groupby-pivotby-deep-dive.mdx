@@ -27,7 +27,7 @@ This makes GROUPBY significantly faster than multiple SUMIFS formulas for the sa
 
 **Multiple aggregation functions:**
 
-```
+```excel
 =GROUPBY(tblSales[Region], {tblSales[Amount], tblSales[Amount]}, {SUM, AVERAGE})
 ```
 
@@ -35,7 +35,7 @@ This returns total and average sales by region — two aggregations, one formula
 
 **Custom aggregation with LAMBDA:**
 
-```
+```excel
 =GROUPBY(tblSales[Region], tblSales[Amount], LAMBDA(x, MEDIAN(x)))
 ```
 
@@ -43,7 +43,7 @@ Median sales by region — impossible with Pivot Tables without a workaround.
 
 **Sorting by aggregated result:**
 
-```
+```excel
 =GROUPBY(tblSales[Region], tblSales[Amount], SUM, , , -2)
 ```
 
@@ -55,7 +55,7 @@ Sorts by the aggregation column (column 2) in descending order.
 
 PIVOTBY creates cross-tabulations — one column per unique value:
 
-```
+```excel
 =PIVOTBY(tblSales[Region], tblSales[Category], tblSales[Amount], SUM)
 ```
 
@@ -63,7 +63,7 @@ This creates a table with regions as rows and product categories as columns. Tot
 
 **With multiple metrics:**
 
-```
+```excel
 =PIVOTBY(tblSales[Region], tblSales[Category], {tblSales[Amount], tblSales[Amount]}, {SUM, COUNT})
 ```
 
@@ -91,7 +91,7 @@ Shows both total sales and order count in each cell.
 
 **Combine with SORT for control.** GROUPBY's built-in sorting is limited. Wrap it with SORT for more options:
 
-```
+```excel
 =SORT(GROUPBY(tblSales[Region], tblSales[Amount], SUM), 2, -1)
 ```
 

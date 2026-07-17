@@ -11,7 +11,7 @@ category: "Google Sheets"
 
 You know Excel. You have been using VLOOKUP, SUMIFS, and Pivot Tables for years. Then someone puts you on a Google Sheets project, and you see a function called QUERY. The syntax looks like nothing you have seen before.
 
-```
+```excel
 =QUERY(A1:D100, "SELECT B, SUM(D) WHERE C > 100 GROUP BY B LABEL SUM(D) ''")
 ```
 
@@ -42,7 +42,7 @@ That last column is the same query language used by databases. If you ever work 
 
 ## The Anatomy of a QUERY
 
-```
+```excel
 =QUERY(data, query, [headers])
 ```
 
@@ -73,19 +73,19 @@ This is the simplest query. It selects which columns to show and optionally rena
 
 **Show all columns:**
 
-```
+```excel
 =QUERY(A1:D100, "SELECT *", 1)
 ```
 
 **Show specific columns by letter:**
 
-```
+```excel
 =QUERY(A1:D100, "SELECT A, C, D", 1)
 ```
 
 Column references use spreadsheet column letters (A, B, C...) or `Col1`, `Col2` notation:
 
-```
+```excel
 =QUERY(A1:D100, "SELECT Col1, Col3", 1)
 ```
 
@@ -95,7 +95,7 @@ Column references use spreadsheet column letters (A, B, C...) or `Col1`, `Col2` 
 
 **Rename columns with LABEL:**
 
-```
+```excel
 =QUERY(A1:D100, "SELECT A, B, C LABEL A 'Product', B 'Category', C 'Price'", 1)
 ```
 
@@ -109,35 +109,35 @@ WHERE filters your data, similar to how you would use FILTER in Excel or a WHERE
 
 **Numeric conditions:**
 
-```
+```excel
 =QUERY(A1:D100, "SELECT A, B, C WHERE C > 500", 1)
 ```
 
 **Text conditions — use single quotes:**
 
-```
+```excel
 =QUERY(A1:D100, "SELECT A, B, C WHERE B = 'East'", 1)
 ```
 
 **Date conditions — use `date` keyword:**
 
-```
+```excel
 =QUERY(A1:D100, "SELECT A, B, C WHERE D > date '2026-01-01'", 1)
 ```
 
 **Multiple conditions with AND/OR:**
 
-```
+```excel
 =QUERY(A1:D100, "SELECT A, B, C WHERE B = 'East' AND C > 500", 1)
 ```
 
-```
+```excel
 =QUERY(A1:D100, "SELECT A, B, C WHERE B = 'East' OR B = 'West'", 1)
 ```
 
 **NULL checks:**
 
-```
+```excel
 =QUERY(A1:D100, "SELECT A, B, C WHERE C IS NOT NULL", 1)
 ```
 
@@ -149,7 +149,7 @@ This is where QUERY really shines. Instead of writing SUMIFS for every category,
 
 **Total sales by region:**
 
-```
+```excel
 =QUERY(A1:D100, "SELECT B, SUM(C) GROUP BY B", 1)
 ```
 
@@ -157,7 +157,7 @@ This replaces: a list of `=SUMIF(B:B, "East", C:C)`, `=SUMIF(B:B, "West", C:C)` 
 
 **Multiple aggregations:**
 
-```
+```excel
 =QUERY(A1:D100, "SELECT B, SUM(C), AVG(C), COUNT(C) GROUP BY B", 1)
 ```
 
@@ -165,7 +165,7 @@ Returns: region, total sales, average sale, number of orders.
 
 **With ORDER BY to sort results:**
 
-```
+```excel
 =QUERY(A1:D100, "SELECT B, SUM(C) GROUP BY B ORDER BY SUM(C) DESC", 1)
 ```
 
@@ -183,7 +183,7 @@ PIVOT is the QUERY equivalent of columns in an Excel Pivot Table. It creates one
 
 **Sales by region, broken down by product category (columns):**
 
-```
+```excel
 =QUERY(A1:D100, "SELECT B, SUM(D) GROUP BY B PIVOT C", 1)
 ```
 
@@ -201,7 +201,7 @@ This creates a table with regions as rows and categories as columns — a comple
 
 **QUERY inside other functions.** QUERY output can be used as input to other functions:
 
-```
+```excel
 =SUM(QUERY(A1:D100, "SELECT C WHERE B = 'East'", 0))
 ```
 
@@ -209,7 +209,7 @@ This sums column C for "East" rows — like SUMIF but with QUERY's flexible filt
 
 **Use cell references in your query.** Concatenate cell values into the query string:
 
-```
+```excel
 =QUERY(A1:D100, "SELECT A, B, C WHERE B = '"&F1&"'", 1)
 ```
 
@@ -217,13 +217,13 @@ Now changing F1 changes the criteria without editing the formula.
 
 **IMPORT the query for dashboard-style reports.** QUERY combined with IMPORTRANGE pulls data from other sheets:
 
-```
+```excel
 =QUERY(IMPORTRANGE("sheet_url", "Sheet1!A1:D100"), "SELECT * WHERE C > 100", 1)
 ```
 
 **Format dates properly.** QUERY expects dates in `yyyy-mm-dd` format. If your dates look different, use TEXT to reformat:
 
-```
+```excel
 =QUERY(A1:D100, "SELECT A, B WHERE D > date '"&TEXT(F1, "yyyy-mm-dd")&"'", 1)
 ```
 

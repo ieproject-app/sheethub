@@ -35,7 +35,7 @@ SUMIF adds values that meet a single condition.
 
 ### Syntax
 
-```
+```excel
 =SUMIF(range, criteria, [sum_range])
 ```
 
@@ -49,13 +49,13 @@ SUMIF adds values that meet a single condition.
 
 **Sum all orders from the East region:**
 
-```
+```excel
 =SUMIF(B2:B100, "East", C2:C100)
 ```
 
 **Sum all orders over $500:**
 
-```
+```excel
 =SUMIF(C2:C100, ">500")
 ```
 
@@ -63,7 +63,7 @@ Notice the third argument is optional here. When you omit it, SUMIF sums the sam
 
 **Sum all orders except a specific product:**
 
-```
+```excel
 =SUMIF(A2:A100, "<>Product X", C2:C100)
 ```
 
@@ -79,7 +79,7 @@ SUMIFS does what SUMIF does, but with multiple criteria. It was introduced in Ex
 
 ### Syntax
 
-```
+```excel
 =SUMIFS(sum_range, criteria_range1, criteria1, [criteria_range2, criteria2], ...)
 ```
 
@@ -96,13 +96,13 @@ SUMIFS does what SUMIF does, but with multiple criteria. It was introduced in Ex
 
 **Sum orders from the East region, for Product A:**
 
-```
+```excel
 =SUMIFS(C2:C100, B2:B100, "East", A2:A100, "Product A")
 ```
 
 **Sum orders between $100 and $500:**
 
-```
+```excel
 =SUMIFS(C2:C100, C2:C100, ">=100", C2:C100, "<=500")
 ```
 
@@ -110,7 +110,7 @@ Yes, you can use the same column as both sum and criteria range. Just make sure 
 
 **Sum orders from 2026:**
 
-```
+```excel
 =SUMIFS(C2:C100, D2:D100, ">=1/1/2026", D2:D100, "<=12/31/2026")
 ```
 
@@ -126,13 +126,13 @@ SUMPRODUCT multiplies arrays together and sums the result. It is more flexible t
 
 ### Syntax
 
-```
+```excel
 =SUMPRODUCT(array1, [array2], [array3], ...)
 ```
 
 The classic pattern for conditional sums:
 
-```
+```excel
 =SUMPRODUCT((condition_range1=condition1) * (condition_range2=condition2) * sum_range)
 ```
 
@@ -142,7 +142,7 @@ Each condition is an array of TRUE/FALSE. Multiplying them converts TRUE to 1 an
 
 **SUMPRODUCT equivalent of SUMIFS with two conditions:**
 
-```
+```excel
 =SUMPRODUCT((B2:B100="East") * (A2:A100="Product A") * C2:C100)
 ```
 
@@ -150,7 +150,7 @@ This does the same thing as `=SUMIFS(C2:C100, B2:B100, "East", A2:A100, "Product
 
 **OR logic — sum if East OR West:**
 
-```
+```excel
 =SUMPRODUCT(((B2:B100="East") + (B2:B100="West")) * C2:C100)
 ```
 
@@ -158,7 +158,7 @@ The `+` acts as OR. This is impossible with SUMIFS alone.
 
 **Weighted average:**
 
-```
+```excel
 =SUMPRODUCT(B2:B100, C2:C100) / SUM(C2:C100)
 ```
 
@@ -193,19 +193,19 @@ Say you run a small online store. You export orders to Excel every week: column 
 
 **How much did you sell in the East region?**
 
-```
+```excel
 =SUMIF(C2:C500, "East", D2:D500)
 ```
 
 **How much from Electronics in the East?**
 
-```
+```excel
 =SUMIFS(D2:D500, B2:B500, "Electronics", C2:C500, "East")
 ```
 
 **What is the average order value by category, with East/West split?**
 
-```
+```excel
 =SUMPRODUCT((B2:B500="Electronics") * (C2:C500="East") * D2:D500) / COUNTIFS(B2:B500, "Electronics", C2:C500, "East")
 ```
 
@@ -217,7 +217,7 @@ This one formula does what would take three separate steps with SUMIFS plus a ma
 
 **Use wildcards with SUMIF and SUMIFS.** The `?` matches any single character, and `*` matches any sequence:
 
-```
+```excel
 =SUMIF(A2:A100, "*Widget*", C2:C100)
 ```
 
@@ -227,7 +227,7 @@ This one formula does what would take three separate steps with SUMIFS plus a ma
 
 **Use SUMIFS for date ranges.** Date criteria in SUMIFS are intuitive once you know the pattern:
 
-```
+```excel
 =SUMIFS(C2:C100, D2:D100, ">"&DATE(2026,1,1))
 ```
 
@@ -243,7 +243,7 @@ This one formula does what would take three separate steps with SUMIFS plus a ma
 
 **Forgetting to coerce TRUE/FALSE.** In older Excel versions, you need `--` (double negative) to convert TRUE/FALSE to 1/0:
 
-```
+```excel
 =SUMPRODUCT(--(B2:B100="East"), --(A2:A100="Product A"), C2:C100)
 ```
 
@@ -283,6 +283,6 @@ SUMIFS. It is optimized for conditional aggregation and uses internal indexing. 
 
 Yes. SUMIF, SUMIFS, and SUMPRODUCT all work inside other formulas. A common pattern is checking the result before dividing:
 
-```
+```excel
 =IF(SUMIFS(C2:C100, B2:B100, "East")>0, total/SUMIFS(C2:C100, B2:B100, "East"), 0)
 ```

@@ -38,7 +38,7 @@ GROUPBY fixes all of that. It is a single formula that creates an aggregated tab
 
 ### Syntax
 
-```
+```excel
 =GROUPBY(row_fields, values, function, [field_headers], [total_depth], [sort_order], [filter_array])
 ```
 
@@ -56,7 +56,7 @@ GROUPBY fixes all of that. It is a single formula that creates an aggregated tab
 
 You have sales data: Product, Region, Amount. You want total sales by region:
 
-```
+```excel
 =GROUPBY(B2:B100, C2:C100, SUM)
 ```
 
@@ -91,7 +91,7 @@ That is it. Three arguments, one formula, and you get a clean table of regions w
 
 You can pass multiple values to aggregate in different ways:
 
-```
+```excel
 =GROUPBY(B2:B100, {C2:C100, D2:D100}, {SUM, AVERAGE})
 ```
 
@@ -103,7 +103,7 @@ This returns: Region, Total Sales, Average Sale — side by side. One formula.
 
 Pass an array for row_fields to group by more than one column:
 
-```
+```excel
 =GROUPBY({A2:A100, B2:B100}, C2:C100, SUM)
 ```
 
@@ -119,7 +119,7 @@ This groups by Product AND Region — like having two row fields in a Pivot Tabl
 
 **Sort by the aggregated value:**
 
-```
+```excel
 =GROUPBY(B2:B100, C2:C100, SUM, , , 3)
 ```
 
@@ -127,7 +127,7 @@ The `sort_order` argument is a column index (1 = first column, 2 = second, etc.)
 
 **Filter before grouping:**
 
-```
+```excel
 =GROUPBY(B2:B100, C2:C100, SUM, , , , D2:D100 > DATE(2026, 1, 1))
 ```
 
@@ -139,13 +139,13 @@ The `filter_array` must be TRUE/FALSE and the same size as your data rows. Only 
 
 PIVOTBY is GROUPBY's sibling. It adds column grouping — like putting a field in the Columns area of a Pivot Table.
 
-```
+```excel
 =PIVOTBY(row_fields, column_fields, values, function)
 ```
 
 **Sales by Region (rows) and Product Category (columns):**
 
-```
+```excel
 =PIVOTBY(B2:B100, A2:A100, C2:C100, SUM)
 ```
 
@@ -173,7 +173,7 @@ GROUPBY is powerful, but it is not a Pivot Table killer for every scenario.
 
 **Use LAMBDA for custom aggregations.** The function argument accepts any LAMBDA:
 
-```
+```excel
 =GROUPBY(B2:B100, C2:C100, LAMBDA(x, MEDIAN(x)))
 ```
 
@@ -181,7 +181,7 @@ This gives you median sales by region — something that requires a workaround i
 
 **Combine with other dynamic array functions.** GROUPBY spills automatically, so you can wrap it:
 
-```
+```excel
 =SORT(GROUPBY(B2:B100, C2:C100, SUM), 2, -1)
 ```
 
@@ -191,7 +191,7 @@ This groups by region, sums sales, then sorts by total descending.
 
 **Structure your data as a table first.** GROUPBY works best when your source data is a proper Excel Table (Ctrl+T). Named references make formulas readable:
 
-```
+```excel
 =GROUPBY(tblSales[Region], tblSales[Amount], SUM)
 ```
 

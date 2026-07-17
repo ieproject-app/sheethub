@@ -1,6 +1,7 @@
 import { MDXRemote } from "next-mdx-remote/rsc";
 import remarkGfm from "remark-gfm";
 import rehypeShiki from "@shikijs/rehype";
+import excelFormulaGrammar from "@/grammars/excel-formula.tmLanguage.json";
 import { ScrollReveal } from "@/components/ui/scroll-reveal";
 import { mdxComponents } from "@/components/mdx-components";
 import { cn } from "@/lib/utils";
@@ -108,7 +109,12 @@ export function LayoutStaticPageTemplate({
                 options={{
                   mdxOptions: {
                     remarkPlugins: [remarkGfm],
-                    rehypePlugins: [[rehypeShiki, { theme: "github-dark" }]],
+                    rehypePlugins: [[rehypeShiki, {
+                      theme: "github-dark",
+                      langs: [excelFormulaGrammar],
+                      langAlias: { excel: "excel-formula" },
+                      fallbackLanguage: "text",
+                    }]],
                   },
                 }}
               />

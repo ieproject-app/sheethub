@@ -27,13 +27,13 @@ Import data from a different Google Sheet.
 
 ### Syntax
 
-```
+```excel
 =IMPORTRANGE(spreadsheet_url, range_string)
 ```
 
 ### Example
 
-```
+```excel
 =IMPORTRANGE("https://docs.google.com/spreadsheets/d/abc123", "Sheet1!A1:C100")
 ```
 
@@ -41,7 +41,7 @@ Import data from a different Google Sheet.
 
 **Use with QUERY for filtered imports:**
 
-```
+```excel
 =QUERY(IMPORTRANGE("url", "Sheet1!A1:C100"), "SELECT * WHERE Col2 > 500")
 ```
 
@@ -53,13 +53,13 @@ Import a table or list from any web page.
 
 ### Syntax
 
-```
+```excel
 =IMPORTHTML(url, query, index)
 ```
 
 ### Example
 
-```
+```excel
 =IMPORTHTML("https://en.wikipedia.org/wiki/List_of_countries_by_GDP", "table", 1)
 ```
 
@@ -79,13 +79,13 @@ Import data from XML, HTML, or RSS feeds using XPath queries.
 
 ### Syntax
 
-```
+```excel
 =IMPORTXML(url, xpath_query)
 ```
 
 ### Example
 
-```
+```excel
 =IMPORTXML("https://example.com", "//h1")
 ```
 
@@ -93,13 +93,13 @@ Returns all H1 headings from the page.
 
 **Get all links from a page:**
 
-```
+```excel
 =IMPORTXML("https://example.com", "//a/@href")
 ```
 
 **Get page title:**
 
-```
+```excel
 =IMPORTXML("https://example.com", "//title")
 ```
 
@@ -111,13 +111,13 @@ Import a CSV or TSV file directly from a URL.
 
 ### Syntax
 
-```
+```excel
 =IMPORTDATA(url)
 ```
 
 ### Example
 
-```
+```excel
 =IMPORTDATA("https://example.com/data.csv")
 ```
 
@@ -142,13 +142,13 @@ Import functions recalculate periodically. For real-time data, use Google Apps S
 
 **Wrap in IFERROR to handle temporary failures:**
 
-```
+```excel
 =IFERROR(IMPORTRANGE("url", "Sheet1!A1:C100"), "Waiting for data...")
 ```
 
 **Use cell references for URLs.** Put the URL in a cell and reference it:
 
-```
+```excel
 =IMPORTRANGE(A1, "Sheet1!A1:C100")
 ```
 
@@ -156,7 +156,7 @@ Now you can change the URL without editing the formula.
 
 **Combine with QUERY for large imports:**
 
-```
+```excel
 =QUERY(IMPORTRANGE("url", "Sheet1!A1:C10000"), "SELECT * WHERE Col1 IS NOT NULL")
 ```
 

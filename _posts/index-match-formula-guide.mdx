@@ -42,7 +42,7 @@ You use MATCH to find the row, then feed that row into INDEX to get the value.
 
 ### MATCH Syntax
 
-```
+```excel
 =MATCH(lookup_value, lookup_array, match_type)
 ```
 
@@ -56,7 +56,7 @@ MATCH returns the position. For example, `=MATCH("P102", A2:A100, 0)` returns `3
 
 ### INDEX Syntax
 
-```
+```excel
 =INDEX(array, row_num, column_num)
 ```
 
@@ -70,7 +70,7 @@ INDEX returns the value at the specified position. For example, `=INDEX(C2:C100,
 
 ### Putting Them Together
 
-```
+```excel
 =INDEX(return_range, MATCH(lookup_value, lookup_range, 0))
 ```
 
@@ -80,7 +80,7 @@ MATCH finds the row. INDEX uses it to return the value.
 
 Look up an employee name (column C) and return their department (column B — to the left):
 
-```
+```excel
 =INDEX(B2:B100, MATCH("Jane Smith", C2:C100, 0))
 ```
 
@@ -90,7 +90,7 @@ MATCH finds "Jane Smith" in column C and returns position 7. INDEX takes row 7 f
 
 Look up "P102" in column A and return a value from column C:
 
-```
+```excel
 =INDEX(C2:C100, MATCH("P102", A2:A100, 0))
 ```
 
@@ -111,7 +111,7 @@ You need the price of "Beta" in "Q2 2026":
 | Beta    | 200     | 210     | 220     |
 ```
 
-```
+```excel
 =INDEX(B2:D4, MATCH("Beta", A2:A4, 0), MATCH("Q2 2026", B1:D1, 0))
 ```
 
@@ -157,7 +157,7 @@ INDEX-MATCH is no longer the default choice for every lookup. But for two-way lo
 
 **Combine with named ranges.** Instead of writing `=INDEX(C2:C100, MATCH(B2, A2:A100, 0))`, define a named range:
 
-```
+```excel
 =INDEX(EmployeeNames, MATCH(B2, EmployeeIDs, 0))
 ```
 
@@ -165,13 +165,13 @@ This makes the formula readable and eliminates off-by-one errors when the data r
 
 **Use MATCH to validate data existence.** MATCH alone is useful for checking whether a value exists in a list. If it returns #N/A, the value is not there:
 
-```
+```excel
 =IF(ISNUMBER(MATCH(B2, A2:A100, 0)), "Found", "Not found")
 ```
 
 **Lock your ranges.** When copying INDEX-MATCH down a column, lock the lookup and return ranges with `$`:
 
-```
+```excel
 =INDEX($C$2:$C$100, MATCH($B2, $A$2:$A$100, 0))
 ```
 
@@ -185,7 +185,7 @@ The row reference on the lookup value ($B2) stays unlocked so it changes as you 
   **Range mismatch.** The lookup range in MATCH and the return range in INDEX must have the same starting row. If you search in rows 2-100 but return from rows 1-100, the positions will be off by one. Always align them.
 </Callout>
 
-```
+```excel
 ✅ =INDEX(C2:C100, MATCH(B2, A2:A100, 0))
 ❌ =INDEX(C1:C100, MATCH(B2, A2:A100, 0))  // Off by one!
 ```
@@ -229,7 +229,7 @@ No, INDEX-MATCH returns a single value. For multiple results, use FILTER or comb
 
 Wrap the formula in IFERROR:
 
-```
+```excel
 =IFERROR(INDEX(C2:C100, MATCH(B2, A2:A100, 0)), "Not found")
 ```
 

@@ -18,6 +18,7 @@ import { extractHeadings } from "@/lib/mdx-utils";
 import { LayoutBreadcrumbs } from "@/components/layout/layout-breadcrumbs";
 import remarkGfm from "remark-gfm";
 import rehypeShiki from "@shikijs/rehype";
+import excelFormulaGrammar from "@/grammars/excel-formula.tmLanguage.json";
 
 /** Safely convert a date string to ISO string; falls back to current date if invalid/missing. */
 function safeToISO(dateStr: string | undefined | null): string {
@@ -181,7 +182,12 @@ export default async function Page({
                 options={{
                   mdxOptions: {
                     remarkPlugins: [remarkGfm],
-                    rehypePlugins: [[rehypeShiki, { theme: "github-dark" }]],
+                    rehypePlugins: [[rehypeShiki, {
+                      theme: "github-dark",
+                      langs: [excelFormulaGrammar],
+                      langAlias: { excel: "excel-formula" },
+                      fallbackLanguage: "text",
+                    }]],
                   },
                 }}
               />

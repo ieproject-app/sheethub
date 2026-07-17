@@ -25,7 +25,7 @@ FILTER is one of the most practical functions in Google Sheets. Unlike QUERY, it
 
 ### Syntax
 
-```
+```excel
 =FILTER(range, condition1, [condition2], ...)
 ```
 
@@ -39,7 +39,7 @@ FILTER is one of the most practical functions in Google Sheets. Unlike QUERY, it
 
 **Return all rows where region is East:**
 
-```
+```excel
 =FILTER(A2:D100, B2:B100="East")
 ```
 
@@ -51,19 +51,19 @@ FILTER spills the result automatically into the cells below and to the right.
 
 **Numeric filter — amount over 500:**
 
-```
+```excel
 =FILTER(A2:D100, C2:C100>500)
 ```
 
 **Text filter — product is Widget A:**
 
-```
+```excel
 =FILTER(A2:D100, A2:A100="Widget A")
 ```
 
 **Date filter — orders after January 1, 2026:**
 
-```
+```excel
 =FILTER(A2:D100, D2:D100>DATE(2026,1,1))
 ```
 
@@ -73,7 +73,7 @@ FILTER spills the result automatically into the cells below and to the right.
 
 Separate conditions with commas — all must be TRUE:
 
-```
+```excel
 =FILTER(A2:D100, B2:B100="East", C2:C100>500)
 ```
 
@@ -85,7 +85,7 @@ This returns rows where region is East AND amount > 500.
 
 Use `+` between conditions for OR:
 
-```
+```excel
 =FILTER(A2:D100, (B2:B100="East") + (B2:B100="West"))
 ```
 
@@ -97,19 +97,19 @@ This returns rows where region is East OR West.
 
 **Count filtered results:**
 
-```
+```excel
 =COUNTA(FILTER(A2:A100, B2:B100="East"))
 ```
 
 **Sum filtered amounts:**
 
-```
+```excel
 =SUM(FILTER(C2:C100, B2:B100="East"))
 ```
 
 **Average of filtered results:**
 
-```
+```excel
 =AVERAGE(FILTER(C2:C100, B2:B100="East"))
 ```
 
@@ -133,19 +133,19 @@ This returns rows where region is East OR West.
 
 **Return specific columns only.** Instead of returning the whole range, specify just the columns:
 
-```
+```excel
 =FILTER({A2:A100, C2:C100}, B2:B100="East")
 ```
 
 **Use with SORT to order results:**
 
-```
+```excel
 =SORT(FILTER(A2:D100, B2:B100="East"), 3, TRUE)
 ```
 
 **Handle empty results with IFERROR:**
 
-```
+```excel
 =IFERROR(FILTER(A2:D100, B2:B100="East"), "No matching data")
 ```
 

@@ -44,7 +44,7 @@ VLOOKUP stands for "Vertical Lookup." It searches for a value in the first colum
 
 Suppose you have an inventory table in range A2:C10 with Product ID, Product Name, and Price. You want to find the price of product "P102":
 
-```
+```excel
 =VLOOKUP("P102", A2:C10, 3, FALSE)
 ```
 
@@ -75,7 +75,7 @@ XLOOKUP is Microsoft's modern replacement, introduced in 2020 for Microsoft 365 
 
 Using the same inventory table:
 
-```
+```excel
 =XLOOKUP("P102", A2:A10, C2:C10, "Not found")
 ```
 
@@ -147,13 +147,13 @@ XLOOKUP is the better choice when:
 
 **Combine with other functions.** XLOOKUP can nest inside IF, SUMIFS, or FILTER to build powerful data pipelines. For example, to look up a value only if a condition is met:
 
-```
+```excel
 =IF(C2="Active", XLOOKUP(B2, IDs, Prices, "N/A"), "Inactive")
 ```
 
 **Use match_mode=-1 for bracket lookups.** When you need to find a tax rate based on income brackets or a discount tier based on order volume, approximate match is essential:
 
-```
+```excel
 =XLOOKUP(A2, bracket_lower, bracket_rate, , -1)
 ```
 
@@ -165,7 +165,7 @@ XLOOKUP is the better choice when:
 
 **Mismatched data types.** If you look up a number but the lookup column contains text (or vice versa), the match fails. Use the TRIM function and ensure consistent formatting:
 
-```
+```excel
 =XLOOKUP(TEXT(A2, "0"), TEXT(range, "0"), return_range)
 ```
 

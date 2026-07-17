@@ -29,7 +29,7 @@ COUNTIF counts cells that meet a single condition.
 
 ### Syntax
 
-```
+```excel
 =COUNTIF(range, criteria)
 ```
 
@@ -42,31 +42,31 @@ COUNTIF counts cells that meet a single condition.
 
 **Count orders from the East region:**
 
-```
+```excel
 =COUNTIF(B2:B100, "East")
 ```
 
 **Count orders over $500:**
 
-```
+```excel
 =COUNTIF(C2:C100, ">500")
 ```
 
 **Count orders for Product A:**
 
-```
+```excel
 =COUNTIF(A2:A100, "Product A")
 ```
 
 **Count orders except Product A:**
 
-```
+```excel
 =COUNTIF(A2:A100, "<>Product A")
 ```
 
 **Use a cell reference as criteria:**
 
-```
+```excel
 =COUNTIF(B2:B100, E1)
 ```
 
@@ -74,7 +74,7 @@ COUNTIF counts cells that meet a single condition.
 
 COUNTIF supports wildcards for partial matches:
 
-```
+```excel
 =COUNTIF(A2:A100, "Widget*")   // Starts with Widget
 =COUNTIF(A2:A100, "?idget")    // Any single char followed by idget
 ```
@@ -87,7 +87,7 @@ COUNTIFS does what COUNTIF does, but with multiple criteria all at once.
 
 ### Syntax
 
-```
+```excel
 =COUNTIFS(criteria_range1, criteria1, [criteria_range2, criteria2], ...)
 ```
 
@@ -97,19 +97,19 @@ All conditions must be TRUE for a cell to be counted (AND logic).
 
 **Count orders from East region for Product A:**
 
-```
+```excel
 =COUNTIFS(B2:B100, "East", A2:A100, "Product A")
 ```
 
 **Count orders between $100 and $500:**
 
-```
+```excel
 =COUNTIFS(C2:C100, ">=100", C2:C100, "<=500")
 ```
 
 **Count orders from 2026:**
 
-```
+```excel
 =COUNTIFS(D2:D100, ">=1/1/2026", D2:D100, "<=12/31/2026")
 ```
 
@@ -125,7 +125,7 @@ All conditions must be TRUE for a cell to be counted (AND logic).
 
 For OR logic, simply add two COUNTIF results:
 
-```
+```excel
 =COUNTIF(B2:B100, "East") + COUNTIF(B2:B100, "West")
 ```
 
@@ -139,7 +139,7 @@ For OR logic, simply add two COUNTIF results:
 
 **Combine with SUMPRODUCT for OR logic inside one formula:**
 
-```
+```excel
 =SUMPRODUCT(--((B2:B100="East") + (B2:B100="West") > 0))
 ```
 

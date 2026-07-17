@@ -4,6 +4,7 @@ import { MDXRemote } from "next-mdx-remote/rsc";
 import { mdxComponents } from "@/components/mdx-components";
 import remarkGfm from "remark-gfm";
 import rehypeShiki from "@shikijs/rehype";
+import excelFormulaGrammar from "@/grammars/excel-formula.tmLanguage.json";
 import { cvData } from "@/lib/cv-data";
 import { Badge } from "@/components/ui/badge";
 import {
@@ -146,7 +147,12 @@ export default async function AboutPage() {
                     options={{
                       mdxOptions: {
                         remarkPlugins: [remarkGfm],
-                        rehypePlugins: [[rehypeShiki, { theme: "github-dark" }]],
+                        rehypePlugins: [[rehypeShiki, {
+                          theme: "github-dark",
+                          langs: [excelFormulaGrammar],
+                          langAlias: { excel: "excel-formula" },
+                          fallbackLanguage: "text",
+                        }]],
                       },
                     }}
                   />

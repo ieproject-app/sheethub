@@ -101,7 +101,7 @@ These do not exist in Excel:
 
 **The most painful one for Excel users moving to Sheets:** QUERY. It is Sheets' superpower. You can filter, group, sort, and aggregate in one formula. Nothing equivalent exists in Excel.
 
-```
+```excel
 =QUERY(A1:D100, "SELECT B, SUM(C) GROUP BY B ORDER BY SUM(C) DESC LABEL SUM(C) 'Total'", 1)
 ```
 
@@ -152,7 +152,7 @@ These are the **silent traps** — functions that exist in both but behave diffe
 
 **Use ARRAYFORMULA in Sheets for legacy compatibility.** Modern Excel does not need it, but Sheets does for some array operations:
 
-```
+```excel
 =ARRAYFORMULA(IF(A2:A100 > 100, "High", "Low"))
 ```
 

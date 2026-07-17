@@ -19,7 +19,7 @@ You need the name in column A, email in B, phone in C, region in D. Manually spl
 
 ### Syntax
 
-```
+```excel
 =SPLIT(text, delimiter, [split_by_each], [remove_empty_text])
 ```
 
@@ -27,19 +27,19 @@ You need the name in column A, email in B, phone in C, region in D. Manually spl
 
 **Split by space:**
 
-```
+```excel
 =SPLIT(A1, " ")
 ```
 
 **Split by comma:**
 
-```
+```excel
 =SPLIT(A1, ",")
 ```
 
 **Split by pipe (|):**
 
-```
+```excel
 =SPLIT(A1, "|")
 ```
 
@@ -47,7 +47,7 @@ You need the name in column A, email in B, phone in C, region in D. Manually spl
 
 Full name "John Smith" → First and last name:
 
-```
+```excel
 =SPLIT(A1, " ")
 ```
 
@@ -59,7 +59,7 @@ Returns `John` in one cell, `Smith` in the next.
 
 ### Syntax
 
-```
+```excel
 =TEXT(number, format)
 ```
 
@@ -67,19 +67,19 @@ Returns `John` in one cell, `Smith` in the next.
 
 **Format as currency:**
 
-```
+```excel
 =TEXT(1234.5, "$#,##0.00")  →  $1,234.50
 ```
 
 **Format as date:**
 
-```
+```excel
 =TEXT(A1, "mmmm d, yyyy")   →  July 14, 2026
 ```
 
 **Format as percentage:**
 
-```
+```excel
 =TEXT(0.15, "0%")           →  15%
 ```
 
@@ -89,19 +89,19 @@ Returns `John` in one cell, `Smith` in the next.
 
 **First 3 characters:**
 
-```
+```excel
 =LEFT(A1, 3)
 ```
 
 **Last 4 characters:**
 
-```
+```excel
 =RIGHT(A1, 4)
 ```
 
 **Middle characters (start at position 5, take 3):**
 
-```
+```excel
 =MID(A1, 5, 3)
 ```
 
@@ -111,19 +111,19 @@ Returns `John` in one cell, `Smith` in the next.
 
 **Count characters:**
 
-```
+```excel
 =LEN(A1)
 ```
 
 **Remove extra spaces:**
 
-```
+```excel
 =TRIM(A1)
 ```
 
 **Remove non-printable characters:**
 
-```
+```excel
 =CLEAN(A1)
 ```
 
@@ -131,7 +131,7 @@ Returns `John` in one cell, `Smith` in the next.
 
 ## UPPER, LOWER, PROPER — Change Case
 
-```
+```excel
 =UPPER(A1)    →  JOHN SMITH
 =LOWER(A1)    →  john smith
 =PROPER(A1)   →  John Smith
@@ -143,19 +143,19 @@ Returns `John` in one cell, `Smith` in the next.
 
 **Ampersand (&) is the simplest:**
 
-```
+```excel
 =A1 & " " & B1
 ```
 
 **With TEXT function for formatting:**
 
-```
+```excel
 =A1 & " sold " & TEXT(C1, "$#,##0") & " worth of products"
 ```
 
 **JOIN with delimiter:**
 
-```
+```excel
 =JOIN(", ", A1:D1)
 ```
 
@@ -165,19 +165,19 @@ Returns `John` in one cell, `Smith` in the next.
 
 **Combine SPLIT with TRANSPOSE to split into rows instead of columns:**
 
-```
+```excel
 =TRANSPOSE(SPLIT(A1, ","))
 ```
 
 **Use TRIM before SPLIT to handle inconsistent spacing:**
 
-```
+```excel
 =SPLIT(TRIM(A1), " ")
 ```
 
 **Extract email from "Name &lt;email&gt;":**
 
-```
+```excel
 =TRIM(MID(A1, FIND("<", A1)+1, FIND(">", A1) - FIND("<", A1) - 1))
 ```
 
