@@ -5,6 +5,6 @@ import { execSync } from "node:child_process";
 try {
   execSync("npm run typecheck", { stdio: "inherit" });
   execSync("npm run lint", { stdio: "inherit" });
-} catch (error) {
+} catch {
   process.exitCode = 1;
 }
