@@ -1,0 +1,263 @@
+---
+title: "Google Sheets AI Function: How to Use =AI() in Your Spreadsheets"
+date: "2026-07-21"
+description: "Use the Google Sheets AI function =AI() for text, summarization, sentiment, categorization via natural language."
+published: true
+featured: false
+heroImage: "default-og"
+tags: ["google-sheets", "formulas", "tutorial", "guide", "advanced"]
+category: "Google Sheets"
+---
+
+You have 500 customer reviews that need categorizing into Positive, Neutral, and Negative. You could read them one by one — or you could write a single formula that does it instantly.
+
+Google Sheets now ships with a native AI function called **=AI()** (also callable as `=Gemini()`). It is not a sidebar add-on or a separate panel. It is a first-class worksheet function that generates text, summarizes data, analyzes sentiment, and categorizes content using natural language prompts directly in a cell.
+
+This guide covers what =AI() can do, how to write prompts, and when to use it.
+
+---
+
+## What Is the =AI() Function?
+
+=AI() is Google's native LLM integration inside the spreadsheet grid. Type it into any cell like you would SUM or VLOOKUP, and it sends your prompt — plus optional cell references — to Google's LLM, then returns the result.
+
+**Key difference from Gemini sidebar:** If you have used the [Gemini AI in Google Sheets](/blog/gemini-ai-google-sheets-guide) feature before, you know it works through a side panel where you describe what you want and Gemini builds formulas or suggests actions. =AI() is different — it lives in the cell itself. You write it like any other formula, and it returns text directly.
+
+| Feature | Gemini Sidebar | =AI() Function |
+|---------|---------------|----------------|
+| Access | Click Gemini icon in toolbar | Type `=AI()` in any cell |
+| Output | Formula, chart, or suggestion | Text result in the cell |
+| Automation | Manual trigger per request | Updates when source data changes |
+| Composability | Standalone | Works inside IF, FILTER, QUERY |
+
+=AI() started rolling out to Google Workspace accounts in early 2026. If you do not see it yet, check your Workspace admin settings or use your personal Google account.
+
+---
+
+## Basic Usage: Text Generation
+
+The simplest form of =AI() takes a single prompt string and returns generated text.
+
+### Syntax
+
+```excel
+=AI(prompt, [data])
+```
+
+| Parameter | Required | Description |
+|-----------|----------|-------------|
+| `prompt` | Yes | Text instruction in natural language |
+| `data` | No | Optional cell reference or range to include |
+
+### Example: Product Description Generator
+
+Say you run an e-commerce store. Column A holds product names, and you want AI-written descriptions.
+
+```excel
+=AI("Write a one-sentence product description for: ", A2)
+```
+
+This generates a unique description for each product by combining your prompt template with the value in A2.
+
+### Using Cell References in Prompts
+
+You can reference cells directly inside the prompt string using the ampersand (&) or CONCATENATE:
+
+```excel
+=AI("Write a marketing tagline for " & A2 & " in the " & B2 & " category")
+```
+
+With A2 = "Ergonomic Chair" and B2 = "Office Furniture", the function returns something like: "Work smarter and sit more comfortably with the Ergonomic Chair — the essential upgrade for any modern office."
+
+---
+
+## Summarization
+
+The real power of =AI() shows when you pass a range of data. The function can analyze multiple cells and return a condensed result.
+
+### Syntax
+
+```excel
+=AI("instruction for summarization", range)
+```
+
+### Example: Customer Feedback Summary
+
+Column A contains 50 customer reviews. You want a two-sentence summary of the overall sentiment.
+
+```excel
+=AI("Summarize these customer reviews in 2 sentences: ", A2:A51)
+```
+
+The function reads all 50 cells, identifies common themes, and returns a concise summary. No need to copy-paste into ChatGPT — the formula updates automatically when new reviews arrive.
+
+### Practical Scenario: Survey Analysis
+
+After a product launch, your team collected 200 survey responses in column B. Instead of reading every row:
+
+```excel
+=AI("What are the top 3 complaints mentioned in these survey responses?", B2:B201)
+```
+
+The response highlights recurring issues like pricing concerns, delivery delays, or feature requests — all from a single formula.
+
+---
+
+## Sentiment Analysis
+
+=AI() can classify text as Positive, Neutral, or Negative. This is useful for social media monitoring, support ticket triage, or product review filtering.
+
+### Syntax
+
+```excel
+=AI("Sentiment of this text: ", cell_reference)
+```
+
+### Example: Support Ticket Triage
+
+Column C holds support ticket descriptions. You want to flag urgent negative tickets automatically.
+
+```excel
+=AI("Sentiment of this support ticket: ", C2)
+```
+
+Returns one of: **Positive**, **Neutral**, or **Negative**.
+
+Combine this with conditional formatting to highlight negative tickets in red — or use FILTER to extract them to a separate sheet.
+
+### Batch Sentiment with Array Formulas
+
+Wrap =AI() in ARRAYFORMULA to analyze an entire column at once:
+
+```excel
+=ARRAYFORMULA(AI("Sentiment of this text: ", C2:C100))
+```
+
+Each row in column D now shows the sentiment for the corresponding ticket in column C. This gives you an instant heatmap of customer satisfaction.
+
+---
+
+## Categorization
+
+The =AI() function can group unstructured data into predefined categories. This replaces manual sorting that would normally take hours.
+
+### Syntax
+
+```excel
+=AI("Categorize this item: ", cell_reference, "category list")
+```
+
+### Example: Automated Expense Classification
+
+Column E contains a list of business expenses. You want each transaction categorized as Food, Travel, Office, or Software.
+
+```excel
+=AI("Categorize this expense: ", E2, "Categories: Food, Travel, Office, Software")
+```
+
+A row with "Uber ride to client meeting" returns **Travel**. "Monthly Slack subscription" returns **Software**. "Team lunch at Italian place" returns **Food**.
+
+This works on descriptions that are too varied for a simple IF or VLOOKUP. The AI understands context — it knows "Starbucks" is Food and "Adobe Creative Cloud" is Software.
+
+---
+
+## Combining =AI() with Other Functions
+
+The real magic starts when =AI() plays well with the rest of Google Sheets. Because it returns text, you can nest it inside logical and filtering functions.
+
+### FILTER + AI
+
+Find all products whose descriptions mention a specific topic:
+
+```excel
+=FILTER(A2:A100, AI("Does this product description mention sustainability?", B2:B100) = "Yes")
+```
+
+This scans 99 product descriptions and returns only the rows where the AI detects sustainability keywords — no manual keyword lists needed.
+
+### IF + AI
+
+Create dynamic labels based on data context:
+
+```excel
+=IF(AI("Is this customer spending over $1,000?", D2) = "Yes", "Premium", "Standard")
+```
+
+The AI reads the dollar amount in D2 and classifies it. This is useful when your threshold is not a simple number comparison — for example, "Is this a high-risk transaction?" based on multiple factors visible in the cell.
+
+### QUERY + AI
+
+Use AI to preprocess data before running SQL-style queries. See the [Google Sheets QUERY Function Guide](/blog/query-function-google-sheets-guide) for a full reference — then combine it with an AI-generated column for smarter filtering.
+
+The [FILTER Function in Google Sheets](/blog/filter-function-google-sheets) guide covers more patterns for extracting matching rows.
+
+---
+
+## Limitations and Best Practices
+
+=AI() is powerful, but it has sharp edges.
+
+### Rate Limits
+
+Google imposes rate limits on AI function calls. Running =AI() on 10,000 rows at once will likely hit the quota. Use AI functions selectively — pre-filter your data first, then apply =AI() to the subset.
+
+### Data Privacy
+
+=AI() sends your prompt text and referenced cell data to Google's LLM servers. Do not use this function with personally identifiable information (PII), financial account numbers, or confidential business data unless your Workspace admin has confirmed data handling agreements in place.
+
+### When NOT to Use =AI()
+
+| Use Case | Better Approach |
+|----------|----------------|
+| Simple math (SUM, AVERAGE) | Built-in functions |
+| Exact match lookup | VLOOKUP, INDEX+MATCH, XLOOKUP |
+| Boolean logic (IF, AND, OR) | Native logical functions |
+| Date arithmetic | DATEDIF, NETWORKDAYS |
+| Text extraction (left 3 chars) | LEFT, MID, RIGHT, REGEXEXTRACT |
+
+=AI() adds latency. Each call takes 1–3 seconds. For a spreadsheet that recalculates on every edit, dozens of AI calls will slow things down significantly.
+
+### Volatility
+
+AI functions recalculate every time Sheets detects a change — even unrelated edits. To prevent runaway recalculation, consider copying and pasting values (Paste Special → Values only) once =AI() returns the result you need.
+
+---
+
+## Common Prompts Cheat Sheet
+
+| Goal | Formula |
+|------|---------|
+| Generate description | `=AI("Describe this product in 1 sentence: ", A2)` |
+| Summarize feedback | `=AI("Summarize these comments in 2 bullet points", A2:A20)` |
+| Detect sentiment | `=AI("What is the sentiment of this text?", B2)` |
+| Categorize items | `=AI("Categorize: ", C2, "Red, Blue, Green")` |
+| Extract keywords | `=AI("Extract 3 keywords from: ", D2)` |
+| Translate text | `=AI("Translate to Spanish: ", E2)` |
+| Spell check | `=AI("Fix spelling errors in: ", F2)` |
+| Generate email | `=AI("Write a follow-up email about: ", G2)` |
+
+---
+
+## AI Prompt Callout
+
+You have seen concrete examples of =AI() in action throughout this guide. Now imagine you have a dataset that does not match any of the scenarios above.
+
+Describe your problem to an AI assistant like ChatGPT, Gemini, or Claude:
+
+> "I have a column of customer feedback comments. I want to classify each one as 'Bug Report', 'Feature Request', 'Question', or 'Praise'. The data is in column A from rows 2 to 500. Write me a =AI() formula that returns the classification for each row."
+
+The assistant will return a formula similar to:
+
+```excel
+=AI("Classify this customer feedback as Bug Report, Feature Request, Question, or Praise: ", A2)
+```
+
+You can then drag it down your column. The key is to be specific about your categories and your data structure — just like the examples shown above.
+
+---
+
+## Summary
+
+The =AI() function brings LLM-powered text generation directly into Google Sheets cells. Unlike the Gemini sidebar, it works like any other formula — composable, automatable, and updateable.
+
+Start with simple text generation. Move to summarization for survey data. Add sentiment analysis for customer feedback. Layer categorization for expense tracking. And once you are comfortable, nest =AI() inside FILTER, IF, and QUERY to build intelligent spreadsheets that process natural language as easily as numbers.

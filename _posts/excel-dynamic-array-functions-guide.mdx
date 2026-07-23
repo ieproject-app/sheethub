@@ -1,0 +1,245 @@
+---
+title: "Dynamic Array Functions in Excel: FILTER, SORT, UNIQUE, SEQUENCE"
+date: "2026-07-22"
+description: "Master FILTER, SORT, UNIQUE & SEQUENCE in Excel. Build reports that auto-update with spill ranges — no VBA required."
+published: true
+featured: false
+heroImage: "default-og"
+tags: ["excel", "formulas", "filter", "sort", "unique", "tutorial"]
+category: "Formulas & Functions"
+---
+
+You filter a table, copy the result to a new sheet, and send the report. Tomorrow morning the source data changes. Your copy is now stale. Rinse and repeat every week.
+
+Dynamic array functions eliminate this cycle. Instead of manually filtering, sorting, and extracting — then doing it all over again when data changes — you write a formula once. The results spill into adjacent cells and recalculate the moment anything in the source range updates. No <Kbd>Ctrl</Kbd> + <Kbd>C</Kbd>, no refresh button, no stale reports.
+
+## What Are Dynamic Array Functions?
+
+Dynamic array functions return multiple values that "spill" into neighboring cells automatically. Excel figures out how many cells the result needs and fills them — no dragging formulas, no <Kbd>Ctrl</Kbd> + <Kbd>Shift</Kbd> + <Kbd>Enter</Kbd> (CSE) array formulas of the past.
+
+**Availability:**
+- Excel 365 (all channels) — fully supported
+- Excel 2024 — fully supported
+- Excel for the Web — fully supported
+- Excel 2021 and earlier — not available
+
+The spill range is the heart of this feature. When you write `=FILTER(A2:B100, B2:B100>1000)`, the results occupy as many rows and columns as needed. You reference the entire spill with the `#` operator: `=A2#` refers to everything that spilled from the formula in A2.
+
+Four functions form the core of the dynamic array family: **FILTER**, **SORT**, **UNIQUE**, and **SEQUENCE**. Master these four and you can build reports that maintain themselves.
+
+## FILTER — Extract Rows That Match Criteria
+
+FILTER returns every row from a range that satisfies a condition. Think of it as AutoFilter, but as a formula that recalculates automatically.
+
+**Syntax:**
+```excel
+=FILTER(array, include, [if_empty])
+```
+
+| Argument | What It Does |
+|----------|--------------|
+| `array` | The range or array to filter |
+| `include` | A TRUE/FALSE condition for each row |
+| `if_empty` | Optional. What to show if nothing matches |
+
+**Example — Filter Sales Above $10,000:**
+
+| Salesperson | Amount |
+|-------------|--------|
+| Alice | 12,500 |
+| Bob | 8,200 |
+| Carol | 15,300 |
+| Dave | 9,700 |
+
+```excel
+=FILTER(A2:B5, B2:B5>10000)
+```
+
+Returns Alice and Carol's rows. If the source data changes — someone adds a new sale of $11,000 — the result updates instantly.
+
+**Multi-Condition Filtering:**
+
+Use `*` for AND logic (both conditions must be true). Use `+` for OR logic (either condition can be true):
+
+```excel
+=FILTER(A2:B100, (B2:B100>10000)*(C2:C100="West"))
+```
+
+This returns sales above $10,000 AND in the West region. The parentheses matter — each condition must be wrapped separately.
+
+```excel
+=FILTER(A2:B100, (B2:B100>10000)+(C2:C100="West"))
+```
+
+This returns sales above $10,000 OR in the West region. Any row matching either condition passes through.
+
+**Handling No Matches:**
+
+```excel
+=FILTER(A2:B100, B2:B100>100000, "No matching records")
+```
+
+Without the third argument, a no-match scenario returns `#CALC!`. The `if_empty` parameter gives you a clean fallback message.
+
+## SORT — Reorder Data With a Formula
+
+SORT rearranges a range by one or more columns. Unlike the Sort button, this is a formula — it recalculates when data changes.
+
+**Syntax:**
+```excel
+=SORT(array, [sort_index], [sort_order], [by_col])
+```
+
+| Argument | What It Does |
+|----------|--------------|
+| `array` | The range to sort |
+| `sort_index` | Which column to sort by (1 = first column) |
+| `sort_order` | 1 = ascending (default), -1 = descending |
+| `by_col` | FALSE = sort rows (default), TRUE = sort columns |
+
+**Example — Sort Products by Price Descending:**
+
+```excel
+=SORT(A2:B10, 2, -1)
+```
+
+This sorts the two-column range by the second column (price) from highest to lowest.
+
+For sorting by multiple columns, use `SORTBY`:
+
+```excel
+=SORTBY(A2:C100, B2:B100, -1, C2:C100, 1)
+```
+
+This sorts by column B descending, then column C ascending as a tiebreaker. SORTBY shines when your sort columns are different from your display columns.
+
+## UNIQUE — Extract Distinct Values
+
+UNIQUE returns a list of values that appear only once (or once per category). Useful for building dropdown lists, de-duplicating data, and spotting duplicates.
+
+**Syntax:**
+```excel
+=UNIQUE(array, [by_col], [exactly_once])
+```
+
+**Example — Build a Dynamic Dropdown List:**
+
+```excel
+=SORT(UNIQUE(A2:A100))
+```
+
+This extracts all distinct values from column A and sorts them alphabetically. Wrap this in a named range and point your data validation dropdown at it. When new categories appear in the source data, the dropdown updates automatically — unlike a manually typed list.
+
+**Finding Duplicates (exactly_once mode):**
+
+```excel
+=UNIQUE(A2:A100, FALSE, TRUE)
+```
+
+The third argument set to `TRUE` returns only values that appear exactly once. Everything that shows up twice or more is excluded. This is your built-in duplicate detector.
+
+## SEQUENCE — Generate Number Arrays
+
+SEQUENCE creates an array of sequential numbers. On its own it seems basic, but combined with other functions it generates calendars, date ranges, and numbered lists.
+
+**Syntax:**
+```excel
+=SEQUENCE(rows, [cols], [start], [step])
+```
+
+**Example — Calendar Grid for July 2026:**
+
+```excel
+=SEQUENCE(6, 7, DATE(2026, 7, 1) - WEEKDAY(DATE(2026, 7, 1)) + 1, 1)
+```
+
+This generates a 6-row, 7-column grid starting from the correct Sunday before July 1, stepping by 1 day. Format the cells as day numbers and you have a monthly calendar that updates when you change the date.
+
+**Example — Number Every Nth Row:**
+
+```excel
+=SEQUENCE(COUNTA(A2:A100))
+```
+
+Creates a numbered list 1, 2, 3... matching the count of non-empty cells in column A. No dragging the fill handle.
+
+## Real-World Combo: Dynamic Dashboard in One Formula
+
+The real power comes from chaining these functions. Here is a live sales report — filtering, sorting, and deduplicating — all in one formula:
+
+```excel
+=SORT(UNIQUE(FILTER(A2:C100, C2:C100>5000)), 2, 1)
+```
+
+**What this does, step by step:**
+1. FILTER keeps only rows where sales exceed $5,000
+2. UNIQUE removes any duplicate rows from the result
+3. SORT orders the output by the second column ascending
+
+One formula. No macros. It recalculates the instant new data hits your source range.
+
+You can push this further. Combine with XLOOKUP to enrich the report:
+
+```excel
+=XLOOKUP(FILTER(A2:A100, B2:B100>0), Products[ID], Products[Name], "Unknown")
+```
+
+This filters active products, then looks up each product name from a reference table. Every piece of your dashboard runs on formulas.
+
+## AI Prompt to Build Your Own Dynamic Report
+
+Here is the formula combination we just built: FILTER → UNIQUE → SORT. You describe the same pattern to any AI assistant:
+
+```
+I have an Excel table with columns: Product (A), Category (B), Sales (C).
+
+I need one formula that:
+- Filters to only rows where Sales > 5000
+- Removes duplicate rows
+- Sorts the result by Category alphabetically
+
+Give me the formula using dynamic array functions.
+```
+
+The AI should return something like `=SORT(UNIQUE(FILTER(A2:C100, C2:C100>5000)), 2, 1)`. Once you verify it works on your actual data, you know the pattern. Swap the column references and conditions for your next report.
+
+## Common Mistakes
+
+**Spill range is blocked.** If cells where the result should spill already contain data, Excel shows `#SPILL!`. Clear the area below and to the right of your formula.
+
+**The `@` operator kills arrays.** Excel sometimes adds `@` in front of array formulas (implicit intersection). This forces the formula to return a single value. Remove the `@` to restore spill behavior.
+
+**Array size mismatch.** When using FILTER with multiple criteria, every condition array must have the same number of rows. `C2:C100` and `D2:D500` in the same formula fails because the ranges don't match.
+
+**Older Excel versions.** Dynamic arrays are a 365-era feature. If your workbook needs to work in Excel 2019, stick with traditional formulas or fall back to Pivot Tables.
+
+**Not enough spill space.** SEQUENCE with `=SEQUENCE(1000, 10)` needs 10,000 cells. Make sure there is room — or reduce the dimensions.
+
+## Related Functions
+
+- **[GROUPBY Function Guide](/blog/groupby-function-excel-guide)** — GROUPBY and PIVOTBY bring Pivot Table power to formulas
+- **[FILTER Function in Google Sheets](/blog/filter-function-google-sheets)** — How FILTER works differently on the Sheets side
+- **[COUNTIF & COUNTIFS Guide](/blog/countif-countifs-guide)** — The classic way to count with conditions, now often replaced by FILTER + ROWS
+- **[Data Validation Dropdown Guide](/blog/data-validation-dropdown-guide)** — Pair UNIQUE with dropdowns for self-updating lists
+
+## FAQ
+
+**Do dynamic array functions work with Excel Tables?**
+
+Yes. Using table references like `=FILTER(tblSales, tblSales[Amount]>1000)` makes formulas readable and auto-expanding. This is the recommended approach.
+
+**What is RANDARRAY?**
+
+RANDARRAY generates random numbers — similar to SEQUENCE but with random values. `=RANDARRAY(5, 3)` creates a 5-row, 3-column grid of random decimals. Useful for generating sample data.
+
+**Can I use dynamic arrays with Pivot Tables?**
+
+You cannot place a dynamic array formula inside a Pivot Table, but you can use the spill range as a source for charts, data validation, and other formulas. For many use cases, GROUPBY replaces the need for Pivot Tables entirely.
+
+**Why does my formula show curly braces?**
+
+Curly braces (`{ }`) around a formula mean it was entered as a legacy CSE array formula with <Kbd>Ctrl</Kbd> + <Kbd>Shift</Kbd> + <Kbd>Enter</Kbd>. Dynamic array functions do not need CSE. If you see braces, you are using the old method.
+
+**What happens when source data grows?**
+
+Spill ranges auto-expand. If your FILTER formula references `A2:A100` and you add data to row 101, update the reference to `A2:A101` or use a table reference that expands automatically.
