@@ -3,7 +3,7 @@ title: "Google Sheets AI Function: How to Use =AI() in Your Spreadsheets"
 date: "2026-07-21"
 description: "Use the Google Sheets AI function =AI() for text, summarization, sentiment, categorization via natural language."
 published: true
-featured: false
+featured: true
 heroImage: "default-og"
 tags: ["google-sheets", "formulas", "tutorial", "guide", "advanced"]
 category: "Google Sheets"
@@ -30,7 +30,7 @@ This guide covers what =AI() can do, how to write prompts, and when to use it.
 | Automation | Manual trigger per request | Updates when source data changes |
 | Composability | Standalone | Works inside IF, FILTER, QUERY |
 
-=AI() started rolling out to Google Workspace accounts in early 2026. If you do not see it yet, check your Workspace admin settings or use your personal Google account.
+=AI() is available to Google Workspace accounts with the Gemini add-on enabled. As of mid-2026, the function is rolling out gradually — availability depends on your Workspace plan (Business Starter, Standard, Plus, or Enterprise), admin settings, and region. If you do not see it yet, check your Workspace admin console under Gemini settings, or try with a personal Google account where rollout may differ.
 
 ---
 
@@ -144,15 +144,17 @@ The =AI() function can group unstructured data into predefined categories. This 
 ### Syntax
 
 ```excel
-=AI("Categorize this item: ", cell_reference, "category list")
+=AI("Categorize this item: ", cell_reference)
 ```
+
+Note: The exact syntax for categorization depends on Google's rollout. Some accounts support an optional third parameter for category hints — test on your own sheet first. <!-- PERLU VERIFIKASI: cek sintaks resmi di dokumentasi Google untuk parameter ke-3 AI() -->
 
 ### Example: Automated Expense Classification
 
 Column E contains a list of business expenses. You want each transaction categorized as Food, Travel, Office, or Software.
 
 ```excel
-=AI("Categorize this expense: ", E2, "Categories: Food, Travel, Office, Software")
+=AI("Categorize this expense as Food, Travel, Office, or Software: ", E2)
 ```
 
 A row with "Uber ride to client meeting" returns **Travel**. "Monthly Slack subscription" returns **Software**. "Team lunch at Italian place" returns **Food**.
@@ -219,7 +221,15 @@ Google imposes rate limits on AI function calls. Running =AI() on 10,000 rows at
 
 ### Volatility
 
-AI functions recalculate every time Sheets detects a change — even unrelated edits. To prevent runaway recalculation, consider copying and pasting values (Paste Special → Values only) once =AI() returns the result you need.
+AI functions recalculate every time Sheets detects a change — even unrelated edits. This can slow down your spreadsheet significantly if you have dozens of =AI() calls.
+
+**How to manage this:**
+
+1. **Freeze the results.** Once =AI() returns the value you need, select the cell, copy (<Kbd>Ctrl</Kbd> + <Kbd>C</Kbd>), and paste as values (<Kbd>Ctrl</Kbd> + <Kbd>Shift</Kbd> + <Kbd>V</Kbd> or right-click → Paste Special → Values only). This replaces the formula with plain text that never recalculates.
+
+2. **Limit the range.** Do not apply =AI() to 10,000 rows at once. Pre-filter your data first, then apply =AI() to the subset. Use FILTER or QUERY to narrow down rows before feeding them to AI.
+
+3. **Schedule recalculation manually.** Keep =AI() formulas in a separate sheet and turn off auto-calculate for that sheet when editing other parts of the workbook.
 
 ---
 
@@ -230,7 +240,7 @@ AI functions recalculate every time Sheets detects a change — even unrelated e
 | Generate description | `=AI("Describe this product in 1 sentence: ", A2)` |
 | Summarize feedback | `=AI("Summarize these comments in 2 bullet points", A2:A20)` |
 | Detect sentiment | `=AI("What is the sentiment of this text?", B2)` |
-| Categorize items | `=AI("Categorize: ", C2, "Red, Blue, Green")` |
+| Categorize items | `=AI("Categorize as Red, Blue, or Green: ", C2)` |
 | Extract keywords | `=AI("Extract 3 keywords from: ", D2)` |
 | Translate text | `=AI("Translate to Spanish: ", E2)` |
 | Spell check | `=AI("Fix spelling errors in: ", F2)` |

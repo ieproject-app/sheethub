@@ -1,0 +1,250 @@
+---
+title: "Google Sheets ARRAYFORMULA: Complete Guide with Examples"
+date: "2026-07-28"
+description: "Master ARRAYFORMULA in Google Sheets. Combine with FILTER, SPLIT, IF across columns — avoid common mistakes."
+published: true
+featured: false
+heroImage: "default-og"
+tags: ["google-sheets", "formulas", "arrayformula", "tutorial"]
+category: "Google Sheets"
+---
+
+Maria manages inventory across 500 SKUs. Every week she spends 45 minutes dragging formulas down new rows as products arrive and sell. One ARRAYFORMULA changed that to zero. This is what Maria learned — and what you can steal.
+
+ARRAYFORMULA is a Google Sheets function that processes an entire range of cells in a single formula. Instead of evaluating a formula for one cell, it evaluates it for every cell in the range and returns an array of results that spill down automatically. New data arrives and the formula covers it — no copy-paste needed, no cells missed.
+
+**Availability:**
+- Google Sheets (all plans — Free, Business, Enterprise, Education) — fully supported
+- Excel — no direct equivalent. Excel 365 uses dynamic arrays (`#` spill operator) with similar behavior but different syntax
+- Excel 2019 and earlier — requires CSE array formulas (`Ctrl` + `Shift` + `Enter`)
+
+## ARRAYFORMULA vs QUERY — pick the right tool first
+
+Before diving into patterns, know which tool fits your job. Both handle array operations but serve different purposes.
+
+| Aspect | ARRAYFORMULA | QUERY |
+|--------|-------------|-------|
+| Syntax | Regular spreadsheet formulas | SQL-like query language |
+| Best for | Math, text processing, conditional logic | Grouping, filtering, sorting, aggregating |
+| Learning curve | Low — you already know the formulas | Medium — requires SQL knowledge |
+| Performance | Fast for row-by-row operations | Faster for large dataset aggregation |
+| Data manipulation | Cell-level transformations | Column-level analysis |
+
+**Choose ARRAYFORMULA when** you need to apply existing formulas across ranges — multiplying columns, splitting text, labeling rows based on conditions.
+
+**Choose QUERY when** you need GROUP BY, ORDER BY, PIVOT, or aggregate functions across grouped data — total sales by region, sorted highest to lowest.
+
+The [QUERY Function guide](/blog/query-function-google-sheets-guide) covers SQL-like patterns for complex analysis. The rest of this guide focuses on what ARRAYFORMULA does best.
+
+## Quick Reference — 6 ARRAYFORMULA patterns at a glance
+
+| Problem | Formula | Outcome |
+|---------|---------|---------|
+| Math across two columns | `=ARRAYFORMULA(A2:A * B2:B)` | One formula replaces N cell-level formulas |
+| Conditional labels | `=ARRAYFORMULA(IF(B2:B>TODAY(),"Due","OK"))` | Automatically flags every row |
+| Batch text splitting | `=ARRAYFORMULA(SPLIT(A2:A,","))` | Splits all rows at once |
+| Clean split data | `=ARRAYFORMULA(TRIM(SPLIT(A2:A,",")))` | Split + clean in one pass |
+| Multi-sheet import | `=ARRAYFORMULA(IMPORTRANGE(url,"Sheet1!A2:A"))` | Import from other sheets with control |
+| Filter with calculated criteria | `=ARRAYFORMULA(FILTER(A2:C,B2:B*C2:C>5000))` | Filter on math, not just direct values |
+
+Bookmark this table. Each pattern is explained in detail below.
+
+## The Copy-Paste Problem → Basic ARRAYFORMULA
+
+Here's the "before" most Sheets users live with — dragging a formula down 20 rows:
+
+```
+Row 1:  =IF(B2>100,"High","Low")
+Row 2:  =IF(B3>100,"High","Low")
+Row 3:  =IF(B4>100,"High","Low")
+...20 rows total, each with the same formula.
+```
+
+Now the "after" — one formula:
+
+```excel
+=ARRAYFORMULA(IF(B2:B21>100,"High","Low"))
+```
+
+**What changed:** One formula in a single cell processes all 20 rows. Add a 21st row — it's already covered. Delete a row? No broken formula chain.
+
+### Syntax
+
+```excel
+=ARRAYFORMULA(array_formula)
+```
+
+| Argument | What It Does |
+|----------|--------------|
+| `array_formula` | A formula, range, or mathematical expression that operates on one or more arrays |
+
+**Example — Multiply Two Columns:**
+
+```excel
+=ARRAYFORMULA(A2:A10 * B2:B10)
+```
+
+This multiplies each value in A2:A10 with its corresponding value in B2:B10. One formula replaces nine cell-level formulas.
+
+**Single-Cell Output:**
+
+```excel
+=ARRAYFORMULA(SUM(A2:A10 * B2:B10))
+```
+
+Wrapping SUM around the array calculates a single total — the sum of all products. This powers SUMPRODUCT-style calculations without the dedicated function.
+
+### 🚫 Mistake to Avoid: Array Size Mismatch
+
+All ranges in an ARRAYFORMULA must have the same number of rows. This formula fails:
+
+```excel
+=ARRAYFORMULA(A2:A100 + B2:B50)  # 99 rows vs 49 rows — error!
+```
+
+**Fix:** Match the row counts, or reference a single column range like `A2:A` and handle blanks with IFERROR padding.
+
+### 🚫 Mistake to Avoid: Whole-Column References
+
+```excel
+=ARRAYFORMULA(A:A * B:B)  # Processes ~1M rows even if only 100 have data
+```
+
+**Fix:** Reference only the data range — `A2:A500` — or use a dynamic range that grows with your data.
+
+### 🚫 Mistake to Avoid: Missing Headers
+
+ARRAYFORMULA spills results starting from the cell you enter. If that cell has a header and the formula returns more rows than expected, the header gets overwritten. Leave a row gap under headers or start the formula below them.
+
+## The Conditional Labeling Problem → ARRAYFORMULA + IF
+
+Have a column that needs labels based on conditions? Instead of dragging an IF formula down, write it once.
+
+**Example — Flag Overdue Items:**
+
+| Task | Due Date | Status |
+|------|----------|--------|
+| Report Q2 | 2026-06-30 | Overdue |
+| Invoice #123 | 2026-07-15 | |
+| Meeting notes | 2026-08-01 | |
+
+```excel
+=ARRAYFORMULA(IF(B2:B4 < TODAY(), "Overdue", ""))
+```
+
+This checks each due date in B2:B4. If it's past today, the cell shows "Overdue". If not, it stays blank.
+
+**Nested Conditions — Three Labels:**
+
+```excel
+=ARRAYFORMULA(IF(B2:B4 < TODAY(), "Overdue",
+    IF(B2:B4 = TODAY(), "Due today", "Upcoming")))
+```
+
+Three outcomes from one formula — no dragging or manual copying needed.
+
+### 🚫 Mistake: #N/A from Blank Cells
+
+When one range has blanks and another doesn't, ARRAYFORMULA returns `#N/A`. The IF section is a common place to encounter this:
+
+```excel
+=ARRAYFORMULA(IFERROR(A2:A100 * B2:B100, ""))
+```
+
+IFERROR converts any error to an empty string — clean arrays with one wrapper.
+
+## The Text Mess Problem → ARRAYFORMULA + SPLIT + TRIM
+
+Data from imports or user entry often arrives as packed text — "Smith, John" — that needs splitting into columns. Do it once for all rows.
+
+**Example — Split Names Across All Rows:**
+
+```excel
+=ARRAYFORMULA(SPLIT(A2:A, ","))
+```
+
+If A2 contains "Smith, John" and A3 contains "Doe, Jane", the formula returns "Smith" and "John" in adjacent cells for row 2, "Doe" and "Jane" for row 3. All with one formula.
+
+### 🚫 Mistake: Empty Cells Cause #VALUE!
+
+Blank cells make SPLIT return an error. Fix in one step:
+
+```excel
+=ARRAYFORMULA(IFERROR(SPLIT(A2:A, ","), ""))
+```
+
+**Add TRIM for clean text.** Data from external sources often has inconsistent spacing around commas:
+
+```excel
+=ARRAYFORMULA(IFERROR(TRIM(SPLIT(A2:A, ",")), ""))
+```
+
+TRIM removes leading, trailing, and double spaces from each split value. The result is clean, standardized text across every row. See the [SPLIT Text Functions guide](/blog/split-text-functions-google-sheets) for more batch text patterns.
+
+## The Multi-Sheet Problem → ARRAYFORMULA + IMPORTRANGE
+
+IMPORTRANGE pulls data from another Google Sheet. Wrapping it in ARRAYFORMULA lets you control exactly which rows are imported and handle errors cleanly.
+
+**Example — Import With Error Handling:**
+
+```excel
+=ARRAYFORMULA(IFERROR(IMPORTRANGE("spreadsheet_url", "Sheet1!A2:A100"), ""))
+```
+
+This imports data from another sheet and replaces any import errors with blanks.
+
+**Selective Import — Only Values Over a Threshold:**
+
+```excel
+=ARRAYFORMULA(IF(IMPORTRANGE("spreadsheet_url", "Sheet1!B2:B100") > 1000,
+    IMPORTRANGE("spreadsheet_url", "Sheet1!A2:A100"), ""))
+```
+
+This imports values from column A only when column B exceeds 1,000. Without ARRAYFORMULA, you would need separate formulas for each row. Check the [IMPORT Functions guide](/blog/google-sheets-import-functions-guide) for more IMPORTRANGE patterns.
+
+**When to skip ARRAYFORMULA with IMPORTRANGE:** If you only need a raw import without conditions, IMPORTRANGE alone works fine. Save ARRAYFORMULA wrapping for when you need filtering, error handling, or conditional logic on the imported data.
+
+## AI Prompt to Build Your Own ARRAYFORMULA
+
+The ARRAYFORMULA + IF pattern from the Conditional Labeling section works well as an AI prompt. Describe the same scenario to any AI assistant:
+
+```text
+I have a Google Sheet with columns:
+- Task (A)
+- Due Date (B)
+- Status (C)
+
+I want one formula in column C that:
+- Shows "Overdue" if the date is before today
+- Shows "Due today" if the date equals today
+- Shows "Upcoming" for future dates
+
+Give me an ARRAYFORMULA using nested IF.
+```
+
+The AI should return something like `=ARRAYFORMULA(IF(B2:B < TODAY(), "Overdue", IF(B2:B = TODAY(), "Due today", "Upcoming")))`. Test it with your actual dates, adjust the conditions, and you have a reusable pattern for any conditional labeling task.
+
+## FAQ
+
+**Does ARRAYFORMULA work with all Google Sheets functions?**
+
+It works with most functions that take range references. Functions that already return arrays (FILTER, QUERY, SORT, UNIQUE) don't need ARRAYFORMULA — but wrapping them can enable advanced patterns like calculated criteria.
+
+**Can ARRAYFORMULA return results in multiple columns?**
+
+Yes. If the inner formula returns multiple columns (like SPLIT which splits into adjacent columns), ARRAYFORMULA distributes the results accordingly.
+
+**Why does ARRAYFORMULA feel slow on my sheet?**
+
+Likely whole-column references. `=ARRAYFORMULA(A:A * B:B)` processes over a million rows. Restrict to your data range: `A2:A5000` or use a dynamic named range.
+
+**Is there an Excel equivalent to ARRAYFORMULA?**
+
+Excel 365's dynamic arrays behave similarly — formulas like `=A2:A10*B2:B10` spill automatically without a wrapper. Older Excel versions require CSE array formulas (`Ctrl` + `Shift` + `Enter`). ARRAYFORMULA is the Google Sheets way to achieve this on all Sheets plans.
+
+## Related Functions
+
+- **[FILTER Function Guide](/blog/filter-function-google-sheets)** — FILTER with ARRAYFORMULA for calculated conditions
+- **[QUERY Function Guide](/blog/query-function-google-sheets-guide)** — When to use QUERY instead of ARRAYFORMULA
+- **[SPLIT Text Functions Guide](/blog/split-text-functions-google-sheets)** — Batch text splitting with ARRAYFORMULA
+- **[IMPORT Functions Guide](/blog/google-sheets-import-functions-guide)** — ARRAYFORMULA with IMPORTRANGE for multi-sheet imports

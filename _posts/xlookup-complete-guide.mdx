@@ -124,6 +124,8 @@ The last argument (-1) tells XLOOKUP to search from the bottom up.
 =IF(C2="Active", XLOOKUP(B2, IDs, Prices, "N/A"), "Inactive")
 ```
 
+For lookups you use repeatedly, wrap the pattern in a [LAMBDA function](/blog/excel-lambda-function-guide) to create a reusable custom function across your workbook.
+
 **Use XMATCH for positional lookups.** XMATCH returns the position instead of the value — useful for INDEX-MATCH fans who want modern syntax.
 
 ---

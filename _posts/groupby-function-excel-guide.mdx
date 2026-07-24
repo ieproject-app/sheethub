@@ -185,7 +185,7 @@ This gives you median sales by region — something that requires a workaround i
 =SORT(GROUPBY(B2:B100, C2:C100, SUM), 2, -1)
 ```
 
-This groups by region, sums sales, then sorts by total descending.
+This groups by region, sums sales, then sorts by total descending. It's a practical illustration of how [dynamic array functions](/blog/excel-dynamic-array-functions-guide) like FILTER and SORT fundamentally change formula-based reporting.
 
 **Use field_headers=3 for auto-detection.** It tries to detect header rows automatically. If your data has clean headers in the first row, this saves one argument.
 

@@ -1,0 +1,237 @@
+---
+title: "Excel Data Cleaning: Duplicates, Flash Fill, Text to Columns"
+date: "2026-07-30"
+description: "Clean messy data in Excel. Master Remove Duplicates, Flash Fill, Text to Columns, TRIM, and Find & Replace for analysis-ready data."
+published: true
+featured: false
+heroImage: "default-og"
+tags: ["excel", "data-analysis", "data-cleaning", "productivity", "tutorial"]
+category: "Data Analysis"
+---
+
+A blank cell in column A. Extra spaces in column B. Numbers stored as text in column C. Duplicates in column D. And that's just the first four columns.
+
+Excel Data Cleaning is what turns a chaotic spreadsheet into something you can actually work with. This is not a disaster — this is a typical Tuesday for anyone who works with data. Excel has six tools that turn messy data into ready-for-analysis information: Remove Duplicates, Flash Fill, Text to Columns, TRIM, Find & Replace, and Data Validation.
+
+**Availability:** All techniques in this guide work in Excel 2019, Excel 2021, and Excel 365 for Windows and Mac. Flash Fill and dynamic arrays are available in Excel 2016 and later. Power Query (Get & Transform) is available in Excel 365 and Excel 2021. Some features may have reduced functionality in older versions or Excel Online.
+
+## Remove Duplicates
+
+The fastest way to clean duplicate rows is Excel's built-in Remove Duplicates tool.
+
+**How to use it:** Select your data range, go to the **Data** tab, and click **Remove Duplicates** in the Data Tools group.
+
+A dialog box appears showing all columns in your selection. Excel checks entire rows — it only removes a row if all selected columns match another row.
+
+**Key decisions:**
+
+- **Select all columns** — removes only full duplicate rows (identical in every field). Use this for exact row deduplication.
+- **Select specific columns** — removes rows where the selected columns match, even if other columns differ. Use this when you only care about uniqueness in key fields (like email addresses or order IDs).
+
+**What happens to data:** Excel keeps the first occurrence and removes subsequent duplicates. No data is lost from remaining rows — just the duplicate rows are deleted.
+
+**Check before deleting:** Use conditional formatting to highlight duplicates first:
+
+1. Select your range.
+2. **Home > Conditional Formatting > Highlight Cells Rules > Duplicate Values**.
+3. Review which rows are highlighted before running Remove Duplicates.
+
+For more control over duplicate detection, see the [COUNTIF and COUNTIFS Guide](/blog/countif-countifs-guide). COUNTIF can identify duplicates without removing them, letting you review each case manually.
+
+**Limitation:** Remove Duplicates is one-way — there is no undo after saving. Always save a backup copy before deduplicating.
+
+**Workaround — Keep a backup:** Before running Remove Duplicates, copy the raw data to a new sheet named "Original". This gives a safety net if the deduplication removes rows that should have been kept.
+
+## Flash Fill (Ctrl+E)
+
+Flash Fill is Excel's pattern-recognition feature. Type one example of what you want, press <Kbd>Ctrl</Kbd> + <Kbd>E</Kbd>, and Excel fills the remaining cells by detecting the pattern. (Check the [Excel Keyboard Shortcuts Guide](/blog/excel-keyboard-shortcuts-guide) for more shortcuts like this one.)
+
+**When to use it:**
+
+- Split a full name column into first and last names
+- Extract domain names from email addresses
+- Format phone numbers consistently
+- Combine first and last names from separate columns
+
+**Example — Extract first names:**
+
+| Full Name | First Name |
+|-----------|-----------|
+| John Smith | John |
+| Jane Doe | (type "Jane" → Ctrl+E fills the rest) |
+| Bob Johnson | Bob |
+
+Type "John" in the first row of the "First Name" column. Press <Kbd>Ctrl</Kbd> + <Kbd>E</Kbd>. Excel recognizes the pattern — extract the word before the space — and fills the remaining cells.
+
+**Example — Format phone numbers:**
+
+Type `(555) 123-4567` next to `5551234567`. Flash Fill detects the formatting pattern and applies it to all cells in the column.
+
+**Limitation:** Flash Fill does not update automatically. If source data changes, Flash Fill results do not recalculate — they need to be reapplied.
+
+**Workaround — Use formulas for dynamic updates:** Instead of Flash Fill for tasks that need to update regularly, use text functions like LEFT, RIGHT, MID, and FIND. For example, extracting first names:
+
+```excel
+=LEFT(A2, FIND(" ", A2) - 1)
+```
+
+This formula recalculates automatically when source data changes. Use Flash Fill for one-time cleanups and formulas for ongoing data workflows.
+
+## Text to Columns
+
+Text to Columns splits a single column of data into multiple columns based on a delimiter or fixed width.
+
+**How to use it:** Select the column, go to **Data > Text to Columns** (in the Data Tools group).
+
+**Delimited** — Choose the character that separates your data: comma, tab, semicolon, space, or custom. The preview shows how the data splits. This is the go-to choice for CSV data, tab-separated exports, and log files.
+
+**Fixed width** — Set breaklines where columns should split. Use this when data aligns in columns without a consistent delimiter, such as legacy system reports.
+
+**Pro tip — Fix text dates:** Dates imported as text strings do not work in formulas or Pivot Tables. Use Text to Columns to convert them:
+
+1. Select the date column.
+2. **Data > Text to Columns > Delimited > Next > Next**.
+3. Under **Column data format**, select **Date** and choose the format (MDY, DMY, YMD).
+4. Click **Finish**.
+
+The text dates become real date values that work in sorting, filtering, and date formulas.
+
+**Limitation:** Text to Columns overwrites the original column and adjacent columns to the right. If there is data in adjacent columns, it gets overwritten.
+
+**Workaround — Insert blank columns first:** Before running Text to Columns, insert enough blank columns to the right of your data to accommodate the split. This prevents data loss. For CSV import-level cleaning, the [Open UTF-8 CSV in Excel Guide](/blog/open-utf8-csv-excel-guide) covers handling encoding issues during the import step.
+
+## TRIM, CLEAN, and PROPER
+
+Three text functions that handle the most common text quality issues — extra spaces, non-printable characters, and inconsistent capitalization.
+
+**TRIM** — Removes leading spaces, trailing spaces, and double spaces between words. Imported data almost always has extra spaces:
+
+```excel
+=TRIM(A2)
+```
+
+**CLEAN** — Removes non-printable characters (like line breaks and tab characters) that often appear in data copied from web pages or PDFs:
+
+```excel
+=CLEAN(A2)
+```
+
+**PROPER** — Capitalizes the first letter of each word. Use after importing data in all-caps or all-lowercase:
+
+```excel
+=PROPER(A2)
+```
+
+**Combine for thorough text cleaning:**
+
+```excel
+=TRIM(CLEAN(A2))
+```
+
+This removes all non-printable characters and extra spaces in one step. Create a new column with the cleaned data, then copy and paste as values to replace the originals.
+
+**Limitation:** These functions create new data in adjacent columns — they do not modify the original cells in place. You need to copy and paste as values to replace the original data.
+
+**Workaround — Use Power Query for in-place transformation:** If running text cleaning on the same dataset repeatedly, load the data into Power Query (Data > From Table/Range) and apply TRIM and CLEAN as transformation steps. Power Query applies the transformations during the load process, and refreshing the query reapplies them without manual formulas.
+
+## Find & Replace (Advanced)
+
+Everyone knows <Kbd>Ctrl</Kbd> + <Kbd>H</Kbd> for basic find and replace — covered in the [Excel Keyboard Shortcuts Guide](/blog/excel-keyboard-shortcuts-guide) along with others. But Find & Replace has powerful options that most users miss.
+
+**Wildcards:** Use `?` to match any single character and `*` to match any sequence of characters. Replace `*Co.*` with `Company` to standardize inconsistent abbreviations in one pass.
+
+**Replace within formulas:** Click **Options > Look in: Formulas** to find and replace inside formula text. Use this to update range references across many formulas at once — for example, changing `'2025'!B:B` to `'2026'!B:B` across an entire workbook.
+
+**Format-based replace:** Click **Options > Format** to find cells with specific formatting and replace both the format and the content. Replace all red-highlighted error cells with a standardized orange warning format in one operation.
+
+**Limitation:** Find & Replace changes all matches at once with no per-match review option. It can unintentionally modify data that matches the search pattern but should not be replaced.
+
+**Workaround — Use a helper column with SEARCH:** For targeted replacement that allows per-row review:
+
+```excel
+=IF(ISNUMBER(SEARCH("Co.", A2)), SUBSTITUTE(A2, "Co.", "Company"), A2)
+```
+
+This creates a new column with the replacement applied only where the search term exists, and leaves other values unchanged. Review the results, then paste as values over the originals.
+
+## Data Validation (Prevention)
+
+The best cleaning strategy is preventing bad data from entering your sheet in the first place. Data Validation gates what users can enter into cells.
+
+**How to use it:** Select cells, go to **Data > Data Validation** (or **Data > Data Tools > Data Validation** in older versions).
+
+**Useful validation rules:**
+
+| Rule Type | Prevents | Example |
+|-----------|----------|---------|
+| Whole number | Text in numeric fields | Between 1 and 100 |
+| List | Invalid entries | Dropdown from a named range |
+| Date | Wrong date format | Date after January 1, 2026 |
+| Custom formula | Complex validation | `=ISNUMBER(A2)` ensures numeric input |
+
+**Input messages** show users what to enter when they select the cell. **Error alerts** block invalid entries with a custom message. For shared sheets, this eliminates most data entry errors.
+
+The [Data Validation Dropdown Guide](/blog/data-validation-dropdown-guide) covers advanced validation patterns including cascading dropdowns and custom formula validators.
+
+**Limitation:** Data Validation only works on manually entered data. Paste operations bypass validation rules entirely.
+
+**Workaround — Use Sheet Protection:** Combine Data Validation with sheet protection. Protect the sheet but allow editing in validated cells. Users can only paste into unprotected areas, forcing data entry through validated cells. For imported data, always run the cleaning steps above after pasting.
+
+## Cleaning Workflow
+
+Putting it all together — the six-step process from messy import to analysis-ready data:
+
+```text
+1. Import correctly — Use Power Query or Import Wizard to set data types at import
+2. Remove duplicates — Run Remove Duplicates on a backup copy of your data
+3. Clean text — Apply TRIM, CLEAN, Flash Fill across text columns
+4. Fix data types — Text to Columns for dates and number conversion
+5. Validate — Set up Data Validation to prevent new errors
+6. Analyze — Feed cleaned data into Pivot Tables or dynamic array formulas
+```
+
+For step 6, see the [Dynamic Array Functions Guide](/blog/excel-dynamic-array-functions-guide) for using UNIQUE to identify unique values after cleaning, and the [Pivot Table Beginner Guide](/blog/pivot-table-beginner-guide) for creating Pivot Tables from cleaned data.
+
+## AI Prompt to Build Your Cleaning Workflow
+
+Here is the cleaning workflow from section 8. Describe your specific data problem to any AI assistant:
+
+```text
+I have messy data in Excel with the following issues:
+- [LIST ISSUES: duplicates / extra spaces / text dates / etc.]
+- Here is a sample row: [PASTE A FEW ROWS]
+- My data has [NUMBER] rows and [NUMBER] columns
+
+What is the fastest cleaning workflow for this specific data? Give me the exact Excel formulas and step-by-step instructions.
+```
+
+The AI should return a tailored cleaning sequence using the functions above. Test the workflow on a small sample (10 rows) before applying to the full dataset.
+
+## Related Functions
+
+- **[Dynamic Array Functions Guide](/blog/excel-dynamic-array-functions-guide)** — Using UNIQUE to identify unique values after cleaning
+- **[COUNTIF and COUNTIFS Guide](/blog/countif-countifs-guide)** — Counting cleaned data to verify deduplication
+- **[Pivot Table Beginner Guide](/blog/pivot-table-beginner-guide)** — Creating reports from analysis-ready data
+- **[Open UTF-8 CSV in Excel Guide](/blog/open-utf8-csv-excel-guide)** — Fixing encoding issues during CSV import
+
+## FAQ
+
+**Does Remove Duplicates delete data permanently?**
+
+It deletes duplicate rows from the current sheet. Once saved, the rows cannot be recovered. Always save a backup copy before running Remove Duplicates.
+
+**Why does Flash Fill sometimes not work?**
+
+Flash Fill needs a clear pattern. If the first example is ambiguous — or if adjacent rows have inconsistent patterns — Flash Fill may not detect the intended transformation. Type a second or third example to reinforce the pattern, then press <Kbd>Ctrl</Kbd> + <Kbd>E</Kbd> again.
+
+**What is the difference between TRIM and CLEAN?**
+
+TRIM removes extra space characters (leading, trailing, and double spaces between words). CLEAN removes non-printable characters like line breaks and tab characters that cannot be seen but interfere with formulas.
+
+**Can Data Validation prevent all bad data?**
+
+No. Data Validation only works on manual entry. Pasting data bypasses validation. Use sheet protection to restrict pasting, or run the cleaning workflow after every data import.
+
+**How do I know if my data is clean enough for analysis?**
+
+Run a quick quality check: use COUNTIF to check for blanks in required columns, check that all columns have the expected data type, and verify that SUM and AVERAGE return reasonable values. The cleaning workflow in section 8 covers the full verification process.
