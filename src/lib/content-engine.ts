@@ -94,6 +94,17 @@ export type ContentEngineConfig<TFrontmatter extends BaseFrontmatter> = {
   normaliseFrontmatter?: (data: Record<string, unknown>) => TFrontmatter | null;
 };
 
+function clampFutureDate<T extends BaseFrontmatter>(fm: T): T {
+  if (!fm || !fm.date) return fm;
+  const targetTime = new Date(fm.date).getTime();
+  const now = new Date();
+  if (!isNaN(targetTime) && targetTime > now.getTime()) {
+    const todayStr = now.toISOString().split("T")[0];
+    return { ...fm, date: todayStr };
+  }
+  return fm;
+}
+
 export function createContentEngine<TFrontmatter extends BaseFrontmatter>(
   config: ContentEngineConfig<TFrontmatter>,
 ) {
@@ -120,7 +131,7 @@ export function createContentEngine<TFrontmatter extends BaseFrontmatter>(
 
           if (!fm) return null;
 
-          return { slug, frontmatter: fm };
+          return { slug, frontmatter: clampFutureDate(fm) };
         } catch (err) {
           console.error("Error reading MDX file:", filePath, err);
           return null;
@@ -158,7 +169,7 @@ export function createContentEngine<TFrontmatter extends BaseFrontmatter>(
 
       if (!fm) return null;
 
-      return { slug, frontmatter: fm, content };
+      return { slug, frontmatter: clampFutureDate(fm), content };
     } catch (err) {
       console.error("Error reading MDX content:", foundPath, err);
       return null;
