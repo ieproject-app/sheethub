@@ -1,0 +1,237 @@
+---
+title: "Excel TEXTSPLIT, TEXTBEFORE and TEXTAFTER: Complete Guide"
+date: "2026-07-28"
+updated: "2026-08-01"
+description: "Learn TEXTSPLIT, TEXTBEFORE, and TEXTAFTER in Excel. Replace LEFT/RIGHT/MID with cleaner text extraction."
+published: true
+featured: false
+heroImage: "default-og"
+tags: ["Excel", "Formulas", "Text Functions", "Data Cleaning", "Tutorial"]
+category: "Formulas & Functions"
+---
+
+Two formulas, one job: pull `Smith` out of `"Smith, John"`. `=LEFT(A2, FIND(",", A2)-1)` gets there by stacking four functions; `=TEXTBEFORE(A2, ",")` needs just one. Both return the same result — until the data stops cooperating. Add a middle name and the LEFT chain demands another FIND, another MID, and an IFERROR on top. Drop the comma entirely and it collapses into `#VALUE!`. TEXTBEFORE handles both cases with the same one-line formula.
+
+TEXTSPLIT, TEXTBEFORE, and TEXTAFTER form a complete modern text extraction toolkit that handles 90% of real-world text parsing needs in Excel. No more nesting FIND inside MID just to get a substring. Each function does exactly one thing, clearly and reliably.
+
+**Availability:** These three functions are available in Excel 365 (desktop, Mac, and web) only — not in Excel 2021, 2019, or earlier.
+
+## The Old Way vs The New Way
+
+Here is a simple example: extract the last name from `"Smith, John"`.
+
+**Old way (legacy):**
+```excel
+=LEFT(A2, FIND(",", A2)-1)
+```
+
+This works until someone has a suffix (`"Smith Jr., John"`) or the comma is missing. The formula is fragile because FIND returns `#VALUE!` when the delimiter is absent, and you need to wrap everything in IFERROR just to handle edge cases.
+
+**New way (modern):**
+```excel
+=TEXTBEFORE(A2, ",")
+```
+
+One function. One argument. Returns `"Smith"` — or an empty string if the comma isn't found, which is much easier to handle.
+
+The same pattern applies across all three modern functions. They are purpose-built for text extraction, single-purpose, and significantly more readable than the nested alternatives.
+
+## TEXTSPLIT — Split Text Into Rows and Columns
+
+TEXTSPLIT handles a wide range of text-splitting tasks. Unlike the legacy approach of using Text to Columns or nested MID functions, TEXTSPLIT can split text into columns, rows, or both simultaneously.
+
+**Syntax:**
+```excel
+=TEXTSPLIT(text, col_delimiter, [row_delimiter], [ignore_empty], [match_mode], [pad_with])
+```
+
+**Split into columns:** This splits text at each comma into separate columns:
+```excel
+=TEXTSPLIT(A2, ",")
+```
+Result: `red` → `green` → `blue` across three columns.
+
+**Split into rows and columns:** Pass a second delimiter to split both directions:
+```excel
+=TEXTSPLIT(A2, ",", ";")
+```
+This is useful for two-dimensional data embedded in a single cell — like importing tabular data into a single string.
+
+**Handle empty cells with ignore_empty vs pad_with:** These two optional arguments do different jobs. `ignore_empty` (the fourth argument) skips consecutive delimiters, while `pad_with` (the sixth argument) fills the gaps when a split produces a ragged grid.
+
+Skip empty items: with `red,,blue` in A2, the consecutive commas produce three columns by default. Setting `ignore_empty` to TRUE drops the blank one:
+
+```excel
+=TEXTSPLIT(A2, ",", , TRUE)
+```
+
+Fill missing cells: when you split into rows and columns at the same time, shorter rows leave a gap. With `a,b;c` in A2, the formula below returns a 2×2 grid where the missing cell reads N/A instead of `#N/A`:
+
+```excel
+=TEXTSPLIT(A2, ",", ";", , , "N/A")
+```
+
+TEXTSPLIT returns a dynamic array that spills into neighboring cells automatically. Like all modern Excel array functions, [dynamic arrays enable TEXTSPLIT to reshape data](/blog/excel-dynamic-array-functions-guide) without manual cell references.
+
+## TEXTBEFORE — Extract Text Before a Delimiter
+
+TEXTBEFORE returns everything before a specified delimiter. Think of it as "give me everything to the left of character X."
+
+**Syntax:**
+```excel
+=TEXTBEFORE(text, delimiter, [instance_num], [match_mode], [match_end], [if_not_found])
+```
+
+**Extract first name (text before space):**
+```excel
+=TEXTBEFORE(A2, " ")
+```
+
+**Get the second occurrence:** The `instance_num` parameter lets you pick which occurrence of the delimiter to use. To get the text before the second comma:
+```excel
+=TEXTBEFORE(A2, ", ", 2)
+```
+
+**Handle missing delimiters gracefully:** The sixth argument, `if_not_found`, returns a fallback value instead of an error. The three middle arguments (`instance_num`, `match_mode`, `match_end`) are optional, so you skip them by leaving the slots empty:
+
+```excel
+=TEXTBEFORE(A2, ",", , , , "no comma")
+```
+
+If `A2` contains `Smith, John`, this returns `Smith`. If the comma is missing, it returns the fallback text `no comma` instead of an error. You can also use a cell reference as the fallback — `=TEXTBEFORE(A2, ",", , , , A2)` returns the entire original text when no comma is found. Legacy functions would need an IFERROR wrapper to achieve the same result.
+
+## TEXTAFTER — Extract Text After a Delimiter
+
+TEXTAFTER is TEXTBEFORE's counterpart — it returns everything after a delimiter.
+
+**Syntax:**
+```excel
+=TEXTAFTER(text, delimiter, [instance_num], [match_mode], [match_end], [if_not_found])
+```
+
+**Extract domain from email:**
+```excel
+=TEXTAFTER(A2, "@")
+```
+Input: `alice@company.com` → Output: `company.com`
+
+**Extract file extension using negative instance:** Use a negative `instance_num` to count from the end:
+```excel
+=TEXTAFTER(A2, ".", -1)
+```
+For `report_final_v2.xlsx` this returns `xlsx` — using `-1` means "after the last dot," which is exactly what you want for file extensions.
+
+**Extract everything after the first space:**
+```excel
+=TEXTAFTER(A2, " ")
+```
+Input: `John Smith` → Output: `Smith`
+
+## Real-World Data Cleaning Examples
+
+Here is how the three functions work together in common data cleaning scenarios. These patterns are a core [part of your Excel data cleaning workflow](/blog/excel-data-cleaning-techniques-guide).
+
+| Input | Formula | Output |
+|-------|---------|--------|
+| alice@company.com | `=TEXTAFTER(A2, "@")` | company.com |
+| Smith, John | `=TEXTBEFORE(A2, ",")` | Smith |
+| Smith, John | `=TEXTAFTER(A2, ", ")` | John |
+| red;green;blue | `=TEXTSPLIT(A2, ";")` | red → green → blue (3 columns) |
+| report_final_v3.xlsx | `=TEXTBEFORE(A2, "_")` | report |
+| 2026-07-28 | `=TEXTBEFORE(A2, "-")` | 2026 |
+
+### Parsing Address Data
+
+Say you have addresses in a single cell like `"123 Main St, Springfield, IL 62701"`. You need city and state separately:
+
+```excel
+=LET(
+    address, A2,
+    city_state, TEXTAFTER(address, ", "),
+    city, TEXTBEFORE(city_state, ", "),
+    state_zip, TEXTAFTER(city_state, ", "),
+    state, TEXTBEFORE(state_zip, " "),
+    zip, TEXTAFTER(state_zip, " "),
+    HSTACK(city, state, zip)
+)
+```
+
+Using TEXTAFTER and TEXTBEFORE together with LET creates a clean, readable pipeline instead of a tangled nest of FIND and MID functions.
+
+### Extracting Usernames and Domains from Email Lists
+
+For a column of email addresses, extract usernames and domains into separate columns:
+
+```excel
+=HSTACK(
+    TEXTBEFORE(A2:A10, "@"),
+    TEXTAFTER(A2:A10, "@")
+)
+```
+
+By applying the formulas to a range (A2:A10), they spill into adjacent columns automatically — one for usernames, one for domains. No dragging, no copying.
+
+## TEXTSPLIT + WRAPCOLS/WRAPROWS — Bonus Pattern
+
+One powerful combination that many users miss: using TEXTSPLIT with WRAPCOLS or WRAPROWS to reshape long lists.
+
+You have a comma-separated list of 50 items in a single cell. You want them in a grid of 5 rows and 10 columns.
+
+```excel
+=WRAPCOLS(TEXTSPLIT(A2, ","), 5)
+```
+
+This splits the text into individual items, then wraps them into columns of 5. Change the second argument to control the chunk size. This pattern is invaluable for transforming imported flat data into structured output.
+
+## Limitations
+
+These functions are powerful, but they have some constraints worth knowing.
+
+**Excel 365 / Web only.** TEXTSPLIT, TEXTBEFORE, and TEXTAFTER are not available in Excel 2021, 2019, or earlier versions. If you work in a shared environment where colleagues use older Excel versions, you may need to fall back to LEFT/RIGHT/MID/FIND or use the legacy Text to Columns feature.
+
+**No regex patterns.** These functions work with literal delimiters. If you need pattern-based extraction (like finding all five-digit sequences in a string), use the [Excel REGEX functions](/blog/regex-functions-excel-guide) for complex pattern matching instead.
+
+**TEXTSPLIT can overflow.** Splitting a very long text string into many cells can produce a spill range that covers thousands of columns. Excel handles this gracefully (it stops at the column limit), but be mindful when splitting unstructured data.
+
+**Google Sheets comparison.** If you work across platforms, TEXTSPLIT is [similar to Google Sheets SPLIT function](/blog/split-text-functions-google-sheets) — and Google Sheets also supports native TEXTBEFORE and TEXTAFTER equivalents. The extraction patterns in this guide transfer cleanly between Excel and Sheets, so you can apply the same formulas in either app.
+
+## Common Errors and Troubleshooting
+
+**`#VALUE!` — TEXTSPLIT with no delimiter.** TEXTSPLIT needs at least one delimiter. If both `col_delimiter` and `row_delimiter` are empty, the function can't split anything. `=TEXTSPLIT(A2)` returns `#VALUE!`; add at least one delimiter, like `=TEXTSPLIT(A2, ",")`, to split correctly:
+
+```excel
+=TEXTSPLIT(A2)
+```
+
+**`#N/A` — delimiter not found.** TEXTBEFORE and TEXTAFTER return `#N/A` when the delimiter doesn't exist in the text. Use the `if_not_found` argument, or wrap the formula in IFERROR. The first version below returns the fallback text directly; the second is an equivalent safety net:
+
+```excel
+=TEXTBEFORE(A2, ",", , , , "no comma")
+=IFERROR(TEXTBEFORE(A2, ","), "no comma")
+```
+
+**`#NAME?` — function not available.** TEXTSPLIT, TEXTBEFORE, and TEXTAFTER only exist in Excel for Microsoft 365 and Excel on the web. Older versions (2021, 2019, and earlier) don't recognize them and return `#NAME?`. Check the version in your status bar, or fall back to LEFT/RIGHT/MID/FIND when colleagues use older Excel.
+
+## AI Prompt Callout
+
+Once you understand the foundation, you can describe your text parsing problem to an AI (ChatGPT, Gemini, or Claude) and get a ready-to-use formula.
+
+Try this prompt with your own data:
+
+<Callout variant="info" title="AI Prompt Template">
+  I have a column with text in the format "Last, First — Department — Location". I need three columns: Last Name, First Name, Department. Write formulas using TEXTSPLIT, TEXTBEFORE, and TEXTAFTER.
+</Callout>
+
+The AI will recognize which function fits each extraction: TEXTBEFORE for "Last," TEXTAFTER for "First," and a combination for "Department." Adjust the cell references to match your data.
+
+A good rule of thumb: describe the input format and the output you want, and let the AI figure out whether TEXTBEFORE, TEXTAFTER, or TEXTSPLIT is the right tool for each piece.
+
+## SheetHub's Take
+
+TEXTSPLIT, TEXTBEFORE, and TEXTAFTER replace a generation of clunky, nested text functions with clean, single-purpose alternatives.
+
+- **TEXTSPLIT** — split text into columns, rows, or both simultaneously.
+- **TEXTBEFORE** — extract everything before a delimiter.
+- **TEXTAFTER** — extract everything after a delimiter.
+
+Next time you reach for LEFT, RIGHT, MID, or FIND, ask yourself: is one of these three a cleaner fit? Nine times out of ten, it will be.

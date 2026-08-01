@@ -1,0 +1,215 @@
+---
+title: "Google Sheets SPARKLINE: In-Cell Mini Charts in One Formula"
+date: "2026-07-30"
+updated: "2026-08-01"
+description: "Create in-cell mini charts in Google Sheets with SPARKLINE. Line, bar, column, and win/loss — all in one formula."
+published: true
+featured: false
+heroImage: "default-og"
+tags: ["Google Sheets", "Formulas", "SPARKLINE", "Visualization", "Tutorial"]
+category: "Formulas & Functions"
+---
+
+The Google Sheets SPARKLINE function draws a mini chart inside a single cell. You don't need a chart editor.
+
+You have a row of monthly sales figures. The numbers are clear, but the trend isn't. You don't want to build a full chart — you just want a tiny visual cue next to each row so you can scan the data at a glance.
+
+Enter SPARKLINE: a chart you can drop into any cell.
+
+SPARKLINE creates these mini charts with a single formula. Type the formula, and your cell turns into a chart.
+
+## What Is SPARKLINE?
+
+SPARKLINE is a Google Sheets formula that turns one row of data into a visual trend, comparison bar, or win/loss indicator.
+
+Unlike Excel sparklines (which are chart objects attached to cells), Google Sheets SPARKLINE is a **formula**. This means:
+
+- It moves with your data when you sort or filter
+- It recalculates automatically when source data changes
+- You can copy it down a column to create one sparkline per row
+- You can copy and paste it like any other formula
+
+SPARKLINE supports four chart types: LINE, BAR, COLUMN, and WINLOSS.
+
+## SPARKLINE Syntax
+
+```excel
+=SPARKLINE(data, [options])
+```
+
+- **data** — A range or array of values to chart
+- **options** (optional) — A set of key-value pairs for customization
+
+The simplest possible sparkline:
+
+```excel
+=SPARKLINE(B2:G2)
+```
+
+This creates a default line chart from the six values in row 2. That's it. One formula, one in-cell chart.
+
+## Chart Types and Customization
+
+### LINE Chart
+
+The default type, best for showing trends over time:
+
+```excel
+=SPARKLINE(B2:G2, {"charttype", "line"; "linewidth", 2; "color", "blue"})
+```
+
+<Callout variant="info" title="Locale Syntax Note">
+  The options array uses commas and semicolons: within each key-value pair, a comma separates the key from the value, and a semicolon separates one pair from the next. If your spreadsheet is set to a non-US locale (for example, many European regional settings), Google Sheets may expect these separators swapped — semicolon inside the pair and comma between pairs. If SPARKLINE throws a parse error, try the reversed form: `{"charttype"; "line", "linewidth"; 2, "color"; "blue"}`.
+</Callout>
+
+| Option | Effect |
+|--------|--------|
+| `linewidth` | Thickness of the line (1-5) |
+| `color` | Line color (name or hex) |
+
+### BAR Chart
+
+Horizontal bars, good for comparing values side by side:
+
+```excel
+=SPARKLINE(B2:G2, {"charttype", "bar"; "max", 100; "color1", "green"; "color2", "red"})
+```
+
+BAR charts are useful for budget variance — actual vs target in a single cell.
+
+### COLUMN Chart
+
+Vertical bars — like a mini bar chart:
+
+```excel
+=SPARKLINE(B2:G2, {"charttype", "column"; "color", "#4285F4"; "negcolor", "red"})
+```
+
+### WINLOSS Chart
+
+Up/down indicators for binary outcomes — winning streaks, project milestones, or pass/fail tracking:
+
+```excel
+=SPARKLINE(B2:G2, {"charttype", "winloss"; "color", "green"; "negcolor", "red"})
+```
+
+Each value above zero gets a green bar, below zero a red bar. Perfect for tracking streaks.
+
+## SPARKLINE + GOOGLEFINANCE — Live Stock Visuals
+
+This is where SPARKLINE shines. Combine it with GOOGLEFINANCE to create live stock performance charts inside a single cell:
+
+```excel
+=SPARKLINE(GOOGLEFINANCE("AAPL", "close", TODAY()-30, TODAY()))
+```
+
+This shows Apple's 30-day stock price trend as a mini line chart. Every time you open the sheet, it refreshes with the latest data.
+
+Customize it for a bullish look:
+
+```excel
+=SPARKLINE(GOOGLEFINANCE("AAPL", "close", TODAY()-30, TODAY()),
+  {"charttype", "line"; "linewidth", 2; "color", "#00AA00"})
+```
+
+For a full portfolio view, [combine SPARKLINE with GOOGLEFINANCE for live stock mini-charts](/blog/google-sheets-googlefinance-guide) across every ticker in your portfolio. Live stocks are just the start. Point SPARKLINE at your own data and it does the same job.
+
+## Practical Applications
+
+| Use Case | Formula Pattern |
+|----------|----------------|
+| Sales trend per product row | `=SPARKLINE(B2:G2)` |
+| Budget variance bar | `=SPARKLINE({actual, budget}, {"charttype", "bar"})` |
+| KPI dashboard with 100+ rows | `=BYROW(B2:G100, LAMBDA(row, SPARKLINE(row)))` |
+| Project win/loss tracker | `=SPARKLINE(B2:G2, {"charttype", "winloss"})` |
+| Stock performance sparkline | `=SPARKLINE(GOOGLEFINANCE(A2,"close",TODAY()-30,TODAY()))` |
+
+For large dashboards, [apply formulas across hundreds of rows with ARRAYFORMULA](/blog/arrayformula-google-sheets-complete-guide) — just remember SPARKLINE charts one row per formula, so copy the formula down instead. SPARKLINE mini-charts also work as building blocks in [Canvas dashboards](/blog/google-sheets-canvas-dashboard-guide), providing lightweight visual cues alongside interactive components.
+
+### KPI Dashboard Example
+
+| Product | Jan | Feb | Mar | Apr | May | Jun | Trend |
+|---------|-----|-----|-----|-----|-----|-----|-------|
+| Widget A | 120 | 135 | 128 | 142 | 155 | 148 | `=SPARKLINE(B2:G2)` |
+| Widget B | 90 | 85 | 95 | 102 | 98 | 110 | `=SPARKLINE(B3:G3)` |
+| Widget C | 200 | 210 | 195 | 205 | 220 | 230 | `=SPARKLINE(B4:G4)` |
+
+The Trend column shows each product's sales trajectory instantly. Widget B dips in Feb but recovers. Widget C is consistently growing. You can scan 50 rows in seconds — that's the power of SPARKLINE.
+
+## SPARKLINE Options Reference
+
+| Option | Values | Description | Applies To |
+|--------|--------|-------------|------------|
+| `charttype` | `line`, `bar`, `column`, `winloss` | Type of sparkline | All |
+| `color` | Color name or hex code | Main chart color | All |
+| `negcolor` | Color name or hex code | Color for negative values | All |
+| `linewidth` | Number (1-5) | Line stroke thickness | LINE |
+| `max` | Number | Maximum value for axis scale | BAR, COLUMN |
+| `xmin` / `xmax` | Number | X-axis range | LINE |
+| `axis` | Boolean or color | Show/hide axis line | LINE |
+| `color1` / `color2` | Color | First/second bar color | BAR |
+
+## Limitations
+
+SPARKLINE is lightweight by design, which means some tradeoffs:
+
+- **One row of data per sparkline** — no multi-series charts in a single cell
+- **No labels or axis titles** — the chart lives inside the cell, so there's no room for text
+- **No interactive elements** — hover, tooltip, and click don't exist
+- **Options syntax can be confusing** — the nested array format takes some getting used to
+
+If you need full-featured charts with labels, legends, and interactivity, use Google Sheets' chart editor or Canvas dashboards instead.
+
+## SPARKLINE in Excel vs Google Sheets
+
+If you're coming from Excel, SPARKLINE works differently than you might expect:
+
+| Feature | Google Sheets SPARKLINE | Excel Sparkline |
+|---------|------------------------|-----------------|
+| Type | Formula (`=SPARKLINE()`) | Chart object (ribbon) |
+| Customization | Formula options in cell | Ribbon + Format pane |
+| Portability | Formula moves with data | Tied to cell position |
+| Copy/paste | Works like any formula | Requires special handling |
+| WINLOSS type | ✅ Supported | ✅ Supported |
+
+The formula-based approach in Google Sheets is more flexible — you can nest SPARKLINE inside IF statements or combine it with GOOGLEFINANCE in ways Excel's chart-based sparklines can't match.
+
+## Common Errors and Troubleshooting
+
+**`#VALUE!` — empty or invalid data range.** SPARKLINE needs at least one numeric value. A blank range, a text-only range, or a single empty cell returns `#VALUE!`. A numeric range like `=SPARKLINE(B2:G2)` works fine; a single empty cell like `=SPARKLINE(A1)` does not:
+
+```excel
+=SPARKLINE(B2:G2)
+```
+
+**Parse error in the options array.** The options argument must be a valid array literal. A typo in the separator — or the wrong separator for your locale — breaks the whole formula. If you see a parse error, check the separators against the Locale Syntax Note above.
+
+**`#N/A` — errors inside the data.** If the source range contains `#N/A` or another error value, the sparkline fails. Clean the data first, or neutralize errors with IFERROR:
+
+```excel
+=SPARKLINE(ARRAYFORMULA(IFERROR(B2:G2, 0)))
+```
+
+**`#NAME?` — misspelled function name.** A typo like `=SPARKLIN(B2:G2)` returns `#NAME?`. Also remember the formula is Google Sheets-only — the Excel equivalent is a chart object on the Insert tab, not a formula.
+
+## AI Prompt Callout
+
+Now that you understand SPARKLINE syntax and options, here's how to describe your visualization needs to an AI assistant (ChatGPT, Gemini, or Claude):
+
+<Callout variant="info" title="AI Prompt Template">
+  I have monthly sales data for 20 products across columns B through G (one row per product). I want a SPARKLINE next to each product's data showing the sales trend with a blue line. Write a SPARKLINE formula I can copy down for each product row, plus a BYROW version if possible.
+</Callout>
+
+The AI will generate the formula based on the examples above — just adjust the range to fit your data.
+
+## SheetHub's Take
+
+SPARKLINE turns cells into live data visualizations with a single formula. Everything happens inside the formula bar:
+
+- LINE sparklines for trends over time
+- BAR and COLUMN for comparisons
+- WINLOSS for binary tracking
+- Combine with GOOGLEFINANCE for live stock charts
+- Copy SPARKLINE down a column to scale across hundreds of rows
+
+Pick a row of data in your sheet and type `=SPARKLINE(B2:G2)`. You just made your first in-cell chart. Now imagine doing that for every row in your dashboard.

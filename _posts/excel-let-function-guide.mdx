@@ -1,0 +1,217 @@
+---
+title: "Excel LET Function: Simplify Complex Formulas, Boost Performance"
+date: "2026-07-28"
+updated: "2026-08-01"
+description: "Simplify Excel formulas with the LET function. Define variables, reduce repetition, and boost speed with real examples."
+published: true
+featured: false
+heroImage: "default-og"
+tags: ["Excel", "Formulas", "LET Function", "Advanced", "Tutorial"]
+category: "Formulas & Functions"
+---
+
+You copy-paste the same VLOOKUP three times inside a single IF formula. When something breaks six months later, you have to find and fix every occurrence by hand. There is a better way.
+
+The LET function lets you define named variables inside a single formula — less repetition, better readability, and faster calculations. Instead of writing the same lookup or calculation multiple times, you define it once and reuse it by name. The result is cleaner formulas that are easier to debug and faster to compute.
+
+## What Is the LET Function?
+
+Introduced in Excel for Microsoft 365 in 2020, LET is the closest Excel gets to writing proper code inside a cell. It works like [formula-level named ranges](/blog/excel-named-ranges-guide) — you assign names to intermediate calculations and reference those names in the final expression.
+
+The function delivers two distinct benefits:
+
+- **Readability:** A 200-character monster formula becomes clean, labeled logic anyone can follow.
+- **Performance:** Each named variable is calculated once and cached. Referencing it multiple times doesn't recalculate the value — it reads from cache.
+
+## LET Syntax
+
+The syntax looks like this:
+
+```excel
+=LET(
+    name1, value1,
+    name2, value2,
+    calculation
+)
+```
+
+Each `name` is a variable name you choose (without spaces), paired with a `value` — the expression or cell reference it represents. The last argument is the `calculation` that uses those variables and returns the final result.
+
+Variable names can include periods (like `sale.amount`) but not spaces. They are case-insensitive in Excel, but using consistent casing helps readability.
+
+## Basic Example — Without vs With LET
+
+Imagine you need to calculate a 10% commission on sales, plus a 5% bonus override. Without LET, you might write:
+
+```excel
+=VLOOKUP(A2, B:C, 2, FALSE) * 0.1 + VLOOKUP(A2, B:C, 2, FALSE) * 0.05
+```
+
+That VLOOKUP runs twice — once for the commission, once for the bonus. If the lookup column changes, you have to edit two places.
+
+With LET:
+
+```excel
+=LET(
+    sale, VLOOKUP(A2, B:C, 2, FALSE),
+    sale * 0.1 + sale * 0.05
+)
+```
+
+The VLOOKUP runs once. `sale` holds the result, and both the commission and bonus calculations reference it. Change the lookup column in one place, and both calculations update.
+
+## Real Business Example — Commission Calculator
+
+Here is a practical scenario. You manage a sales team with this table:
+
+| Employee | Region | Sales |
+|----------|--------|-------|
+| Alice | North | $45,000 |
+| Bob | South | $32,000 |
+| Carol | North | $28,000 |
+| David | South | $51,000 |
+
+Your commission rules:
+- North region: 10% of sales
+- South region: 15% of sales
+- If sales exceed $40,000: add a $500 bonus
+
+The LET formula for this is:
+
+```excel
+=LET(
+    region, B2,
+    sales, C2,
+    commission_rate, IF(region="North", 0.1, 0.15),
+    commission, sales * commission_rate,
+    bonus, IF(sales > 40000, 500, 0),
+    commission + bonus
+)
+```
+
+Each piece of logic has a clear name. If the bonus threshold changes from $40,000 to $50,000, you update one number. If you need to add a tier for West region at 12%, you add one line. The formula stays readable because every step is labeled.
+
+For more complex grouping scenarios, [combine GROUPBY with LET for complex aggregations](/blog/excel-groupby-pivotby-deep-dive) in a single clean formula. When the same logic needs to live beyond a single cell, LET + LAMBDA is the combination to reach for.
+
+## LET + LAMBDA: The Power Combo
+
+LET shines brightest when paired with LAMBDA. LAMBDA lets you create custom reusable functions, and LET gives those functions internal variables that don't clutter the parameter list.
+
+A LAMBDA for tiered discounts might use LET internally, like this:
+
+```excel
+=LAMBDA(qty, price,
+    LET(
+        subtotal, qty * price,
+        discount, IF(qty >= 100, 0.15, IF(qty >= 50, 0.1, 0)),
+        subtotal * (1 - discount)
+    )
+)
+```
+
+This is the pattern for [combining LET with LAMBDA for custom reusable functions](/blog/excel-lambda-function-guide) — the LAMBDA defines the interface (quantity and price), and LET handles the internal calculation logic. The result is readable, testable, and reusable across your workbook.
+
+## Performance Benefits
+
+Every time Excel evaluates a formula that references the same range or calculation multiple times, it recomputes that intermediate value. LET breaks this cycle by caching variables.
+
+Consider a dynamic array formula that filters a large dataset and then counts the filtered rows. Without LET:
+
+```excel
+=COUNTA(FILTER(A2:A10000, B2:B10000="Active"))
+```
+
+Excel runs the FILTER twice — once for the count, and if you need the filtered data elsewhere, again. With LET:
+
+```excel
+=LET(
+    filtered, FILTER(A2:A10000, B2:B10000="Active"),
+    HSTACK(filtered, ROWS(filtered))
+)
+```
+
+The FILTER runs once, and both the data and the row count reference the cached result. For large datasets with thousands of rows, this cuts calculation time significantly. This is especially valuable because [LET improves performance in dynamic array formulas](/blog/excel-dynamic-array-functions-guide) where spill ranges can be expensive to recompute.
+
+### When Performance Matters Most
+
+- **Large arrays (10,000+ rows):** A single FILTER or SORT on a large range can take milliseconds. Repeating it three times adds noticeable lag.
+- **LAMBDA helpers (BYROW, MAP, REDUCE):** These iterate over each row. If the calculation inside calls a slow lookup, LET inside the LAMBDA caches that lookup per row.
+- **Volatile functions (INDIRECT, OFFSET, TODAY):** These recalculate on every change. LET minimizes how many times they're called.
+
+## Limitations and Best Practices
+
+LET is powerful, but it has some constraints worth knowing.
+
+**Variable scope:** Variables exist only within the LET block. You cannot reference them outside the formula. If you need the same variable in multiple cells, consider a named range instead — or define a named LAMBDA that wraps the LET logic.
+
+**Nesting depth:** Excel supports up to 64 levels of nested LET. In practice, if your LET has more than 6-8 variables, it may be a sign to break the logic into multiple columns or helper cells.
+
+**Debugging:** Use the F9 key to evaluate selected parts of a LET formula in the formula bar. Highlight a variable reference and press `F9` to see its current value. Just remember to press `Esc` after — pressing `Enter` will replace the formula with the hardcoded value.
+
+**When NOT to use LET:**
+- **Simple one-reference formulas:** `=A2*B2` does not benefit from LET.
+- **Single-use values:** If you only reference a calculation once, LET adds complexity without benefit.
+- **Team workbooks:** Some colleagues may not be familiar with LET. For shared workbooks, balance readability with familiarity.
+
+## Common Errors and Troubleshooting
+
+**`#NAME?` — typo in a variable name.** LET resolves every name in the calculation argument against the names you declared. If they don't match, Excel can't recognize the variable:
+
+```excel
+=LET(
+    sales, VLOOKUP(A2, B:C, 2, FALSE),
+    sale * 0.1
+)
+```
+
+This returns `#NAME?` because the calculation references `sale` while the declared name is `sales`. The fix is to use the exact name you declared:
+
+```excel
+=LET(
+    sales, VLOOKUP(A2, B:C, 2, FALSE),
+    sales * 0.1
+)
+```
+
+**`#VALUE!` — wrong data type in a calculation.** LET doesn't change how Excel handles data types. If a variable holds text and you use it in arithmetic, you get `#VALUE!`. For example, if C2 contains the text "N/A", this formula fails:
+
+```excel
+=LET(
+    sales, C2,
+    sales * 0.1
+)
+```
+
+Clean the source data first, or guard the calculation:
+
+```excel
+=LET(
+    sales, C2,
+    IFERROR(sales * 0.1, 0)
+)
+```
+
+This returns 0 instead of an error when a cell contains non-numeric text.
+
+**`#N/A` — lookup finds nothing.** LET itself doesn't produce `#N/A`, but it surfaces errors from the functions inside it. If a VLOOKUP inside LET can't find a match, the whole formula returns `#N/A`. Wrap the lookup in IFERROR inside the LET block to control the fallback value.
+
+## AI Prompt Callout
+
+Once you understand how LET works, you can describe your calculation logic to an AI (ChatGPT, Gemini, or Claude) and get a well-structured LET formula.
+
+Try this prompt template with your own data:
+
+<Callout variant="info" title="AI Prompt Template">
+  I have a sales table with columns [A: Employee, B: Region, C: Sales]. I need a formula that calculates commission at 10% for North and 15% for South, then adds a $500 bonus if sales exceed $40,000. Write this as a single LET formula with named variables.
+</Callout>
+
+The AI will produce something close to the commission example earlier in this guide. Adjust the variable names and thresholds to match your real data, and you have a production-ready formula in seconds.
+
+## SheetHub's Take
+
+The LET function transforms how you write complex Excel formulas. Use it to:
+- **Reduce repetition** — define a calculation once and reference it by name.
+- **Improve readability** — replace nested, tangled logic with labeled variables.
+- **Boost performance** — cache intermediate results instead of recalculating them.
+
+Next time you face a formula that sprawls across 200 characters, ask yourself: can I name a piece of this? If yes, LET is your answer.
