@@ -78,8 +78,13 @@ Do **NOT** edit the `.mdx` file directly. Instead:
    - The team will process the revision on the server and return to `user_review` when finished.
 
 ### Case B: 100% Passed (No Errors Found)
-1. Report to the user that the article passed all 4 pillars of the SheetHub audit.
+1. Report to the user that the article passed all 5 pillars of the SheetHub audit.
 2. Confirm the article is approved and ready for `git commit` & `git push`.
+3. **Post-Push Reconcile:** Immediately after executing `git commit` & `git push`, run:
+   ```bash
+   wsl python3 /home/snipgeek/.hermes/scripts/sheethub_auto_reconcile.py
+   ```
+   This automatically updates the server state to `pushed_live`, syncs `article_queue.json` to server AHC, and triggers a Telegram notification: `🚀 Artikel SheetHub Berhasil Publish / Pushed Live!`.
 
 ---
 
