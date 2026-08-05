@@ -1,0 +1,207 @@
+---
+title: "Excel TOCOL Function Guide: Flatten Any Array"
+date: "2026-08-02"
+description: "Reshape data in Excel with TOCOL, TOROW, WRAPCOLS, WRAPROWS and EXPAND. Flatten grids and wrap lists in one formula."
+published: true
+featured: false
+heroImage: "default-og"
+tags: ["excel", "formulas", "tocol", "torow", "wraprows", "tutorial"]
+category: "Formulas & Functions"
+---
+
+A dropdown needs a single column, but the data arrives as a grid of five. A label sheet needs a 10-column table, but the data arrives as one long list. Copy-paste fixes it once — and again every time the data changes. The Excel reshape functions fix the shape at the source: TOCOL flattens a range into one column, TOROW into one row, WRAPROWS and WRAPCOLS turn lists into grids, and EXPAND pads an array to any size. One formula, one dynamic spill, and the layout stays correct forever.
+
+## What Are the Reshaping Functions?
+
+These five functions belong to the dynamic array family, alongside [FILTER and SORT](/blog/excel-dynamic-array-functions-guide); each one returns a differently shaped array that spills automatically.
+
+| Function | What It Does | Syntax |
+|----------|-------------|--------|
+| **TOCOL** | Flattens a 2D range into a single column | `=TOCOL(array, [ignore], [scan_by_column])` |
+| **TOROW** | Flattens a 2D range into a single row | `=TOROW(array, [ignore], [scan_by_column])` |
+| **WRAPCOLS** | Wraps a 1D list into a grid, column by column | `=WRAPCOLS(vector, wrap_count, [pad_with])` |
+| **WRAPROWS** | Wraps a 1D list into a grid, row by row | `=WRAPROWS(vector, wrap_count, [pad_with])` |
+| **EXPAND** | Pads an array with extra rows and columns | `=EXPAND(array, rows, [columns], [pad_with])` |
+
+**Availability:** all five require Excel for Microsoft 365 (Windows, Mac, and web); Excel 2021 and older return `#NAME?`.
+
+**Mental model:** TOCOL and TOROW collapse a 2D range into one dimension; WRAPCOLS and WRAPROWS fold a list back into a grid; EXPAND resizes an array with padding.
+
+## TOCOL — Flatten a Range into a Single Column
+
+```excel
+=TOCOL(array, [ignore], [scan_by_column])
+```
+
+A team roster in three columns of a signup sheet (B2:D10) needs every name in one column for a dropdown:
+
+```excel
+=TOCOL(B2:D10)
+```
+
+By default, TOCOL reads row by row — left to right, top to bottom.
+
+**`ignore`** controls what gets skipped:
+
+| Value | Behavior |
+|-------|----------|
+| `0` | Keep everything (default) |
+| `1` | Skip blank cells |
+| `2` | Skip errors |
+| `3` | Skip blanks and errors |
+
+A signup sheet with empty slots is the classic case — blanks would otherwise become empty rows in the dropdown:
+
+```excel
+=TOCOL(B2:D10, 1)
+```
+
+**`scan_by_column`** changes the read order. `TRUE` reads column B first, then C, then D — useful when each column is a meaningful unit, like a week in a calendar grid:
+
+```excel
+=TOCOL(B2:H32, , TRUE)
+```
+
+## TOROW — Flatten into a Single Row
+
+TOROW is the horizontal mirror of TOCOL. Same arguments, same rules — the result spills into one row instead of one column.
+
+```excel
+=TOROW(array, [ignore], [scan_by_column])
+```
+
+Some exports wrap headers across several rows. A log with titles in A1, subtitles in A2, and values in A3 reads as one clean row:
+
+```excel
+=TOROW(A1:D3, 1)
+```
+
+The `1` skips the blank cells that usually appear in wrapped headers.
+
+## WRAPCOLS and WRAPROWS — Turn a List into a Grid
+
+WRAPROWS and WRAPCOLS fold a one-dimensional list into a grid. The fill direction differs: WRAPROWS fills row by row, so `wrap_count` is the number of columns; WRAPCOLS fills column by column, so `wrap_count` is the number of rows.
+
+```excel
+=WRAPROWS(vector, wrap_count, [pad_with])
+=WRAPCOLS(vector, wrap_count, [pad_with])
+```
+
+**Twelve items into a 4 × 3 grid** — the result is four rows of three, read left to right:
+
+```excel
+=WRAPROWS(A1:A12, 3)
+```
+
+**One hundred product codes into a 10-column label table** — WRAPCOLS fills down first, so each printed column is a cut-down strip:
+
+```excel
+=WRAPCOLS(A1:A100, 10, "")
+```
+
+**`pad_with`** fills leftover cells when the list length does not divide evenly; the default `#N/A` clutters the grid. At 5 columns, twelve items produce three rows, and the three leftover cells fill with empty text.
+
+## EXPAND — Pad an Array to a Target Size
+
+EXPAND returns an array with more rows and columns than the original, filling the new cells with a padding value. A 3 × 3 table that needs to fill a 5 × 5 report block:
+
+```excel
+=EXPAND(A1:C3, 5, 5, "")
+```
+
+**EXPAND cannot shrink.** The `rows` and `columns` arguments must be at least the original dimensions. To trim an array down, use [TAKE and DROP](/blog/excel-take-drop-chooserows-choosecols-guide) instead.
+
+Its most useful job is preparing arrays of different sizes before combining them — pad a short list to match a longer one so that [VSTACK](/blog/excel-vstack-hstack-guide) aligns the columns.
+
+## The TOCOL ↔ WRAPROWS Round-Trip
+
+Because TOCOL reads row by row by default, wrapping its output back reproduces the original grid:
+
+```excel
+=WRAPROWS(TOCOL(A1:C4), 3)
+```
+
+A 4 × 3 range flattens to 12 cells, then wraps back into 4 rows of 3. That matters when rows arrive with ragged lengths, or when columns should be rows. TOROW pairs with WRAPCOLS for horizontal round-trips.
+
+## Real Use Cases
+
+| Scenario | Solution |
+|----------|----------|
+| Unpivot a grid into one column | `=TOCOL(B2:D10, 1)` |
+| Collapse multi-row headers into one row | `=TOROW(A1:D3, 1)` |
+| Turn a 12-item list into a 4 × 3 grid | `=WRAPROWS(A1:A12, 3)` |
+| Arrange 100 product codes into a 10-column table | `=WRAPCOLS(A1:A100, 10, "")` |
+| Match the dimensions of two arrays | `=EXPAND(A1:C3, 5, 5, "")` |
+
+Reshaping is usually step one of a cleaning job: you [flatten a messy grid into one clean column before cleaning it](/blog/excel-data-cleaning-techniques-guide), then deduplicate and standardize the result.
+
+For data that arrives as several separate lists, you can [combine TOCOL with VSTACK to merge multiple lists into one column](/blog/excel-vstack-hstack-guide) — stack the lists first, then flatten once.
+
+## Error Handling and Limitations
+
+**`#VALUE!` — WRAPROWS/WRAPCOLS got a 2D vector.** The wrap functions accept one dimension only. Flatten first:
+
+```excel
+=WRAPROWS(TOCOL(B2:D10), 4)
+```
+
+**`#CALC!` — wrap_count is 0 or the vector is empty.** No valid grid shape exists; keep the count at least 1.
+
+**`#VALUE!` — EXPAND tried to shrink.** Rows or columns below the original dimensions are rejected. Use TAKE or DROP to trim instead.
+
+**Performance.** A whole-column reference like `A:A` processes 1,048,576 cells. Limit ranges to the data present (`A1:A5000`, not `A:A`), especially when the result spills into a grid.
+
+**Availability.** All five functions are Microsoft 365 only; on older Excel, TRANSPOSE or Power Query are the practical fallbacks.
+
+## Reshaping Functions vs the Alternatives
+
+| Method | Pros | Cons |
+|--------|------|------|
+| **TOCOL / TOROW / WRAP / EXPAND** | One formula, dynamic, composes with other array functions | Microsoft 365 only |
+| **TRANSPOSE (classic)** | Works in every Excel version | Cannot flatten multi-column ranges |
+| **Power Query** | Handles huge datasets and complex transforms | Needs setup and a refresh step |
+| **Copy-paste manual** | Simple and universal | Static, error-prone, never updates |
+
+For recurring reports, the reshape functions win; for one-off transforms on enormous datasets, Power Query is worth the setup.
+
+## Pro Tips
+
+- **`=TOCOL(range, 1)` is the most used pattern** — skipping blanks automatically gives a clean list from any messy grid.
+- **TOCOL + UNIQUE builds a unique list from a grid** without a helper column:
+
+```excel
+=UNIQUE(TOCOL(B2:D10, 1))
+```
+
+- **Normalize before charting:** EXPAND + WRAPROWS gives every series the same grid size.
+- **Pair with text functions:** [split text into arrays, then reshape the result with WRAPROWS](/blog/excel-textsplit-textbefore-textafter-guide) for multi-column layouts from one cell.
+
+## Common Mistakes to Avoid
+
+1. **Forgetting the `ignore` argument.** The default keeps blanks, so a sparse grid returns empty rows. Add `1` (or `3` to also drop errors).
+2. **Confusing WRAPROWS and WRAPCOLS.** WRAPROWS fills row by row (left to right first); WRAPCOLS fills column by column (top to bottom first). Pick by how you want the grid read.
+3. **Using EXPAND to shrink.** EXPAND only grows — use TAKE and DROP to trim by position.
+
+## FAQ
+
+**Can TOCOL skip errors?** Yes — `ignore` of `2` skips errors, `3` skips blanks and errors.
+
+**WRAPROWS or WRAPCOLS?** The fill direction. WRAPROWS reads the list left to right; WRAPCOLS reads top to bottom first.
+
+**Can EXPAND shrink an array?** No — `rows` and `columns` must be at least the original dimensions. Use TAKE or DROP to trim.
+
+**Available in Google Sheets?** TOCOL and TOROW exist there with the same role; WRAPCOLS, WRAPROWS, and EXPAND do not.
+
+## AI Prompt Callout
+
+Once you understand the reshape family, you can describe a layout problem to an AI assistant (ChatGPT, Gemini, or Claude) and get a ready-to-use formula:
+
+<Callout variant="info" title="AI Prompt Template">
+  I have a table in cells A2:D50 with columns Product, Category, Price, and Stock. I need one formula that returns a single column of every non-blank Category value, with duplicates removed, so I can use it as a dropdown source. Use the TOCOL and UNIQUE functions.
+</Callout>
+
+Adjust the range and columns to match your data.
+
+## SheetHub's Take
+
+TOCOL, TOROW, WRAPCOLS, WRAPROWS, and EXPAND close the gap between the shape your data has and the shape your tools need. Learn them as a family: flatten with TOCOL or TOROW, rebuild grids with WRAPROWS or WRAPCOLS, pad with EXPAND. The real wins come from composing them — a round-trip, a unique list, or a perfectly sized report block in one formula.

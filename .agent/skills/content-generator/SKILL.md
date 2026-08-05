@@ -26,10 +26,10 @@ title: "Complete Guide to XLOOKUP in Excel & Google Sheets"
 description: "Master XLOOKUP with practical step-by-step examples, formula syntax, and troubleshooting tips."
 date: "2026-07-23"
 updated: "2026-07-23"
-category: "Excel" # Excel, Google Sheets, AI, Formulas, Tutorials
+category: "Formulas & Functions" # Formulas & Functions, Google Sheets, Productivity, Data Analysis, Formatting & Layout, Comparison, Excel, AI
 tags: ["XLOOKUP", "Formulas", "Excel"]
 published: true
-heroImage: "/images/posts/xlookup-guide.webp"
+heroImage: "default-og"
 ```
 
 ---

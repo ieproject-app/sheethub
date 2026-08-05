@@ -1,0 +1,86 @@
+---
+title: "Combo Chart in Google Sheets: Secondary Axis & Multi-X Scatter"
+date: "2026-08-02"
+description: "Google Sheets July 2026: combo charts with secondary axis and multi-X scatter charts, step by step."
+published: true
+featured: false
+heroImage: "default-og"
+tags: ["google-sheets", "charts", "data-analysis", "news", "update", "tutorial"]
+category: "Data Analysis"
+---
+
+Revenue runs in the millions; profit margin runs in single digits. Plot both on one axis and the margin flattens into a near-straight line at the bottom of the chart. That scale mismatch is exactly the problem Google Sheets solved in July 2026: combo charts with a secondary axis, plus scatter charts where every series gets its own X-axis. Both arrived natively — no workaround required.
+
+## What's New: Combo Charts (July 2026)
+
+Google announced combo chart support on July 20, 2026. Sheets can now create three new chart types directly:
+
+| Chart Type | What It Shows |
+|------------|---------------|
+| **Clustered Column - Line** | Bars for one series, a line for another, sharing one axis |
+| **Clustered Column - Line on Secondary Axis** | Bars on the left axis, line on the right axis — different scales |
+| **Custom Combo** | Choose a chart type per series, from columns to lines to area |
+
+The feature rolled out to Rapid Release domains starting July 20 and reaches Scheduled Release domains on August 4, 2026. It is available to all Google Workspace customers and personal Google accounts, with no admin control required.
+
+## How to Create a Combo Chart
+
+Combo charts take about a minute from a normal data table. Say the sheet holds monthly revenue and margin:
+
+| Month | Revenue | Margin % |
+|-------|---------|----------|
+| Jan | 1,200,000 | 8.5 |
+| Feb | 1,350,000 | 8.9 |
+| Mar | 1,280,000 | 8.2 |
+
+1. Select the data range, including headers.
+2. Go to **Insert → Chart**.
+3. In the Chart editor, open the **Chart type** dropdown and pick **Combo chart**.
+4. Assign each series a type: revenue as columns, margin as a line.
+5. Turn on the secondary axis for the line series so it scales independently.
+
+That is the whole setup — no manual re-plotting and no formula hacks.
+
+## Secondary Axis — When You Need It
+
+Use a secondary axis whenever two series live on different scales: revenue in the millions versus margin as a percentage, or units sold versus price per unit. Without it, the smaller-scale series gets visually crushed into the baseline.
+
+In the Chart editor, select the series, then set **Axis → Right axis**. The chart now shows two vertical scales — the left one for revenue, the right one for margin.
+
+## What's New: Scatter with Multiple X-Series
+
+On July 29, 2026, Google released a second charting upgrade: scatter charts with multiple independent X-series. Previously, every series in a scatter chart had to share the same horizontal axis, which forced workarounds for a long-standing request — users have asked for per-series X values since at least 2019.
+
+Now each series can map to its own X column. Rapid Release rollout started July 29; Scheduled Release starts August 14, 2026.
+
+## How to Create a Scatter Chart with Multiple X-Series
+
+Temperature readings for two cities with different measurement windows are a classic case. City A recorded hourly temperatures for three days; City B only has data for the last day.
+
+1. Keep each city's X and Y values in its own pair of columns.
+2. Select all four columns and insert a **Scatter chart**.
+3. In the Chart editor, confirm each series references its own X column.
+4. Each series now plots against its own time axis — overlapping where the windows overlap, extending beyond where they do not.
+
+## Excel Import Compatibility
+
+Both updates improve Excel round-tripping. Previously, importing an Excel file with a combo chart dropped the secondary axis, and importing a scatter chart with multiple X-series collapsed everything onto a single X-axis. Those configurations are now preserved in both directions — open an Excel workbook in Sheets and the charts keep their structure.
+
+## What This Means for Your Workflow
+
+Three practical takeaways:
+
+1. **You no longer need Excel just for combo charts.** The classic "I will do the chart in Excel, everything else in Sheets" workflow can stay in one place.
+2. **Multi-X scatter is available for mixed datasets.** Comparing metrics with different time windows no longer requires dummy columns or separate charts.
+3. **Know when a combo chart is the right tool.** Use one when series share a category axis but differ in scale or type. If the story is comparing two independent trends, two charts side by side often read better than one crowded chart.
+
+For lighter visuals, [SPARKLINE in-cell mini charts](/blog/google-sheets-sparkline-guide) cover single-cell sparklines — combo charts are the full-size option. For interactive dashboard views, [Google Sheets Canvas](/blog/google-sheets-canvas-dashboard-guide) layers AI-generated data views on top of the same source data.
+
+## Rollout & Availability
+
+- **Combo charts:** announced July 20, 2026; Rapid Release from July 20, Scheduled Release from August 4.
+- **Scatter with multiple X-series:** announced July 29, 2026; Rapid Release from July 29, Scheduled Release from August 14.
+- Rollout is gradual — up to 15 days for full visibility, so check your own account before relying on it.
+- Available to all Workspace customers and personal accounts. No admin control.
+
+**Pro tip:** not sure which chart type fits your data? [Ask Gemini to suggest the right chart type](/blog/gemini-ai-google-sheets-guide) before inserting — a second opinion costs nothing.

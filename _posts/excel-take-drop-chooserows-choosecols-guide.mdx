@@ -1,0 +1,212 @@
+---
+title: "Excel TAKE and DROP Function Guide: Slice Any Array"
+date: "2026-08-01"
+description: "Slice Excel arrays with TAKE, DROP, CHOOSEROWS, CHOOSECOLS: extract or reorder rows and columns in one dynamic formula."
+published: true
+featured: false
+heroImage: "default-og"
+tags: ["excel", "formulas", "take-drop", "chooserows-choosecols", "dynamic-arrays", "tutorial"]
+category: "Formulas & Functions"
+---
+
+Need the last 50 rows of a 10,000-row log? One formula: `=TAKE(A2:D10001, -50)`. Need every other row from a report? One formula. Need three non-adjacent columns in a new order? One formula. The Excel TAKE and DROP functions, plus CHOOSEROWS and CHOOSECOLS, turn array slicing from a copy-paste ritual into a single dynamic formula.
+
+## What Are TAKE, DROP, CHOOSEROWS, and CHOOSECOLS?
+
+These four functions belong to the [dynamic array family](/blog/excel-dynamic-array-functions-guide) that includes FILTER and SORT. Each takes an array and returns a rearranged subset that spills automatically.
+
+| Function | What It Does | Syntax |
+|----------|-------------|--------|
+| **TAKE** | Returns the first or last N rows or columns | `=TAKE(array, rows, [columns])` |
+| **DROP** | Removes the first or last N rows or columns | `=DROP(array, rows, [columns])` |
+| **CHOOSEROWS** | Returns specific rows, in any order | `=CHOOSEROWS(array, row_num1, [row_num2], ...)` |
+| **CHOOSECOLS** | Returns specific columns, in any order | `=CHOOSECOLS(array, col_num1, [col_num2], ...)` |
+
+**Availability:** all four require Excel for Microsoft 365 (Windows, Mac, and web). Excel 2021 and older return `#NAME?`.
+
+**Mental model:** TAKE keeps what you ask for, DROP removes what you do not want, and CHOOSEROWS/CHOOSECOLS cherry-pick positions.
+
+## TAKE — Slice Rows or Columns from the Edges
+
+TAKE extracts a contiguous block from the start or end of an array. A **positive** number takes from the beginning; a **negative** number counts from the end.
+
+```excel
+=TAKE(array, rows, [columns])
+```
+
+**Last 50 rows of a big log.** Your sales log runs from A2 to D10001:
+
+```excel
+=TAKE(A2:D10001, -50)
+```
+
+**First two columns only.** Omit the rows argument and set columns:
+
+```excel
+=TAKE(A2:T1000, , 2)
+```
+
+The result is a dynamic spill: add a transaction to the log, and TAKE immediately shows the new last 50 rows.
+
+## DROP — Remove Rows or Columns from the Edges
+
+DROP is the mirror image of TAKE: it removes rows or columns from the start or end and returns everything left.
+
+```excel
+=DROP(array, rows, [columns])
+```
+
+**Remove a header row.** Data with column titles in row 1:
+
+```excel
+=DROP(A1:D100, 1)
+```
+
+**Drop the last row** (a totals row, for example) with a negative number:
+
+```excel
+=DROP(A1:D100, -1)
+```
+
+**When to use which:** if you know what to keep, use TAKE. If you know what to remove, use DROP.
+
+## CHOOSEROWS — Pick Any Rows, in Any Order
+
+CHOOSEROWS returns specific rows by position — they do not need to be consecutive.
+
+```excel
+=CHOOSEROWS(array, row_num1, [row_num2], ...)
+```
+
+**Extract the odd rows** (1, 3, 5, and 7):
+
+```excel
+=CHOOSEROWS(A2:B100, 1, 3, 5, 7)
+```
+
+**Negative indices count from the end.** Grab the last row without knowing the report's length:
+
+```excel
+=CHOOSEROWS(A1:F100, -1)
+```
+
+**Header plus total row** — keep just the title row and the bottom total:
+
+```excel
+=CHOOSEROWS(Report, 1, -1)
+```
+
+## CHOOSECOLS — Reorder and Extract Non-Adjacent Columns
+
+CHOOSECOLS does for columns what CHOOSEROWS does for rows — and it can **reorder** them too.
+
+```excel
+=CHOOSECOLS(array, col_num1, [col_num2], ...)
+```
+
+**Reorder columns.** Make column 3 come first, then 1, then 2:
+
+```excel
+=CHOOSECOLS(A2:F100, 3, 1, 2)
+```
+
+**Pick non-adjacent columns.** Your raw table has 6 columns, but the report needs only Name (column 2), Total (column 5), and Region (column 4):
+
+```excel
+=CHOOSECOLS(A2:F100, 2, 5, 4)
+```
+
+This is where CHOOSE falls short: it selects a single value per index, and building an array of non-adjacent columns requires awkward array-constant tricks. CHOOSECOLS handles it in one declaration.
+
+## Real-World Use Cases
+
+| Scenario | Solution | Why It Works |
+|----------|----------|-------------|
+| Last 50 rows of a 10,000-row log | `=TAKE(A2:D10001, -50)` | Negative index counts from the end |
+| Remove header and footer rows | `=DROP(A1:D100, 1)` plus `=DROP(..., -1)` | DROP trims edges in one step |
+| Extract odd-numbered rows | `=CHOOSEROWS(A1:D100, 1, 3, 5, 7)` | Non-consecutive indices allowed |
+| Reorder report columns | `=CHOOSECOLS(A1:F100, 3, 1, 2)` | Output order follows argument order |
+| Stack the latest N rows per sheet | `=VSTACK(TAKE(Jan!A2:D100, -10), TAKE(Feb!A2:D100, -10))` | TAKE samples, VSTACK assembles |
+
+## Combining with VSTACK, HSTACK, and FILTER
+
+The real power shows up when you compose these functions. **TAKE + VSTACK** samples the newest rows from several sheets and merges them:
+
+```excel
+=VSTACK(TAKE(Jan!A2:D100, -10), TAKE(Feb!A2:D100, -10), TAKE(Mar!A2:D100, -10))
+```
+
+You can [stack the last N rows from each sheet with VSTACK](/blog/excel-vstack-hstack-guide) as part of a rolling report.
+
+**CHOOSECOLS + FILTER** filters first, then shapes the output — keep only high-value rows, then expose just the columns the dashboard needs:
+
+```excel
+=CHOOSECOLS(FILTER(A1:D100, D1:D100 > 1000), 1, 4)
+```
+
+You do not need helper columns, since each function returns an in-memory array.
+
+## Error Handling and Limitations
+
+These functions are strict about positions: an index outside the array, or zero, returns an error rather than an empty result.
+
+**`#CALC!` — index out of range (TAKE/DROP).** Asking TAKE for 200 rows from a 100-row array, or passing 0, returns `#CALC!`. Clamp or wrap in IFERROR:
+
+```excel
+=IFERROR(TAKE(A1:D100, MIN(50, ROWS(A1:D100))), "n/a")
+```
+
+**`#VALUE!` — invalid position (CHOOSEROWS/CHOOSECOLS).** A row or column number of 0, or one beyond the array bounds, returns `#VALUE!`. See the [formula errors guide for the full #CALC! and #VALUE! playbook](/blog/excel-formula-errors-troubleshooting-guide) when these appear in your workbooks.
+
+**Whole-column references.** Avoid `A:A` — they pull in the entire 1,048,576-row grid, slowing calculation. Use explicit ranges like `A2:D10000`.
+
+**Not a filter.** These functions slice by **position**, not by **condition**. Use [FILTER](/blog/excel-dynamic-array-functions-guide) for criteria — filter first, then slice.
+
+## TAKE and DROP vs the Alternatives
+
+| Method | Pros | Cons |
+|--------|------|------|
+| **TAKE / DROP / CHOOSEROWS / CHOOSECOLS** | One formula, dynamic, spills, composes with other array functions | Excel 365 only |
+| **INDEX / MATCH** | Works in every Excel version | Verbose and nested for multi-row, multi-column slicing |
+| **Power Query** | Handles huge datasets and complex transforms | Requires setup and refresh |
+| **Manual copy-paste** | Simple and universal | Static, error-prone, never updates |
+
+For recurring reports on changing data, the dynamic array functions win. For one-off extraction on enormous datasets, Power Query is worth the setup.
+
+## Pro Tips
+
+- **Negative index = count from the end** — the shared pattern across all four functions. `-1` always means "the last one," which makes dynamic boundaries trivial.
+- **Combine with SEQUENCE** for custom patterns: `=CHOOSEROWS(A1:D100, SEQUENCE(10,,1,2))` builds row indices 1, 3, 5, ... 19.
+- **Wrap in LET for readable pipelines.** You can [wrap these functions in a LAMBDA to build reusable slice-and-extract helpers](/blog/excel-lambda-function-guide) that you call like custom functions.
+
+## Common Mistakes to Avoid
+
+1. **Swapping rows and columns.** `=TAKE(array, 2)` returns the first two rows — not the first two columns. Omit rows and set columns explicitly: `=TAKE(array, , 2)`.
+2. **Passing 0.** Zero is never "keep nothing" — it produces an error. Omit the argument instead.
+3. **Expecting condition-based filtering.** These functions cannot say "keep rows where Sales > 1,000." That is FILTER's job — slice after filtering, not instead of it.
+
+## FAQ
+
+**Is TAKE available in Excel 2019?** No. All four functions require Excel for Microsoft 365 or Excel for the web.
+
+**How do I get the last row of a growing table?** `=TAKE(array, -1)` — the negative index always means "from the end."
+
+**What is the difference between DROP and FILTER?** DROP removes rows or columns by position; FILTER removes rows by a condition you define.
+
+**Does CHOOSECOLS modify my original data?** No. The output is a spilled array, a calculated result, and it updates automatically if the source changes.
+
+## AI Prompt Callout
+
+Here is a template you can use with ChatGPT, Gemini, or Claude to generate a formula for your workbook:
+
+<Callout variant="info" title="AI Prompt Template">
+  I have a table in cells A1:F1000 with columns Date, Customer, Product, Region, Sales, Rep. I need a formula that returns only the last 200 rows of the table, keeping only the Customer, Sales, and Region columns in that order. Use the TAKE and CHOOSECOLS functions.
+</Callout>
+
+Adjust the cell range, column order, and row count to match your data.
+
+## SheetHub's Take
+
+TAKE, DROP, CHOOSEROWS, and CHOOSECOLS close a gap that used to force everyone into nested INDEX formulas or manual copy-paste: "the last N rows" or "these three columns, in this order" is now a one-line dynamic formula. Learn them together, because they compose — slice with TAKE, trim with DROP, reorder with CHOOSECOLS, assemble with VSTACK.
+
+Next time you reach for the mouse to delete rows or drag columns into a new order, type `=TAKE(` or `=CHOOSECOLS(` instead. The result stays live, and your report stops being a daily chore.

@@ -19,6 +19,12 @@ const PLATFORM_THEME: Record<
     border: "border-emerald-500/20",
     gradient: "from-emerald-500 to-lime-500",
   },
+  excel: {
+    accent: "text-emerald-700 dark:text-emerald-300",
+    bg: "bg-emerald-600/10",
+    border: "border-emerald-600/20",
+    gradient: "from-emerald-600 to-green-500",
+  },
   default: {
     accent: "text-primary",
     bg: "bg-primary/10",
@@ -89,8 +95,9 @@ export function DownloadClient({ downloadInfo }: DownloadClientProps) {
                 Open Template
               </h2>
               <p className="text-sm text-muted-foreground leading-relaxed">
-                Click the button below to open this Google Sheets template.
-                Make a copy to start editing — no sign-in required to view.
+                {downloadInfo.platform === "excel"
+                  ? "Click the button below to download the Excel (.xlsx) template directly."
+                  : "Click the button below to open this Google Sheets template. Make a copy to start editing — no sign-in required to view."}
               </p>
             </div>
 
@@ -99,7 +106,7 @@ export function DownloadClient({ downloadInfo }: DownloadClientProps) {
               className="w-full h-14 rounded-xl text-sm font-black uppercase tracking-wider transition-all shadow-lg cursor-pointer hover:scale-[1.01] active:scale-[0.99] bg-foreground text-background hover:brightness-110"
             >
               <Download className="mr-2 h-5 w-5" />
-              Open in Google Sheets
+              {downloadInfo.platform === "excel" ? "Download Excel Template (.xlsx)" : "Open in Google Sheets"}
               <ArrowRight className="ml-2 h-4 w-4 opacity-40" />
             </Button>
 

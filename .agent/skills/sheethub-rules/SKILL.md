@@ -34,7 +34,7 @@ updated: "2026-07-23"
 category: "Excel" # Excel, Google Sheets, AI, Tutorials, etc.
 tags: ["XLOOKUP", "Formulas"]
 published: true
-heroImage: "/images/posts/my-post-hero.webp" # Full path starting with /images/
+heroImage: "default-og" # Always use "default-og" (SheetHub standard)
 ```
 
 ### Custom Components

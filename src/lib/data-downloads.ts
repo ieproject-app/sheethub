@@ -2,7 +2,7 @@ export interface DownloadInfo {
   fileName: string;
   fileSize?: string;
   externalUrl: string;
-  platform?: 'windows' | 'gdrive' | 'github' | 'font' | 'software' | 'driver' | 'doc';
+  platform?: 'windows' | 'gdrive' | 'excel' | 'github' | 'font' | 'software' | 'driver' | 'doc';
   descriptionEn?: string;
   howToUseEn?: string[];
   license?: string;
