@@ -1,0 +1,182 @@
+---
+title: "Excel IMPORTCSV Function: Import CSV with One Formula"
+date: "2026-08-07"
+description: "Import CSV and text files into Excel with IMPORTTEXT and IMPORTCSV formulas, one-cell data import without Power Query."
+published: true
+heroImage: "default-og"
+tags: ["excel", "importcsv", "data-import", "news", "update", "tutorial"]
+category: "Data Analysis"
+---
+
+A new CSV file lands in your inbox every morning. You open Excel, click Data, then From Text/CSV, browse to the file, click Load, wait for the import wizard, and repeat the whole sequence tomorrow. Excel just shipped two new functions that replace that entire workflow with a single formula in a cell.
+
+## What Are IMPORTTEXT and IMPORTCSV?
+
+IMPORTTEXT and IMPORTCSV are formula-based import functions that pull external CSV and text files directly into a cell. Type the formula once, and the data spills into a dynamic array. When the source file changes, refresh the data with a single click instead of repeating the import wizard.
+
+Both functions return dynamic arrays, so they work like FILTER or SORT. The result spills across rows and columns automatically. IMPORTTEXT handles raw text files with custom delimiters, while IMPORTCSV auto-detects commas and parses the file into columns for you.
+
+> IMPORTTEXT and IMPORTCSV are available to Microsoft 365 subscribers on the **Insiders Beta channel** (Excel for Windows, Version 2502, Build 18604.20002 or later). They are not yet generally available. Check your channel before using them in production files.
+
+## IMPORTTEXT Syntax
+
+```excel
+=IMPORTTEXT(path, [delimiter], [skip_rows], [take_rows], [encoding], [locale])
+```
+
+The first argument is the file path, either a URL or a local file path. Excel pulls the file and splits it on the delimiter you specify. Skip rows to ignore headers or metadata, and set encoding to handle non-ASCII characters.
+
+Here's a real example pulling a public CSV from a URL:
+
+```excel
+=IMPORTTEXT("https://example.com/data.csv", ",", 1, , "UTF-8")
+```
+
+That skips the first row (the header), splits on commas, and interprets the file as UTF-8. The result is a two-dimensional array that spills into adjacent cells.
+
+For log files with pipe delimiters:
+
+```excel
+=IMPORTTEXT("C:/data/log.txt", "|", 1, , "UTF-8")
+```
+
+Same pattern. Excel reads the file, skips one row, splits on pipes, and spills the result. You can reference the result in other formulas just like any dynamic array.
+
+## IMPORTCSV Syntax
+
+```excel
+=IMPORTCSV(path, [skip_rows], [take_rows], [locale])
+```
+
+IMPORTCSV assumes the file is a standard CSV with comma delimiters and UTF-8 encoding, so you do not specify those. It auto-detects the structure and returns the data as an array.
+
+Simplest case: import the entire file:
+
+```excel
+=IMPORTCSV("C:/data/report.csv")
+```
+
+Skip the first row if it contains headers:
+
+```excel
+=IMPORTCSV("C:/data/report.csv", 1)
+```
+
+Pull only the first 100 rows after skipping one:
+
+```excel
+=IMPORTCSV("https://example.com/data.csv", 1, 100)
+```
+
+Set a specific locale if the CSV uses regional formatting:
+
+```excel
+=IMPORTCSV("https://example.com/data.csv", , , "en-US")
+```
+
+Notice the double commas: those skip the `skip_rows` and `take_rows` arguments to reach `locale` in the fourth position.
+
+## How Refresh Works
+
+Import functions do not refresh automatically. The data is static until you tell Excel to pull the latest version. Go to **Data > Refresh All** or press <Kbd>Ctrl</Kbd> + <Kbd>Alt</Kbd> + <Kbd>F5</Kbd> to update every imported dataset in the workbook.
+
+This is different from [Power Query and import wizard workflows](/blog/open-utf8-csv-excel-guide), which create persistent connections that can auto-refresh on file open. Import functions are simpler but require manual refresh.
+
+If you want static data that never changes, copy the spilled range and paste as values. The formula disappears, and the data stays frozen.
+
+## Real Use Cases
+
+| Scenario | Formula |
+|----------|---------|
+| Import public CSV from a URL | `=IMPORTCSV("https://example.com/data.csv")` |
+| Import local CSV, skip header | `=IMPORTCSV("C:/data/report.csv", 1)` |
+| Import pipe-delimited log | `=IMPORTTEXT("C:/data/log.txt", "\|", 1, , "UTF-8")` |
+| Import with regional locale | `=IMPORTCSV("https://example.com/data.csv", , , "en-US")` |
+| Pull first 50 rows only | `=IMPORTCSV("C:/data/report.csv", 1, 50)` |
+
+## Error Handling
+
+**#VALUE! or connection error**  
+The file path is wrong or the URL is not accessible. Check the path and make sure the file exists. For URLs, verify that the link is public and does not require authentication.
+
+**Garbled characters**  
+The file encoding does not match what Excel expects. Set the encoding argument explicitly:
+
+```excel
+=IMPORTTEXT("C:/data/file.csv", ",", , , "UTF-8")
+```
+
+**Performance lag on large files**  
+Import functions load the entire file into memory. If the file is over 10,000 rows, use `take_rows` to limit the import or switch to Power Query for better performance.
+
+**Delimiter not recognized**  
+IMPORTCSV assumes commas. If your file uses tabs, semicolons, or another delimiter, use IMPORTTEXT and specify the character:
+
+```excel
+=IMPORTTEXT("C:/data/file.tsv", CHAR(9), 1)
+```
+
+CHAR(9) is the tab character.
+
+## Comparison: Formula Import vs Alternatives
+
+| Method | Pros | Cons |
+|--------|------|------|
+| IMPORTTEXT / IMPORTCSV | One formula, no setup, refreshable | Insiders Beta only, limited to CSV/text |
+| Power Query | Powerful transforms, stable | Steeper learning curve, more setup |
+| Import wizard | Familiar, guided | Manual process every time |
+| Copy-paste | Fast for one-off tasks | Static data, no refresh |
+
+Formula import is the fastest path when you just need raw data in a cell. For transformation pipelines or complex cleaning, Power Query is still the better tool. [Google Sheets has offered formula-based imports for years](/blog/google-sheets-import-functions-guide) with IMPORTRANGE and IMPORTDATA. These Excel functions bring that same convenience to Microsoft 365.
+
+## Pro Tips
+
+Combine import formulas with other dynamic arrays. Drop IMPORTCSV into FILTER to pull only rows that meet a condition:
+
+```excel
+=FILTER(IMPORTCSV("C:/data/sales.csv", 1), INDEX(IMPORTCSV("C:/data/sales.csv", 1), , 3) > 1000)
+```
+
+That imports the CSV, skips the header, and keeps only rows where column 3 is greater than 1000.
+
+Use `skip_rows` to ignore metadata or multi-line headers. If your file has three header rows, set `skip_rows` to 3.
+
+Reference the file path from another cell for portability. Put the URL or path in cell A1, then:
+
+```excel
+=IMPORTCSV(A1)
+```
+
+Change A1 to switch data sources without editing the formula.
+
+## Common Mistakes to Avoid
+
+**Using relative paths**  
+Relative paths break when you move the workbook. Use absolute paths or URLs.
+
+**Forgetting encoding**  
+If your file has accented characters or non-English text and they render as boxes, add the encoding argument.
+
+**Assuming auto-refresh**  
+The data does not update when the source file changes. You must refresh manually.
+
+## FAQ
+
+**When will IMPORTTEXT and IMPORTCSV be generally available?**  
+As of August 2026, they are in Insiders Beta. Microsoft has not announced a GA date. Check your Excel version under **File > Account**.
+
+**Can I import Excel files?**  
+No. These functions work only with CSV and plain text. For Excel files, use Power Query.
+
+**What is the difference between IMPORTTEXT and IMPORTCSV?**  
+IMPORTTEXT requires you to specify the delimiter and encoding. IMPORTCSV assumes commas and UTF-8, so it has fewer arguments.
+
+**How do I stop the data from refreshing?**  
+Copy the spilled range, paste as values, or delete the formula. Once the formula is gone, the data is static.
+
+**Can I use these functions in Excel 2021?**  
+No. IMPORTTEXT and IMPORTCSV require Microsoft 365 and are not part of the Excel 2021 perpetual license.
+
+## What to Do Next
+
+Once the data is imported, [clean the imported data with these data cleaning techniques](/blog/excel-data-cleaning-techniques-guide) to remove duplicates, fix formatting, and prepare it for analysis. For more complex import scenarios that require transformation or scheduled refresh, the [Power Query and import wizard approach](/blog/open-utf8-csv-excel-guide) offers more control.

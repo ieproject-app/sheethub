@@ -1,0 +1,108 @@
+---
+title: "Google Sheets SHEET & SHEETS Functions: Reference Tabs"
+date: "2026-08-08"
+description: "Use SHEET and SHEETS in Google Sheets to get tab numbers and count sheets. New 2026 functions explained."
+tags: ["google-sheets", "tutorial", "sheet-function", "formulas", "news"]
+category: "Google Sheets"
+published: true
+heroImage: "default-og"
+---
+
+Google quietly shipped two new functions in February 2026 that many spreadsheet users did not even notice. `SHEET` and `SHEETS` are the first official, formula-based way to work with your workbook's own tabs, returning a sheet's number or counting how many sheets exist. For anyone who has ever asked a forum "how do I get the sheet number in a formula?" or built a dashboard that breaks the moment someone adds a tab, these two functions are a small but meaningful answer.
+
+This is a news angle with a practical payoff: what `SHEET` and `SHEETS` do, where they differ (including a behavior discrepancy between the two), and how to combine them with dynamic references so your multi-tab reports stop breaking when the workbook changes.
+
+## Two New Functions, One Announcement
+
+Both functions arrived with the same Google Workspace Updates announcement on **February 23, 2026**, rolling out gradually over up to 15 days to Rapid and Scheduled release domains. They are available to all Google Workspace customers and to users with personal Google accounts, and there is **no admin control** — you can use them in any spreadsheet immediately.
+
+The pair answers a gap that spreadsheet users have lived with for years. Previously, if you wanted a sheet's position or a total tab count inside a formula, you had to reach for scripts or fragile `INDIRECT` tricks. Now Sheets recognizes your workbook structure natively. Both functions **recalculate dynamically**: if a sheet is added, removed, moved, or renamed, the results update automatically. When your data lives across many tabs, IMPORT functions plus SHEET/SHEETS give you dynamic multi-tab references that stay correct as the file evolves.
+
+Because the release is recent, coverage online is still thin. Most blogs have not written about it yet, which puts you ahead of the curve if you learn these functions now. The functionality itself is stable and available to every account, so there is no downside to adopting it in your own sheets today.
+
+## What Is SHEET()?
+
+`SHEET` returns the **number** of a sheet — not its name. The syntax is:
+
+```excel
+=SHEET(value)
+```
+
+- If you supply a **sheet name or reference**, it returns that sheet's position in the tab order.
+- If you **omit the argument** (`=SHEET()`), it returns the number of the sheet containing the formula.
+
+If you put `=SHEET()` in a cell on the third tab, it returns `3`. If you type `=SHEET("Data")`, it returns the position of the sheet named "Data," no matter which tab the formula sits on.
+
+This is the useful one for dynamic work. Because the number follows the sheet's actual position, a label on a tab can show its own index, or a formula can look up which sheet the current cell belongs to.
+
+## What Is SHEETS()?
+
+`SHEETS` counts tabs. The syntax looks like a function call with an argument, but it has an important quirk:
+
+```excel
+=SHEETS()
+```
+
+**In Google Sheets, `SHEETS` does not accept arguments.** A formula like `=SHEETS(Sheet1!A1)` returns an error. The official documentation is explicit: "Formulas containing arguments for this function will result in an error." That differs from Excel, where `SHEETS(reference)` is valid, so it is worth remembering if you switch between the two platforms.
+
+Used correctly, `=SHEETS()` returns the total number of sheets in the spreadsheet. That makes it perfect for structure checks — for example, an `IF` that flags when a workbook is missing an expected tab.
+
+## Real Use Cases
+
+| Scenario | Formula | What It Returns |
+|----------|---------|-----------------|
+| The current sheet's number | `=SHEET()` | Position of the tab holding the formula |
+| The position of a named tab | `=SHEET("Data")` | Sheet number of "Data" |
+| Total number of tabs | `=SHEETS()` | Count of all sheets in the file |
+| Flag a missing tab | `=IF(SHEETS() >= 4, "OK", "missing")` | "OK" or "missing" based on tab count |
+| Label a tab with its index | `="Sheet " & SHEET()` | e.g. "Sheet 3" |
+
+The last pattern is a tidy way to auto-number sheets. Whatever reordering happens in the tab bar, the label stays correct because `SHEET()` recalculates dynamically. When those tabs hold data pulled from other files, the [IMPORT functions guide](/blog/google-sheets-import-functions-guide) shows how to bring outside data in, so `SHEET`/`SHEETS` can then manage the tabs that result.
+
+## Dynamic Tab References
+
+The real power shows up when you pair these with `INDIRECT`. A classic problem is a workbook with 12 monthly tabs and a summary sheet that must pull the right month. Instead of hard-coding `January!B2`, `February!B2`, and so on, you can compute the tab name:
+
+```excel
+=INDIRECT(TEXT(DATE(2026, SHEET(), 1), "mmm") & "!B2")
+```
+
+Here `SHEET()` feeds the month number for a sheet that sits in month order, and `INDIRECT` builds the reference to the matching tab. Adding or moving a month updates the pull automatically.
+
+Let us make that concrete with a 12-month example. Set the tabs up in order — January through December — and let the 13th "Summary" tab do the aggregation. In the Summary tab, `=SHEET()` inside a cell on a given tab tells you which month it is, and the formula above turns that number into the correct tab name. Now if you reorder the tabs, every monthly pull follows the new order with zero edits. This is exactly the kind of maintenance headache that used to eat hours in a workbook that added a new month every January.
+
+Note that `INDIRECT` is volatile, so on very large files with thousands of cells it can slow recalculation — use it where the flexibility outweighs the cost. For heavier consolidation across many tabs, combine SHEET/SHEETS with [QUERY over multiple tabs](/blog/query-function-google-sheets-guide) to build a single rolling report.
+
+## SHEET/SHEETS in Excel: The Parity Note
+
+Excel has had `SHEET()` and `SHEETS()` since 2013, so these names are not new in the spreadsheet world — just new to Google Sheets. The core idea is identical: `SHEET` returns a sheet number, `SHEETS` counts sheets. The difference is in the details: Excel's `SHEETS(reference)` accepts a reference and counts the sheets within it, while Google Sheets' `SHEETS()` takes no arguments at all. Excel also returns `#REF!` for invalid sheet names, where Google Sheets returns `#N/A`. For a broader look at how the two platforms map, see [Excel vs Google Sheets formula differences](/blog/excel-vs-google-sheets-formula-differences).
+
+## Error Handling & Limitations
+
+1. **Invalid sheet name.** `=SHEET("not-a-tab")` returns `#N/A` because the name cannot be resolved. Double-check the exact tab name, including spaces.
+2. **`SHEETS` with an argument.** A `SHEETS(reference)` formula errors in Google Sheets, unlike Excel. Omit the argument.
+3. **`INDIRECT` performance.** Combining `SHEET`/`SHEETS` with `INDIRECT` makes formulas volatile; on huge workbooks prefer a helper column or a single computed reference rather than thousands of `INDIRECT` calls.
+4. **Sheet order vs. name.** `SHEET` returns position in the tab bar, which changes when tabs are reordered. If you need a stable identity independent of position, reference by name instead.
+5. **Rollout visibility.** The functions may take up to 15 days to appear on your account after the launch window begins, so a brand-new file might not show them immediately.
+
+## Pro Tips
+
+- Use `SHEET()` for **auto-labeling** tabs in dashboards — the label always matches position.
+- Use `SHEETS()` with an `IF` guard as a **before-distribution structure check** so you never hand off a workbook missing a required tab.
+- Pair `SHEET` with `INDIRECT` for **month-order summaries** rather than hard-coding tab names, and you can reorganize the tab bar without rewriting formulas.
+
+## Common Mistakes to Avoid
+
+- Assuming `SHEET` returns a sheet **name** — it returns a **number**. Getting the name still requires a separate approach.
+- Confusing `SHEET` (a number) with `SHEETS` (a count), or swapping which one takes an argument.
+- Hard-coding sheet numbers when a dynamic `SHEET()`/`INDIRECT` would survive reordering.
+
+## FAQ
+
+- **Does `SHEET` return the tab name?** No — it returns the sheet number. The name requires other functions.
+- **When were these functions released?** February 23, 2026, rolling out gradually over up to 15 days.
+- **Does Excel have the same functions?** Yes — Excel has had `SHEET`/`SHEETS` since 2013, with the difference that Excel's `SHEETS` accepts a reference argument.
+
+## Summary
+
+`SHEET` and `SHEETS` give Google Sheets users an official way to read workbook structure in a formula. `SHEET()` returns the number of a tab — current or named — and `SHEETS()` returns the total tab count, with both recalculating dynamically as your file changes. The main catch is that Google Sheets' `SHEETS` takes no argument, unlike Excel. Pair them with `INDIRECT` for month-order summaries and auto-labeled dashboards, use `SHEETS()` as a structure guard before sharing, and your multi-tab reports will finally hold together as the workbook grows.

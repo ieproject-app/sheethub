@@ -1,0 +1,97 @@
+---
+title: "How to Sum Filtered Rows with Custom Criteria in Google Sheets"
+date: "2026-08-07"
+description: "Learn two ways to sum visible filtered rows in Google Sheets while excluding rows that match custom criteria."
+published: true
+featured: false
+heroImage: "default-og"
+tags: ["google-sheets", "tutorial", "sumif", "filter", "array-formula"]
+category: "Google Sheets"
+---
+
+You filtered your sheet down to exactly the rows you care about, and now you just want the total of one column among them. Drag a SUM across and you get every row including the ones you hid. That is the moment most people discover that `=SUM()` pays no attention to filters at all. What you actually need is a sum of *visible* filtered rows, and often with one more condition on top: exclude the status column entries marked `drop`.
+
+This guide walks through two clean approaches, when each one wins, and the exact formulas to drop into your sheet. No helper-heavy workaround, no macros, no scripts.
+
+## Why a Plain SUM Fails
+
+A filtered sheet still contains every cell underneath. `=SUM(V3:V)` adds up every value in the column whether its row is shown or hidden. The same is true of `=SUMIF()`. Filtering changes what you *see*, not what the formula *reads*.
+
+Two of the usual fixes fall short on their own:
+
+- **SUBTOTAL(109, ...)** sums only visible rows, but it takes a single range and cannot also exclude rows whose status equals `drop`.
+- **SUMIFS** handles multiple criteria beautifully, but it has no idea which rows the filter has hidden.
+
+The solution is to combine the two: use SUBTOTAL to detect visibility and let SUMIFS or SUMPRODUCT apply your extra criterion.
+
+## Solution 1: One Self-Contained Formula
+
+If you want a single formula that does not touch the sheet, combine **SUMPRODUCT**, **BYROW**, and **SUBTOTAL**. Suppose column V holds the values to add, and column AJ holds a status where some rows say `drop`.
+
+```excel
+=SUMPRODUCT(BYROW(V3:V, LAMBDA(r, SUBTOTAL(109, r))), (AJ3:AJ <> "drop"))
+```
+
+Here is what each piece does:
+
+1. `BYROW(V3:V, LAMBDA(r, SUBTOTAL(109, r)))` walks every row in the range and, for each cell, asks SUBTOTAL(109, ...) whether that cell is currently visible. Function code **109** is the SUM variant that ignores hidden rows, so it returns the value when the row is visible and 0 when it is filtered out.
+2. `(AJ3:AJ <> "drop")` produces a second list of TRUE/FALSE that is 1/0 when the status is not `drop`.
+3. `SUMPRODUCT` multiplies the two lists element by element and adds the results. A row contributes its value only when it is both visible *and* not marked `drop`.
+
+**Pros:** no helper column, fully self-contained, easy to paste into any cell.
+
+**Cons:** BYROW over a huge range can slow down. Scope the range (`V3:V2000`) instead of an open-ended column if your sheet is large.
+
+## Solution 2: A Fast Helper Column
+
+When performance matters or the dataset is big, add one helper column and switch to SUMIFS. Put this in a new column, say AK, starting at the first data row:
+
+```excel
+=SUBTOTAL(103, V3)
+```
+
+Function code **103** is the COUNTA variant that counts only visible cells. It returns 1 when the row is visible and 0 when it is filtered out.
+
+Now sum the values where the row is visible **and** the status is not `drop`:
+
+```excel
+=SUMIFS(V3:V, AJ3:AJ, "<>drop", AK3:AK, 1)
+```
+
+SUMIFS adds up column V wherever column AJ is not `drop` and column AK equals 1 (the visible marker). Because AK only shows 1 for visible rows, the filter is respected at the same time. For the full breakdown of how SUMIF, SUMIFS, and SUMPRODUCT decide which rows to include, see our [SUMIFS for conditional summing](/blog/sumif-vs-sumifs-vs-sumproduct-comparison) guide.
+
+**Pros:** extremely fast on large sheets, scales to thousands of rows.
+
+**Cons:** it adds a helper column to your layout, and you must remember to fill it down when you add new rows.
+
+## Direct Formula vs Helper Column
+
+| Criterion | SUMPRODUCT + BYROW + SUBTOTAL | Helper Column + SUMIFS |
+|-----------|-------------------------------|------------------------|
+| Helper column needed | No | Yes |
+| Speed on large data | Slower | Faster |
+| Formula complexity | Higher | Lower |
+| Best for | Quick ad-hoc totals | Reports you run repeatedly |
+| Range discipline | Needs a bounded range | Tolerates full columns well |
+
+Use Solution 1 when you want a drop-in formula for a one-off check. Reach for Solution 2 when this is a recurring report on a big table.
+
+## Pro Tips
+
+- **Prefer bounded ranges in Solution 1.** `V3:V2000` recalculates far less than `V3:V` over a whole column. For very large data, bound the range or switch to the helper column.
+- **Combine with FILTER for dynamic ranges.** If your visible set changes shape, the [Google Sheets FILTER for dynamic ranges](/blog/filter-function-google-sheets) lets you build an intermediate filtered array you then sum.
+- **Keep formulas readable with LET.** In the newest Sheets you can name the pieces; see the [LET function for cleaner formulas](/blog/excel-let-function-guide).
+- **The legacy array entry is gone for BYROW.** You type these formulas normally and press `<Kbd>Enter</Kbd>`. There is no need for `<Kbd>Ctrl</Kbd> + <Kbd>Shift</Kbd> + <Kbd>Enter</Kbd>` with modern dynamic functions.
+- **Know your SUBTOTAL codes.** 109 = SUM of visible rows, 103 = COUNTA of visible rows. Using the 1–11 variants without the 100 offset ignores hidden rows *only if* they were hidden by a filter, not by manual row hiding.
+
+## AI Prompt Callout
+
+Understand the concept, then let an AI scaffold the exact formula for your own columns. Describe your sheet plainly:
+
+> I have a Google Sheet where column V contains the values I want to add and column AJ holds a status that sometimes says "drop". The sheet is filtered. I need the sum of the visible rows in column V while excluding any row whose column AJ equals "drop". Write me a formula that does this in one cell.
+
+A model can turn that into a SUMPRODUCT/BYROW/SUBTOTAL expression tailored to your ranges, or recommend the helper-column approach if your table is large.
+
+## Summary
+
+A sum that respects the filter *and* skips the `drop` rows is a two-part problem: SUM ignores the filter, and SUBTOTAL ignores criteria. Combine them. Use SUMPRODUCT with BYROW and SUBTOTAL(109) for a quick self-contained total, or add a SUBTOTAL(103) helper column and let SUMIFS do the filtering for speed. Pick based on dataset size and how often you run the report, and you will never paste a misleading total again.

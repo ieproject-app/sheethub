@@ -1,0 +1,184 @@
+---
+title: "Excel Date Functions: DATEDIF, EDATE, EOMONTH & NETWORKDAYS"
+date: "2026-08-07"
+description: "Learn Excel date functions: DATEDIF for age, EDATE and EOMONTH for deadlines, NETWORKDAYS for business days."
+published: true
+featured: false
+heroImage: "default-og"
+tags: ["excel", "tutorial", "date-functions", "datedif", "formulas"]
+category: "Formulas & Functions"
+---
+
+Look at a cell that shows **01/15/2026**. Now think about what Excel actually sees in that cell: the number **46,037**. Every date in Excel is stored as a serial number that counts days from January 1, 1900. The format you see is just a mask painted over that number. This one idea explains why DATEDIF, EDATE, EOMONTH, and NETWORKDAYS do their work with plain arithmetic, and it is the foundation for calculating ages, due dates, and project deadlines without ever touching a calendar.
+
+## Why Dates Are Really Numbers
+
+The most useful habit in spreadsheet work is remembering that a date and a number are the same thing under a different outfit. When you write `=A2+30` next to a date, Excel adds thirty days. It works because the cell contains a serial number, and the date format only changes how that number is displayed.
+
+Once you treat a date as a number, the routine tricks follow on their own. Add 30 to go a month forward, subtract two serial dates to count the days between them, and compare dates with `>` and `<` because they are just numbers.
+
+## What Is a Serial Date in Excel?
+
+On Windows, Excel counts from serial 1, which is January 1, 1900. Every later day adds one to the count. The date **01/15/2026** is stored internally as **46,037**. Because the value is a number, Excel can sort dates, sum them, and feed them straight into date functions.
+
+Changing how a date *looks* is different from changing its value. To switch a cell from `01/15/2026` to `January 15, 2026`, select the cell and press `<Kbd>Ctrl</Kbd> + <Kbd>1</Kbd>` to open Format Cells, then pick the date style you want. The serial number underneath never changes; only the mask does.
+
+The one trap is **text dates**. A value imported as text aligns left, looks like a date, but refuses arithmetic: `=A2+30` on a text date returns `#VALUE!` because Excel cannot add 30 to text. This class of mistake and how to fix it is covered in our [formula errors guide](/blog/excel-formula-errors-troubleshooting-guide).
+
+## DATEDIF: Age in Years, Months & Days
+
+DATEDIF returns the difference between two dates in the unit you ask for. Its syntax is:
+
+```excel
+=DATEDIF(start_date, end_date, unit)
+```
+
+The `unit` argument is a quoted letter. `"Y"` gives complete years, `"M"` gives complete months, `"D"` gives days, and the combinations `"YM"`, `"YD"`, and `"MD"` measure the remainder after subtracting the larger unit.
+
+**Calculate an employee's age.** With a birth date in B2, get years, then months and days as remainders:
+
+```excel
+=DATEDIF(B2, TODAY(), "Y")
+=DATEDIF(B2, TODAY(), "YM")
+=DATEDIF(B2, TODAY(), "MD")
+```
+
+A well-known quirk: DATEDIF does not appear in Excel's function list or autocomplete and is undocumented in current Help, yet it has worked reliably since Excel 2000. Type it by hand and it runs.
+
+Order matters. DATEDIF assumes `start_date` is earlier than `end_date`. Flip them and you get a `#NUM!` error. Guard with an IF:
+
+```excel
+=IF(B2 > C2, "Check dates", DATEDIF(B2, C2, "Y"))
+```
+
+## EDATE & EOMONTH: Move by Months
+
+Where DATEDIF measures a span, EDATE and EOMONTH move a date along the calendar by whole months.
+
+**EDATE** returns the same day of the month, `n` months away. A 12-month contract starting on March 10, 2026 renews on:
+
+```excel
+=EDATE(DATE(2026,3,10), 12)
+```
+
+The result is **03/10/2027**. Use a negative count to move backward: `=EDATE(TODAY(), -3)` shifts three months into the past, handy for rolling reporting windows.
+
+**EOMONTH** returns the last day of a month. The second argument shifts the month; `0` means the current month:
+
+```excel
+=EOMONTH(TODAY(), 0)
+=EOMONTH(TODAY(), 1)
+=EOMONTH(TODAY(), -1)
+```
+
+That gives the last day of the current month, next month, and last month respectively.
+
+A common billing pattern is a **net-30 due date at month end**. If the invoice date is in A2:
+
+```excel
+=EOMONTH(A2, 0)
+```
+
+EOMONTH always lands on a real last day, so it handles February and leap years correctly.
+
+## NETWORKDAYS & WORKDAY: Business Days Only
+
+When a deadline is quoted in working days, weekends must be skipped. Two functions handle this.
+
+**NETWORKDAYS** counts the number of working days between two dates, excluding Saturdays and Sundays:
+
+```excel
+=NETWORKDAYS(start_date, end_date, [holidays])
+```
+
+**Count business days remaining in a sprint.** With the finish date in C2 and a named range `Holidays` holding holiday dates:
+
+```excel
+=NETWORKDAYS(TODAY(), C2, Holidays)
+```
+
+**WORKDAY** does the reverse: it returns the date that is `n` working days after a start date:
+
+```excel
+=WORKDAY(start_date, days, [holidays])
+```
+
+**Estimate a delivery date 10 working days out:**
+
+```excel
+=WORKDAY(TODAY(), 10, Holidays)
+```
+
+The `holidays` argument is optional, but skipping it means national holidays are treated as normal working days. Pass a real range (ideally a named range such as `Holidays`) so the list is easy to update without touching any formula.
+
+Both functions have been available since Excel 2007, so they work in every modern version of the app.
+
+## TODAY, NOW & WEEKDAY: Dynamic Dates
+
+**TODAY()** returns the current date and **NOW()** returns the current date and time. Both are volatile: they recalculate every time the workbook opens, so they are ideal for dates that must always be current, like an age that updates itself.
+
+```excel
+=TODAY()
+=NOW()
+```
+
+**WEEKDAY** tells you which day of the week a date falls on. The `return_type` controls the numbering: `1` makes Sunday the first day of the week (1=Sunday), while `2` makes Monday the first (1=Monday), which suits a Monday-based work week.
+
+```excel
+=WEEKDAY(TODAY(), 2)
+```
+
+Combined, these build a deadline that shifts on its own. A report due on the last business day of the current month uses TODAY, EOMONTH, and WORKDAY together:
+
+```excel
+=WORKDAY(EOMONTH(TODAY(), 0), -1, Holidays)
+```
+
+That reads as "the last working day before the end of this month" and updates every time the file opens.
+
+## Real Use Cases
+
+| Scenario | Formula |
+|----------|---------|
+| Age in years from a birth date | `=DATEDIF(B2, TODAY(), "Y")` |
+| Last day of the current month | `=EOMONTH(TODAY(), 0)` |
+| Business days left in a period | `=NETWORKDAYS(TODAY(), C2, Holidays)` |
+| Deliverable 10 working days out | `=WORKDAY(TODAY(), 10, Holidays)` |
+| Anniversary of a contract start | `=EDATE(A2, 12)` |
+
+## Error Handling & Limitations
+
+Even experienced users hit these four walls; each has a straightforward workaround.
+
+- **`#NUM!` from DATEDIF.** The start date is later than the end date. Swap the arguments or wrap in an IF guard as shown earlier.
+- **Dates imported as text.** The cell aligns left and refuses arithmetic. Convert with `=DATEVALUE(A2)` or use Text to Columns with a date format. Text dates are a classic source of formula errors.
+- **Locale differences.** The same serial displays as `01/15/2026` in the US and `15/01/2026` in Europe, but the stored value is identical. Never compare dates by comparing their formatted strings.
+- **Weekend-only blindspots.** WORKDAY and NETWORKDAYS skip weekends but not public holidays unless you supply the `holidays` range. For deadline math that respects national days off, always pass the list.
+
+## Pro Tips
+
+- Pair date inputs with a [data validation dropdown](/blog/data-validation-dropdown-guide) restricted to dates, so text dates never sneak in.
+- Use a custom format such as `yyyy-mm-dd` for logs and exports. It sorts as text in the same order as the date and is unambiguous across locales.
+- Store your holiday list in a named range like `Holidays`; adding next year's dates becomes a one-time data edit.
+- Press `<Kbd>Ctrl</Kbd> + <Kbd>;</Kbd>` to stamp today's date and `<Kbd>Ctrl</Kbd> + <Kbd>Shift</Kbd> + <Kbd>;</Kbd>` for the current time, as noted in our [keyboard shortcuts guide](/blog/excel-keyboard-shortcuts-guide).
+
+## Common Mistakes to Avoid
+
+- **Adding 30 to a real date works** (you get 30 days later), but adding 30 to a text date just concatenates text. Confirm the cell holds a serial date first.
+- **Choosing the wrong DATEDIF unit.** Pick exactly: `"Y"` for years, `"M"` for months, `"D"` for days, and the pairs `"YM"`, `"YD"`, `"MD"` for remainders. Grabbing the wrong letter returns the wrong number.
+- **Assuming NETWORKDAYS counts calendar days.** It counts working days only, skipping Saturdays and Sundays.
+- **Hardcoding holidays** inside formulas. Put them in a range so they can be updated without rewriting every formula.
+
+## FAQ
+
+**Why does DATEDIF not appear in the function list?**
+It is an undocumented legacy function Excel has supported since 2000 but never lists in autocomplete or current Help. Type it manually and it works.
+
+**How do I calculate age up to today?**
+Use `=DATEDIF(birth_date, TODAY(), "Y")`, then `"YM"` and `"MD"` for months and days.
+
+**Does NETWORKDAYS include holidays?**
+No. It only excludes weekends by default; pass a `holidays` range to exclude public holidays too.
+
+**How do I keep date formats consistent?**
+Apply a custom format such as `yyyy-mm-dd`. Formatting never changes the underlying serial value, so arithmetic and comparisons stay reliable regardless of how dates display.
