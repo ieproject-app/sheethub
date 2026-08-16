@@ -1,6 +1,6 @@
 ---
-name: article-reviewer
-description: Standard instructions for synchronizing drafts/sheethub branch, listing unreviewed draft articles, auditing against SheetHub standards, and triggering automated revision requests or merging approved articles to main.
+name: sheethub-article-reviewer
+description: Standard instructions for synchronizing drafts/sheethub branch, listing unreviewed draft articles, auditing against SheetHub 5-pillar golden standards, and triggering automated revision requests or merging approved articles to main.
 ---
 
 # SheetHub Article Reviewer Skill
@@ -66,7 +66,7 @@ Antigravity acts as the **Chief Quality Inspector**.
 
 Inspect each target `.mdx` file against the following 5 pillars:
 
-### Pillar 1: Frontmatter & SEO (`content-generator`)
+### Pillar 1: Frontmatter & SEO (`sheethub-content-generator`)
 - [ ] Required fields present: `title`, `description`, `date`, `updated`, `category`, `tags`, `published`, `heroImage`.
 - [ ] Title is catchy, informative, and includes target keyword.
 - [ ] Meta `description` is concise (120–160 chars) and optimized for search preview.
@@ -74,13 +74,13 @@ Inspect each target `.mdx` file against the following 5 pillars:
 - [ ] `tags` is a valid YAML array of strings.
 - [ ] `heroImage` is set to `"default-og"` (SheetHub standard).
 
-### Pillar 2: Writing Tone & Style (`sheethub_blog_tone`)
+### Pillar 2: Writing Tone & Style (`sheethub-blog-tone`)
 - [ ] Written in English (`en`).
 - [ ] Introduction is direct, engaging, and states the spreadsheet problem clearly in the first paragraph.
 - [ ] Uses proper Markdown heading hierarchy (`##` for sections, `###` for sub-sections).
 - [ ] Authoritative, helpful, spreadsheet-expert voice without AI clichés.
 
-### Pillar 3: MDX Syntax & React Attributes (`sheethub_rules`)
+### Pillar 3: MDX Syntax & React Attributes (`sheethub-rules`)
 - [ ] **STRICT:** Uses `className="..."` everywhere (NEVER `class="..."`).
 - [ ] Custom components used appropriately (`<Callout>`, `<Gallery>`, `<ImageGrid>`, `<DownloadButton>`).
 - [ ] File path is strictly flat directly inside `_posts/<slug>.mdx` (never inside subfolders).
