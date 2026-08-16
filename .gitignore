@@ -39,3 +39,4 @@ serviceAccountKey.json
 # IDE settings
 .idea/
 .zcode/
+.agent/skills.bak.*
