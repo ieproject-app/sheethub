@@ -1,64 +1,85 @@
 ---
 name: sheethub-article-reviewer
-description: Standard instructions for synchronizing drafts/sheethub branch, listing unreviewed draft articles, auditing against SheetHub 5-pillar golden standards, and triggering automated revision requests or merging approved articles to main.
+description: Standard instructions for reviewing SheetHub draft articles via Git branch drafts/sheethub or Server AHC queue, auditing against 5-pillar golden standards, and triggering automated revisions or publishing to main.
 ---
 
 # SheetHub Article Reviewer Skill
 
-Use this skill whenever the user asks to check, list, or review draft blog articles in `_posts/*.mdx` (e.g. "Review artikel draft", "List artikel yang belum direview", "Review artikel <slug>", or "Cek kualitas artikel").
+Use this skill whenever the user asks to check, list, or review draft blog articles for SheetHub (e.g., "Review artikel draft", "List artikel yang belum direview", "Review artikel <slug>", or "Cek kualitas artikel").
 
-Antigravity acts as the **Chief Quality Inspector**.
+You act as the **Chief Quality Inspector (EIC)** for SheetHub (`sheethub.web.id`).
 
 ---
 
-## 🔄 Standard Workflow Overview
+## 🔄 Standard Multi-IDE & Multi-Agentic Workflow
 
 ```text
-1. Sync Draft Branch:
-   git checkout drafts/sheethub && git pull origin drafts/sheethub
-
-2. List Unreviewed Draft Articles:
-   git diff --name-only main...drafts/sheethub -- _posts/
-   (List them to the user first without rushing to review immediately unless asked)
-
-3. Perform 5-Pillar Quality Audit on selected article:
-   - Pillar 1: Frontmatter & SEO
-   - Pillar 2: Writing Tone & Style
-   - Pillar 3: MDX Syntax & React Attributes
-   - Pillar 4: Formula & Code Accuracy
-   - Pillar 5: Interactive Templates & Google Drive Policy
-
-4. Take Action:
-   ├─ Case A (Needs Revision):
-   │  Update frontmatter status: "needs_revision" + revision_notes,
-   │  git commit & push to origin drafts/sheethub (or trigger via SSH to server AHC).
-   │
-   └─ Case B (100% Passed / Approved):
-      Merge drafts/sheethub into main and push to publish live.
+┌─────────────────────────────────────────────────────────────────────────────┐
+│ STEP 1: Sync & Detect Draft Articles                                        │
+│ • Primary (Git): git checkout drafts/sheethub && git pull origin drafts/sheethub │
+│ • Fallback/Verify (Server Queue): Check articles in 'user_review' state     │
+│   ssh hermes@100.104.234.102 "grep -o '\"slug\": \"[^\"]*\", \"state\": \"user_review\"' ~/.hermes/agents/sheethub/data/article_queue.json" │
+└──────────────────────────────────────┬──────────────────────────────────────┘
+                                       │
+                                       ▼
+┌─────────────────────────────────────────────────────────────────────────────┐
+│ STEP 2: List Drafts to User                                                 │
+│ • List unreviewed articles clearly to the user before auditing              │
+└──────────────────────────────────────┬──────────────────────────────────────┘
+                                       │
+                                       ▼
+┌─────────────────────────────────────────────────────────────────────────────┐
+│ STEP 3: Perform 5-Pillar Quality Audit                                      │
+│ • Pillar 1: Frontmatter & SEO (Category, tags, 120-160 char description)    │
+│ • Pillar 2: Writing Tone & Style (Spreadsheet expert, first paragraph hook) │
+│ • Pillar 3: MDX Syntax & React (className everywhere, NEVER class)          │
+│ • Pillar 4: Formula & Code Accuracy (Excel / Google Sheets exact syntax)    │
+│ • Pillar 5: Templates & Google Drive Policy (Hosted on Google Drive only)   │
+└──────────────────────────────────────┬──────────────────────────────────────┘
+                                       │
+                    ┌──────────────────┴──────────────────┐
+                    ▼                                     ▼
+        [Case A: Needs Revision]               [Case B: 100% Passed]
+        • Trigger instant server revision:     • Merge drafts/sheethub -> main
+          ssh hermes@100.104.234.102           • git push origin main
+          "python3 ~/.hermes/scripts/          • Update server queue to
+           sheethub_revise.py                   'pushed_live'
+           --slug <slug> --notes '<notes>'"
 ```
 
 ---
 
 ## 1. Step 1: Sync & Detect Draft Articles
 
-1. **Always switch and pull the latest draft branch first**:
+1. **Switch to and pull the dedicated draft branch**:
    ```bash
    git checkout drafts/sheethub
    git pull origin drafts/sheethub
    ```
 
-2. **List draft articles waiting for review**:
+2. **Detect unreviewed draft files**:
    - Compare draft branch against `main`:
      ```bash
      git diff --name-only main...drafts/sheethub -- _posts/
      ```
-   - Check status of files in `_posts/` (including any uncommitted changes):
+   - Check modified or untracked files in `_posts/`:
      ```bash
      git status --short _posts/
      ```
-   - Inspect frontmatter status (e.g., `status: "ready_for_review"` or default new drafts).
 
-3. **Present the list to the user** before proceeding to deep review, unless a specific slug is requested directly.
+3. **Verify Server Queue State (Single Source of Truth on Server AHC)**:
+   - In Server AHC (`100.104.234.102`), articles ready for EIC review have `state: "user_review"`.
+   - Inspect queue if needed:
+     ```bash
+     ssh hermes@100.104.234.102 "cat ~/.hermes/agents/sheethub/data/article_queue.json"
+     ```
+
+4. **Direct SCP Fallback (If working in an isolated environment without git remote sync)**:
+   ```bash
+   scp hermes@100.104.234.102:~/.hermes/agents/sheethub/_posts/<slug>.mdx _posts/
+   ```
+
+5. **Present the list of candidate draft articles to the user** before diving into deep review, unless a specific slug was requested directly.
 
 ---
 
@@ -67,18 +88,18 @@ Antigravity acts as the **Chief Quality Inspector**.
 Inspect each target `.mdx` file against the following 5 pillars:
 
 ### Pillar 1: Frontmatter & SEO (`sheethub-content-generator`)
-- [ ] Required fields present: `title`, `description`, `date`, `updated`, `category`, `tags`, `published`, `heroImage`.
+- [ ] Required fields present: `title`, `description`, `date`, `category`, `tags`, `published`, `heroImage`.
 - [ ] Title is catchy, informative, and includes target keyword.
 - [ ] Meta `description` is concise (120–160 chars) and optimized for search preview.
-- [ ] Category matches standard set (`Formulas & Functions`, `Google Sheets`, `Productivity`, `Data Analysis`, `Formatting & Layout`, `Comparison`, `Excel`, `AI`).
-- [ ] `tags` is a valid YAML array of strings.
+- [ ] Category matches standard set: `Formulas & Functions`, `Google Sheets`, `Productivity`, `Data Analysis`, `Formatting & Layout`, `Comparison`, `Excel`, `AI`.
+- [ ] `tags` is a valid YAML array of lowercase kebab-case strings (no spaces).
 - [ ] `heroImage` is set to `"default-og"` (SheetHub standard).
 
 ### Pillar 2: Writing Tone & Style (`sheethub-blog-tone`)
 - [ ] Written in English (`en`).
 - [ ] Introduction is direct, engaging, and states the spreadsheet problem clearly in the first paragraph.
 - [ ] Uses proper Markdown heading hierarchy (`##` for sections, `###` for sub-sections).
-- [ ] Authoritative, helpful, spreadsheet-expert voice without AI clichés.
+- [ ] Authoritative, helpful, spreadsheet-expert voice without AI clichés (*"Furthermore"*, *"In conclusion"*).
 
 ### Pillar 3: MDX Syntax & React Attributes (`sheethub-rules`)
 - [ ] **STRICT:** Uses `className="..."` everywhere (NEVER `class="..."`).
@@ -100,33 +121,28 @@ Inspect each target `.mdx` file against the following 5 pillars:
 ## 3. Step 3: Action Based on Audit Results
 
 ### Case A: Errors / Improvements Found (Requires Revision)
-1. Edit the article's YAML Frontmatter in `_posts/<slug>.mdx` to include the revision details:
+1. Trigger instant revision to Server AHC agents (Sam/Drafter, Jordan/SEO, Morgan/Humanizer):
+   ```bash
+   ssh hermes@100.104.234.102 "python3 /home/hermes/.hermes/scripts/sheethub_revise.py --slug <SLUG> --notes '<COMPILED_REVISION_NOTES>'"
+   ```
+2. Update frontmatter in `_posts/<slug>.mdx` on `drafts/sheethub`:
    ```yaml
-   ---
-   title: "..."
    status: "needs_revision"
    revision_notes:
-     - "Frontmatter: Meta description is too short (current 85 chars, needs 120-160 chars)."
-     - "Section ## Syntax: Change class='bg-gray' to className='bg-gray'."
-     - "Formula block: Fix syntax for =VLOOKUP(...) parameter order."
-   ---
+     - "Catatan perbaikan 1..."
+     - "Catatan perbaikan 2..."
    ```
-2. Commit and push the revision request to `drafts/sheethub`:
+3. Commit and push to `drafts/sheethub`:
    ```bash
    git commit -am "review: <slug> needs revision"
    git push origin drafts/sheethub
    ```
-3. *Optional / Fast Trigger:* If instant revision is desired without waiting for the 3-hour poller cron on Server AHC:
-   ```bash
-   ssh hermes@100.104.234.102 "python3 /home/hermes/.hermes/scripts/sheethub_revise.py --slug <SLUG> --notes '<COMPILED_REVISION_NOTES>'"
-   ```
-4. Report to user that revision notes have been submitted to Sam (Drafter), Jordan (SEO), and Morgan (Humanizer).
 
 ---
 
 ### Case B: 100% Passed (Approved / Ready to Publish)
-1. Report to the user that the article passed all 5 pillars of the SheetHub audit.
-2. If `status: "needs_revision"` or `revision_notes` exist in frontmatter, clean them up or ensure `published: true`.
+1. Report to user that the article passed all 5 pillars of the SheetHub audit.
+2. Ensure `published: true` and remove temporary `revision_notes` from frontmatter.
 3. Merge `drafts/sheethub` into `main` and push to publish live:
    ```bash
    git checkout main
@@ -134,7 +150,11 @@ Inspect each target `.mdx` file against the following 5 pillars:
    git merge drafts/sheethub
    git push origin main
    ```
-4. Switch back to `drafts/sheethub` if continuing review work:
+4. Reconcile Server AHC queue status to `pushed_live`:
+   ```bash
+   ssh hermes@100.104.234.102 "python3 -c \"import json; p='/home/hermes/.hermes/agents/sheethub/data/article_queue.json'; d=json.load(open(p)); q=d.get('queue',d); [x.update({'state':'pushed_live'}) for x in q if x.get('slug')=='<SLUG>']; json.dump(d,open(p,'w'),indent=2)\""
+   ```
+5. Return to `drafts/sheethub` if continuing review work:
    ```bash
    git checkout drafts/sheethub
    ```
