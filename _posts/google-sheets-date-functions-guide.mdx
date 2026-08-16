@@ -9,7 +9,7 @@ tags: ["google-sheets", "tutorial", "date-functions", "datedif", "formulas"]
 category: "Google Sheets"
 ---
 
-Did you know Google Sheets stores dates as numbers too, and that `DATEDIF` works almost exactly like Excel's, quirks included? That shared foundation makes age calculations, month-end deadlines, and business-day schedules portable. The important detail for Sheets users is the surrounding behavior: locale settings affect how text dates are parsed, and the serial-date base is not identical to Excel's.
+Did you know Google Sheets stores dates as numbers too, and that `DATEDIF` works almost exactly like Excel's, quirks included? Google Sheets date functions make age calculations, month-end deadlines, and business-day schedules portable. The important detail for Sheets users is the surrounding behavior: locale settings affect how text dates are parsed, and the serial-date base is not identical to Excel's.
 
 ## Same Functions, Slightly Different Numbers
 
@@ -134,7 +134,7 @@ The last formula returns the number of days until the date in C2. To calculate t
 =WORKDAY(EOMONTH(TODAY(), 0)+1, -1, Holidays)
 ```
 
-For a column of dates, [wrap date calculations in ARRAYFORMULA to compute ages or deadlines for an entire column at once](/blog/arrayformula-google-sheets-complete-guide). For market-related date ranges, [GOOGLEFINANCE accepts date arguments, so the date functions guide shows how to build dynamic date ranges](/blog/google-sheets-googlefinance-guide).
+For a column of dates, use a consistent formula pattern and keep the source dates in one range. For market-related date ranges, [Google Sheets date functions](/blog/google-sheets-googlefinance-guide) work with `GOOGLEFINANCE` date arguments when you build period-based analysis.
 
 ## Sheets vs. Excel: What Actually Differs?
 

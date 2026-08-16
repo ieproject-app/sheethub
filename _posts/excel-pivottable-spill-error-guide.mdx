@@ -9,7 +9,7 @@ tags: ["excel", "news", "update", "pivot-table", "tutorial"]
 category: "Data Analysis"
 ---
 
-Microsoft has officially documented a PivotTable `#SPILL!` error for Excel for Microsoft 365. The message appears when a PivotTable cannot expand into the worksheet because something blocks the space it needs.
+Microsoft has officially documented the PivotTable #SPILL! error for Excel for Microsoft 365. The message appears when a PivotTable cannot expand into the worksheet because something blocks the space it needs.
 
 That is useful news for anyone who has seen a PivotTable appear to break after its layout changed. The error identifies a space problem, not a damaged source range. In most cases, you can restore the report by clearing the obstruction or moving the PivotTable.
 
@@ -54,11 +54,11 @@ If the report is close to the worksheet boundary, moving it to a new sheet is of
 | PivotTable `#SPILL!` | A report layout with fields and totals | Data, merged cells, another object, or the worksheet edge | Select the obstructing cells and clear or move the blocker |
 | Formula `#SPILL!` | Results returned by one dynamic array formula | Content in the formula's spill range | Clear the spill range or move the formula |
 
-For a broader explanation of spill references and the `#` operator, read our [Excel spill ranges guide](/blog/excel-spill-ranges-guide). That article focuses on dynamic array formulas, while this guide focuses on PivotTable layout space.
+For a broader explanation of spill references and the `#` operator, read our [PivotTable #SPILL! error versus dynamic array spill ranges guide](/blog/excel-spill-ranges-guide). That article focuses on dynamic array formulas, while this guide focuses on PivotTable layout space.
 
 ## When GROUPBY Is a Better Fit
 
-A PivotTable remains useful when you need interactive fields, slicers, and a familiar report layout. For a formula-driven summary that must feed other formulas directly, [GROUPBY in Excel](/blog/excel-groupby-pivotby-deep-dive) may be a better fit.
+A PivotTable remains useful when you need interactive fields, slicers, and a familiar report layout. For a formula-driven summary that must feed other formulas directly, GROUPBY may be a better fit. Our [dynamic array functions guide](/blog/excel-dynamic-array-functions-guide) explains the formula-based approach behind that kind of report.
 
 `GROUPBY` returns a dynamic array from a formula cell, so it avoids PivotTable-specific layout controls. It still needs enough empty space for its results, though. A formula-based report can produce its own `#SPILL!` error if another value blocks the array output.
 

@@ -9,7 +9,7 @@ tags: ["google-sheets", "tutorial", "checkboxes", "productivity", "interactive"]
 category: "Productivity"
 ---
 
-A checkbox looks like a form control, but Google Sheets reads it as a plain TRUE or FALSE value. That one fact turns a clickable box into a switch your formulas can count, format, and filter. Click a cell and its value flips from TRUE to FALSE; every formula that references it updates on the spot.
+A checkbox looks like a form control, but Google Sheets reads it as a plain TRUE or FALSE value. A Google Sheets checkbox is therefore a formula-ready switch that can count, format, and filter your data. Click a cell and its value flips from TRUE to FALSE; every formula that references it updates on the spot.
 
 No add-ons, no scripts, and no paid plan are required. Checkboxes work in every Google account, and this guide shows how to add them, read their values, and wire them into progress calculations, conditional formatting, and filter-driven dashboards.
 
@@ -61,7 +61,7 @@ That formula counts how many tasks are done. For the value of completed work, SU
 =SUMIF(B2:B100, TRUE, C2:C100)
 ```
 
-Given a tracker where column B holds checkboxes and column C holds task values, the result is the total value of everything completed. The same approach extends to [COUNTIF and COUNTIFS patterns](/blog/countif-countifs-guide) when you add a second condition, such as a department or priority column.
+Given a tracker where column B holds checkboxes and column C holds task values, the result is the total value of everything completed. The same approach extends to [Google Sheets checkbox totals with custom criteria](/blog/google-sheets-sum-filtered-data-custom-criteria) when you add visibility rules or custom criteria, such as a department or priority column.
 
 ## Conditional Formatting Toggle
 
@@ -79,7 +79,7 @@ A checkbox can repaint a row the moment it is ticked, which is the visual feedba
 
 **Step 4:** Set a fill color, then click **Done**.
 
-Now any row whose checkbox is checked turns green. Add a strikethrough in the same rule for a finished-task look. The `$B` anchor keeps the rule tied to the checkbox column while the row number moves with each row. If you want the full menu of rule types, the [conditional formatting guide](/blog/conditional-formatting-guide) covers color scales, data bars, and formula-based rules in detail.
+Now any row whose checkbox is checked turns green. Add a strikethrough in the same rule for a finished-task look. The `$B` anchor keeps the rule tied to the checkbox column while the row number moves with each row. For a broader report that summarizes filtered data, the [Google Sheets QUERY guide](/blog/google-sheets-query-advanced-guide) covers PIVOT, LABEL, and FORMAT clauses.
 
 ## To-Do List with Progress
 
@@ -113,7 +113,7 @@ That formula returns only the rows where the checkbox is checked, which is perfe
 =FILTER(A2:C100, B2:B100=FALSE)
 ```
 
-The two live ranges form a miniature dashboard: tick a box and a task moves from one table to the other with no formulas to maintain. QUERY does the same job with SQL-style clauses when you need extra control, and the [advanced QUERY guide](/blog/query-function-google-sheets-guide) shows how to shape and label the output.
+The two live ranges form a miniature dashboard: tick a box and a task moves from one table to the other with no formulas to maintain. QUERY does the same job with SQL-style clauses when you need extra control, and the [advanced Google Sheets QUERY examples](/blog/google-sheets-query-advanced-guide) show how to shape and label the output.
 
 ## Checkbox vs Dropdown vs Radio
 
@@ -125,7 +125,7 @@ Each widget suits a different interaction, and the choice changes how your formu
 | Dropdown | One value from many options | Text comparisons, VLOOKUP |
 | Radio-style validation | One exclusive choice | Single value per row |
 
-Checkboxes and dropdowns are both created through data validation, so the [data validation guide](/blog/data-validation-dropdown-guide) is the right place to learn the rest of the validation toolbox, from lists to error alerts.
+Checkboxes and dropdowns are both created through data validation. Once the checkbox state drives a report, the [Google Sheets pivot table guide](/blog/google-sheets-pivot-tables-guide) is a useful next step for grouping and summarizing the results.
 
 ## Error Handling and Limitations
 
@@ -142,7 +142,7 @@ Checkboxes and dropdowns are both created through data validation, so the [data 
 - Combine checkboxes, conditional formatting, and FILTER into one mini dashboard: tick a box and the row highlights, the progress rises, and the active list updates at once.
 - Use custom values for readable statuses: a "Yes/No" checkbox reads better in a printed report than TRUE/FALSE.
 - Link checkboxes to a second sheet when you want a clean dashboard tab that only displays the filtered results.
-- For a fully visual board, [Google Sheets Canvas](/blog/google-sheets-canvas-dashboard-guide) pairs checkbox-driven data with AI layout tools and gives the same data a presentation-ready surface.
+- For a dashboard that summarizes checkbox-driven data, [Google Sheets pivot tables](/blog/google-sheets-pivot-tables-guide) can group completed work by owner, status, or date.
 
 ## Common Mistakes to Avoid
 
