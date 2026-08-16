@@ -5,7 +5,7 @@ description: Standard instructions for reviewing SheetHub draft articles via Git
 
 # SheetHub Article Reviewer Skill
 
-Use this skill whenever the user asks to check, list, or review draft blog articles for SheetHub (e.g., "Review artikel draft", "List artikel yang belum direview", "Review artikel <slug>", or "Cek kualitas artikel").
+Use this skill whenever the user asks to check, list, or review draft blog articles for SheetHub (e.g. "Review artikel draft", "List artikel yang belum direview", "Review artikel <slug>", or "Cek kualitas artikel").
 
 You act as the **Chief Quality Inspector (EIC)** for SheetHub (`sheethub.web.id`).
 
@@ -19,13 +19,13 @@ You act as the **Chief Quality Inspector (EIC)** for SheetHub (`sheethub.web.id`
 │ • Primary (Git): git checkout drafts/sheethub && git pull origin drafts/sheethub │
 │ • Verify Server Queue (Helper Script):                                      │
 │   ssh hermes@100.104.234.102 "python3 ~/.hermes/scripts/sheethub_list_queue.py user_review" │
-└──────────────────────────────────────┬──────────────────────────────────────┘
+└─────────────────────────────────────────────────────────────────────────────┘
                                        │
                                        ▼
 ┌─────────────────────────────────────────────────────────────────────────────┐
 │ STEP 2: List Drafts to User                                                 │
 │ • List unreviewed articles clearly to the user before auditing              │
-└──────────────────────────────────────┬──────────────────────────────────────┘
+└─────────────────────────────────────────────────────────────────────────────┘
                                        │
                                        ▼
 ┌─────────────────────────────────────────────────────────────────────────────┐
@@ -33,22 +33,22 @@ You act as the **Chief Quality Inspector (EIC)** for SheetHub (`sheethub.web.id`
 │ • Pillar 1: Frontmatter & SEO (Category, tags, 120-160 char description)    │
 │ • Pillar 2: Writing Tone & Style (Spreadsheet expert, first paragraph hook) │
 │ • Pillar 3: MDX Syntax & React (className everywhere, NEVER class)          │
-│ • Pillar 4: Formula & Code Accuracy (Excel / Google Sheets exact syntax)    │
+│ • Pillar 4: Formula & Code Syntax Accuracy (Excel / Google Sheets exact syntax) │
 │ • Pillar 5: Templates & Google Drive Policy (Hosted on Google Drive only)   │
-└──────────────────────────────────────┬──────────────────────────────────────┘
-                                       │
+└─────────────────────────────────────────────────────────────────────────────┘
                     ┌──────────────────┴──────────────────┐
                     ▼                                     ▼
         [Case A: Needs Revision]               [Case B: 100% Passed]
-        • Update frontmatter & git push:       • SELECTIVE PUBLISH to main:
-          git add _posts/<slug>.mdx              git checkout main && git pull
-          git commit -m "review: <slug>..."      git checkout drafts/sheethub -- _posts/<slug>.mdx
-          git push origin drafts/sheethub        git add _posts/<slug>.mdx
-        • (Optional) Fast-trigger:               git commit -m "feat(content): publish <slug>"
-          ssh hermes@100.104.234.102             git push origin main
-          "python3 ~/.hermes/scripts/          • Update server queue to
-           sheethub_revise.py                   'pushed_live' (ensure_ascii=False)
-           --slug <slug> --notes '<notes>'"
+        • Update frontmatter & git push:       • If revised: commit frontmatter
+          git add _posts/<slug>.mdx              cleanup to drafts FIRST
+          git commit -m "review: <slug>..."    • SELECTIVE PUBLISH to main:
+          git push origin drafts/sheethub        git checkout main && git pull
+        • (Optional) Fast-trigger:               git checkout drafts/sheethub -- _posts/<slug>.mdx
+          ssh hermes@100.104.234.102             git add _posts/<slug>.mdx
+          "python3 ~/.hermes/scripts/            git commit -m "feat(content): publish <slug>"
+           sheethub_revise.py                    git push origin main
+           --slug <slug> --notes '<notes>'"    • Update server queue to
+                                               'pushed_live' (ensure_ascii=False)
 ```
 
 ---
@@ -89,7 +89,7 @@ You act as the **Chief Quality Inspector (EIC)** for SheetHub (`sheethub.web.id`
    scp hermes@100.104.234.102:~/.hermes/agents/sheethub/_posts/<slug>.mdx _posts/
    ```
 
-5. **Present the list of candidate draft articles to the user** before diving into deep review, unless a specific slug was requested directly.
+5. **Present the list of candidate draft articles to the user** before diving into deep review, unless a specific slug is requested directly.
 
 ---
 
@@ -157,7 +157,22 @@ Inspect each target `.mdx` file against the following 5 pillars:
 > **CRITICAL:** NEVER run `git merge drafts/sheethub` into `main`. The `drafts/sheethub` branch contains ALL active in-progress drafts. Always **SELECTIVELY PUBLISH** only the approved article file.
 
 1. Report to user that the article passed all 5 pillars of the SheetHub audit.
-2. Ensure `published: true` and remove temporary `revision_notes` or `status: "needs_revision"` from frontmatter.
+
+2. **Approve-after-revision: clean the frontmatter on `drafts/sheethub` FIRST.** If (and only if) the approved article still carries revision markers:
+   - ensure `published: true`
+   - remove `status: "needs_revision"` and `revision_notes:`
+
+   If anything changed, commit and push the cleanup to `drafts/sheethub` BEFORE publishing — otherwise the selective checkout in step 3 restores the stale markers, and the server poller may re-trigger a revision on an already-published article:
+   ```bash
+   git add _posts/<slug>.mdx
+   git commit -m "review: <slug> approved (frontmatter cleanup)"
+   git push origin drafts/sheethub
+   ```
+   *Optional instant pickup* (skip the ≤3h poller wait):
+   ```bash
+   ssh hermes@100.104.234.102 "python3 ~/.hermes/scripts/sheethub_git_revision_poller.py"
+   ```
+
 3. Switch to `main` and selectively check out only the approved `.mdx` file:
    ```bash
    git checkout main
@@ -167,10 +182,12 @@ Inspect each target `.mdx` file against the following 5 pillars:
    git commit -m "feat(content): publish <slug>"
    git push origin main
    ```
+
 4. Reconcile Server AHC queue status to `pushed_live`:
    ```bash
    ssh hermes@100.104.234.102 "python3 -c \"import json; p='/home/hermes/.hermes/agents/sheethub/data/article_queue.json'; d=json.load(open(p)); q=d.get('queue',d); [x.update({'state':'pushed_live'}) for x in q if x.get('slug')=='<SLUG>']; json.dump(d,open(p,'w',encoding='utf-8'),indent=2,ensure_ascii=False)\""
    ```
+
 5. Return to `drafts/sheethub` for continuing review work:
    ```bash
    git checkout drafts/sheethub
