@@ -17,8 +17,8 @@ You act as the **Chief Quality Inspector (EIC)** for SheetHub (`sheethub.web.id`
 ┌─────────────────────────────────────────────────────────────────────────────┐
 │ STEP 1: Sync & Detect Draft Articles                                        │
 │ • Primary (Git): git checkout drafts/sheethub && git pull origin drafts/sheethub │
-│ • Fallback/Verify (Server Queue): Check articles in 'user_review' state     │
-│   ssh hermes@100.104.234.102 "grep -o '\"slug\": \"[^\"]*\", \"state\": \"user_review\"' ~/.hermes/agents/sheethub/data/article_queue.json" │
+│ • Verify Server Queue (Python Native):                                      │
+│   ssh hermes@100.104.234.102 "python3 -c \"import json; q=json.load(open('/home/hermes/.hermes/agents/sheethub/data/article_queue.json')); q=q.get('queue',q); print('\\n'.join(i['slug'] for i in q if i.get('state')=='user_review'))\"" │
 └──────────────────────────────────────┬──────────────────────────────────────┘
                                        │
                                        ▼
@@ -43,7 +43,7 @@ You act as the **Chief Quality Inspector (EIC)** for SheetHub (`sheethub.web.id`
         • Trigger instant server revision:     • Merge drafts/sheethub -> main
           ssh hermes@100.104.234.102           • git push origin main
           "python3 ~/.hermes/scripts/          • Update server queue to
-           sheethub_revise.py                   'pushed_live'
+           sheethub_revise.py                   'pushed_live' (ensure_ascii=False)
            --slug <slug> --notes '<notes>'"
 ```
 
@@ -69,9 +69,9 @@ You act as the **Chief Quality Inspector (EIC)** for SheetHub (`sheethub.web.id`
 
 3. **Verify Server Queue State (Single Source of Truth on Server AHC)**:
    - In Server AHC (`100.104.234.102`), articles ready for EIC review have `state: "user_review"`.
-   - Inspect queue if needed:
+   - Inspect queue via native Python JSON parser:
      ```bash
-     ssh hermes@100.104.234.102 "cat ~/.hermes/agents/sheethub/data/article_queue.json"
+     ssh hermes@100.104.234.102 "python3 -c \"import json; q=json.load(open('/home/hermes/.hermes/agents/sheethub/data/article_queue.json')); q=q.get('queue',q); print('\\n'.join(i['slug'] for i in q if i.get('state')=='user_review'))\""
      ```
 
 4. **Direct SCP Fallback (If working in an isolated environment without git remote sync)**:
@@ -152,7 +152,7 @@ Inspect each target `.mdx` file against the following 5 pillars:
    ```
 4. Reconcile Server AHC queue status to `pushed_live`:
    ```bash
-   ssh hermes@100.104.234.102 "python3 -c \"import json; p='/home/hermes/.hermes/agents/sheethub/data/article_queue.json'; d=json.load(open(p)); q=d.get('queue',d); [x.update({'state':'pushed_live'}) for x in q if x.get('slug')=='<SLUG>']; json.dump(d,open(p,'w'),indent=2)\""
+   ssh hermes@100.104.234.102 "python3 -c \"import json; p='/home/hermes/.hermes/agents/sheethub/data/article_queue.json'; d=json.load(open(p)); q=d.get('queue',d); [x.update({'state':'pushed_live'}) for x in q if x.get('slug')=='<SLUG>']; json.dump(d,open(p,'w',encoding='utf-8'),indent=2,ensure_ascii=False)\""
    ```
 5. Return to `drafts/sheethub` if continuing review work:
    ```bash
