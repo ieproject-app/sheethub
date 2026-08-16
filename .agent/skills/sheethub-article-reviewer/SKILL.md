@@ -40,12 +40,22 @@ You act as the **Chief Quality Inspector (EIC)** for SheetHub (`sheethub.web.id`
                     ┌──────────────────┴──────────────────┐
                     ▼                                     ▼
         [Case A: Needs Revision]               [Case B: 100% Passed]
-        • Trigger instant server revision:     • Merge drafts/sheethub -> main
-          ssh hermes@100.104.234.102           • git push origin main
+        • Update frontmatter & git push:       • SELECTIVE PUBLISH to main:
+          git add _posts/<slug>.mdx              git checkout main && git pull
+          git commit -m "review: <slug>..."      git checkout drafts/sheethub -- _posts/<slug>.mdx
+          git push origin drafts/sheethub        git add _posts/<slug>.mdx
+        • (Optional) Fast-trigger:               git commit -m "feat(content): publish <slug>"
+          ssh hermes@100.104.234.102             git push origin main
           "python3 ~/.hermes/scripts/          • Update server queue to
            sheethub_revise.py                   'pushed_live' (ensure_ascii=False)
            --slug <slug> --notes '<notes>'"
 ```
+
+---
+
+## ⚙️ Environment Prerequisites
+- **Git Repository:** Repositori `ieproject-app/sheethub` dengan branch `main` dan `drafts/sheethub`.
+- **Server AHC Access (Opsional tapi Direkomendasikan):** Akses SSH ke `hermes@100.104.234.102` (via Tailscale) untuk verifikasi antrean langsung & fast-trigger perbaikan. Jika bekerja di lingkungan offline/tanpa SSH, alur Git murni tetap berfungsi penuh.
 
 ---
 
@@ -121,40 +131,47 @@ Inspect each target `.mdx` file against the following 5 pillars:
 ## 3. Step 3: Action Based on Audit Results
 
 ### Case A: Errors / Improvements Found (Requires Revision)
-1. Trigger instant revision to Server AHC agents (Sam/Drafter, Jordan/SEO, Morgan/Humanizer):
-   ```bash
-   ssh hermes@100.104.234.102 "python3 /home/hermes/.hermes/scripts/sheethub_revise.py --slug <SLUG> --notes '<COMPILED_REVISION_NOTES>'"
-   ```
-2. Update frontmatter in `_posts/<slug>.mdx` on `drafts/sheethub`:
+1. Update frontmatter in `_posts/<slug>.mdx` on `drafts/sheethub`:
    ```yaml
    status: "needs_revision"
    revision_notes:
      - "Catatan perbaikan 1..."
      - "Catatan perbaikan 2..."
    ```
-3. Commit and push to `drafts/sheethub`:
+2. Stage, commit, and push specific draft to `drafts/sheethub`:
    ```bash
-   git commit -am "review: <slug> needs revision"
+   git add _posts/<slug>.mdx
+   git commit -m "review: <slug> needs revision"
    git push origin drafts/sheethub
+   ```
+3. *Optional / Fast Trigger:* If instant revision is desired without waiting for the 3-hour poller cron on Server AHC:
+   ```bash
+   ssh hermes@100.104.234.102 "python3 /home/hermes/.hermes/scripts/sheethub_revise.py --slug <SLUG> --notes '<COMPILED_REVISION_NOTES>'"
    ```
 
 ---
 
-### Case B: 100% Passed (Approved / Ready to Publish)
+### Case B: 100% Passed (Approved / Selective Publish to Main)
+
+> [!WARNING]
+> **CRITICAL:** NEVER run `git merge drafts/sheethub` into `main`. The `drafts/sheethub` branch contains ALL active in-progress drafts. Always **SELECTIVELY PUBLISH** only the approved article file.
+
 1. Report to user that the article passed all 5 pillars of the SheetHub audit.
-2. Ensure `published: true` and remove temporary `revision_notes` from frontmatter.
-3. Merge `drafts/sheethub` into `main` and push to publish live:
+2. Ensure `published: true` and remove temporary `revision_notes` or `status: "needs_revision"` from frontmatter.
+3. Switch to `main` and selectively check out only the approved `.mdx` file:
    ```bash
    git checkout main
    git pull origin main
-   git merge drafts/sheethub
+   git checkout drafts/sheethub -- _posts/<slug>.mdx
+   git add _posts/<slug>.mdx
+   git commit -m "feat(content): publish <slug>"
    git push origin main
    ```
 4. Reconcile Server AHC queue status to `pushed_live`:
    ```bash
    ssh hermes@100.104.234.102 "python3 -c \"import json; p='/home/hermes/.hermes/agents/sheethub/data/article_queue.json'; d=json.load(open(p)); q=d.get('queue',d); [x.update({'state':'pushed_live'}) for x in q if x.get('slug')=='<SLUG>']; json.dump(d,open(p,'w',encoding='utf-8'),indent=2,ensure_ascii=False)\""
    ```
-5. Return to `drafts/sheethub` if continuing review work:
+5. Return to `drafts/sheethub` for continuing review work:
    ```bash
    git checkout drafts/sheethub
    ```
