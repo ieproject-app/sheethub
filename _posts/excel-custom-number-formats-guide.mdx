@@ -1,6 +1,7 @@
 ---
 title: "Excel Custom Number Formats: Format Codes, Colors & Conditions"
 date: "2026-08-09"
+updated: "2026-08-16"
 description: "Learn Excel custom number format codes: four-section structure, colors, conditions, and thousands scaling with examples."
 published: true
 featured: false
@@ -9,27 +10,27 @@ tags: ["excel", "tutorial", "number-formatting", "formatting", "custom-format"]
 category: "Formatting & Layout"
 ---
 
-Type `1200` into a cell and it looks like 1200. Change the number format to `$#,##0.00` and the same cell reads `$1,200.00`. Switch the format to `0.0,, "M"` and it shows `1.2M`. The value never changed — the formula bar still says 1200. Only the display changed. That is the whole idea behind Excel custom number formats: a format code is a small language that controls how a number looks without altering the number itself.
+Type `1200` into a cell and it looks like 1200. Change the number format to `$#,##0.00` and the same cell reads `$1,200.00`. Switch the format to `0.0, "K"` and it shows `1.2K`. The value never changed. The formula bar still says 1200. Only the display changed. That is the whole idea behind Excel custom number formats: a format code is a small language that controls how a number looks without altering the number itself.
 
-## Same Number, Three Looks
+## Same number, three looks
 
-Here is the same underlying value presented three ways:
+The same underlying value presented three ways:
 
 | Value in cell | Format code | What you see |
 |---------------|-------------|--------------|
 | 1200 | `General` | `1200` |
 | 1200 | `$#,##0.00` | `$1,200.00` |
-| 1200 | `0.0,, "M"` | `1.2M` |
+| 1200 | `0.0, "K"` | `1.2K` |
 
-Same cell, same number, three different stories — and switching between them takes seconds.
+Same cell, same number, three different stories, and switching between them takes seconds.
 
-## What Is a Custom Number Format?
+## What is a custom number format?
 
-A custom number format is a text string you type into the Format Cells dialog: select the cells, press <Kbd>Ctrl</Kbd> + <Kbd>1</Kbd> — the same shortcut from the [Excel keyboard shortcuts guide](/blog/excel-keyboard-shortcuts-guide) — open the Number tab, choose Custom, and type your code into the Type box. The preview shows the effect before you apply it.
+A custom number format is a text string you type into the Format Cells dialog: select the cells, press <Kbd>Ctrl</Kbd> + <Kbd>1</Kbd>, open the Number tab, choose Custom, and type your code into the Type box. The preview shows the effect before you apply it. For a broader cleanup workflow, see these [Excel data cleaning techniques](/blog/excel-data-cleaning-techniques-guide) before you format the finished values.
 
-The code only affects display — the stored value and every formula that references the cell stay untouched.
+The code only affects display. The stored value and every formula that references the cell stay untouched.
 
-## The Four-Section Structure
+## The four-section structure
 
 Format codes can hold up to four sections, separated by semicolons:
 
@@ -62,14 +63,14 @@ The digits in a format code are placeholders with different levels of commitment
 
 | Code | Behavior |
 |------|----------|
-| `0` | Required digit — a missing position shows as 0 |
-| `#` | Optional digit — disappears when there is nothing to show |
+| `0` | Required digit; a missing position shows as 0 |
+| `#` | Optional digit; it disappears when there is nothing to show |
 | `?` | Optional digit that leaves a space, aligning decimals |
 | `#,##0` | Thousands separator |
 
 `0` forces a digit: `000` turns `7` into `007`. `#` shows only existing digits: `###` leaves `7` as `7`. `?` pads with spaces, aligning decimals in a column.
 
-## Scaling Large Numbers
+## Scaling large numbers
 
 A trailing comma scales the value down by one thousand per comma:
 
@@ -85,15 +86,15 @@ A trailing comma scales the value down by one thousand per comma:
 
 `1,200,000` becomes `1`, and `0.0,,` turns `1,200,000` into `1.2`. Full values stay in the cells while the report shows tidy K and M numbers.
 
-## Colors and Conditions
+## Colors and conditions
 
-Colors go in square brackets at the start of a section — eight named colors: `[Black]`, `[Blue]`, `[Cyan]`, `[Green]`, `[Magenta]`, `[Red]`, `[White]`, and `[Yellow]`. The classic red-negative format is:
+Colors go in square brackets at the start of a section. Excel recognizes eight named colors: `[Black]`, `[Blue]`, `[Cyan]`, `[Green]`, `[Magenta]`, `[Red]`, `[White]`, and `[Yellow]`. The classic red-negative format is:
 
 ```excel
 0.00;[Red]-0.00
 ```
 
-Conditions use a comparison in brackets with a two-section layout — the first wins when true, the second handles everything else:
+Conditions use a comparison in brackets with a two-section layout: the first section wins when true, and the second handles everything else:
 
 ```excel
 [>100][Green]0;[<=100][Red]0
@@ -101,7 +102,7 @@ Conditions use a comparison in brackets with a two-section layout — the first 
 
 Above 100 displays in green; at or below 100 in red. With conditions, sections mean "true;otherwise", not positive/negative.
 
-## Percent, Scientific & Text
+## Percent, scientific, and text
 
 Percent formats multiply the display by 100 and add the symbol:
 
@@ -117,15 +118,15 @@ Percent formats multiply the display by 100 and add the symbol:
 
 `1200` shows as `1.20E+03`.
 
-Literal text goes in double quotes, and `@` shows whatever text the cell contains. As the fourth section, this formats text entries:
+Literal text goes in double quotes, and `@` shows whatever text the cell contains. Used as the fourth section, it formats text entries:
 
 ```excel
 0.00;[Red]-0.00;0;"Call: "@
 ```
 
-Type `John` and the cell displays `Call: John`. For a single literal character, escape it with a backslash — `0\K` appends K. `*` (fill) and `_` (space) have special meaning — quote or escape them.
+Type `John` and the cell displays `Call: John`. For a single literal character, escape it with a backslash. `0\K` appends K. `*` (fill) and `_` (space) have special meaning. Quote or escape them.
 
-## Custom Dates and Cumulative Time
+## Custom dates and cumulative time
 
 Date parts combine freely:
 
@@ -143,9 +144,9 @@ renders `2026-08-09`; `ddd, mmm d` gives `Sun, Aug 9`. Time is where one charact
 h:mm
 ```
 
-`[h]` counts elapsed hours, so 25 hours and 30 minutes displays as `25:30`. Plain `h` resets at 24, showing `1:30`. Timesheets that cross midnight need the brackets — the most common fix in this topic.
+`[h]` counts elapsed hours, so 25 hours and 30 minutes displays as `25:30`. Plain `h` resets at 24, showing `1:30`. Timesheets that cross midnight need the brackets. That is the most common fix in this topic.
 
-## Real Use Cases
+## Real use cases
 
 | Need | Format code |
 |------|-------------|
@@ -156,30 +157,30 @@ h:mm
 | Aligned decimal column | `0.0?` |
 | Hide the value on screen | `;;;` |
 
-For phone numbers that can start with zero, swap `#` for `0` — `(000) 000-0000` — so leading digits stay visible instead of vanishing.
+For phone numbers that can start with zero, swap `#` for `0` and use `(000) 000-0000`. The leading digits then stay visible.
 
-## Error Handling & Limitations
+## Error handling and limitations
 
-- **Malformed codes fall back to General.** An invalid code — wrong section count, stray character, unbalanced quotes — silently shows the raw value. Check the preview in Format Cells before applying.
-- **Locale changes punctuation.** A comma where your Excel expects a decimal point (or the reverse) is the usual reason a copied code "does nothing."
-- **`[h]` vs `h` is easy to mix up.** Durations over 24 hours silently display wrong — decide elapsed vs clock time before writing the code.
-- **Format-code conditions are not conditional formatting.** They only handle two numeric comparisons; for formulas, icon sets, or data bars you need conditional formatting rules.
-- **Format codes never transform data.** Display-only — use `ROUND` or a helper column when calculations need real rounding.
+- Malformed codes fall back to General. An invalid code, such as one with the wrong section count, a stray character, or unbalanced quotes, silently shows the raw value. Check the preview in Format Cells before applying.
+- Locale changes punctuation. A comma where your Excel expects a decimal point (or the reverse) is the usual reason a copied code "does nothing."
+- `[h]` and `h` are easy to mix up. Durations over 24 hours display incorrectly, so decide whether you need elapsed time or clock time before writing the code.
+- Format-code conditions are not conditional formatting. They handle two numeric comparisons; for formulas, icon sets, or data bars, use conditional formatting rules.
+- Format codes never transform data. They affect display only. Use `ROUND` or a helper column when calculations need real rounding.
 
-## Pro Tips
+## Pro tips
 
-- **Pair codes with conditional formatting.** Number format codes control the static look of a value, while [Excel custom number format codes](/blog/conditional-formatting-guide) change it based on conditions.
-- **Build a format library.** Custom formats are stored with the workbook — keep a hidden sheet of your best codes as text.
-- **Use `;;;` to hide values.** Three empty sections display nothing while the cell keeps its value.
-- **Scale before you style.** Apply `0.0,,` to revenue columns first, then decide on the K/M label.
+- Keep growing reports consistent. Combine [Excel custom number format codes with Excel Tables structured references](/blog/excel-tables-structured-references-guide) so formatted report ranges stay organized as rows are added.
+- Build a format library. Custom formats are stored with the workbook, so keep a hidden sheet of your best codes as text.
+- Use `;;;` to hide values. Three empty sections display nothing while the cell keeps its value.
+- Scale before you style. Apply `0.0,,` to revenue columns first, then decide on the K/M label.
 
-## Common Mistakes to Avoid
+## Common mistakes to avoid
 
-- **Forgetting the semicolons.** Mixing conditions or colors with the wrong number of sections silently produces garbage.
-- **Using format codes to round data.** Formulas still read the full-precision value — use `ROUND` when a rounded result matters.
-- **Assuming `0.0` rounds the value.** It only rounds the display.
-- **Copying codes across locales without checking separators.** A code can fail silently on another machine.
-- **Expecting text formatting from a numeric code.** Without a fourth section, text entries ignore your code and show as typed.
+- Forgetting the semicolons can cause a code with conditions or colors to fail silently.
+- Format codes do not round data. Formulas still read the full-precision value, so use `ROUND` when a rounded result matters.
+- `0.0` rounds the display, not the value.
+- Check separators before copying codes across locales. A code can fail silently on another machine.
+- A numeric code cannot format text entries without a fourth section. Otherwise, text shows as typed.
 
 ## FAQ
 
@@ -189,21 +190,21 @@ For phone numbers that can start with zero, swap `#` for `0` — `(000) 000-0000
 
 **How do I show negatives in red?** Use two sections: `0.00;[Red]-0.00`.
 
-**How do I display millions as 1.2M?** Use the double-comma scale: `#,##0.0,, "M"`.
+**How do I display millions as 1.2M?** Use `1,200,000` with the double-comma scale `#,##0.0,, "M"`; the cell displays `1.2M` while retaining the full value.
 
-**Availability:** Custom number formats exist in every Excel version — desktop, web, and mobile. Microsoft 365 includes the same codes.
+**Availability:** Custom number formats exist in every Excel version, including desktop, web, and mobile. Microsoft 365 includes the same codes.
 
 <Callout variant="tip" title="AI Prompt Idea">
 
-Now that you understand format codes, describe your display problem to ChatGPT, Gemini, or Claude:
+Use the format-code rules above to describe your display problem to ChatGPT, Gemini, or Claude:
 
 **Prompt:**
 > "I have a sales report in Excel. Column C holds revenue values in full dollars, and some values are negative. I want them displayed with two decimals and a thousands separator, negatives in red with a minus sign, and zero shown as a dash. Write a custom number format code for this."
 
-Compare the AI's code against the examples in this article — count the sections and check where `[Red]` sits before you apply it.
+Compare the AI's code against the examples in this article. Count the sections and check where `[Red]` sits before you apply it.
 
 </Callout>
 
 ## Summary
 
-Custom number formats are the fastest way to make a spreadsheet look deliberate: the same value can read as `$1,200.00`, `1.2K`, or `1.20E+03` without a single formula. Learn the four-section structure, remember that `0` forces digits while `#` lets them go, and keep `[h]:mm` for anything that crosses midnight. The value never changes — only the story the cell tells.
+Custom number formats are a practical way to control how a spreadsheet displays data: the same value can read as `$1,200.00`, `1.2K`, or `1.20E+03` without a single formula. Learn the four-section structure, remember that `0` forces digits while `#` lets them go, and keep `[h]:mm` for anything that crosses midnight. The value never changes; only its display does.

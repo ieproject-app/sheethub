@@ -1,0 +1,135 @@
+---
+title: "Fill with Gemini Google Sheets: Data and Error Fixes"
+date: "2026-08-16"
+description: "Use Fill with Gemini in Google Sheets to generate data, fix formula errors, and understand its license limits."
+published: true
+featured: false
+heroImage: "default-og"
+tags: ["google-sheets", "gemini", "ai", "news", "update", "tutorial"]
+category: "Google Sheets"
+---
+
+Google expanded Gemini in Sheets again in July 2026. **Fill with Gemini** became available in 11 additional languages, while Gemini can also explain and fix formula errors directly from an error cell. The important distinction is the entry point: this article is about the context-menu workflow and error assistant, not the separate formula-based AI feature.
+
+Fill with Gemini is the no-formula path: select a pattern, ask Sheets to generate, label, or clean the rest, then review the proposal. It is not a substitute for checking data quality or protecting sensitive information.
+
+## What Fill with Gemini Does
+
+Fill with Gemini looks at selected examples and suggests values for the remaining cells. Depending on the request and account, it can help with tasks such as:
+
+- Generating realistic sample rows for a demonstration
+- Categorizing descriptions into labels such as `Hardware` or `Services`
+- Extracting a consistent field from text
+- Normalizing dates, names, or other repeated formats
+- Filling a column from a pattern in the existing rows
+
+Gemini proposes output from the context you provide; treat the result as a draft until checked.
+
+The broader [Gemini in Google Sheets guide](/blog/google-sheets-let-function-guide) covers spreadsheet automation context, while this article stays focused on Fill with Gemini and formula-error fixes.
+
+## How to Use Fill with Gemini
+
+1. Open a native Google Sheets file on a computer. Gemini features work best in native Sheets files; convert an `.xlsx` file first if necessary.
+2. Enter a few representative examples in the target column, or select the range containing the pattern.
+3. Right-click the selected range.
+4. Choose **Fill with Gemini**.
+5. Describe the result you want, such as “Classify each support request as Billing, Technical, or Account.”
+6. Review the preview and inspect several rows, including edge cases.
+7. Insert or apply the result only after it matches the intended pattern.
+
+For a generated-data request, provide the structure and constraints rather than only saying “fill this.” For example:
+
+> “Create 20 realistic but fictional product rows using the columns Product, Category, Region, and Status. Keep categories to Hardware, Software, and Services. Do not use real customer information.”
+
+For a labeling request, show examples that represent the categories clearly. If two examples could reasonably receive different labels, add an instruction explaining the distinction before applying the result.
+
+## Three Useful Patterns
+
+### Generate test data
+
+Fill with Gemini is useful for a prototype dashboard or training sheet that needs plausible rows but no real customer data. State the number of rows, required columns, allowed categories, and whether dates or amounts should follow a range.
+
+Review generated values for duplicates, impossible dates, inconsistent capitalization, and accidental personal information. Use generated data for testing unless independently verified.
+
+### Label text from examples
+
+Suppose a feedback column contains short comments. Provide a few labeled examples, then ask Gemini to classify the remaining comments using the same categories. Keep the category set small and explicit.
+
+| Example text | Label |
+|---|---|
+| “The invoice total is wrong.” | Billing |
+| “The dashboard will not load.” | Technical |
+| “Please change the account owner.” | Account |
+
+A category prediction can be useful for triage, but ambiguous comments still need human review.
+
+### Normalize a repeated format
+
+If a column contains inconsistent versions of the same type of value, ask Gemini to standardize the pattern. Examples include capitalization, region names, or a date display. Keep the original column until the result has been compared against it; replacing the source too early makes mistakes harder to audit.
+
+## Fix Formula Errors with Gemini
+
+Google also introduced a separate error-troubleshooting workflow in June 2026. When a formula cell displays an error, hover over the cell and click **Fix**. Gemini analyzes the formula and surrounding sheet context, then provides an explanation and a possible corrected version.
+
+The flow is:
+
+1. Select or hover over the cell showing the formula error.
+2. Click **Fix** in the error assistance prompt.
+3. Read Gemini’s explanation of the likely cause.
+4. Compare the suggested formula with the intended calculation.
+5. Apply the change only after checking references, ranges, and expected output.
+
+For example, a `#DIV/0!` result may come from a blank denominator, a zero value, or a reference that shifted after rows were inserted. Gemini can suggest a correction, but it cannot know whether returning `0`, a blank, or an error message is correct for the report. That decision belongs to the spreadsheet owner.
+
+Use the [advanced Google Sheets QUERY guide](/blog/google-sheets-query-advanced-guide) when the problem is a complex query that needs deliberate testing rather than an automatic fix.
+
+## Fill with Gemini Is Not the Formula AI Feature
+
+Google Sheets has several Gemini entry points. Fill with Gemini uses a selected range and a context-menu action. The formula-error assistant starts from an error cell and offers an explanation or correction. Other Gemini features can work from the side panel or generate spreadsheet content from a prompt.
+
+Do not treat these workflows as interchangeable. This article does not cover the syntax or use cases of the separate cell formula AI function. If a workbook needs deterministic calculations, ordinary Sheets formulas remain easier to audit because their logic is visible in the cell and can be tested row by row.
+
+## Availability and License Requirements
+
+Gemini features in Sheets require an eligible Google Workspace or Google AI plan. Availability is not universal across free or basic accounts. The documented plan families for Gemini in Sheets include:
+
+| Plan family | Examples |
+|---|---|
+| Business | Business Standard and Business Plus |
+| Enterprise | Enterprise Standard and Enterprise Plus |
+| Consumer | Google AI Pro and Google AI Ultra |
+| Education | Google AI Pro for Education and eligible add-ons |
+| Other add-ons | AI Expanded Access, subject to the feature’s terms |
+
+Administrators may need to allow Gemini for Workspace and users may need Workspace smart features enabled. If **Fill with Gemini** is missing, check the account edition, administrator settings, file type, language, and rollout status before assuming the spreadsheet is broken.
+
+The July expansion added Mandarin, Dutch, Malay, Hebrew, Polish, Turkish, Czech, Indonesian, Swedish, Danish, and Norwegian. Availability can vary by feature, so check the current Help Center list.
+
+## Limits and Safe Use
+
+Usage limits apply per user and can change after promotional access periods. Google announced higher AI Expanded Access limits after July 15, 2026; the exact allowance depends on the current plan. Treat older numbers as temporary unless the current Help Center confirms them.
+
+Follow these practices:
+
+- Use small, representative ranges instead of sending an entire workbook at once.
+- Keep the original data until the generated result has passed review.
+- Never paste passwords, private customer records, health information, or confidential business data into an AI prompt.
+- Verify categories, dates, formulas, and totals before sharing the sheet.
+- Record the prompt or decision rule when the generated result affects a recurring workflow.
+- Use ordinary formulas or controlled scripts when reproducibility matters more than convenience.
+
+## FAQ
+
+**Is Fill with Gemini free in Google Sheets?** Not universally. It requires an eligible Google Workspace or Google AI plan, and availability may also depend on administrator settings and supported languages.
+
+**Is Fill with Gemini the same as the cell formula AI feature?** No. Fill with Gemini is a context-menu workflow for generating, labeling, or cleaning a selected range. The formula AI feature uses a different entry point.
+
+**Can Gemini fix every formula error?** No. It can explain and suggest a correction, but the suggestion may be wrong or unsuitable for the report’s business logic. Check the formula manually before applying it.
+
+**Does Fill with Gemini work in an Excel file?** Gemini features work best with native Google Sheets files. Convert the `.xlsx` file to Google Sheets before using the feature, then confirm that formatting and formulas survived conversion.
+
+**Is Indonesian supported?** Google’s July 2026 language update lists Indonesian among the 11 additional languages. Support can differ by feature, account, and rollout, so verify the current language setting if the option does not appear.
+
+## Summary
+
+Fill with Gemini lets eligible Google Sheets users generate, label, and clean data from a selected pattern without writing a formula for every row. Gemini can also explain formula errors through the **Fix** action. The July 2026 update expanded language support, but licensing, administrator settings, usage limits, and feature availability still apply. Treat every AI result as a draft, protect sensitive data, and verify the output before it becomes part of a shared report.
