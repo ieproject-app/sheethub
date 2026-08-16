@@ -1,0 +1,154 @@
+---
+title: "Excel MAKEARRAY Function: Generate Arrays with LAMBDA"
+date: "2026-08-04"
+description: "Generate custom arrays with Excel MAKEARRAY and LAMBDA. Build multiplication tables, random grids, and dummy data."
+published: true
+featured: false
+heroImage: "default-og"
+tags: ["excel", "formulas", "makearray", "lambda", "advanced", "tutorial"]
+category: "Formulas & Functions"
+---
+
+Did you know that manually creating a 9×9 multiplication table requires 81 separate formulas? MAKEARRAY reduces it to one.
+
+## What Is MAKEARRAY?
+
+MAKEARRAY is one of the functions that only exists because [LAMBDA does](/blog/excel-lambda-function-guide). It creates an array of a given size and calls your LAMBDA once for every cell, passing the row number and column number as parameters:
+
+```excel
+=MAKEARRAY(rows, columns, LAMBDA(r, c, expression))
+```
+
+The three arguments are:
+
+| Argument | What It Does |
+|----------|--------------|
+| `rows` | Number of rows in the result. Must be greater than zero. |
+| `columns` | Number of columns in the result. Must be greater than zero. |
+| `LAMBDA(r, c, ...)` | Called for each cell. `r` is the row index, `c` is the column index, and the expression returns the value for that cell. |
+
+**Availability:** MAKEARRAY requires Excel for Microsoft 365 (Windows, Mac, and web). It is not available in Excel 2021, 2019, or earlier — older versions return `#NAME?` because both MAKEARRAY and LAMBDA are missing.
+
+**Mental model:** you are not writing a formula for one cell and copying it. You are describing the entire grid in one expression, and Excel fills in every cell by varying `r` and `c`.
+
+## Example 1: A Multiplication Table in One Formula
+
+The classic MAKEARRAY demo is a 9×9 multiplication table. This single formula produces all 81 values:
+
+```excel
+=MAKEARRAY(9, 9, LAMBDA(r, c, r*c))
+```
+
+Read it left to right: build 9 rows and 9 columns, and in every cell multiply its row number by its column number. Cell (3, 4) gets `3*4` = 12, cell (7, 2) gets 14, and so on. Change `9` to `12` and the table grows instantly — one edit, not 144 cells of work.
+
+To add dynamic headers, reference two cells that hold the table size:
+
+```excel
+=MAKEARRAY(B1, B2, LAMBDA(r, c, r*c))
+```
+
+Now the grid resizes itself whenever you update `B1` or `B2`.
+
+## Example 2: A Random Grid
+
+Need a 5×5 grid of random numbers between 1 and 100 — a dice-roll simulator, a bingo card, or test data? Same pattern, different expression:
+
+```excel
+=MAKEARRAY(5, 5, LAMBDA(r, c, RANDBETWEEN(1, 100)))
+```
+
+One caveat: `RANDBETWEEN` is volatile, so the whole grid recalculates every time the sheet changes. If you need a stable snapshot, copy the result and paste it as values with <Kbd>Ctrl</Kbd> + <Kbd>Shift</Kbd> + <Kbd>V</Kbd> (Windows) or <Kbd>Cmd</Kbd> + <Kbd>Shift</Kbd> + <Kbd>V</Kbd> (Mac).
+
+## Example 3: Dummy Data with INDEX
+
+MAKEARRAY shines when you need realistic sample data. To generate 10 rows of names cycling through a small list, combine INDEX with `MOD`:
+
+```excel
+=MAKEARRAY(10, 3, LAMBDA(r, c, INDEX({"Alice","Bob","Cara"}, MOD(r-1,3)+1)))
+```
+
+The `MOD(r-1,3)+1` part cycles through 1, 2, 3, 1, 2, 3... so each row picks the next name and wraps around. Because `c` is unused here, every column repeats the same sequence — a quick way to build a 10×3 block of names for testing. Swap the array constant for product names or regions to shape the dummy data however you like.
+
+## Combining MAKEARRAY with XLOOKUP
+
+You can call any function inside the LAMBDA, including XLOOKUP. A common pattern is building a lookup result for each row index:
+
+```excel
+=MAKEARRAY(5, 1, LAMBDA(r, c, XLOOKUP(r, $A$2:$A$10, $B$2:$B$10)))
+```
+
+This returns the first five matching values from column B, one per row. Two details matter here:
+
+1. **Anchor the lookup range.** `$A$2:$A$10` and `$B$2:$B$10` use absolute references. Relative references shift inside MAKEARRAY and produce wrong or missing matches.
+2. **The LAMBDA must return a scalar.** XLOOKUP returns a single value, so it works. If your LAMBDA returns an array — say, a whole row from INDEX — MAKEARRAY throws `#VALUE!`.
+
+## Real Use Cases
+
+| Scenario | Formula |
+|----------|---------|
+| Multiplication table 9×9 | `=MAKEARRAY(9, 9, LAMBDA(r, c, r*c))` |
+| Random grid 5×5 | `=MAKEARRAY(5, 5, LAMBDA(r, c, RANDBETWEEN(1,100)))` |
+| Dummy data, 10 rows of cycling names | `=MAKEARRAY(10, 3, LAMBDA(r, c, INDEX({"Alice","Bob","Cara"}, MOD(r-1,3)+1)))` |
+| Identity matrix | `=MAKEARRAY(5, 5, LAMBDA(r, c, IF(r=c, 1, 0)))` |
+| Lookup per row | `=MAKEARRAY(5, 1, LAMBDA(r, c, XLOOKUP(r, $A$2:$A$10, $B$2:$B$10)))` |
+
+In every case the result is a dynamic array that spills exactly like [FILTER or SEQUENCE](/blog/excel-dynamic-array-functions-guide) — the size is fixed, but the values recalculate whenever the inputs change.
+
+## Error Handling & Limitations
+
+- **`#VALUE!` — LAMBDA returns an array.** The expression must return one scalar per cell. If you need a sub-array, wrap it with INDEX or CHOOSE so the LAMBDA extracts a single value.
+- **`#VALUE!` — invalid dimensions.** Rows or columns set to 0, negative, or non-numeric values throw `#VALUE!`. Guard dynamic sizes with `MAX`:
+  ```excel
+  =MAKEARRAY(MAX(1, B1), MAX(1, B2), LAMBDA(r, c, r*c))
+  ```
+- **`#NAME?` — older Excel.** MAKEARRAY and LAMBDA are Microsoft 365 only. Workarounds: drag a regular formula, or generate data with Power Query.
+- **Performance on large grids.** Every cell runs the LAMBDA, so a 100×100 grid means 10,000 calculations. Keep grids reasonable and avoid heavy volatile functions inside the LAMBDA.
+- **Volatile functions recalculate constantly.** RANDBETWEEN and RAND inside MAKEARRAY recompute on every sheet change. Paste as values when you need stable output.
+
+## MAKEARRAY vs Alternatives
+
+| Method | Pros | Cons |
+|--------|------|------|
+| **MAKEARRAY** | One formula, fully dynamic, custom logic per cell | Microsoft 365 only, requires LAMBDA |
+| Dragged formula | Works in every Excel version | Manual, easy to break, static |
+| Power Query | Handles large generated datasets | Setup and refresh overhead |
+| VBA / macros | Maximum control | Requires macro-enabled files |
+
+If you only need sequential numbers — 1, 2, 3, 4... — SEQUENCE is simpler and lighter. Use MAKEARRAY when each cell needs different logic, like the multiplication table or the random grid.
+
+## Pro Tips
+
+- **Define your source lists with [LET](/blog/excel-let-function-guide) before passing them into the LAMBDA.** A named list keeps the LAMBDA expression readable instead of nesting a long array constant inside INDEX.
+- **Combine with SEQUENCE** when you want to transform row and column positions in interesting ways, such as offsetting or stepping values.
+- **Test the LAMBDA in one cell first.** Write `=LAMBDA(r, c, r*c)(3, 4)` in a single cell to confirm the expression returns the expected scalar before wrapping it in MAKEARRAY.
+
+## Common Mistakes to Avoid
+
+1. **Returning an array from the LAMBDA.** Each call must produce one value, or you get `#VALUE!`.
+2. **Passing zero or negative dimensions.** Rows and columns must be positive integers.
+3. **Using MAKEARRAY for simple sequential lists.** SEQUENCE does that with less overhead.
+4. **Forgetting absolute references** in lookups inside the LAMBDA, which silently shifts the results.
+
+## FAQ
+
+**Does MAKEARRAY require LAMBDA?** Yes — the third argument is a LAMBDA that calculates each cell.
+
+**Can I generate random text?** Yes. Combine INDEX with RANDBETWEEN, or pick from a list with `MOD(r-1, n)+1` as in the dummy data example.
+
+**Why do I get `#VALUE!`?** Either the LAMBDA returned an array instead of a scalar, or the rows/columns arguments were below 1 or non-numeric.
+
+**Does Google Sheets have MAKEARRAY?** No. Sheets uses SEQUENCE, ARRAYFORMULA, or MAP for similar jobs.
+
+## AI Prompt Callout
+
+Once you understand how MAKEARRAY works, you can describe the grid you need to an AI assistant (ChatGPT, Gemini, or Claude) and get a ready-to-use formula:
+
+<Callout variant="info" title="AI Prompt Template">
+  I have a pricing matrix with 8 products and 5 regions. I need a formula that returns an 8×5 grid where each cell is the product's base price times a region multiplier. Region multipliers are in row 1, base prices are in column A. Use MAKEARRAY and LAMBDA, with absolute references to the multiplier and price ranges.
+</Callout>
+
+Adjust the ranges and multipliers to match your data.
+
+## SheetHub's Take
+
+MAKEARRAY turns "describe the grid" into a single formula: rows, columns, and the LAMBDA that fills every cell. It is the fastest way to build multiplication tables, random grids, and realistic dummy data — and the natural companion to the [LAMBDA function guide](/blog/excel-lambda-function-guide) for custom reusable logic. Start with the 9×9 table, then experiment with INDEX and XLOOKUP inside the LAMBDA; once the pattern clicks, generating an entire array by hand will feel like a thing of the past.

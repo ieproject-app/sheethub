@@ -1,0 +1,132 @@
+---
+title: "Slow Excel Workbooks? Use Check Performance to Find Bloated Cells"
+date: "2026-08-15"
+description: "Speed up slow Excel workbooks with Check Performance. Find and remove bloated formatting that drags down your files."
+published: true
+featured: false
+heroImage: "default-og"
+tags: ["excel", "productivity", "performance", "workbook", "tutorial"]
+category: "Productivity"
+---
+
+A single accidental format applied to an entire Excel column can affect more than one million cells. The workbook may look normal, yet its used range keeps expanding and every save, calculation, or open operation has more work to do. **Excel Check Performance** finds this hidden formatting so you can clean up a slow workbook without hunting through every sheet.
+
+## What Check Performance Does
+
+Check Performance opens the **Workbook Performance** pane. It looks for unwanted formatted cells: cells that contain formatting beyond the area where your actual data, formulas, or layout ends. This is a common form of workbook bloat because formatting can extend far below the last meaningful row or far to the right of the last used column.
+
+The tool does not act like a general file-size compressor. It targets unnecessary formatting in the workbook and lists the sheets that need attention. Data, formulas, charts, and pivot tables remain part of the workbook. Review the proposed cleanup before saving a copy of an important file.
+
+**Availability:** Check Performance is available in Excel for the web and Excel for Windows for Microsoft 365. The exact command and rollout can depend on the current Microsoft 365 build. It is not a feature to assume is available in perpetual editions such as Excel 2021.
+
+## How to Use Check Performance in Excel
+
+1. Open a copy of the workbook you want to inspect.
+2. Open the **Review** tab on the ribbon.
+3. Select **Check Performance**.
+4. Wait for the Workbook Performance pane to scan the file.
+5. Review the workbook and sheet entries listed in the pane.
+6. Select a sheet with unwanted formatted cells.
+7. Choose **Optimize sheet** for a focused cleanup, or **Optimize all** to process every listed sheet.
+8. Save the cleaned copy under a new name.
+9. Reopen it and test the formulas, filters, charts, and reports that matter to your workflow.
+
+Start with **Optimize sheet** when the workbook is important or when only one tab looks suspicious. It gives a smaller change to inspect. Use **Optimize all** after reviewing the list and creating a backup, especially when many sheets have accumulated formatting over time.
+
+## Optimize Sheet vs Optimize All
+
+| Option | Scope | Best use | Review level |
+|---|---|---|---|
+| **Optimize sheet** | One selected worksheet | Test the cleanup or fix a known problem | Compare one sheet before and after |
+| **Optimize all** | Every sheet identified by the pane | Clean a workbook with widespread formatting bloat | Test the complete workbook afterward |
+
+Optimization is not a replacement for a backup. Keep the original file until the cleaned copy has passed a practical review. Check important totals, print areas, named ranges, conditional formatting, and external links before distributing the result.
+
+## What It Cleans and What It Keeps
+
+The main target is formatting that exists outside the useful data area. Examples include a fill color applied to thousands of blank rows, borders dragged far beyond a report, or copied formatting left behind after data was deleted.
+
+Check Performance is not intended to remove the business data that the workbook needs. Nevertheless, every automated cleanup deserves verification. After optimization, check:
+
+- The last meaningful row and column on each important sheet.
+- Formulas that reference broad ranges.
+- Conditional formatting rules and their applies-to ranges.
+- Charts, print areas, filters, and pivot-table sources.
+- Hidden sheets or helper ranges used by reports.
+
+If a result changes unexpectedly, close the cleaned copy without overwriting the original and compare the two files.
+
+## Why Workbooks Become Bloated
+
+Unwanted formatting is only one source of sluggishness. These patterns often accumulate together.
+
+### Formatting beyond the data
+
+Pasting from another workbook can bring styles, borders, and number formats into blank cells. Repeating that action across many rows makes Excel treat a much larger area as used. Clear formats from genuinely unused regions, then use Check Performance to find what remains.
+
+### Full-column references
+
+A formula that checks `A:A` processes up to 1,048,576 rows even when the dataset contains only a few thousand. Full-column references are convenient, but repeated across many formulas they can increase calculation work. Prefer an Excel Table, a bounded range, or a dynamic spill reference that follows the actual output.
+
+For a modern range that expands from a dynamic-array formula, the [Excel spill ranges guide](/blog/excel-spill-ranges-guide) explains how the `#` operator can replace brittle fixed references.
+
+### Volatile formulas
+
+Functions such as OFFSET, INDIRECT, TODAY, and NOW can recalculate more often than ordinary formulas. A few are useful; hundreds or thousands can make a workbook feel slow. Replace volatile patterns with direct references or nonvolatile alternatives where the model allows it.
+
+### Too many conditional-formatting rules
+
+Rules that cover entire columns, overlap one another, or repeat for every small section can add calculation and rendering work. Consolidate rules where possible and keep each applies-to range close to the data it serves.
+
+## Alternatives Without Microsoft 365
+
+If Check Performance is unavailable, use a smaller diagnostic routine.
+
+### Inquire add-in
+
+The Inquire add-in for Excel desktop includes **Workbook Analysis**, which can expose workbook structure, formulas, links, and other relationships. Availability depends on the Excel edition and organizational setup. It is a broader analysis tool, not an identical replacement for Check Performance.
+
+### Inspect the last used cell
+
+On Windows, press <Kbd>Ctrl</Kbd> + <Kbd>End</Kbd> to move to Excel's last used cell. If the cursor jumps far below or to the right of the real report, the used range may contain stale formatting or old content. This check is a clue, not proof: formulas, hidden content, and objects can also extend the used range.
+
+### Clean a known area manually
+
+Select blank rows or columns beyond the real dataset, choose **Home > Clear > Clear Formats**, save a copy, and test the workbook. Use this method only when the boundary is certain. Clearing formats inside a report can remove intentional number formats, borders, or conditional formatting.
+
+| Method | Strength | Limitation |
+|---|---|---|
+| Check Performance | Focused cleanup of unwanted formatted cells | Microsoft 365 availability varies by build and edition |
+| Inquire Workbook Analysis | Broad workbook diagnostics | Desktop add-in and edition requirements apply |
+| Manual cleanup | Works when the problem area is known | Easy to remove useful formatting or miss hidden bloat |
+
+## A Practical Performance Routine
+
+Run Check Performance before sending a large workbook to colleagues or publishing a recurring report. Then combine it with ordinary range hygiene:
+
+1. Keep source data in a well-defined table or bounded range.
+2. Avoid full-column references in thousands of repeated formulas.
+3. Keep conditional-formatting rules close to the data.
+4. Remove unused styles and formats from confirmed blank areas.
+5. Inspect volatile formulas and replace them where practical.
+6. Save, close, reopen, and test the workbook after cleanup.
+
+For a broader cleanup pass, combine the performance check with the [Excel data cleaning guide](/blog/excel-data-cleaning-techniques-guide), which covers duplicates, Flash Fill, and Text to Columns. Cleaning values and cleaning the used range solve different problems, but they work well together.
+
+## FAQ
+
+**Does Check Performance delete formulas or data?**  
+Its purpose is to remove unwanted formatting, not business data. Still, create a backup and verify important outputs after optimization.
+
+**Is Check Performance available in Excel 2021?**  
+Do not assume it is. The feature is associated with Microsoft 365 Excel for the web and Windows desktop, and availability can depend on the current build.
+
+**Why is the file still slow after optimization?**  
+The remaining cause may be full-column references, volatile formulas, oversized conditional-formatting ranges, external links, objects, or a calculation-heavy model. Check Performance focuses on unwanted formatted cells.
+
+**Should Optimize sheet or Optimize all be used first?**  
+Use Optimize sheet for a cautious test on one tab. Use Optimize all after backing up and reviewing the Workbook Performance list.
+
+## Summary
+
+A slow Excel workbook can hide its biggest problem outside the visible report. Check Performance identifies unwanted formatted cells and offers a focused sheet cleanup or a workbook-wide optimization. Back up first, verify the result, then address full-column references, volatile formulas, and oversized conditional formatting so the workbook stays responsive as it grows.

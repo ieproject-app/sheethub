@@ -1,0 +1,111 @@
+---
+title: "LET Function in Google Sheets: Named Variables & Missing Headers Fix"
+date: "2026-08-05"
+description: "Use LET in Google Sheets for named variables, faster formulas, and a fix for missing headers in array filters."
+tags: ["google-sheets", "formulas", "let-function", "arrayformula", "advanced", "tutorial"]
+category: "Google Sheets"
+published: true
+heroImage: "default-og"
+---
+
+**LET** di Google Sheets (native 2022): named variables → formula lebih readable, cepat, dan mudah dirawat. Kombinasi FILTER/ARRAYFORMULA (contoh resmi Google: criteria + FILTER + ISBLANK). **Plus ide user U2**: pattern SEQUENCE+ROWS untuk bypass header yang hilang di array filter — solusi konkret untuk masalah nyata. Menutup 2 gap sekaligus: Sheets LET belum ada artikel (excel-let-function-guide hanya Excel) + ide user pending.
+
+## The big idea: Variabel bernama di dalam formula — tulis sekali, pakai berulang, dan atasi header yang "hilang" saat filter array.
+
+### What to Cover
+
+1. LET syntax: `=LET(name1, value1, [name2, value2, ...], calculation)`
+2. Named variables: readability + performa (hitung sekali, tidak berulang)
+3. Contoh dasar: `=LET(x, A1:A10, SUM(x))`
+4. Kombinasi FILTER + LET (contoh resmi Google: FILTER + ISBLANK criteria)
+5. Kombinasi ARRAYFORMULA + LET
+6. **Ide user U2**: Fix Missing Headers — pattern SEQUENCE+ROWS untuk bypass header di array filter
+7. ⚠️ GATE SINTAKS: header-bypass pattern perlu diuji dulu sebelum publish
+8. Perbandingan: LET Sheets vs LET Excel (paritas) — cross-link excel-let-function-guide
+9. Blok Availability (Sheets native 2022 — semua akun)
+
+## 1. Why This Matters (Pain Point Hook)
+
+"Formula FILTER yang panjang: kriteria yang sama ditulis 3 kali, sulit dibaca, lambat. LET memecahkan ini — dan ada satu bug klasik: saat filter array, header sering 'hilang'. Keduanya diselesaikan di artikel ini."
+
+## 2. What Is LET?
+
+- Sintaks: `=LET(name1, value1, [name2, value2, ...], calculation)`
+- Variabel bernama di dalam formula
+- Availability: Google Sheets (native 2022, semua akun)
+- Benefit: readability + performa (evaluasi sekali)
+
+## 3. LET Basics — Named Variables
+
+- `=LET(total, SUM(A1:A10), total * 1.1)` — hitung sekali, pakai berulang
+- Contoh nyata: kalkulasi pajak dengan rate sebagai variabel
+
+## 4. LET + FILTER — The Official Pattern
+
+- Contoh resmi Google: `=LET(criteria, FILTER(A2:A, B2:B="Yes"), SUM(criteria))` (ilustrasi — verifikasi sintaks persis saat draft)
+- FILTER + ISBLANK pattern
+- Kenapa LET di sini: criteria dipakai beberapa kali tanpa duplikasi
+
+## 5. LET + ARRAYFORMULA
+
+- `=LET(data, A2:C100, ARRAYFORMULA(data * 2))`
+- Kombinasi dengan MAP/BYROW untuk transformasi per-baris
+
+## 6. 🧠 Fix Missing Headers in Array Filter (Ide User U2)
+
+- Masalah: saat FILTER array, baris header ikut terfilter / hilang dari output
+- Pattern SEQUENCE+ROWS: `=LET(rows_count, ROWS(data), ...)` — bangun ulang header + data
+- Contoh: `=LET(d, A2:C100, h, A1:C1, VSTACK(h, FILTER(d, ...)))` — header eksplisit + data terfilter
+- ⚠️ Uji pattern sebelum publish (GATE SINTAKS) — verifikasi perilaku di Sheets
+- Alternatif: ARRAYFORMULA dengan IF untuk header
+
+## 7. Real Use Cases (Tabel)
+
+| Scenario | Solution |
+|----------|----------|
+| Kriteria dipakai berulang | `=LET(c, B2:B="Yes", FILTER(A2:A, c))` |
+| Header hilang saat filter | LET + VSTACK header + FILTER |
+| Formula pajak berulang | LET rate + amount |
+| Transformasi array | LET data + ARRAYFORMULA |
+
+## 8. Error Handling & Limitations (≥3 poin + workaround)
+
+- Nama variabel bentrok dengan nama range → gunakan nama unik / hindari nama range existing
+- LET tidak bisa menyimpan array hasil filter untuk dipakai di luar formula yang sama
+- Formula sangat panjang → pecah jadi beberapa LET / Named Functions
+- Perilaku LET + array di ARRAYFORMULA perlu uji — verifikasi saat draft
+- Paritas Excel: sintaks sama, tapi perilaku array sedikit beda — cross-link, bukan duplikat
+
+## 9. Comparison: LET vs Alternatives
+
+| Method | Pros | Cons |
+|--------|------|------|
+| LET | Readable, cepat | Butuh pemahaman variabel |
+| Named Ranges | Reusable lintas sheet | Setup di Name Manager |
+| Formula panjang tanpa LET | Langsung | Sulit dibaca, lambat |
+| Named Functions (LAMBDA) | Reusable + parameter | Advanced |
+
+## 10. Pro Tips
+
+- Gunakan LET di semua formula yang punya nilai berulang
+- Nama variabel deskriptif (criteria, rate, data) — bukan x, y
+- Kombinasikan dengan LAMBDA/Named Functions untuk fungsi custom
+
+## 11. Common Mistakes to Avoid
+
+- Nama variabel sama dengan nama kolom/range
+- Lupa argumen calculation terakhir
+- Mengira LET menyimpan hasil untuk formula lain (tidak — scope lokal)
+
+## 12. FAQ
+
+- Apakah LET di Sheets sama dengan Excel? (Ya — sintaks identik, lihat Excel LET guide)
+- Kapan LET tersedia di Sheets? (Native sejak 2022, semua akun)
+- Bagaimana mengatasi header hilang di filter? (Pattern SEQUENCE+ROWS / VSTACK header)
+- Apakah LET mempercepat formula? (Ya — nilai dihitung sekali, bukan berulang)
+
+## Internal Links
+
+- [ARRAYFORMULA guide](/blog/arrayformula-google-sheets-complete-guide) — see how LET and ARRAYFORMULA work together
+- [FILTER guide](/blog/filter-function-google-sheets) — learn how LET makes FILTER criteria reusable
+- [Excel LET function guide](/blog/excel-let-function-guide) — compare Sheets LET with Excel LET (paritas)

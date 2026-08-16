@@ -1,0 +1,197 @@
+---
+title: "Google Sheets Date Functions: DATEDIF, EDATE & EOMONTH"
+date: "2026-08-12"
+description: "Use Google Sheets date functions for age, deadlines, month ends, and business-day calculations across locales."
+published: true
+featured: false
+heroImage: "default-og"
+tags: ["google-sheets", "tutorial", "date-functions", "datedif", "formulas"]
+category: "Google Sheets"
+---
+
+Did you know Google Sheets stores dates as numbers too, and that `DATEDIF` works almost exactly like Excel's, quirks included? That shared foundation makes age calculations, month-end deadlines, and business-day schedules portable. The important detail for Sheets users is the surrounding behavior: locale settings affect how text dates are parsed, and the serial-date base is not identical to Excel's.
+
+## Same Functions, Slightly Different Numbers
+
+Google Sheets represents a date with a serial number and applies a date format to display it. In Sheets, serial **0** corresponds to December 30, 1899. Excel's commonly used Windows date system starts at January 1, 1900, so imported serial values can differ by a day even when the displayed dates look similar.
+
+Google Sheets makes these functions available to all account types. A personal account, a Workspace account, and a browser session can use the same date formulas. Menu labels and locale settings may differ, but the functions themselves are broadly available.
+
+## How Google Sheets Stores Dates
+
+A real date can be added, compared, and passed to another function. For example, if A2 contains a date, this formula returns the date 30 days later:
+
+```excel
+=A2+30
+```
+
+Formatting changes the appearance, not the underlying value. A date can display as `01/15/2026`, `15/01/2026`, or `2026-01-15` while still representing the same point in time.
+
+Text is different. A value such as `01/15/2026` pasted from another system may remain text, depending on the spreadsheet locale. Convert recognizable text with `DATEVALUE`:
+
+```excel
+=DATEVALUE("2026-01-15")
+```
+
+Locale is especially important for an ambiguous value such as `01/02/2026`. One locale can read it as January 2, while another reads it as February 1. For files shared across regions, use an unambiguous ISO-style input such as `2026-01-15`, then apply a display format such as `yyyy-mm-dd`.
+
+## DATEDIF: Calculate Age and Date Differences
+
+`DATEDIF` returns the complete difference between two dates. Its syntax is:
+
+```excel
+=DATEDIF(start_date, end_date, unit)
+```
+
+The unit controls the result:
+
+| Unit | Result |
+|---|---|
+| `"Y"` | Complete years |
+| `"M"` | Complete months |
+| `"D"` | Total days |
+| `"YM"` | Remaining months after complete years |
+| `"YD"` | Remaining days after complete years |
+| `"MD"` | Remaining days after complete months |
+
+To calculate a person's age from a birth date in B2, use:
+
+```excel
+=DATEDIF(B2, TODAY(), "Y")
+```
+
+For a years, months, and days display, calculate the remainder units separately:
+
+```excel
+=DATEDIF(B2, TODAY(), "Y")
+=DATEDIF(B2, TODAY(), "YM")
+=DATEDIF(B2, TODAY(), "MD")
+```
+
+The function has a familiar quirk: it may not appear in autocomplete, but it still works when typed manually. The start date must not be later than the end date. Otherwise, Sheets returns `#NUM!`. A simple guard makes that failure easier to understand:
+
+```excel
+=IF(B2>C2, "Check dates", DATEDIF(B2, C2, "Y"))
+```
+
+## EDATE and EOMONTH: Month-Based Calculations
+
+Use `EDATE` when a deadline or renewal should move by whole months. The syntax is `=EDATE(start, months)`. A positive number moves forward; a negative number moves backward.
+
+```excel
+=EDATE(DATE(2026,3,10), 6)
+=EDATE(TODAY(), -3)
+```
+
+The first example returns September 10, 2026; the second moves three months into the past. These formulas suit renewals, review windows, and rolling reports.
+
+`EOMONTH` returns the final day of a month. Its second argument is a month offset, where `0` means the month containing the starting date:
+
+```excel
+=EOMONTH(TODAY(), 0)
+=EOMONTH(TODAY(), 1)
+=EOMONTH(TODAY(), -1)
+```
+
+For a contract in A2 that ends at the end of its starting month, use `=EOMONTH(A2, 0)`. The function handles February and leap years without a special case.
+
+## NETWORKDAYS, WORKDAY, and INTL Variants
+
+`NETWORKDAYS` counts working days between two dates, excluding Saturday and Sunday by default. Add a holiday range so public holidays are excluded too:
+
+```excel
+=NETWORKDAYS(TODAY(), C2, Holidays)
+```
+
+`WORKDAY` moves forward or backward by a number of working days and returns a date:
+
+```excel
+=WORKDAY(TODAY(), 10, Holidays)
+```
+
+For a weekend other than Saturday and Sunday, use the `INTL` variants. The weekend argument can be a weekend code or a seven-character string of zeroes and ones. For example, this treats Friday and Saturday as the weekend:
+
+```excel
+=NETWORKDAYS.INTL(A2, B2, "0000110", Holidays)
+=WORKDAY.INTL(A2, 10, "0000110", Holidays)
+```
+
+The holiday argument is optional, but omitting it means a national holiday counts as a working day. Keep holidays in a range rather than hardcoding them into every formula.
+
+## TODAY, NOW, and Dynamic Dates
+
+`TODAY()` returns the current date. `NOW()` returns the current date and time. Both are dynamic and recalculate as the spreadsheet updates, so they suit live age, deadline, and status calculations.
+
+```excel
+=TODAY()
+=NOW()
+=C2-TODAY()
+```
+
+The last formula returns the number of days until the date in C2. To calculate the last working day of the current month, combine `EOMONTH` and `WORKDAY`:
+
+```excel
+=WORKDAY(EOMONTH(TODAY(), 0)+1, -1, Holidays)
+```
+
+For a column of dates, [wrap date calculations in ARRAYFORMULA to compute ages or deadlines for an entire column at once](/blog/arrayformula-google-sheets-complete-guide). For market-related date ranges, [GOOGLEFINANCE accepts date arguments, so the date functions guide shows how to build dynamic date ranges](/blog/google-sheets-googlefinance-guide).
+
+## Sheets vs. Excel: What Actually Differs?
+
+| Aspect | Excel | Google Sheets |
+|---|---|---|
+| Common serial base | January 1, 1900 | December 30, 1899 is serial 0 |
+| `DATEDIF` | Works, but is not prominently listed | Works and is documented in Sheets help |
+| `NETWORKDAYS.INTL` | Available | Available |
+| Locale source | Operating-system and workbook settings | Spreadsheet and account locale settings |
+| Text-date parsing | Can vary by regional settings | Can vary by spreadsheet locale |
+
+The function names are largely portable. The biggest migration risk is copying raw serial values or relying on an ambiguous text date. If a workbook is moving from Excel to Sheets, [the Excel side of this date-functions pair explains the matching functions and their version details](/blog/excel-date-time-functions-guide).
+
+## Practical Date Formulas
+
+| Task | Formula |
+|---|---|
+| Age in complete years | `=DATEDIF(B2,TODAY(),"Y")` |
+| End of the current month | `=EOMONTH(TODAY(),0)` |
+| Business days remaining | `=NETWORKDAYS(TODAY(),C2,Holidays)` |
+| Deadline after 10 workdays | `=WORKDAY(TODAY(),10,Holidays)` |
+| Six months after a start date | `=EDATE(A2,6)` |
+
+Before asking an AI tool for a date formula, validate one known start date and expected month end in the sheet. Include the date column, holiday range, and desired output so locale and argument-order errors are easier to catch.
+
+## Errors and Limitations
+
+- **A text date returns an error or the wrong date.** Convert it with `DATEVALUE`, or use an unambiguous ISO-style input. Check the spreadsheet locale when parsing imported data.
+- **`DATEDIF` returns `#NUM!`.** The start date is later than the end date. Reverse the dates or use an `IF` guard.
+- **A business-day deadline is too late or too early.** `NETWORKDAYS` and `WORKDAY` skip weekends, not public holidays, unless a holiday range is supplied.
+- **Imported serial values are off by one day.** Excel and Sheets use different serial-date conventions. Convert through displayed dates instead of copying raw serial numbers.
+- **A dynamic result changes unexpectedly.** `TODAY()` and `NOW()` recalculate. Use a fixed date cell when the calculation must remain stable.
+
+## Pro Tips and Common Mistakes
+
+Use `yyyy-mm-dd` for shared logs and exports. It is unambiguous across locales. Keep holidays in a named range such as `Holidays`, and use `ARRAYFORMULA` for whole-column calculations.
+
+Do not add numbers to values that only look like dates. Test the cell first, use the correct `DATEDIF` unit, and remember that `NETWORKDAYS` excludes weekends and supplied holidays rather than counting calendar days.
+
+## FAQ
+
+**Are Google Sheets date functions the same as Excel date functions?**
+
+Most core functions use the same names and arguments. Differences appear in serial-date conventions, locale parsing, and how each application documents or formats dates.
+
+**How can a text value become a date?**
+
+Use `DATEVALUE` when the text follows the spreadsheet's locale rules. For shared files, prefer ISO-style text such as `2026-01-15` and verify the resulting date.
+
+**Does Google Sheets have `WORKDAY.INTL`?**
+
+Yes. `WORKDAY.INTL` and `NETWORKDAYS.INTL` let you define a nonstandard weekend and still pass a holiday range.
+
+**Why does my date display differently after import?**
+
+The stored date and its display format are separate. Apply a consistent format such as `yyyy-mm-dd`, then check the spreadsheet locale if the underlying date was parsed from text.
+
+## Summary
+
+Google Sheets date functions cover the full workflow: `DATEDIF` measures elapsed time, `EDATE` moves by months, `EOMONTH` finds month boundaries, and `NETWORKDAYS` or `WORKDAY` handles business schedules. Use `DATEVALUE` carefully, keep locale differences in mind, and supply holidays whenever a deadline must match a real work calendar.
