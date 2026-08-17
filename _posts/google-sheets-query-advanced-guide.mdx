@@ -9,7 +9,7 @@ tags: ["google-sheets", "tutorial", "query", "advanced-formulas", "data-analysis
 category: "Google Sheets"
 ---
 
-This Google Sheets QUERY Pivot guide shows how PIVOT, LABEL, and FORMAT turn a basic query into a presentation-ready report. SELECT, WHERE, ORDER BY, and LIMIT retrieve rows; these advanced clauses shape the result for reporting. If the basic syntax is new, start with our [Google Sheets QUERY Pivot beginner guide](/blog/query-function-google-sheets-guide) first.
+This Google Sheets QUERY Pivot guide shows how PIVOT, LABEL, and FORMAT turn a basic query into a presentation-ready report. SELECT, WHERE, ORDER BY, and LIMIT retrieve rows; these advanced clauses shape the result for reporting. If the report needs interactive field controls instead, compare it with our [Google Sheets QUERY Pivot comparison with pivot tables](/blog/google-sheets-pivot-tables-guide).
 
 ## QUERY Recap in 5 Lines
 
@@ -33,7 +33,7 @@ With column B holding product names, column C holding regions, and column D hold
 
 PIVOT requires GROUP BY and an aggregation; `"select B pivot C"` without them returns a parse error. Keep the number of unique values in mind: 50 regions create 50 columns, so narrow open-ended sets with WHERE first.
 
-PIVOT is the formula-based cousin of a pivot table: a pivot table lets you drag fields around interactively, while QUERY PIVOT recalculates when the source changes. For simple row filtering without aggregation, [FILTER is the simpler alternative](/blog/filter-function-google-sheets).
+PIVOT is the formula-based cousin of a pivot table: a pivot table lets you drag fields around interactively, while QUERY PIVOT recalculates when the source changes. For a practical comparison with filtered totals, see this guide to [summing filtered rows in Google Sheets](/blog/google-sheets-sum-filtered-data-custom-criteria).
 
 ## LABEL: Rename Output Columns
 
@@ -141,7 +141,7 @@ The inner query builds the product totals. The outer query references the inner 
 ## Pro Tips
 
 - Store the query string in a cell and reference it: `=QUERY(A1:D100, G1, 1)`. Editing the report becomes editing one cell.
-- Wrap QUERY in [ARRAYFORMULA-friendly patterns when combining it with other array functions](/blog/arrayformula-google-sheets-complete-guide), and keep range references tight.
+- Keep QUERY ranges tight when combining them with [Google Sheets date functions for report filters](/blog/google-sheets-date-functions-guide), and avoid pulling unused columns into a large query.
 - Label every output column before sharing a report. A manager-facing sheet should never show a header that says `sum(D)`.
 - Use FORMAT on the same columns you LABEL, so numbers and headers are presentation-ready in one pass.
 - For large datasets, narrow with WHERE instead of pulling everything and filtering outside the query.

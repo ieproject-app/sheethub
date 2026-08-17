@@ -11,9 +11,9 @@ category: "Productivity"
 
 A checkbox looks like a form control, but Google Sheets reads it as a plain TRUE or FALSE value. A Google Sheets checkbox is therefore a formula-ready switch that can count, format, and filter your data. Click a cell and its value flips from TRUE to FALSE; every formula that references it updates on the spot.
 
-No add-ons, no scripts, and no paid plan are required. Checkboxes work in every Google account, and this guide shows how to add them, read their values, and wire them into progress calculations, conditional formatting, and filter-driven dashboards.
+You do not need add-ons, scripts, or a paid plan. Checkboxes work in every Google account, and this guide shows how to add them and read their values. From there you get progress bars, conditional formatting, and filter-driven dashboards.
 
-## What a Checkbox Really Is
+## What a checkbox really is
 
 When you insert a checkbox, the cell stops behaving like a normal cell. Its value becomes a Boolean: TRUE when checked, FALSE when unchecked. If you reference the cell in a formula, you get that Boolean, not text.
 
@@ -21,9 +21,9 @@ When you insert a checkbox, the cell stops behaving like a normal cell. Its valu
 =A2
 ```
 
-That formula returns TRUE when the checkbox in A2 is ticked and FALSE when it is not. Because TRUE and FALSE are first-class values in Google Sheets, they work directly with IF, COUNTIF, SUMIF, and logical tests. The checkbox is not a decorative object; it is an input your sheet can react to.
+That formula returns TRUE when the checkbox in A2 is ticked and FALSE when it is not. Because TRUE and FALSE are first-class values in Google Sheets, they work directly with IF, COUNTIF, SUMIF, and logical tests. The checkbox is an input your sheet can react to, exactly like any other cell value.
 
-## Adding a Checkbox
+## Adding a checkbox
 
 The fastest route takes two clicks.
 
@@ -35,9 +35,9 @@ The alternative route goes through data validation, which also lets you set cust
 
 For a custom checkbox, use the validation panel's **Use custom cell values** option. Checked and unchecked boxes can then store values you choose, such as Yes/No or 1/0, instead of TRUE/FALSE.
 
-## The TRUE/FALSE Engine
+## The TRUE/FALSE engine
 
-Reading a checkbox value unlocks the obvious next step: conditional logic.
+Once you can read a checkbox value, conditional logic follows:
 
 ```excel
 =IF(A2, "Done", "Pending")
@@ -47,9 +47,9 @@ When the box in A2 is checked, the formula returns "Done"; when unchecked, "Pend
 
 You can also combine checkboxes with other logic functions. `=AND(A2, B2)` returns TRUE only when both boxes are ticked, which suits a "both tasks complete" gate. `=NOT(A2)` inverts the state, handy for an "exclude this row" flag.
 
-## Counting and Summing with Checkboxes
+## Counting and summing with checkboxes
 
-Because checkboxes store real values, COUNTIF and SUMIF treat them like any other criterion.
+Because a checked box is a TRUE value, COUNTIF and SUMIF treat it like any other criterion.
 
 ```excel
 =COUNTIF(B2:B100, TRUE)
@@ -63,7 +63,7 @@ That formula counts how many tasks are done. For the value of completed work, SU
 
 Given a tracker where column B holds checkboxes and column C holds task values, the result is the total value of everything completed. The same approach extends to [Google Sheets checkbox totals with custom criteria](/blog/google-sheets-sum-filtered-data-custom-criteria) when you add visibility rules or custom criteria, such as a department or priority column.
 
-## Conditional Formatting Toggle
+## Conditional formatting toggle
 
 A checkbox can repaint a row the moment it is ticked, which is the visual feedback most to-do lists need.
 
@@ -81,7 +81,7 @@ A checkbox can repaint a row the moment it is ticked, which is the visual feedba
 
 Now any row whose checkbox is checked turns green. Add a strikethrough in the same rule for a finished-task look. The `$B` anchor keeps the rule tied to the checkbox column while the row number moves with each row. For a broader report that summarizes filtered data, the [Google Sheets QUERY guide](/blog/google-sheets-query-advanced-guide) covers PIVOT, LABEL, and FORMAT clauses.
 
-## To-Do List with Progress
+## To-do list with progress
 
 A live progress percentage needs just two counting formulas.
 
@@ -99,7 +99,7 @@ For a text-based progress bar that needs no images, extend the same idea with RE
 
 Each tick adds a block character, giving a rough bar like `███████░░░` directly inside a cell. It stays within the no-image, text-first design of this site while still reading as a visual gauge.
 
-## Checkbox-Driven Dashboard
+## Checkbox-driven dashboard
 
 Once checkboxes hold TRUE/FALSE values, FILTER can show or hide rows based on them.
 
@@ -115,7 +115,7 @@ That formula returns only the rows where the checkbox is checked, which is perfe
 
 The two live ranges form a miniature dashboard: tick a box and a task moves from one table to the other with no formulas to maintain. QUERY does the same job with SQL-style clauses when you need extra control, and the [advanced Google Sheets QUERY examples](/blog/google-sheets-query-advanced-guide) show how to shape and label the output.
 
-## Checkbox vs Dropdown vs Radio
+## Checkbox vs dropdown vs radio
 
 Each widget suits a different interaction, and the choice changes how your formulas look:
 
@@ -127,15 +127,15 @@ Each widget suits a different interaction, and the choice changes how your formu
 
 Checkboxes and dropdowns are both created through data validation. Once the checkbox state drives a report, the [Google Sheets pivot table guide](/blog/google-sheets-pivot-tables-guide) is a useful next step for grouping and summarizing the results.
 
-## Error Handling and Limitations
+## Error handling and limitations
 
-**1. Drag-fill copies custom values.** Dragging a checkbox range duplicates the underlying custom values, which can silently overwrite cell states. Check the destination range after filling.
+**1.** Dragging a checkbox range duplicates the underlying custom values, which can silently overwrite cell states. Check the destination range after filling.
 
-**2. Custom values change your counting.** A checkbox set to Yes/No stores "Yes", not TRUE. `=COUNTIF(B2:B100, "Yes")` counts it; `=COUNTIF(B2:B100, TRUE)` returns zero. Match the criterion to the value actually stored.
+**2.** A checkbox set to Yes/No stores "Yes", not TRUE. `=COUNTIF(B2:B100, "Yes")` counts it; `=COUNTIF(B2:B100, TRUE)` returns zero. Match the criterion to the value actually stored.
 
-**3. Filtered rows still count.** COUNTIF ignores filters and counts hidden checked boxes. To total only visible rows, switch to a SUBTOTAL-based formula such as `=SUMPRODUCT(SUBTOTAL(103, OFFSET(B2, ROW(B2:B100)-ROW(B2), 0)), --(B2:B100=TRUE))`, or clear the filter before reporting.
+**3.** COUNTIF ignores filters and counts hidden checked boxes. To total only visible rows, switch to a SUBTOTAL-based formula such as `=SUMPRODUCT(SUBTOTAL(103, OFFSET(B2, ROW(B2:B100)-ROW(B2), 0)), --(B2:B100=TRUE))`, or clear the filter before reporting.
 
-**4. Progress above 100%.** If the denominator range includes the header row or empty cells, the percentage inflates. Anchor both COUNTIF and COUNTA to the exact task range.
+**4.** If the denominator range includes the header row or empty cells, the percentage inflates. Anchor both COUNTIF and COUNTA to the exact task range.
 
 ## Pro Tips
 
@@ -144,11 +144,11 @@ Checkboxes and dropdowns are both created through data validation. Once the chec
 - Link checkboxes to a second sheet when you want a clean dashboard tab that only displays the filtered results.
 - For a dashboard that summarizes checkbox-driven data, [Google Sheets pivot tables](/blog/google-sheets-pivot-tables-guide) can group completed work by owner, status, or date.
 
-## Common Mistakes to Avoid
+## Common mistakes to avoid
 
-- **Treating a checkbox as decoration.** It stores a real value; ignoring that value throws away the whole point.
-- **Mixing up "Yes" and TRUE.** Custom-value checkboxes and default checkboxes need different COUNTIF criteria.
-- **Leaving progress as a decimal.** Without percent formatting, 0.75 reads as a fraction instead of 75%.
+- A checkbox is not decoration: it stores a value that formulas can act on, and ignoring that throws away the feature's purpose.
+- Custom-value checkboxes and default checkboxes store different values, so they need different COUNTIF criteria.
+- Without percent formatting, 0.75 reads as a fraction instead of 75%.
 
 ## FAQ
 
@@ -157,3 +157,5 @@ Checkboxes and dropdowns are both created through data validation. Once the chec
 **How do I make progress update automatically?** Divide `=COUNTIF(range, TRUE)` by `=COUNTA(range)`, format the cell as Percent, and it recalculates with every click.
 
 **Can a checkbox change the cell color?** Yes, through conditional formatting. A custom rule like `=$B2=TRUE` repaints the row when the box is checked.
+
+Open a sheet, insert a checkbox in B2, and copy the progress formula from this guide. Tick it, watch the percentage move, and you have a to-do list that updates itself.
