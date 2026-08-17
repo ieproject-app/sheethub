@@ -9,9 +9,9 @@ tags: ["google-sheets", "tutorial", "query", "advanced-formulas", "data-analysis
 category: "Google Sheets"
 ---
 
-This Google Sheets QUERY Pivot guide shows how PIVOT, LABEL, and FORMAT turn a basic query into a presentation-ready report. SELECT, WHERE, ORDER BY, and LIMIT retrieve rows; these advanced clauses shape the result for reporting. If the report needs interactive field controls instead, compare it with our [Google Sheets QUERY Pivot comparison with pivot tables](/blog/google-sheets-pivot-tables-guide).
+In Google Sheets, QUERY can do more than select and filter rows. PIVOT, LABEL, and FORMAT reshape the result for a report. SELECT, WHERE, ORDER BY, and LIMIT retrieve rows; these advanced clauses control how the output is organized. If the report needs interactive field controls instead, compare it with our [Google Sheets QUERY Pivot comparison with pivot tables](/blog/google-sheets-pivot-tables-guide).
 
-## QUERY Recap in 5 Lines
+## QUERY recap in 5 lines
 
 The function takes three arguments: the data range, the query string, and an optional header count.
 
@@ -21,7 +21,7 @@ The function takes three arguments: the data range, the query string, and an opt
 
 The string inside the quotes is the whole query. Clause order matters: SELECT, WHERE, GROUP BY, PIVOT, ORDER BY, LIMIT, OFFSET, LABEL, FORMAT, OPTIONS. A clause in the wrong position produces a parse error, the most common QUERY failure.
 
-## PIVOT: Turn Values into Headers
+## PIVOT: Turn values into headers
 
 PIVOT takes unique values from one column and turns them into headers. A classic use case is a product-by-region summary: products stay as rows, while regions become columns.
 
@@ -35,7 +35,7 @@ PIVOT requires GROUP BY and an aggregation; `"select B pivot C"` without them re
 
 PIVOT is the formula-based cousin of a pivot table: a pivot table lets you drag fields around interactively, while QUERY PIVOT recalculates when the source changes. For a practical comparison with filtered totals, see this guide to [summing filtered rows in Google Sheets](/blog/google-sheets-sum-filtered-data-custom-criteria).
 
-## LABEL: Rename Output Columns
+## LABEL: Rename output columns
 
 QUERY names output columns automatically: the source letter or aggregation expression. `sum(D)` is accurate but unhelpful in a report. LABEL replaces it.
 
@@ -51,9 +51,9 @@ The clause maps an expression to a new name in single quotes. Multiple labels ar
 
 LABEL only changes the output header, never the source data.
 
-## FORMAT: Control Output Formatting
+## FORMAT: Control output formatting
 
-FORMAT applies a number or date pattern to the output without changing source cells. It turns raw values into report-ready columns.
+FORMAT applies a number or date pattern to the output without changing source cells. It makes the returned columns easier to read.
 
 ```excel
 =QUERY(A1:D100, "select B, sum(D) group by B label sum(D) 'Total' format sum(D) '#,##0.00'", 1)
@@ -67,7 +67,7 @@ The pattern uses familiar custom number formats: `#,##0.00` for two decimals, `0
 
 FORMAT expects the correct underlying type. Formatting text as a date does not convert it; fix date-as-text sources with DATEVALUE first.
 
-## OFFSET, LIMIT & OPTIONS
+## OFFSET, LIMIT, and OPTIONS
 
 LIMIT caps the number of rows, and OFFSET skips rows before the result starts. Together they paginate a query:
 
@@ -83,7 +83,7 @@ The OPTIONS clause controls how QUERY interprets the source. The most practical 
 =QUERY(A1:D100, "select A, B options no_format", 1)
 ```
 
-## Filtering by Date: The #1 Pain Point
+## Filtering by date: the #1 pain point
 
 Dates are the most common reason a QUERY returns nothing: a date in a WHERE clause must be a date literal, not a plain string.
 
@@ -101,7 +101,7 @@ For a quarter report, use `<` on the first day of the next quarter to avoid matc
 
 If the source column contains timestamps, use the `datetime` literal: `datetime '2026-01-01 08:00:00'`.
 
-## Numeric vs String Comparison
+## Numeric vs. string comparison
 
 QUERY compares according to column type. A number and a quoted value can produce different results.
 
@@ -129,16 +129,16 @@ The inner query builds the product totals. The outer query references the inner 
 =QUERY(QUERY(A1:D100, "select B, sum(D) group by B", 1), "order by Col2 desc limit 5", 1)
 ```
 
-## Error Handling & Limitations
+## Error handling and limitations
 
-1. **Parse errors.** "Unable to parse query string" usually means a clause is out of order, a quote is missing, or a comma is misplaced. Check the documented clause order.
-2. **PIVOT with too many unique values.** Each unique value becomes a column, so an open-ended pivot column explodes the width. Constrain the data with WHERE first.
-3. **Date text vs date literal.** A date column filtered by a plain string returns nothing. Always use `date 'YYYY-MM-DD'`.
-4. **Case-sensitive comparisons.** WHERE text comparisons are case-sensitive. Normalize with LOWER() when case does not matter.
-5. **Blank cells.** Empty cells can make aggregations skip rows or produce odd totals. Add `where B is not null`.
-6. **Availability.** QUERY is exclusive to Google Sheets. Excel has no equivalent single function; the closest options are Power Query for external data and GROUPBY for in-workbook aggregation.
+1. A parse error such as "Unable to parse query string" usually means a clause is out of order, a quote is missing, or a comma is misplaced. Check the documented clause order.
+2. A PIVOT with too many unique values can make the result extremely wide because each value becomes a column. Constrain the data with WHERE first.
+3. A date column filtered by a plain string can return nothing. Use `date 'YYYY-MM-DD'` instead.
+4. WHERE text comparisons are case-sensitive. Normalize with LOWER() when case does not matter.
+5. Empty cells can make aggregations skip rows or produce odd totals. Add `where B is not null` when blank rows should be excluded.
+6. QUERY is exclusive to Google Sheets. Excel has no equivalent single function; the closest options are Power Query for external data and GROUPBY for in-workbook aggregation.
 
-## Pro Tips
+## Pro tips
 
 - Store the query string in a cell and reference it: `=QUERY(A1:D100, G1, 1)`. Editing the report becomes editing one cell.
 - Keep QUERY ranges tight when combining them with [Google Sheets date functions for report filters](/blog/google-sheets-date-functions-guide), and avoid pulling unused columns into a large query.
@@ -146,7 +146,7 @@ The inner query builds the product totals. The outer query references the inner 
 - Use FORMAT on the same columns you LABEL, so numbers and headers are presentation-ready in one pass.
 - For large datasets, narrow with WHERE instead of pulling everything and filtering outside the query.
 
-## Common Mistakes to Avoid
+## Common mistakes to avoid
 
 - Writing `'2026-01-01'` instead of `date '2026-01-01'` in a date filter.
 - Comparing a text-stored number column to a numeric literal, then wondering why no rows match.
@@ -154,9 +154,9 @@ The inner query builds the product totals. The outer query references the inner 
 - Mixing up quote types: the query string uses double quotes, and every string inside it uses single quotes.
 - Forgetting that nested query columns are Col1, Col2, not the original column letters.
 
-## AI Prompt Callout
+## AI prompt callout
 
-The syntax is fixed, but real reports rarely match the examples. Describe your setup to an AI assistant and let it assemble the query string: "I have a Google Sheets table with columns Date, Product, Region and Sales. Write a QUERY that shows total sales per product for Q2 2026, with regions as column headers and numbers formatted with thousands separators." The assistant can combine the PIVOT, LABEL, FORMAT, and date literal clauses correctly from that description.
+Real reports rarely match a tutorial example exactly. Give an AI assistant your column names, desired result, and date range: "I have a Google Sheets table with columns Date, Product, Region and Sales. Write a QUERY that shows total sales per product for Q2 2026, with regions as column headers and numbers formatted with thousands separators." The assistant can then assemble the PIVOT, LABEL, FORMAT, and date literal clauses from that description.
 
 ## FAQ
 
