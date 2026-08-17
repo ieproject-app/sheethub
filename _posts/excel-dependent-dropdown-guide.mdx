@@ -1,6 +1,7 @@
 ---
 title: "Dependent Dropdown List Excel: Two Cascading Methods"
 date: "2026-08-16"
+updated: "2026-08-17"
 description: "Build dependent dropdown lists in Excel with INDIRECT or dynamic arrays, from two-level choices to three-level cascades."
 published: true
 featured: false
@@ -9,7 +10,7 @@ tags: ["excel", "data-validation", "dropdown", "tutorial", "dynamic-arrays"]
 category: "Productivity"
 ---
 
-A dependent dropdown list in Excel can follow two very different designs. The older approach uses named ranges and `INDIRECT`: it works across a wide range of Excel versions, but it is sensitive to naming mistakes. The newer approach filters a source table into a spill range and points Data Validation at that result: it updates more naturally, but requires dynamic-array support.
+This dependent dropdown list Excel guide compares two very different designs. The older approach uses named ranges and `INDIRECT`: it works across a wide range of Excel versions, but it is sensitive to naming mistakes. The newer approach filters a source table into a spill range and points Data Validation at that result: it updates more naturally, but requires dynamic-array support.
 
 Both methods solve the same problem. Choose a country, and the next dropdown shows only its regions. Choose a region, and a third dropdown shows only its cities. The right choice depends on the Excel versions that open the workbook and how often the source list changes.
 
@@ -87,7 +88,7 @@ The results spill down from E4. Select B2, choose **List** in Data Validation, a
 
 The `#` operator means the entire spill range beginning at E4. If the selected country changes, the formula recalculates and the dropdown reads the new result. If more rows are added to `tblLocations`, the table reference expands automatically.
 
-This pattern is closely related to [Excel dynamic array functions](/blog/excel-dynamic-array-functions-guide), especially `FILTER`, `UNIQUE`, and spill behavior. For a deeper explanation of the `#` reference itself, see the [Excel spill ranges guide](/blog/excel-spill-ranges-guide).
+This pattern is closely related to [Excel dynamic array functions](/blog/excel-dynamic-array-functions-guide), especially `FILTER`, `UNIQUE`, and spill behavior. For a deeper explanation of the `#` reference itself, see the [dependent dropdown list Excel spill method](/blog/excel-spill-ranges-guide).
 
 ### Keep the helper result clean
 
