@@ -9,15 +9,15 @@ tags: ["google-sheets", "tutorial", "date-functions", "datedif", "formulas"]
 category: "Google Sheets"
 ---
 
-Did you know Google Sheets stores dates as numbers too, and that `DATEDIF` works almost exactly like Excel's, quirks included? Google Sheets date functions make age calculations, month-end deadlines, and business-day schedules portable. The important detail for Sheets users is the surrounding behavior: locale settings affect how text dates are parsed, and the serial-date base is not identical to Excel's.
+Google Sheets stores dates as numbers, and `DATEDIF` works almost exactly like Excel's, quirks included. Google Sheets date functions make age calculations, month-end deadlines, and business-day schedules portable. Sheets users also need to account for locale parsing and a serial-date base that differs from Excel's.
 
-## Same Functions, Slightly Different Numbers
+## Same functions, slightly different numbers
 
 Google Sheets represents a date with a serial number and applies a date format to display it. In Sheets, serial **0** corresponds to December 30, 1899. Excel's commonly used Windows date system starts at January 1, 1900, so imported serial values can differ by a day even when the displayed dates look similar.
 
 Google Sheets makes these functions available to all account types. A personal account, a Workspace account, and a browser session can use the same date formulas. Menu labels and locale settings may differ, but the functions themselves are broadly available.
 
-## How Google Sheets Stores Dates
+## How Google Sheets stores dates
 
 A real date can be added, compared, and passed to another function. For example, if A2 contains a date, this formula returns the date 30 days later:
 
@@ -35,7 +35,7 @@ Text is different. A value such as `01/15/2026` pasted from another system may r
 
 Locale is especially important for an ambiguous value such as `01/02/2026`. One locale can read it as January 2, while another reads it as February 1. For files shared across regions, use an unambiguous ISO-style input such as `2026-01-15`, then apply a display format such as `yyyy-mm-dd`.
 
-## DATEDIF: Calculate Age and Date Differences
+## DATEDIF: Calculate age and date differences
 
 `DATEDIF` returns the complete difference between two dates. Its syntax is:
 
@@ -68,13 +68,13 @@ For a years, months, and days display, calculate the remainder units separately:
 =DATEDIF(B2, TODAY(), "MD")
 ```
 
-The function has a familiar quirk: it may not appear in autocomplete, but it still works when typed manually. The start date must not be later than the end date. Otherwise, Sheets returns `#NUM!`. A simple guard makes that failure easier to understand:
+`DATEDIF` may not appear in autocomplete, but it still works when typed manually. The start date must not be later than the end date. If it is later, Sheets returns `#NUM!`. Add a guard to show a clearer message:
 
 ```excel
 =IF(B2>C2, "Check dates", DATEDIF(B2, C2, "Y"))
 ```
 
-## EDATE and EOMONTH: Month-Based Calculations
+## EDATE and EOMONTH: month-based calculations
 
 Use `EDATE` when a deadline or renewal should move by whole months. The syntax is `=EDATE(start, months)`. A positive number moves forward; a negative number moves backward.
 
@@ -118,7 +118,7 @@ For a weekend other than Saturday and Sunday, use the `INTL` variants. The weeke
 
 The holiday argument is optional, but omitting it means a national holiday counts as a working day. Keep holidays in a range rather than hardcoding them into every formula.
 
-## TODAY, NOW, and Dynamic Dates
+## TODAY, NOW, and dynamic dates
 
 `TODAY()` returns the current date. `NOW()` returns the current date and time. Both are dynamic and recalculate as the spreadsheet updates, so they suit live age, deadline, and status calculations.
 
@@ -148,7 +148,7 @@ For a column of dates, use a consistent formula pattern and keep the source date
 
 The function names are largely portable. The biggest migration risk is copying raw serial values or relying on an ambiguous text date. If a workbook is moving from Excel to Sheets, [the Excel side of this date-functions pair explains the matching functions and their version details](/blog/excel-date-time-functions-guide).
 
-## Practical Date Formulas
+## Practical date formulas
 
 | Task | Formula |
 |---|---|
@@ -160,15 +160,15 @@ The function names are largely portable. The biggest migration risk is copying r
 
 Before asking an AI tool for a date formula, validate one known start date and expected month end in the sheet. Include the date column, holiday range, and desired output so locale and argument-order errors are easier to catch.
 
-## Errors and Limitations
+## Errors and limitations
 
-- **A text date returns an error or the wrong date.** Convert it with `DATEVALUE`, or use an unambiguous ISO-style input. Check the spreadsheet locale when parsing imported data.
-- **`DATEDIF` returns `#NUM!`.** The start date is later than the end date. Reverse the dates or use an `IF` guard.
-- **A business-day deadline is too late or too early.** `NETWORKDAYS` and `WORKDAY` skip weekends, not public holidays, unless a holiday range is supplied.
-- **Imported serial values are off by one day.** Excel and Sheets use different serial-date conventions. Convert through displayed dates instead of copying raw serial numbers.
-- **A dynamic result changes unexpectedly.** `TODAY()` and `NOW()` recalculate. Use a fixed date cell when the calculation must remain stable.
+- A text date can return an error or the wrong date. Convert it with `DATEVALUE`, or use an unambiguous ISO-style input. Check the spreadsheet locale when parsing imported data.
+- If `DATEDIF` returns `#NUM!`, the start date is later than the end date. Reverse the dates or use an `IF` guard.
+- A business-day deadline can be too late or too early when the formula skips weekends but not public holidays. Supply a holiday range to `NETWORKDAYS` or `WORKDAY`.
+- Imported serial values can be off by one day because Excel and Sheets use different serial-date conventions. Convert through displayed dates instead of copying raw serial numbers.
+- A dynamic result can change unexpectedly because `TODAY()` and `NOW()` recalculate. Use a fixed date cell when the calculation must remain stable.
 
-## Pro Tips and Common Mistakes
+## Pro tips and common mistakes
 
 Use `yyyy-mm-dd` for shared logs and exports. It is unambiguous across locales. Keep holidays in a named range such as `Holidays`, and use `ARRAYFORMULA` for whole-column calculations.
 
