@@ -1,0 +1,169 @@
+---
+title: "Advanced QUERY in Google Sheets: PIVOT, LABEL & FORMAT"
+date: "2026-08-09"
+description: "Go beyond basic Google Sheets QUERY: master PIVOT, LABEL and FORMAT clauses with date filters and nested queries."
+published: true
+featured: false
+heroImage: "default-og"
+tags: ["google-sheets", "tutorial", "query", "advanced-formulas", "data-analysis"]
+category: "Google Sheets"
+---
+
+In Google Sheets, QUERY can do more than select and filter rows. PIVOT, LABEL, and FORMAT reshape the result for a report. SELECT, WHERE, ORDER BY, and LIMIT retrieve rows; these advanced clauses control how the output is organized. If the report needs interactive field controls instead, compare it with our [Google Sheets QUERY Pivot comparison with pivot tables](/blog/google-sheets-pivot-tables-guide).
+
+## QUERY recap in 5 lines
+
+The function takes three arguments: the data range, the query string, and an optional header count.
+
+```excel
+=QUERY(A1:D100, "select B, sum(D) group by B order by sum(D) desc", 1)
+```
+
+The string inside the quotes is the whole query. Clause order matters: SELECT, WHERE, GROUP BY, PIVOT, ORDER BY, LIMIT, OFFSET, LABEL, FORMAT, OPTIONS. A clause in the wrong position produces a parse error, the most common QUERY failure.
+
+## PIVOT: Turn values into headers
+
+PIVOT takes unique values from one column and turns them into headers. A classic use case is a product-by-region summary: products stay as rows, while regions become columns.
+
+```excel
+=QUERY(A1:D100, "select B, sum(D) group by B pivot C", 1)
+```
+
+With column B holding product names, column C holding regions, and column D holding sales, this returns one row per product with a separate column per region.
+
+PIVOT requires GROUP BY and an aggregation; `"select B pivot C"` without them returns a parse error. Keep the number of unique values in mind: 50 regions create 50 columns, so narrow open-ended sets with WHERE first.
+
+PIVOT is the formula-based cousin of a pivot table: a pivot table lets you drag fields around interactively, while QUERY PIVOT recalculates when the source changes. For a practical comparison with filtered totals, see this guide to [summing filtered rows in Google Sheets](/blog/google-sheets-sum-filtered-data-custom-criteria).
+
+## LABEL: Rename output columns
+
+QUERY names output columns automatically: the source letter or aggregation expression. `sum(D)` is accurate but unhelpful in a report. LABEL replaces it.
+
+```excel
+=QUERY(A1:D100, "select B, sum(D) group by B label sum(D) 'Total Sales'", 1)
+```
+
+The clause maps an expression to a new name in single quotes. Multiple labels are comma-separated, and an empty string removes a header entirely:
+
+```excel
+=QUERY(A1:D100, "select B, sum(D) group by B label B 'Product', sum(D) ''", 1)
+```
+
+LABEL only changes the output header, never the source data.
+
+## FORMAT: Control output formatting
+
+FORMAT applies a number or date pattern to the output without changing source cells. It makes the returned columns easier to read.
+
+```excel
+=QUERY(A1:D100, "select B, sum(D) group by B label sum(D) 'Total' format sum(D) '#,##0.00'", 1)
+```
+
+The pattern uses familiar custom number formats: `#,##0.00` for two decimals, `0%` for percentages, and `yyyy-mm-dd` for dates.
+
+```excel
+=QUERY(A1:D100, "select A, B format A 'yyyy-mm-dd'", 1)
+```
+
+FORMAT expects the correct underlying type. Formatting text as a date does not convert it; fix date-as-text sources with DATEVALUE first.
+
+## OFFSET, LIMIT, and OPTIONS
+
+LIMIT caps the number of rows, and OFFSET skips rows before the result starts. Together they paginate a query:
+
+```excel
+=QUERY(A1:D100, "select B order by B limit 10 offset 20", 1)
+```
+
+This returns rows 21 through 30 of the sorted list.
+
+The OPTIONS clause controls how QUERY interprets the source. The most practical option is `no_format`, which ignores the number formatting stored in the source cells and returns the underlying values:
+
+```excel
+=QUERY(A1:D100, "select A, B options no_format", 1)
+```
+
+## Filtering by date: the #1 pain point
+
+Dates are the most common reason a QUERY returns nothing: a date in a WHERE clause must be a date literal, not a plain string.
+
+```excel
+=QUERY(A1:D100, "where A >= date '2026-01-01' and A <= date '2026-12-31'", 1)
+```
+
+The literal has a fixed shape: `date`, a space, then the ISO date in single quotes. `date '2026-01-01'` is a date value; `'2026-01-01'` is text. Comparing a date column to text can produce an empty or incomplete result.
+
+For a quarter report, use `<` on the first day of the next quarter to avoid matching `06-30` exactly:
+
+```excel
+=QUERY(A1:D100, "where A >= date '2026-04-01' and A < date '2026-07-01'", 1)
+```
+
+If the source column contains timestamps, use the `datetime` literal: `datetime '2026-01-01 08:00:00'`.
+
+## Numeric vs. string comparison
+
+QUERY compares according to column type. A number and a quoted value can produce different results.
+
+```excel
+=QUERY(A1:D100, "where B > 100", 1)
+```
+
+```excel
+=QUERY(A1:D100, "where B > '100'", 1)
+```
+
+The first returns values above one hundred. The second compares text, so `99` can sort above `100` lexically. If an imported column only looks numeric, convert it with VALUE() in a helper column or use `=ARRAYFORMULA(VALUE(B1:B100))` as the query data.
+
+## Nested QUERY
+
+A QUERY result can be the data source for another QUERY. This is how you filter or aggregate the output of a first pass.
+
+```excel
+=QUERY(QUERY(A1:D100, "select B, sum(D) group by B", 1), "where Col2 > 1000", 1)
+```
+
+The inner query builds the product totals. The outer query references the inner result by its generated names: Col1, Col2, and so on. Column letters do not carry through the nesting, so `select B` in the outer query fails; it must be `Col1`. This is also the reliable way to get a top-N list from an aggregation:
+
+```excel
+=QUERY(QUERY(A1:D100, "select B, sum(D) group by B", 1), "order by Col2 desc limit 5", 1)
+```
+
+## Error handling and limitations
+
+1. A parse error such as "Unable to parse query string" usually means a clause is out of order, a quote is missing, or a comma is misplaced. Check the documented clause order.
+2. A PIVOT with too many unique values can make the result extremely wide because each value becomes a column. Constrain the data with WHERE first.
+3. A date column filtered by a plain string can return nothing. Use `date 'YYYY-MM-DD'` instead.
+4. WHERE text comparisons are case-sensitive. Normalize with LOWER() when case does not matter.
+5. Empty cells can make aggregations skip rows or produce odd totals. Add `where B is not null` when blank rows should be excluded.
+6. QUERY is exclusive to Google Sheets. Excel has no equivalent single function; the closest options are Power Query for external data and GROUPBY for in-workbook aggregation.
+
+## Pro tips
+
+- Store the query string in a cell and reference it: `=QUERY(A1:D100, G1, 1)`. Editing the report becomes editing one cell.
+- Keep QUERY ranges tight when combining them with [Google Sheets date functions for report filters](/blog/google-sheets-date-functions-guide), and avoid pulling unused columns into a large query.
+- Label every output column before sharing a report. A manager-facing sheet should never show a header that says `sum(D)`.
+- Use FORMAT on the same columns you LABEL, so numbers and headers are presentation-ready in one pass.
+- For large datasets, narrow with WHERE instead of pulling everything and filtering outside the query.
+
+## Common mistakes to avoid
+
+- Writing `'2026-01-01'` instead of `date '2026-01-01'` in a date filter.
+- Comparing a text-stored number column to a numeric literal, then wondering why no rows match.
+- Using an aggregation like `sum(D)` without GROUP BY, which triggers a parse error.
+- Mixing up quote types: the query string uses double quotes, and every string inside it uses single quotes.
+- Forgetting that nested query columns are Col1, Col2, not the original column letters.
+
+## AI prompt callout
+
+Real reports rarely match a tutorial example exactly. Give an AI assistant your column names, desired result, and date range: "I have a Google Sheets table with columns Date, Product, Region and Sales. Write a QUERY that shows total sales per product for Q2 2026, with regions as column headers and numbers formatted with thousands separators." The assistant can then assemble the PIVOT, LABEL, FORMAT, and date literal clauses from that description.
+
+## FAQ
+
+- **Can QUERY replace a pivot table?** For many cases, yes. QUERY PIVOT produces the same summary shape and recalculates automatically. A real pivot table remains better when you need interactive field dragging.
+- **Why does my query return nothing?** Check the `date 'YYYY-MM-DD'` literal and whether the compared column is stored as text.
+- **Does Excel have QUERY?** No. The nearest equivalents are Power Query for importing external data, and GROUPBY for aggregating ranges in the workbook.
+
+## Summary
+
+The advanced QUERY clauses turn a data extract into a report: PIVOT spreads values into headers, LABEL names output columns, and FORMAT applies number and date patterns. OFFSET and LIMIT paginate, date literals make date filters reliable, type awareness prevents silent comparison failures, and nested QUERY layers one transformation on another. Together they cover most reporting needs inside a single Google Sheets formula.

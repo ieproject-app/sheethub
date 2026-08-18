@@ -1,0 +1,156 @@
+---
+title: "Excel Spill Ranges: Master the # Operator for Dynamic Arrays"
+date: "2026-08-10"
+updated: "2026-08-16"
+description: "Master Excel spill ranges and the # operator to build formulas that update automatically as your data grows."
+published: true
+heroImage: "default-og"
+tags: ["excel", "dynamic-arrays", "spill", "formulas", "tutorial"]
+category: "Formulas & Functions"
+---
+
+You reference a fixed range like A1:A100 and the formula works perfectly until next month, when the data grows to 150 rows. The formula still points at A1:A100, so the bottom 50 rows are invisible. You fix it manually, and the cycle repeats. Excel spill ranges and the `#` operator replace that manual update with a reference that adjusts automatically.
+
+## What a spill range is
+
+When you write a formula like `=FILTER(A2:A100, B2:B100="Yes")` in Excel, the result does not squeeze into a single cell. The formula returns an array of values, and Excel spills those values across multiple rows and columns starting from the cell where you typed the formula. That entire block of output is called a spill range.
+
+The cell where you entered the formula holds the formula itself, and every other cell in the spill displays the result automatically. You cannot edit the spilled cells directly. Excel shows a gray border and the message "Spill from [cell]" when you select one.
+
+Dynamic array functions like FILTER, SORT, UNIQUE, SEQUENCE, XLOOKUP, and VSTACK all produce spill ranges. If you already use those functions, you have seen spill ranges in action. [Learn how Excel spill ranges power dynamic array formulas](/blog/excel-dynamic-array-functions-guide), then learn how to reference their spilled output safely.
+
+## The # operator: referencing a spill
+
+The hash symbol `#` is a spill range operator. When you append `#` to a cell reference, Excel interprets it as "the entire spilled range starting from this cell."
+
+Type this in any cell:
+
+```excel
+=A2#
+```
+
+If A2 contains a dynamic array formula that spills down 20 rows, `=A2#` returns all 20 rows. If the source formula changes and spills 50 rows instead, `=A2#` automatically adjusts to 50 rows. You never have to update the reference manually.
+
+The `#` operator works across sheets too:
+
+```excel
+=Summary!B2#
+```
+
+That pulls the entire spilled range from cell B2 on the Summary sheet.
+
+## Spill references inside other formulas
+
+Spill references become useful when you pass them to other functions. Instead of hard-coding a range that breaks when data grows, you reference the spill and let the formula follow its current size.
+
+Count how many rows a spill contains:
+
+```excel
+=COUNTA(A2#)
+```
+
+Sum a spilled range:
+
+```excel
+=SUM(A2#)
+```
+
+Use a spill as criteria in SUMIFS:
+
+```excel
+=SUMIFS(sales_range, region_range, A2#)
+```
+
+If A2 contains a UNIQUE list of regions that spills 5 rows today and 8 rows tomorrow, the SUMIFS formula automatically sums against 8 regions without any changes.
+
+The same logic applies to INDEX, XLOOKUP, and any function that accepts a range. Point it at a spill reference instead of a fixed range, and your model becomes dynamic.
+
+## Why this prevents broken models
+
+Traditional formulas reference static ranges. You write `=SUM(A1:A100)`, and the formula locks to 100 rows. When your dataset grows to 150 rows, the sum misses the last 50. You update the formula to A1:A150, and the cycle repeats every time new data arrives.
+
+Spill references eliminate this problem. Write `=SUM(A2#)` once, and it sums however many rows the source formula spills, whether that is 10 rows or 10,000. The reference adjusts automatically because the `#` operator always points at the entire spill, not a fixed range.
+
+This matters in financial models, dashboards, and reports where the input data changes every week. Instead of hunting for hard-coded ranges, you use spill references and the model updates itself.
+
+## Spill vs legacy CSE arrays
+
+Before dynamic arrays, Excel had Ctrl+Shift+Enter (CSE) array formulas. You typed a formula, pressed <Kbd>Ctrl</Kbd> + <Kbd>Shift</Kbd> + <Kbd>Enter</Kbd>, and Excel wrapped it in curly braces `{}` to indicate it was an array formula. CSE arrays still work in modern Excel, but dynamic arrays are simpler and more powerful.
+
+| Feature | CSE Arrays (Legacy) | Dynamic Arrays (Modern) |
+|---------|---------------------|-------------------------|
+| Entry method | <Kbd>Ctrl</Kbd> + <Kbd>Shift</Kbd> + <Kbd>Enter</Kbd> | Normal Enter |
+| Output | Fixed size, selected in advance | Spills automatically |
+| Editing | Re-enter entire formula | Edit once, spill updates |
+| Availability | All Excel versions | Microsoft 365, Excel 2021+ |
+| Use spill reference `#` | No | Yes |
+
+CSE arrays require you to select the output range before entering the formula. If the result changes size, you have to reselect and re-enter the formula. Dynamic arrays spill on their own, and the `#` operator references the result no matter how large it grows.
+
+You only need CSE arrays if you are working in Excel 2019 or earlier, or if you need a specific legacy behavior that dynamic arrays do not support. For all other cases, use dynamic arrays.
+
+## Spill range vs #SPILL! error
+
+A spill range is the successful output of a dynamic array formula. The `#SPILL!` error is what you see when Excel cannot spill the result because something blocks the path.
+
+These are different concepts. A spill range is a reference to healthy output. The `#SPILL!` error means the formula tried to spill but failed because merged cells, existing data, or the edge of the sheet got in the way.
+
+Common causes of `#SPILL!` errors:
+
+- Merged cells in the spill path
+- Data or formulas already occupying the cells where the result wants to spill
+- The spill range would exceed the edge of the sheet (row 1,048,576 or column XFD)
+- An Excel Table occupies part of the spill area
+
+[When a spill is blocked, you get the #SPILL! error. See how to fix every cause in our formula errors guide](/blog/excel-formula-errors-troubleshooting-guide).
+
+Once you clear the blockage, the formula spills successfully and you can reference it with the `#` operator.
+
+## Spill limits by version
+
+Dynamic arrays are available in Microsoft 365 and Excel 2021. Excel 2019 and earlier do not support spill ranges or the `#` operator at all. If you open a workbook with spill formulas in Excel 2019, the formulas return `#NAME?` errors.
+
+> Dynamic arrays and spill ranges require **Microsoft 365** or **Excel 2021** (perpetual license). Excel 2019 and earlier versions do not support these features. If you share workbooks with users on older versions, avoid spill formulas or provide a static copy of the data.
+
+The maximum size of a spill depends on memory and Excel's internal limits. In practice, you can spill hundreds of thousands of rows without issue. The limit is the total number of cells in a worksheet (1,048,576 rows × 16,384 columns), but you will hit performance constraints long before that.
+
+Merged cells and Excel Tables can block spills even when there is room. Avoid merging cells in areas where dynamic formulas spill, and be careful placing spill formulas inside or near Tables.
+
+## Pro tips
+
+To name a spill reference, go to Formulas > Define Name and create a named range pointing at `Sheet1!$A$2#`. You can then write `=SUM(SalesData)` instead of `=SUM(Sheet1!$A$2#)`. The named range updates automatically as the spill grows or shrinks.
+
+[Feed a spilled range into VSTACK or HSTACK to combine dynamic outputs into one report](/blog/excel-vstack-hstack-guide). For example, `=VSTACK(A2#, D2#)` stacks two separate spill ranges vertically, and both ranges adjust independently.
+
+Press <Kbd>Ctrl</Kbd> + <Kbd>.</Kbd> (period) to cycle through the corners of a spill range. This is faster than scrolling when the spill is large.
+
+[Use spill references instead of fixed ranges so your cleaning steps survive new rows](/blog/excel-data-cleaning-techniques-guide). If you write `=TRIM(A2#)` to clean spilled text, the cleaning formula adjusts automatically when the source data grows.
+
+## Common mistakes to avoid
+
+If A2 contains a FILTER formula that spills, write `=SUM(A2#)` instead of `=SUM(A2:A100)`. The spill reference always covers the entire result, no matter how many rows.
+
+If you place a spill formula in a cell and existing data sits in the spill path, you get a `#SPILL!` error. Clear the cells or move the formula to a blank area.
+
+The anchor is the cell where you typed the formula. If the formula is in A2 and spills to A2:A20, you reference it with `A2#`, not `A20#`. Referencing a spilled cell, rather than the anchor, with `#` returns an error.
+
+## FAQ
+
+**Can I use spill references in Excel 2019?**  
+No. Excel 2019 does not support dynamic arrays or the `#` operator. Spill formulas opened in Excel 2019 return `#NAME?` errors.
+
+**Why does A2# return #REF!?**  
+The cell you are referencing does not contain a spilled formula, or the spill was deleted. Check that A2 holds a dynamic array formula and that it spills successfully.
+
+**What is the maximum size of a spill?**  
+The theoretical limit is the entire worksheet (1,048,576 rows × 16,384 columns), but memory and performance constraints apply long before that. In practice, spills of tens or hundreds of thousands of cells work without issue on modern hardware.
+
+**Can I use spill references inside Excel Tables?**  
+Yes, but be careful. If a spill formula grows and collides with a Table boundary, you get a `#SPILL!` error. Place spill formulas outside Tables or ensure the spill path is clear.
+
+**How do I stop a spill from expanding?**  
+Copy the spilled range and paste as values. This replaces the dynamic formula with static data.
+
+## What to do next
+
+Once your formulas spill, you can build dependent dropdowns, dashboards, and reports that adjust automatically as data grows. The `#` operator keeps those references tied to the current output instead of a fixed range.
