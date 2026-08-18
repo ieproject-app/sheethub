@@ -12,7 +12,7 @@ category: "Productivity"
 
 A single accidental format applied to an entire Excel column can affect more than one million cells. The workbook may look normal, yet its used range keeps expanding and every save, calculation, or open operation has more work to do. **Excel Check Performance** finds this hidden formatting so you can clean up a slow workbook without hunting through every sheet.
 
-## What Check Performance Does
+## What Check Performance does
 
 Check Performance opens the **Workbook Performance** pane. It looks for unwanted formatted cells: cells that contain formatting beyond the area where your actual data, formulas, or layout ends. This is a common form of workbook bloat because formatting can extend far below the last meaningful row or far to the right of the last used column.
 
@@ -20,7 +20,7 @@ The tool does not act like a general file-size compressor. It targets unnecessar
 
 **Availability:** Check Performance is available in Excel for the web and Excel for Windows for Microsoft 365. The exact command and rollout can depend on the current Microsoft 365 build. It is not a feature to assume is available in perpetual editions such as Excel 2021.
 
-## How to Use Check Performance in Excel
+## How to use Check Performance in Excel
 
 1. Open a copy of the workbook you want to inspect.
 2. Open the **Review** tab on the ribbon.
@@ -34,7 +34,7 @@ The tool does not act like a general file-size compressor. It targets unnecessar
 
 Start with **Optimize sheet** when the workbook is important or when only one tab looks suspicious. It gives a smaller change to inspect. Use **Optimize all** after reviewing the list and creating a backup, especially when many sheets have accumulated formatting over time.
 
-## Optimize Sheet vs Optimize All
+## Optimize sheet vs optimize all
 
 | Option | Scope | Best use | Review level |
 |---|---|---|---|
@@ -43,7 +43,7 @@ Start with **Optimize sheet** when the workbook is important or when only one ta
 
 Optimization is not a replacement for a backup. Keep the original file until the cleaned copy has passed a practical review. Check important totals, print areas, named ranges, conditional formatting, and external links before distributing the result.
 
-## What It Cleans and What It Keeps
+## What it cleans and what it keeps
 
 The main target is formatting that exists outside the useful data area. Examples include a fill color applied to thousands of blank rows, borders dragged far beyond a report, or copied formatting left behind after data was deleted.
 
@@ -57,7 +57,7 @@ Check Performance is not intended to remove the business data that the workbook 
 
 If a result changes unexpectedly, close the cleaned copy without overwriting the original and compare the two files.
 
-## Why Workbooks Become Bloated
+## Why workbooks become bloated
 
 Unwanted formatting is only one source of sluggishness. These patterns often accumulate together.
 
@@ -79,7 +79,7 @@ Functions such as OFFSET, INDIRECT, TODAY, and NOW can recalculate more often th
 
 Rules that cover entire columns, overlap one another, or repeat for every small section can add calculation and rendering work. Consolidate rules where possible and keep each applies-to range close to the data it serves.
 
-## Alternatives Without Microsoft 365
+## Alternatives without Microsoft 365
 
 If Check Performance is unavailable, use a smaller diagnostic routine.
 
@@ -101,7 +101,7 @@ Select blank rows or columns beyond the real dataset, choose **Home > Clear > Cl
 | Inquire Workbook Analysis | Broad workbook diagnostics | Desktop add-in and edition requirements apply |
 | Manual cleanup | Works when the problem area is known | Easy to remove useful formatting or miss hidden bloat |
 
-## A Practical Performance Routine
+## A practical performance routine
 
 Run Check Performance before sending a large workbook to colleagues or publishing a recurring report. Then combine it with ordinary range hygiene:
 
