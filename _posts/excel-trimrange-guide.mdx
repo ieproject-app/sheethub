@@ -1,6 +1,7 @@
 ---
 title: "Excel TRIMRANGE Function: Trim Empty Edges"
 date: "2026-08-16"
+updated: "2026-08-18"
 description: "Use Excel TRIMRANGE to remove empty edge rows and columns, simplify formulas, and trim full-column references."
 published: true
 featured: false
@@ -9,7 +10,7 @@ tags: ["excel", "trimrange", "formulas", "dynamic-arrays", "tutorial"]
 category: "Formulas & Functions"
 ---
 
-One dot can change how much of a worksheet your formula sees. A reference such as `A:A` includes the entire column, while the trim-reference form `A:A.` tells modern Excel to ignore empty rows at the edge. The result is a cleaner reference without manually guessing whether the data ends at row 500 or row 50,000.
+The Excel TRIMRANGE function changes how much of a worksheet your formula sees. A reference such as `A:A` includes the entire column, while the trim-reference form `A:.A` tells modern Excel to ignore empty rows at the edge. The result is a cleaner reference without manually guessing whether the data ends at row 500 or row 50,000.
 
 The `TRIMRANGE` function provides the named version of the same idea. It removes empty rows and columns from the outer edges of a range or array, while leaving the data inside intact. It is useful for formulas that need a range that follows the real data rather than a large block of blank cells.
 
@@ -59,7 +60,7 @@ A trim reference uses punctuation in place of the normal range colon. Microsoft 
 The notation also works with full-column or full-row references. A trailing trim reference can replace a fixed range:
 
 ```excel
-=COUNTA(A:A.)
+=COUNTA(A:.A)
 ```
 
 This counts the nonblank edge-trimmed column rather than forcing another formula to process every worksheet row. The dot is not decoration: it is the syntax that requests a trim reference.
@@ -79,7 +80,7 @@ Paired source ranges should have matching boundaries. If they differ, trim a sha
 For a simple count, use a trim reference directly:
 
 ```excel
-=COUNTA(A:A.)
+=COUNTA(A:.A)
 ```
 
 For an average over a cleaned numeric column:
@@ -98,7 +99,7 @@ These formulas still calculate the values; `TRIMRANGE` only changes the range pa
 =TRIMRANGE(FILTER(A2:C1000, A2:A1000<>"", ""))
 ```
 
-If a source formula already spills to the intended size, trimming may be unnecessary. The [Excel spill ranges guide](/blog/excel-spill-ranges-guide) explains `#` references, while the [Excel dynamic array functions guide](/blog/excel-dynamic-array-functions-guide) covers common source functions.
+If a source formula already spills to the intended size, trimming may be unnecessary. The [Excel TRIMRANGE function guide](/blog/excel-dynamic-array-functions-guide) explains how this edge-trimming pattern fits with `#` references, while the [Excel spill ranges guide](/blog/excel-spill-ranges-guide) covers spill behavior directly.
 
 For growing source data, an Excel Table is often clearer. Table references expand with new rows; `TRIMRANGE` suits larger ranges or arrays with empty edges.
 
@@ -154,7 +155,7 @@ Compare the suggested formula with a known result before applying it to the full
 
 **Is TRIMRANGE available in Excel 2021?** No. It is intended for supported Microsoft 365 Excel versions. Provide a fallback when recipients use older editions.
 
-**Is `A:A.` the same as `TRIMRANGE(A:A)`?** It is a trim-reference shorthand for trimming the relevant edge of a full-column reference. Use the function form when explicit row and column controls are easier to understand.
+**Is `A:.A` the same as `TRIMRANGE(A:A)`?** It is a trim-reference shorthand for trimming the relevant edge of a full-column reference. Use the function form when explicit row and column controls are easier to understand.
 
 **Why does TRIMRANGE leave extra rows?** The edge cells may contain formulas, spaces, hidden characters, or values that only look blank. Formula-generated `""` is not the same as a truly empty cell.
 
@@ -162,4 +163,4 @@ Compare the suggested formula with a known result before applying it to the full
 
 ## Summary
 
-The Excel TRIMRANGE function removes truly empty rows and columns from the edges of a range or array. Use `TRIMRANGE(range, 3, 3)` for the default two-sided trim, choose specific 0–3 edge settings when needed, or use trim-reference notation such as `A:A.` for a compact full-column formula. Remember that formulas returning `""`, spaces, and interior blank rows are not trimmed. For Microsoft 365 workbooks, TRIMRANGE offers a clearer alternative to oversized fixed references when the data boundary is naturally defined by its real contents.
+The Excel TRIMRANGE function removes truly empty rows and columns from the edges of a range or array. Use `TRIMRANGE(range, 3, 3)` for the default two-sided trim, choose specific 0–3 edge settings when needed, or use trim-reference notation such as `A:.A` for a compact full-column formula. Remember that formulas returning `""`, spaces, and interior blank rows are not trimmed. For Microsoft 365 workbooks, TRIMRANGE offers a clearer alternative to oversized fixed references when the data boundary is naturally defined by its real contents.

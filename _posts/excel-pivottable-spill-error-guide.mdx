@@ -11,9 +11,9 @@ category: "Data Analysis"
 
 Microsoft has officially documented the PivotTable #SPILL! error for Excel for Microsoft 365. The message appears when a PivotTable cannot expand into the worksheet because something blocks the space it needs.
 
-That is useful news for anyone who has seen a PivotTable appear to break after its layout changed. The error identifies a space problem, not a damaged source range. In most cases, you can restore the report by clearing the obstruction or moving the PivotTable.
+The error points to a space problem, not a damaged source range. In most cases, you can restore the report by clearing the obstruction or moving the PivotTable.
 
-## What PivotTable `#SPILL!` Means
+## What PivotTable `#SPILL!` means
 
 A PivotTable needs an output area that can grow as fields, totals, or grouped values are displayed. If a cell in that area contains data or a formula, Excel cannot complete the layout and shows `#SPILL!`.
 
@@ -21,33 +21,33 @@ This is related to, but different from, a dynamic array formula spill. A formula
 
 When you select the error cell, Excel keeps the PivotTable itself available. You can still see its outline, open the PivotTable controls, and use the field list. Your source data is not erased just because the displayed result cannot expand.
 
-## Common Causes of the Error
+## Common causes of the error
 
-The obstruction is usually one of these:
+Most cases come down to one of these problems:
 
-- **Existing data or formulas:** A note, value, formula, or imported result occupies a cell where the PivotTable needs to expand.
-- **A table or another PivotTable:** A larger report may run into a neighboring object that cannot share the same grid area.
-- **Merged cells:** Merged cells interrupt the rectangular space that PivotTable output requires.
-- **The worksheet edge:** The report is positioned too close to the bottom or right edge to fit its full layout.
-- **A larger layout:** Adding a field, filter, subtotal, or grand total can make the required output area larger than it was before.
+- A note, value, formula, or imported result occupies a cell where the PivotTable needs to expand.
+- A larger report runs into a neighboring table or PivotTable that cannot share the same grid area.
+- Merged cells interrupt the rectangular space that PivotTable output requires.
+- The report sits too close to the bottom or right edge to fit its full layout.
+- Adding a field, filter, subtotal, or grand total makes the required output area larger than it was before.
 
 A PivotTable can therefore show the error even when its original position was valid. The report may simply need more room after its layout changes.
 
-## How to Fix a PivotTable `#SPILL!` Error
+## How to fix a PivotTable `#SPILL!` error
 
-Follow these steps in order. Start by locating the obstruction before changing the report layout.
+Locate the obstruction before changing the report layout:
 
-1. **Select the cell showing `#SPILL!`.** Look for the highlighted outline that marks the space the PivotTable is trying to use.
-2. **Open the error menu.** Use Excel's error options and choose **Select Obstructing Cells** when that option is available. This takes you directly to cells blocking the intended report area.
-3. **Inspect the selected cells.** Check for values, formulas, tables, other PivotTables, and merged cells. Do not clear information until you confirm that it belongs in the PivotTable's expansion area.
-4. **Clear or move the obstruction.** Move notes or formulas elsewhere, remove obsolete values, or reposition a neighboring table. If a table or another PivotTable blocks the space, move one of the reports instead of forcing them to overlap.
-5. **Unmerge cells when appropriate.** Select the blocking area, open the merge controls, and unmerge the cells if the merged layout is not needed. Otherwise, move the PivotTable to an unmerged area.
-6. **Move or resize the PivotTable.** Use the PivotTable controls to move the report to a larger empty area. Leave room for additional rows and columns if the source data or grouping will grow.
-7. **Check the result.** The `#SPILL!` message should disappear once the full report fits. Dependent PivotCharts or formulas that were showing errors should then be able to use the restored output.
+1. Select the cell showing `#SPILL!`. Look for the highlighted outline that marks the space the PivotTable is trying to use.
+2. Open the error menu. Use Excel's error options and choose **Select Obstructing Cells** when that option is available. Excel takes you directly to cells blocking the intended report area.
+3. Inspect the selected cells. Check for values, formulas, tables, other PivotTables, and merged cells. Do not clear information until you confirm that it belongs in the PivotTable's expansion area.
+4. Clear or move the obstruction. Move notes or formulas elsewhere, remove obsolete values, or reposition a neighboring table. If a table or another PivotTable blocks the space, move one of the reports instead of forcing them to overlap.
+5. Unmerge cells when appropriate. Select the blocking area, open the merge controls, and unmerge the cells if the merged layout is not needed. Otherwise, move the PivotTable to an unmerged area.
+6. Move or resize the PivotTable. Use the PivotTable controls to move the report to a larger empty area. Leave room for additional rows and columns if the source data or grouping will grow.
+7. Check the result. The `#SPILL!` message should disappear once the full report fits. Dependent PivotCharts or formulas can use the restored output again.
 
 If the report is close to the worksheet boundary, moving it to a new sheet is often cleaner than repeatedly rearranging nearby content. If the report is crowded by several summaries, give each report its own section or worksheet.
 
-## PivotTable Spill vs Dynamic Array Spill
+## PivotTable spill vs dynamic array spill
 
 | Situation | What is trying to expand | Typical blocker | Best first fix |
 |---|---|---|---|
@@ -56,7 +56,7 @@ If the report is close to the worksheet boundary, moving it to a new sheet is of
 
 For a broader explanation of spill references and the `#` operator, read our [PivotTable #SPILL! error versus dynamic array spill ranges guide](/blog/excel-spill-ranges-guide). That article focuses on dynamic array formulas, while this guide focuses on PivotTable layout space.
 
-## When GROUPBY Is a Better Fit
+## When GROUPBY is a better fit
 
 A PivotTable remains useful when you need interactive fields, slicers, and a familiar report layout. For a formula-driven summary that must feed other formulas directly, GROUPBY may be a better fit. Our [dynamic array functions guide](/blog/excel-dynamic-array-functions-guide) explains the formula-based approach behind that kind of report.
 
@@ -80,4 +80,4 @@ Microsoft's current support documentation lists this behavior for **Excel for Mi
 
 PivotTable `#SPILL!` means the report cannot expand into its intended area. Look for obstructing values, formulas, tables, merged cells, other PivotTables, or the worksheet edge. Use **Select Obstructing Cells** when available, clear or move the blocker, and move the PivotTable if it still does not fit.
 
-The error is a layout warning, not a replacement for the usual dynamic-array `#SPILL!` troubleshooting process. Once you identify which kind of output is spilling, the fix becomes much more direct.
+The error is a layout warning, not a replacement for the usual dynamic-array `#SPILL!` troubleshooting process. Identify the output type first, then use the corresponding fix.
