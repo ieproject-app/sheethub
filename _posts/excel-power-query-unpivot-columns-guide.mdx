@@ -1,0 +1,115 @@
+---
+title: "Excel Power Query Unpivot Columns: Step-by-Step"
+date: "2026-08-18"
+description: "Learn how to unpivot columns in Excel Power Query, preserve identifiers, clean blanks, and build refreshable analysis tables."
+published: true
+featured: false
+heroImage: "default-og"
+tags: ["excel", "tutorial", "power-query", "unpivot", "data-cleaning"]
+category: "Data Analysis"
+---
+
+Twelve month columns can look tidy on a screen, but they make filtering, charting, and pivot analysis harder. Unpivoting turns that wide layout into a long table with one Month column and one Value column, so each record has a consistent shape.
+
+This Excel Power Query unpivot columns guide shows the native Excel workflow. You will learn when to use **Unpivot Columns**, when **Unpivot Other Columns** is safer, and how to clean the result before loading it back into a worksheet.
+
+## Why wide data becomes difficult to analyze
+
+Suppose a sales table has one row per product and a separate column for every month:
+
+| Product | Region | January | February | March |
+|---|---|---:|---:|---:|
+| Desk | East | 1200 | 1350 | 1280 |
+| Chair | West | 900 | 980 | 1040 |
+
+This format is convenient for entering a monthly report, but every new month adds another column. A pivot table or chart must keep learning about those columns individually.
+
+After unpivoting, the same information becomes a row-based table:
+
+| Product | Region | Month | Value |
+|---|---|---|---:|
+| Desk | East | January | 1200 |
+| Desk | East | February | 1350 |
+| Desk | East | March | 1280 |
+| Chair | West | January | 900 |
+
+Now Month is a field that can be filtered, grouped, sorted, or placed on a pivot axis. If you are cleaning several issues before this step, the broader [Excel data-cleaning techniques](/blog/excel-data-cleaning-techniques-guide) guide can help you prepare the source table.
+
+## Load the table into Power Query
+
+Start with a proper Excel table whenever possible. A table gives Power Query a stable source range and makes future refreshes more predictable. The [Excel tables and structured references](/blog/excel-tables-structured-references-guide) guide covers the table setup in more detail.
+
+1. Click any cell in the source range.
+2. Select **Data > From Table/Range**.
+3. Confirm that **My table has headers** is selected if the first row contains field names.
+4. Click **OK** to open the Power Query Editor.
+5. In the Queries pane, give the query a descriptive name such as `MonthlySales_Unpivoted`.
+
+Before changing the shape, identify the columns that describe each record. In the example, Product and Region are identifiers. January, February, and March are measures that should become rows.
+
+If Power Query detects a wrong data type, you can correct it later. The important decision at this stage is which columns should remain attached to each value.
+
+## Use Unpivot Columns
+
+Use **Unpivot Columns** when you know exactly which columns contain repeated measures. This is the clearest choice when your table has a fixed set of month or category columns.
+
+1. In Power Query Editor, select the first month column.
+2. Hold <Kbd>Ctrl</Kbd> while selecting the other month columns.
+3. Open the **Transform** tab.
+4. Select **Unpivot Columns**.
+5. Power Query replaces the selected columns with two columns named **Attribute** and **Value**.
+
+Attribute contains the original column names, such as January or February. Value contains the numbers that were stored under those headings. Product and Region remain repeated on each output row, which preserves the record's identity.
+
+Rename the new columns immediately if their meaning is clearer with business terms. For this example, rename **Attribute** to **Month** and **Value** to **Sales**. Clear names make the query easier to maintain and make the loaded table easier to use in a pivot.
+
+Use the filter arrow on Month to confirm that each expected period appears. Then check a few values against the source. For example, the Desk row for January should still show 1,200 after the transformation.
+
+## Use Unpivot Other Columns for future-proof tables
+
+Use **Unpivot Other Columns** when the identifier columns are stable but new measure columns may be added later. Instead of selecting every month, select the columns that must remain as identifiers.
+
+For the sales example:
+
+1. Select Product and Region.
+2. Open the **Transform** tab.
+3. Select **Unpivot Other Columns**.
+4. Rename Attribute and Value to Month and Sales.
+
+Power Query keeps Product and Region as they are and unpivots every other column. If April is added to the source table before the next refresh, Power Query can include it without requiring you to edit the column selection manually.
+
+This option is powerful, but it requires discipline. Any column that is not an identifier will be treated as a measure. If you later add a Notes or Manager column and forget to classify it as an identifier, that text may appear in the unpivoted Value column.
+
+Choose **Unpivot Columns** for a tightly controlled schema. Choose **Unpivot Other Columns** for a growing set of period or measure columns with a clearly defined identifier section.
+
+## Clean blanks, data types, and names
+
+Unpivoting changes the shape, not the quality, of the source values. Review these details before loading the result:
+
+- **Null values:** A blank source cell may become a row with a null Value. Filter out nulls when an empty period should not be part of the analysis.
+- **Empty strings:** A formula that returns an empty string is not always treated like a true blank. Filter or replace those values according to the reporting rule.
+- **Numeric values:** Set the Value column to **Whole Number**, **Decimal Number**, or **Currency** as appropriate. This prevents text values from breaking totals.
+- **Month labels:** If the original headings are dates, preserve them as dates when possible. If they are words such as January, add a separate sort field if chronological order matters.
+- **Column names:** Replace generic Attribute and Value names with terms that describe the business data, such as Month and Sales.
+
+You can change a type by selecting the column and choosing the data type icon in its header. If a conversion produces errors, inspect the error rows before loading. A stray text label or a currency symbol may need to be removed or replaced first.
+
+## Load, refresh, and troubleshoot
+
+When the output looks correct, select **Home > Close & Load**. You can load the result to a new worksheet or use **Close & Load To** to choose a table, connection, or data model destination.
+
+The transformation is saved as query steps. When the source table changes, select **Data > Refresh All** to run the steps again. A new row should flow through automatically. A new month column will be included automatically when you used Unpivot Other Columns and kept the identifier columns selected.
+
+If the output has unexpected rows, check these common causes:
+
+1. **An identifier was unpivoted:** Return to the step where the columns were selected and keep the product, region, date, or ID fields out of the measure set.
+2. **A measure stayed wide:** Edit the unpivot step and include the missed month or category column.
+3. **Null rows are inflating totals:** Filter null or empty values before loading, unless a missing period must remain visible.
+4. **The refresh misses new data:** Confirm that the source is an Excel table rather than a manually selected range.
+5. **Months sort alphabetically:** Add a numeric month-order column or convert real date headings to a date type.
+
+Once the table is normalized, it can feed a pivot table, chart, or downstream query with less manual maintenance. For transformations that belong in worksheet formulas instead, compare the approach with [Excel dynamic array functions](/blog/excel-dynamic-array-functions-guide). Power Query is usually the better fit when the same cleanup must be repeated every time a source file is refreshed.
+
+## Summary
+
+Unpivoting converts repeated columns into a consistent attribute-and-value structure. Use **Unpivot Columns** when the measure columns are known and fixed. Use **Unpivot Other Columns** when identifier columns are stable and new measures may arrive. Rename the output fields, check nulls and data types, load the result, and refresh it against the source table before using it for analysis.

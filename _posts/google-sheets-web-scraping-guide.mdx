@@ -1,6 +1,7 @@
 ---
 title: "Web Scraping Google Sheets: IMPORTHTML, IMPORTXML & DATA"
 date: "2026-08-16"
+updated: "2026-08-18"
 description: "Scrape websites into Google Sheets with IMPORTHTML, IMPORTXML and IMPORTDATA. Learn XPath, limits and error fixes."
 published: true
 featured: false
@@ -9,7 +10,7 @@ tags: ["google-sheets", "import", "web-scraping", "data-analysis", "tutorial"]
 category: "Data Analysis"
 ---
 
-Google Sheets has two very different kinds of import. `IMPORTRANGE` moves cells between spreadsheets you control. `IMPORTHTML`, `IMPORTXML`, and `IMPORTDATA` read public content from the web. The formulas look related, but the source, failure modes, and maintenance work are different.
+The web scraping Google Sheets workflow starts with choosing the right import function for the source. Google Sheets has two very different kinds of import. `IMPORTRANGE` moves cells between spreadsheets you control. `IMPORTHTML`, `IMPORTXML`, and `IMPORTDATA` read public content from the web. The formulas look related, but the source, failure modes, and maintenance work are different.
 
 This guide focuses on the external trio: public tables, HTML/XML nodes, and CSV/TSV files. They cannot execute JavaScript applications, bypass logins, or replace a full scraping system.
 
@@ -21,7 +22,7 @@ Use `IMPORTRANGE` when the source is another Google Sheet:
 =IMPORTRANGE("https://docs.google.com/spreadsheets/d/your-file-id", "Data!A1:D100")
 ```
 
-The source owner or editor must authorize the connection the first time. The [Google Sheets QUERY guide](/blog/google-sheets-query-advanced-guide) can then filter or reshape the imported range.
+The source owner or editor must authorize the connection the first time. For [web scraping Google Sheets functions](/blog/google-sheets-import-functions-guide), start by separating internal spreadsheet imports from public web sources.
 
 Web import functions use a public URL instead:
 
@@ -145,13 +146,13 @@ Nest an import inside other Sheets functions. For example, filter a table import
 
 The final `1` marks one header row. Confirm the imported table's actual layout before relying on column numbers.
 
-You can also filter an imported range directly:
+You can also [filter imported Google Sheets data](/blog/filter-function-google-sheets) directly:
 
 ```excel
 =FILTER(IMPORTHTML("https://en.wikipedia.org/wiki/List_of_countries_by_population_in_2015", "table", 1), INDEX(IMPORTHTML("https://en.wikipedia.org/wiki/List_of_countries_by_population_in_2015", "table", 1),,1)<>"")
 ```
 
-This repeats the import and may fetch twice. Prefer one import in a staging tab, then analyze the local result with the [advanced Google Sheets QUERY guide](/blog/google-sheets-query-advanced-guide).
+This repeats the import and may fetch twice. Prefer one import in a staging tab, then analyze the local result with the [Google Sheets QUERY function guide](/blog/query-function-google-sheets-guide).
 
 ## When to Move to Apps Script
 

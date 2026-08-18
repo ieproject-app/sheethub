@@ -14,7 +14,7 @@ This dependent dropdown list Excel guide compares two very different designs. Th
 
 Both methods solve the same problem: choose a country, then show only its regions; choose a region, then show only its cities. The right choice depends on the Excel versions that open the workbook and how often the source list changes.
 
-## What Is a Dependent Dropdown?
+## What is a dependent dropdown?
 
 A regular dropdown always shows the same list. A dependent dropdown changes its list according to an earlier selection. Examples include:
 
@@ -26,7 +26,7 @@ The first selection is the parent value. The next list filters on it. If A2 cont
 
 If data validation is new to the workbook, review the basics first. List sources, input messages, error alerts, and validation rules still apply; the cascade only changes how the source list is generated.
 
-## Method 1: INDIRECT and Named Ranges
+## Method 1: INDIRECT and named ranges
 
 The legacy method is useful when the workbook must work in older Excel versions or when the source lists are small and stable.
 
@@ -61,7 +61,7 @@ When A2 contains `NorthAmerica`, Excel evaluates `INDIRECT($A$2)` as a reference
 
 This method works in older Excel versions, including those without dynamic arrays. Its weakness is fragility: a renamed range, spelling difference, or unmatched parent label produces `#REF!` or an empty dropdown.
 
-## Method 2: Dynamic Arrays and Spill References
+## Method 2: dynamic arrays and spill references
 
 The modern method keeps source data in one structured table and generates each child list with `FILTER` and `UNIQUE`. It is easier to maintain when locations are added, provided the workbook uses Microsoft 365 or Excel 2021+ dynamic arrays.
 
@@ -94,7 +94,7 @@ This pattern is closely related to [Excel dynamic array functions](/blog/excel-d
 
 Place helper formulas on a separate worksheet or beyond the visible form. Label each helper cell and protect the area if other users enter data. Keep the spill path empty: any occupied cell causes `#SPILL!`.
 
-## Building a Three-Level Cascade
+## Building a three-level cascade
 
 A three-level form repeats the same pattern:
 
@@ -116,7 +116,7 @@ Use `=$E$4#` as the Source for B2 and `=$F$4#` as the Source for C2. The multipl
 
 For older workbooks, create named ranges for every region or city group and repeat the `INDIRECT` pattern. A hybrid can use named ranges for the first dependency and a spill formula later, but document version requirements.
 
-## Legacy or Modern: Which Method Should You Use?
+## Legacy or modern: Which method should you use?
 
 | Decision factor | INDIRECT and named ranges | Dynamic arrays and spill references |
 |---|---|---|
@@ -128,7 +128,7 @@ For older workbooks, create named ranges for every region or city group and repe
 
 Choose `INDIRECT` when compatibility matters and lists rarely change. Choose dynamic arrays when the source is tabular, grows regularly, and every user has a supported version.
 
-## Common Errors and Fixes
+## Common errors and fixes
 
 ### The dropdown is empty
 
@@ -150,14 +150,14 @@ Changing A2 does not erase an existing B2 or C2 value. Add a validation check, c
 
 Confirm that Source points to the spill anchor with `#`, not a fixed cell. For table formulas, verify that records are inside `tblLocations` and calculation is set to Automatic.
 
-## Practical Tips
+## Practical tips
 
 - Keep the source table normalized: one country, region, and city per row.
 - Use stable IDs behind display labels when names can change.
 - Put helper formulas on a protected worksheet and test no-match, one-match, and many-match parents.
 - Document the minimum Excel version. Structured table references include new source rows automatically; see the [Excel Tables structured references guide](/blog/excel-tables-structured-references-guide).
 
-## AI Prompt Idea
+## AI prompt idea
 
 After verifying one dependent dropdown with real columns, an AI assistant can adapt the pattern to another layout. Give it the column names, parent cell, output cell, and fallback behavior. For example:
 
