@@ -1,0 +1,140 @@
+---
+title: "Google Sheets Duration Over 24 Hours: Use [h]:mm"
+date: "2026-08-19"
+description: "Show Google Sheets durations over 24 hours with elapsed-time formats, numeric conversions, and reliable formulas."
+published: true
+featured: false
+heroImage: "default-og"
+tags: ["google-sheets", "tutorial", "duration", "time-format", "formatting"]
+category: "Formatting & Layout"
+---
+
+A 30-hour total can appear as `06:00` in Google Sheets, even when the calculation is correct. The problem is the display format: a clock resets after midnight, while a duration should keep counting. Google Sheets duration over 24 hours becomes readable when you use an elapsed-time format such as `[h]:mm` instead of an ordinary hour format.
+
+This distinction matters for work logs, project totals, support queues, and any report where the total can exceed one day. You can keep the same underlying value and change only how Sheets displays it.
+
+## Why 30 hours can display as 06:00
+
+Google Sheets stores dates and times as numbers. The whole-number part represents days, and the decimal part represents a fraction of a day. For example, `0.5` is 12 hours and `1.25` is 30 hours.
+
+A normal format such as `hh:mm` shows the hour on a clock. It displays the fractional time within the current day, so 1.25 becomes `06:00`: one full day is discarded from the display, leaving six hours. The value is still 1.25, but the format is answering the question “What time of day is this?” rather than “How much time has elapsed?”
+
+For a work log, use an elapsed-time format. The hours in brackets tell Sheets to display the accumulated hours instead of wrapping at 24.
+
+## Format elapsed hours with `[h]:mm`
+
+Suppose cells B2:B8 contain daily durations and you want their total in B9. Sum the values normally:
+
+```excel
+=SUM(B2:B8)
+```
+
+Then select B9 and choose **Format > Number > Custom number format**. Enter:
+
+`[h]:mm`
+
+Apply the format. If the underlying result is 1.25, it will display as `30:00` instead of `06:00`.
+
+The formula did not need a special duration function. The change is in the number format. This also means you can switch between a readable duration and a numeric value without rebuilding the calculation.
+
+Google Sheets also has a built-in **Duration** option under **Format > Number**. It is useful when you want a standard duration display. A custom format is more precise when you need a particular combination of hours, minutes, or seconds.
+
+## Choose `[h]:mm:ss` or `[m]:ss`
+
+Use the format that matches the unit your reader needs:
+
+| Format | Example for 30 hours, 5 minutes, 9 seconds | Best for |
+|---|---:|---|
+| `[h]:mm` | `30:05` | Work logs and project totals |
+| `[h]:mm:ss` | `30:05:09` | Timers, testing, and support records |
+| `[m]:ss` | `1805:09` | Audio, video, and total-minute reports |
+| `[s]` | `108309` | Machine or API measurements |
+
+The bracketed token is the accumulated unit. The `mm` after `[h]:` means minutes within the hour; `[m]` means total minutes. Likewise, `[s]` displays total seconds rather than seconds remaining in the current minute.
+
+Do not use `hh:mm` when the total can reach 24 hours. It is a clock format and will wrap. If you need a conventional clock value, such as a meeting start time, `hh:mm` is appropriate. If you need the length of the meeting, use an elapsed format.
+
+## Convert a duration to numeric hours or minutes
+
+A formatted duration is still a fraction of a day. To use the result in a rate, chart, or comparison, convert it to the unit you need.
+
+If C2 contains a duration, multiply by 24 for decimal hours:
+
+```excel
+=C2*24
+```
+
+A value of 1.25 becomes `30`, meaning 30 hours. For decimal minutes, multiply by 1,440:
+
+```excel
+=C2*1440
+```
+
+For total seconds, multiply by 86,400:
+
+```excel
+=C2*86400
+```
+
+Format these results as numbers, not durations. For example, if you want one decimal place for hours, use a number format such as `0.0`. In a US-locale sheet, `1.5` means one and a half hours; do not replace the decimal point with a comma unless your spreadsheet locale requires it.
+
+If your report needs to total only qualifying rows first, review this guide to [sum filtered data in Google Sheets](/blog/google-sheets-sum-filtered-data-custom-criteria) before applying the elapsed-time format to the result.
+
+## Handle shifts that cross midnight
+
+Subtracting an end time from a start time works when both times are on the same date. If a shift starts at 10:00 PM and ends at 6:00 AM, a simple subtraction can produce a negative result because 6:00 AM appears earlier on the same date.
+
+If A2 contains the start time and B2 contains the end time, add one day when the end is earlier than the start:
+
+```excel
+=B2-A2+(B2<A2)
+```
+
+Format the result as `[h]:mm`. For a 10:00 PM to 6:00 AM shift, the result displays as `08:00`.
+
+For records that include actual dates, subtract the full date-time values instead. If A2 is a start date-time and B2 is an end date-time, use:
+
+```excel
+=B2-A2
+```
+
+This is safer for multi-day work because the dates carry the day difference. Use [Google Sheets date functions](/blog/google-sheets-date-functions-guide) when your workflow also needs date boundaries, holidays, or calendar-based deadlines.
+
+## Clock times versus durations
+
+A clock time identifies a point in a day. A duration measures the distance between two points. They can look similar but should not use the same format.
+
+| Need | Example value | Recommended format |
+|---|---:|---|
+| Meeting starts at 6:00 AM | `0.25` | `h:mm AM/PM` |
+| Meeting lasts 6 hours | `0.25` | `[h]:mm` |
+| Project total is 30 hours | `1.25` | `[h]:mm` |
+| Project total as decimal hours | `1.25` | `0.0` after multiplying by 24 |
+
+The same numeric value can therefore display differently without changing the calculation. If the result is used in another formula, formatting alone does not convert it to hours. Keep the `*24`, `*1440`, or `*86400` conversion when a numeric unit is required.
+
+## Troubleshoot a duration that still wraps
+
+**The cell still shows 06:00.** Check the exact format. `hh:mm` wraps at 24; replace it with `[h]:mm`. Also confirm that you applied the format to the total cell, not only to the source range.
+
+**The result is a decimal such as 1.25.** The value is valid, but the cell is formatted as a number. Apply `[h]:mm` to show elapsed time, or multiply by 24 if decimal hours are what you need.
+
+**The formula returns a negative duration.** Check for a shift crossing midnight. Use the date-aware subtraction formula, or add one day when the end time is earlier than the start time.
+
+**The format does not behave as expected after import.** Confirm the spreadsheet locale and inspect whether the source values are real times or text. Text that looks like `8:30` may not participate in time arithmetic until it is converted. Enter a test value directly, calculate a known total, and compare the result before changing the whole column.
+
+**Minutes appear as hours.** Use `[m]:ss` for total minutes. The ordinary `mm:ss` pattern shows minutes and seconds within a clock-style time and can wrap after an hour.
+
+## Practical checklist
+
+1. Calculate the duration with a normal subtraction or `SUM` formula.
+2. Use full date-time values when records cross dates.
+3. Apply `[h]:mm` for accumulated hours and minutes.
+4. Use `[h]:mm:ss` when seconds matter.
+5. Use `[m]:ss` or `[s]` when total minutes or seconds are the reporting unit.
+6. Multiply by 24, 1,440, or 86,400 only when a numeric unit is required.
+7. Test one known result before copying the format across a large work log.
+
+## Summary
+
+Google Sheets does not lose a 30-hour total when it displays `06:00`; the clock-style format is wrapping the display after 24 hours. Use `[h]:mm` for accumulated hours, `[h]:mm:ss` for precise durations, and `[m]:ss` for total minutes. Keep the underlying time value for calculations, use date-aware subtraction across midnight, and convert with `*24`, `*1440`, or `*86400` when a report needs numeric units.
