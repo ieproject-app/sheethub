@@ -14,7 +14,7 @@ The Excel TRIMRANGE function changes how much of a worksheet your formula sees. 
 
 The `TRIMRANGE` function provides the named version of the same idea. It removes empty rows and columns from the outer edges of a range or array, while leaving the data inside intact. It is useful for formulas that need a range that follows the real data rather than a large block of blank cells.
 
-## What TRIMRANGE Does
+## What TRIMRANGE does
 
 `TRIMRANGE` scans inward from the edges of a range until it finds a nonblank cell or value. It then excludes the blank rows or columns outside that boundary. The core syntax is:
 
@@ -47,7 +47,7 @@ This removes trailing blank rows and trailing blank columns:
 
 **Availability:** `TRIMRANGE` is a Microsoft 365 function. Do not assume it works in Excel 2021 or other perpetual editions that do not include the function. Test the target Excel channel before distributing a workbook that depends on it.
 
-## Trim References: The One-Dot Shortcut
+## Trim references: the one-dot shortcut
 
 A trim reference uses punctuation in place of the normal range colon. Microsoft documents three forms:
 
@@ -67,7 +67,7 @@ This counts the nonblank edge-trimmed column rather than forcing another formula
 
 Use the function form when row and column behavior needs to be explicit; use trim references when the shorter notation is clear to the workbook team.
 
-## TRIMRANGE in Real Formulas
+## TRIMRANGE in real formulas
 
 A trimmed range can feed ordinary functions. Suppose columns A and B contain sales amounts and regions, with blank rows below the real dataset. A bounded formula can be made more adaptable by trimming both ranges before filtering:
 
@@ -91,7 +91,7 @@ For an average over a cleaned numeric column:
 
 These formulas still calculate the values; `TRIMRANGE` only changes the range passed to the outer function. It does not clean spaces, correct text numbers, or remove blank rows in the middle.
 
-## TRIMRANGE with Dynamic Arrays
+## TRIMRANGE with dynamic arrays
 
 `TRIMRANGE` also accepts array results from functions such as `FILTER`, `SORT`, and `UNIQUE`. This can be useful when an array contains extra blank edges:
 
@@ -103,7 +103,7 @@ If a source formula already spills to the intended size, trimming may be unneces
 
 For growing source data, an Excel Table is often clearer. Table references expand with new rows; `TRIMRANGE` suits larger ranges or arrays with empty edges.
 
-## What TRIMRANGE Does Not Trim
+## What TRIMRANGE does not trim
 
 `TRIMRANGE` looks for truly empty cells at the edges. A cell that contains a formula returning an empty string is not truly empty because the formula still occupies the cell. Therefore, a formula such as this can keep the apparent edge in place:
 
@@ -121,7 +121,7 @@ A space and a value hidden by formatting are also not empty. Inspect edge cells 
 
 `TRIMRANGE` also does not remove interior blank rows. If a dataset has a blank row between two records, that row remains part of the trimmed result because it is not on the outer edge.
 
-## When to Use TRIMRANGE
+## When to use TRIMRANGE
 
 | Situation | Better choice |
 |---|---|
@@ -134,7 +134,7 @@ A space and a value hidden by formatting are also not empty. Inspect edge cells 
 
 Full-column references are acceptable for small, simple workbooks, but they can make repeated formulas process far more cells than the report needs. For larger workbooks, trim the range, use a Table, or use a bounded reference based on the real data model. The [Excel data cleaning guide](/blog/excel-data-cleaning-techniques-guide) is useful when the problem is stray spaces or hidden characters rather than empty edges.
 
-## Practical Tips
+## Practical tips
 
 - Test the leading and trailing cases separately before using trim references in a shared template.
 - Keep paired data columns aligned; independently trimmed columns can have different heights.
@@ -143,7 +143,7 @@ Full-column references are acceptable for small, simple workbooks, but they can 
 - Check for formulas returning `""` before concluding that TRIMRANGE is broken.
 - Keep a compatible fallback for users who open the workbook outside Microsoft 365.
 
-## AI Prompt Idea
+## AI prompt idea
 
 After checking a small real range manually, an AI assistant can help convert a fixed reference into a trim-aware formula. Describe the source columns, the intended edge behavior, and whether formulas returning `""` should count as empty:
 
