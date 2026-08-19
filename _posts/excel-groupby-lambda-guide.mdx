@@ -1,0 +1,189 @@
+---
+title: "Excel GROUPBY LAMBDA: Custom Aggregation Recipes"
+date: "2026-08-16"
+description: "Go beyond Excel GROUPBY totals with LAMBDA recipes for distinct counts, multi-metric summaries, lists, and ratios."
+published: true
+featured: false
+heroImage: "default-og"
+tags: ["excel", "groupby", "lambda", "advanced", "tutorial"]
+category: "Data Analysis"
+---
+
+How many unique customers bought from each region last quarter? How many products belong to each category, and what share of total revenue came from each group? A PivotTable can answer these questions, but the layout and calculation often need extra work. Excel `GROUPBY` paired with `LAMBDA` can turn each question into a reusable aggregation recipe. This Excel GROUPBY LAMBDA guide focuses on custom recipes rather than syntax basics.
+
+The broader GROUPBY coverage explains the function's behavior, performance, and cross-tab patterns. This article focuses on what happens when `SUM` or `AVERAGE` is not enough. Because the output is a dynamic array, the [Excel GROUPBY LAMBDA-compatible dynamic array functions guide](/blog/excel-dynamic-array-functions-guide) is a useful reference for spill behavior.
+
+## GROUPBY in five lines
+
+`GROUPBY` groups fields and applies a function to each group's values:
+
+```excel
+=GROUPBY(row_fields, values, function)
+```
+
+For example, this returns total sales by region:
+
+```excel
+=GROUPBY(tblSales[Region], tblSales[Amount], SUM)
+```
+
+The third argument accepts a function reference such as `SUM`, or a `LAMBDA` that receives one group's values and returns a result.
+
+`GROUPBY` and `LAMBDA` require Microsoft 365. They are not available in Excel 2021 or perpetual editions that do not include these functions. The [Excel LAMBDA helper functions guide](/blog/excel-lambda-helper-functions-guide) is a useful companion for reusable array logic, but the recipes below keep the LAMBDA inline so each one is easy to test.
+
+## Eta-reduced LAMBDA: pass the function directly
+
+When the desired operation already accepts one array and returns one result, pass the function name directly. This is sometimes called an eta-reduced function reference:
+
+```excel
+=GROUPBY(tblSales[Region], tblSales[Amount], SUM)
+```
+
+There is no need to wrap `SUM` in `LAMBDA(x, SUM(x))`:
+
+```excel
+=GROUPBY(tblSales[Region], tblSales[Amount], AVERAGE)
+```
+
+Use an explicit LAMBDA for multi-step calculations, conditions, or functions that are not already shaped as the required aggregator.
+
+## Recipe 1: distinct count per group
+
+A regular `COUNTA` counts rows, not unique values. If the same customer appears on five orders, it contributes five to the count. To count unique customers per region, filter the customer values for the group, remove duplicates, and count the remaining items:
+
+```excel
+=GROUPBY(tblSales[Region], tblSales[Customer], LAMBDA(x, COUNTA(UNIQUE(x))))
+```
+
+For each region, `UNIQUE(x)` removes repeated names and `COUNTA` returns one scalar count.
+
+The same pattern works for products per category:
+
+```excel
+=GROUPBY(tblSales[Category], tblSales[Product], LAMBDA(x, COUNTA(UNIQUE(x))))
+```
+
+Blank values need deliberate handling. If blank customer cells should not count as a customer, filter them before `UNIQUE`:
+
+```excel
+=GROUPBY(tblSales[Region], tblSales[Customer], LAMBDA(x, COUNTA(UNIQUE(FILTER(x, x<>"")))))
+```
+
+Test the blank case separately. If a group contains no nonblank values, the fallback behavior of `FILTER` should be defined rather than left to an unexpected error.
+
+## Recipe 2: multiple metrics from one group
+
+Sometimes one summary column is not enough. A manager may need total sales, average order value, and the largest order for each region. Return those metrics horizontally with `HSTACK`:
+
+```excel
+=GROUPBY(tblSales[Region], tblSales[Amount], LAMBDA(x, HSTACK(SUM(x), AVERAGE(x), MAX(x))))
+```
+
+Each group produces three values. The output therefore needs room to spill across three metric columns. Add clear headers beside or above the result so readers know which column represents total, average, and maximum.
+
+The LAMBDA returns a horizontal array, so the report must leave room for it to expand. A blocked output area returns `#SPILL!`.
+
+For two standard metrics:
+
+```excel
+=GROUPBY(tblSales[Region], tblSales[Amount], LAMBDA(x, HSTACK(SUM(x), AVERAGE(x))))
+```
+
+Do not return a different number of columns for different groups. Every group should produce the same shape.
+
+## Recipe 3: concatenate items per group
+
+A summary does not always need a number. A category manager may want one row per category with a readable list of its SKUs. `TEXTJOIN` can combine the values belonging to each group:
+
+```excel
+=GROUPBY(tblProducts[Category], tblProducts[SKU], LAMBDA(x, TEXTJOIN(", ", TRUE, x)))
+```
+
+The second argument, `TRUE`, tells `TEXTJOIN` to ignore empty cells. The result might look like this:
+
+| Category | SKU list |
+|---|---|
+| Accessories | A-101, A-104, A-109 |
+| Hardware | H-201, H-204 |
+
+For a compact text representation of an array, `ARRAYTOTEXT` is another option:
+
+```excel
+=GROUPBY(tblProducts[Category], tblProducts[SKU], LAMBDA(x, ARRAYTOTEXT(UNIQUE(x), 1)))
+```
+
+Use `TEXTJOIN` for presentation control; use `ARRAYTOTEXT` for a quick array representation. Deduplicate first when repeated SKUs should appear only once.
+
+## Recipe 4: share of the grand total
+
+A percentage-of-total result needs the group total and the overall total. One practical pattern is to calculate group totals with `GROUPBY`, then divide the result column by the source total in a separate formula. If the grouped result starts in H2 and its numeric totals are in I2:I10:
+
+```excel
+=I2/SUM(tblSales[Amount])
+```
+
+Fill the formula alongside the spilled result or use a second dynamic-array formula that refers to the output range. Format the result as a percentage.
+
+For a custom ratio inside the grouping function, keep the denominator stable and return one scalar per group:
+
+```excel
+=GROUPBY(tblSales[Region], tblSales[Amount], LAMBDA(x, SUM(x)/SUM(tblSales[Amount])))
+```
+
+This works when the denominator is the complete source total. For filtered periods or multiple currencies, define the denominator from the same dataset.
+
+## GROUPBY or PivotTable?
+
+| Need | GROUPBY with LAMBDA | PivotTable |
+|---|---|---|
+| Automatic recalculation | Strong fit | Requires refresh settings or refresh action |
+| Distinct counts and custom text | Formula recipe required | Possible with model features or workarounds |
+| Slicers and interactive exploration | Limited | Strong fit |
+| Reuse in another formula | Direct spilled result | Often requires PivotTable references |
+| Presentation layout | Requires worksheet design | Built-in report layout |
+| Microsoft 365 formula workflow | Strong fit | Strong fit |
+
+Choose `GROUPBY` when the result feeds another formula or needs a custom aggregation. Choose a PivotTable for slicers, drag-and-drop exploration, or presentation-oriented reports.
+
+## Troubleshooting custom aggregates
+
+- If the formula returns `#CALC!` or an empty result, check whether filtering leaves a group with no usable values and add a `FILTER` fallback.
+
+- If the formula returns `#VALUE!`, confirm that the row fields and values have the same number of rows. Mixed data types can also break numeric aggregations, especially when amounts contain text labels.
+
+- If the formula returns `#SPILL!`, clear every cell in the expected output area. A multi-column `HSTACK` recipe needs more horizontal room than a single-value aggregate.
+
+- If the result has an unexpected shape, make sure every group returns one scalar or the same horizontal array width.
+
+- If the formula works in one file but not another, confirm that both files are opened in Microsoft 365 and that the functions have rolled out to the relevant channel. GROUPBY and LAMBDA are not safe assumptions for Excel 2021 workbooks.
+
+## Practical tips
+
+- Store source data in an Excel Table so new rows are included automatically. See the [Excel Tables structured references guide](/blog/excel-tables-structured-references-guide) for the table-reference pattern.
+- Give each output metric a clear header, especially when `HSTACK` creates several columns.
+- Test one small group manually before trusting a distinct count or ratio across the full report.
+- Keep text concatenation for compact summaries; use a separate detail view when lists become very long.
+- Move a recipe into a named LAMBDA only after its inline version is verified with real data.
+- Keep helper calculations separate from the final report so a spilled result has room to expand.
+
+## AI prompt idea
+
+After validating one recipe against a known group, an AI assistant can help adapt it to a different table shape. Provide the table columns, the grouping field, the value field, the expected output type, and the blank-value rule:
+
+> "I have an Excel Table named tblOrders with Region, Customer, and Amount columns. Write a GROUPBY formula that returns the number of distinct nonblank customers per region. Explain the LAMBDA step and include a fallback for a group with no nonblank customers. Keep the result one scalar per region."
+
+Compare the generated formula with the tested recipe. Check table names, blank handling, array shape, and Microsoft 365 availability.
+
+## FAQ
+
+**Is GROUPBY available in Excel 2021?** No. GROUPBY and LAMBDA require Microsoft 365 support. Do not distribute a formula-based report to Excel 2021 users without a compatible fallback.
+
+**Can a PivotTable count unique customers?** Yes, depending on the data model and PivotTable setup. GROUPBY is attractive when the distinct count must be a formula result that updates and feeds another calculation.
+
+**Why does `LAMBDA(x, COUNTA(UNIQUE(x)))` return the wrong count?** Look for blanks, inconsistent customer labels, and whitespace differences. Clean or normalize the source values before counting.
+
+**Can one GROUPBY formula return several aggregations?** Yes. Return a consistent horizontal array with `HSTACK`, then leave enough room for the spilled columns.
+
+## Summary
+
+`GROUPBY` already handles ordinary totals, but `LAMBDA` turns each group into a calculation surface. Use `COUNTA(UNIQUE(x))` for distinct counts, `HSTACK` for multiple metrics, `TEXTJOIN` or `ARRAYTOTEXT` for grouped lists, and a carefully defined denominator for ratios. The result is a formula-driven reporting engine for Microsoft 365, while PivotTables remain the better choice for slicers, exploration, and presentation-heavy analysis.

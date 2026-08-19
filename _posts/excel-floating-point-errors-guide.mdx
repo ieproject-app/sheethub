@@ -1,0 +1,93 @@
+---
+title: "Excel Floating-Point Errors: Why 0.1 + 0.2 Misbehaves"
+date: "2026-08-16"
+description: "Understand Excel floating-point errors, equality surprises, currency rounding, and safer formulas for precise results."
+published: true
+featured: false
+heroImage: "default-og"
+tags: ["excel", "tutorial", "floating-point", "precision", "formulas"]
+category: "Formulas & Functions"
+---
+
+A cell can display **0.30** while Excel calculates with a value that is just above or below 0.30. That difference is normally invisible, but an equality test can expose it: a formula that appears to ask whether two amounts match may return `FALSE`. Excel floating-point errors are not damaged data. They come from the way computers represent decimal numbers in binary.
+
+## Why 0.1 + 0.2 can surprise you
+
+Try these formulas in separate cells:
+
+```excel
+=0.1+0.2
+=0.3
+=(0.1+0.2)=0.3
+```
+
+The first result is displayed as `0.3` in a normal worksheet, and the second result is also displayed as `0.3`. The comparison can still return `FALSE` because the stored binary approximations are not necessarily identical. Formatting rounds what you see; it does not automatically round the value used by later calculations.
+
+That distinction matters in a reconciliation sheet. A displayed total of `$10.00` may be based on a value such as 10.0000000001, while a comparison value is 10. The cells look equal but are not equal at full precision. If the result becomes `#VALUE!`, `#NUM!`, or another visible error for a different reason, use an [Excel formula errors guide](/blog/excel-formula-errors-troubleshooting-guide) to separate a floating-point comparison from a genuine formula failure.
+
+## How Excel stores decimal numbers
+
+Most decimal fractions cannot be represented exactly with a finite binary fraction. The number 0.5 can be represented exactly because it equals one-half. The number 0.1 repeats when expressed in binary, so Excel stores the closest available approximation instead.
+
+Excel keeps up to 15 significant digits for numeric precision. That limit is separate from the number of decimal places shown by a cell format. A format such as `0.00` can make many nearby values look identical, but the underlying calculation still uses the stored number. This is normal behavior in floating-point software, not evidence that Excel has randomly changed a value.
+
+Display formatting is therefore a presentation decision. For example, [Excel floating-point errors and custom number formats](/blog/excel-custom-number-formats-guide) are related because a custom format can show a value with two decimals, a currency symbol, or a thousands suffix without changing the value in the cell. Use formatting when the report needs a particular appearance. Use a formula when the calculation itself needs a defined precision.
+
+## When tiny differences become visible
+
+Floating-point differences usually matter at a boundary where Excel must decide whether two values are the same, whether a threshold has been crossed, or how a total should be posted.
+
+- `IF(A2=B2, ...)` can fail when both cells display the same rounded amount.
+- Adding many unrounded prices or tax calculations can leave a tiny remainder in a currency total.
+- A number produced by arithmetic may not match a stored lookup criterion that looks identical after formatting.
+- A value meant to be exactly 1 can compare as slightly less than or greater than 1.
+- A filtered report may show a small discrepancy when detail rows use more precision than the business rule allows.
+
+The correct response is not to round every cell automatically. First decide what precision the result represents. A measurement may require more digits, while a currency amount is commonly settled to two decimal places. The rounding policy should follow the meaning of the data.
+
+## Fix comparisons and totals deliberately
+
+Round at the point where the business meaning requires a fixed precision. For a two-decimal currency result, round the calculation itself:
+
+```excel
+=ROUND(A2+B2,2)
+```
+
+If A2 and B2 are amounts that should be combined as cents, this produces a value rounded to two decimal places, not merely a value that looks rounded. For a comparison, round both sides to the same policy:
+
+```excel
+=ROUND(A2,2)=ROUND(B2,2)
+```
+
+You can also compare within a documented tolerance when the data is a measurement rather than a financial amount:
+
+```excel
+=ABS(A2-B2)<0.000001
+```
+
+The tolerance should reflect the measurement's meaningful precision. Do not copy a tiny tolerance into every workbook without understanding the units involved.
+
+For line-item pricing, choose a consistent policy. One model rounds each line before summing; another keeps extra precision through the detail calculations and rounds only the invoice total. Both can be valid, but mixing them creates differences that look like errors. Apply the same rule to detail rows, subtotals, and final totals. If the report also hides or filters rows, use the appropriate [SUBTOTAL and AGGREGATE totals](/blog/excel-subtotal-aggregate-guide) after deciding how each underlying amount is rounded.
+
+## Precision as displayed: treat it carefully
+
+Excel includes a **Precision as displayed** option under workbook calculation settings. When enabled, Excel permanently changes stored values to match the number of displayed decimal places. A value displayed with two decimals may have its extra digits discarded when the workbook recalculates.
+
+That can make equality tests and totals appear consistent, but it changes the data itself. The change can be irreversible after the workbook is saved, so do not enable the setting as a quick fix for a single comparison. It can also affect formulas, exports, and later reports that need the original precision.
+
+A safer default is to keep the underlying values and use explicit `ROUND` formulas at documented boundaries. If a workbook genuinely requires Precision as displayed, make a backup first, record the chosen decimal places, test important totals, and ensure every user understands that displayed precision becomes stored precision.
+
+## Troubleshooting checklist
+
+When a result differs by a tiny amount, follow this sequence:
+
+1. Increase the displayed decimal places temporarily so you can see whether the values actually differ.
+2. Check whether the values came from binary-sensitive arithmetic such as decimal fractions, percentages, tax, or repeated additions.
+3. Test a rounded comparison with the precision appropriate for the data.
+4. Find out whether the difference is introduced in each line item, a subtotal, or only the final total.
+5. Document whether the model rounds each transaction, each subtotal, or only the final result.
+6. Avoid Precision as displayed unless changing the stored data is intentional and backed up.
+
+## Summary
+
+Excel floating-point errors are small representation differences that become visible when formulas compare, accumulate, or filter numeric values. A cell format changes appearance, not calculation precision. Use `ROUND` where the business rule requires a fixed number of decimals, use a tolerance for suitable measurements, and apply one consistent policy across detail and total formulas. Treat Precision as displayed as a deliberate data change, not a harmless display option.
