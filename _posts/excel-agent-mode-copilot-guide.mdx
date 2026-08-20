@@ -1,0 +1,94 @@
+---
+title: "Excel Agent Mode: Build Workbooks with Copilot"
+date: "2026-08-20"
+description: "Use Excel Agent Mode for workbook tasks with safer prompts, review steps, and practical Copilot limits."
+published: true
+featured: false
+heroImage: "default-og"
+tags: ["excel", "agent-mode", "copilot", "news", "update", "tutorial"]
+category: "Productivity"
+---
+
+A typical Excel guide teaches you to solve one calculation at a time: pick a function, write the formula, check the result, and copy it down. Excel Agent Mode works the other way around. Instead of answering a single formula question, Copilot takes the outcome you describe, plans the steps, builds the workbook pieces, and then waits for your approval before anything is applied. One prompt can produce a formatted loan calculator with a payment schedule, or a sales summary with a PivotTable, where the manual route would take an hour of sheet setup and formula writing.
+
+Agent Mode is part of Microsoft 365 Copilot in Excel. It reached general availability on Windows desktop on January 27, 2026, with Mac following within days, after launching on Excel for the web in December 2025. This guide covers what Agent Mode actually does, how to check whether you can use it, how to write a task prompt that produces a useful workbook, and where the limits are.
+
+## What Excel Agent Mode Is Designed to Do
+
+Agent Mode turns Copilot from a chat assistant into an active collaborator. In normal Copilot chat you ask a question and receive an answer, then copy that answer into your workbook yourself. Agent Mode receives a goal, plans next steps, works directly in the workbook, iterates on the result, and validates the outcome.
+
+Typical scenarios Microsoft highlights: updating budgets and forecasts, building financial models, and analyzing data with tables, charts, and PivotTables. During public preview, Microsoft says it improved task success across workbook creation, formula repair, and chart and PivotTable generation.
+
+The difference matters for how you prompt. With a chatbot you describe a formula problem. With Agent Mode you describe a deliverable: source data, desired output, constraints, and acceptance criteria. The distinction shows up in the example prompts later in this guide.
+
+## Check Access Before Starting
+
+Agent Mode is available on Excel for the web, Windows, and Mac for commercial Microsoft 365 Copilot licenses, plus Microsoft 365 Personal, Family, and Premium subscriptions. Two caveats: Personal and Family plans use an AI credit model, so heavy workbook generation consumes credits, and Agent Mode was not yet available to customers in the EU or UK at the time of writing.
+
+Availability is part of the broader [Excel feature updates](/blog/excel-june-2026-update) Microsoft shipped through 2026, and rollout still varies by channel, build, and account type. Before you rely on Agent Mode in a shared workbook, open Copilot in your own build and confirm the Agent Mode entry point exists. If you do not see it, update Excel or check your license type first.
+
+## Write a Workbook Task Prompt
+
+Outcome-based prompts work best. The official Microsoft example for a loan calculator shows the pattern:
+
+> Build a loan calculator that computes monthly payments based on user inputs for loan amount, annual interest rate, and term in years. Generate a schedule showing month, payment, principal, interest, and remaining balance. Present the results in a clear, formatted table.
+
+You can reuse the same structure for almost any workbook task:
+
+1. **Source:** name the input range or sheet, for example "a table with columns Product, Region, Sales in A1:D40".
+2. **Desired output:** state what should be produced, for example "a summary sheet grouped by region".
+3. **Constraints:** set boundaries, for example "use only the data on the Input sheet" or "do not add macros".
+4. **Acceptance criteria:** describe how you will know it is right, for example "total sales per region matches the SUMIFS result on the Input sheet".
+
+When you need a formula for a narrower problem, precise wording matters just as much. The pattern for describing a calculation goal in plain English is covered in [AI prompts for Excel formulas](/blog/ai-excel-formulas-prompt-guide), and it transfers directly to Agent Mode prompts.
+
+## Review the Generated Workbook
+
+Agent Mode applies changes to your workbook, which means the review step is not optional. Before you accept a generated result, check these five things:
+
+1. **Formulas:** open a few generated cells and confirm the references point at the intended ranges.
+2. **Sheet structure:** verify the sheets, tables, and named ranges match what you asked for.
+3. **Labels and units:** check headers, currency symbols, and date formats, especially if your workbook mixes regions.
+4. **Assumptions:** look for hard-coded values such as a tax rate or growth percentage and decide whether they belong in an input cell instead.
+5. **Changes list:** if Copilot offers a summary of edits, read it before applying.
+
+A generated loan calculator might contain a formula like this:
+
+```excel
+=PMT(B2/12, B3*12, -B1)
+```
+
+That formula assumes the annual rate is in B2, the term in years is in B3, and the loan amount is in B1. Checking those cell references against the sheet is exactly the kind of verification that matters, because Agent Mode can guess wrong when the layout is ambiguous.
+
+Generated workbooks often use dynamic arrays, so if a formula returns a spill range that fills extra cells, review the spill boundaries too. A refresher on how spill ranges and array results behave is in [Excel dynamic array functions](/blog/excel-dynamic-array-functions-guide).
+
+## Improve an Analysis Without Losing Control
+
+You do not have to accept the first result. Follow-up prompts can refine the output in small steps: "add a monthly total row", "format the header row in bold", or "replace the table with a PivotTable that groups by month". Each round produces a new proposal you review before it is applied.
+
+Two controls help keep you in charge. The model switcher in Agent Mode lets you choose between the OpenAI-powered experience and Claude models from Anthropic, or leave it in Auto mode and let Copilot pick. Web-grounded search brings in current information with source citations, which is useful for prompts like "pull in the latest exchange rates", but it also means the answer depends on what the search finds, so verify cited figures against your own sources.
+
+## Limitations and Safe-Use Checklist
+
+Agent Mode is not a replacement for understanding your data. Keep these limits in mind:
+
+| Limit | What it means for you |
+|---|---|
+| Incomplete context | Copilot sees the workbook, not your full business process. A result can look complete and still miss a step you did not describe. |
+| Wrong assumptions | If a prompt is ambiguous, Copilot guesses. Stating constraints explicitly reduces, but does not remove, wrong guesses. |
+| Unsupported tasks | Complex automation, external connectors, and Office Scripts are outside the core Agent Mode scope. Check current documentation before planning a workflow around them. |
+| Sensitive data | Prompts may be sent to external AI services. Do not paste confidential or personal data you are not allowed to share. |
+| Credit usage | On Personal and Family plans, each Agent Mode run consumes AI credits. Check your credit balance for large jobs. |
+
+Before you start, run through this checklist:
+
+- [ ] Confirm Agent Mode is available in your build and license.
+- [ ] Write the task as an outcome with source, output, constraints, and acceptance criteria.
+- [ ] Keep sensitive data out of prompts.
+- [ ] Review formulas, sheet structure, and assumptions before applying.
+- [ ] Spot-check generated numbers against a known-good calculation.
+- [ ] Verify cited web results against the original source.
+
+## Summary
+
+Excel Agent Mode changes the Copilot relationship from answering questions to doing workbook work: it plans, builds, and iterates, then hands the result back for review. The practical skills are the same ones that make any Excel work reliable: write precise prompts, review generated formulas, keep sensitive data out, and verify numbers before they go anywhere. Start with a small, well-scoped task, review the first result carefully, and you will learn quickly where Agent Mode saves real time and where it still needs you.

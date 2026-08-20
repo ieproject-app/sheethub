@@ -11,7 +11,7 @@ category: "Formulas & Functions"
 
 What if a product code is not enough to identify the right row? The same product may appear in several regions, price lists, or effective periods. **XLOOKUP multiple criteria Excel** formulas let you match the product and the second condition together instead of returning the first product match by accident.
 
-This guide compares three approaches: Boolean multiplication inside XLOOKUP, a concatenated lookup key, and a helper key column. The first is compact, the second keeps the logic in one formula, and the third is usually easiest for a team to audit.
+You have three ways to combine the conditions: Boolean multiplication inside XLOOKUP, a concatenated lookup key, and a helper key column. The first is compact, the second keeps the logic in one formula, and the third is usually easiest for a team to audit.
 
 ## Why one lookup condition is not enough
 
@@ -95,7 +95,7 @@ Then use the helper column in XLOOKUP:
 =XLOOKUP(G2&"|"&H2,D2:D100,C2:C100,"Not found")
 ```
 
-This is the most transparent method. A reviewer can inspect the key, filter it, and identify spaces or inconsistent values without unpacking an array formula. It also makes troubleshooting easier when a user reports `Not found`.
+This is the most transparent method. A reviewer can inspect the key, filter it, and identify spaces or inconsistent values without unpacking an array formula. It also makes troubleshooting easier when a user reports `Not found`, because the key is a visible column instead of a calculation buried inside the lookup.
 
 The helper column is especially useful when:
 
@@ -120,7 +120,7 @@ A result greater than 1 means the criteria do not identify a unique row. XLOOKUP
 | Concatenated key in formula | Moderate | Easy until delimiter rules get complex | Recalculates the combined arrays | Text-based criteria with a safe delimiter |
 | Helper key column | Highest for teams | Centralized and easy to inspect | Reuses a prebuilt key | Repeated lookups, audits, and large workbooks |
 
-All three methods use XLOOKUP's first-match behavior. None of them automatically resolves duplicate rows. Decide whether duplicates are valid, report them with `COUNTIF`, or add another condition such as an effective date.
+All three methods use XLOOKUP's first-match behavior, and none of them automatically resolves duplicate rows. So decide whether duplicates are valid, report them with `COUNTIF`, or add another condition such as an effective date.
 
 ## Troubleshoot no-match and duplicate results
 

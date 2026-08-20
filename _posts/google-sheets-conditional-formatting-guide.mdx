@@ -9,7 +9,7 @@ tags: ["google-sheets", "conditional-formatting", "formatting", "tutorial"]
 category: "Formatting & Layout"
 ---
 
-Why does a row turn red the moment a checkbox is ticked? Why does a color scale make a high value green while a status label stays unchanged? In Google Sheets, conditional formatting connects a cell’s appearance to its value, and custom formulas let one cell control the formatting of an entire range.
+Why does a row turn red the moment a checkbox is ticked? Why does a color scale make a high value green while a status label stays unchanged? Google Sheets conditional formatting connects a cell’s appearance to its value, and custom formulas let one cell control the formatting of an entire range.
 
 The basic rules are quick to apply. The difficult part is writing references correctly: `$A1` and `$A$1` behave differently across many rows.
 
@@ -71,7 +71,7 @@ To highlight a row when the task is complete, select `A2:D100`, choose **Custom 
 
 The absolute column `$D` makes every cell in a row check column D. Relative row `2` becomes D2, D3, and so on.
 
-When a condition must evaluate many rows at once, [ARRAYFORMULA patterns in Google Sheets](/blog/arrayformula-google-sheets-complete-guide) can extend the logic beyond a single row.
+When a condition must evaluate many rows at once, [Google Sheets conditional formatting with ARRAYFORMULA](/blog/arrayformula-google-sheets-complete-guide) can extend the logic beyond a single row.
 
 To highlight the row when the task is overdue and not complete:
 
