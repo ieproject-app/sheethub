@@ -1,0 +1,149 @@
+---
+title: "XLOOKUP Multiple Criteria in Excel: 3 Methods"
+date: "2026-08-18"
+description: "Use XLOOKUP with multiple criteria in Excel. Compare Boolean, concatenated-key, and helper-column methods."
+published: true
+featured: false
+heroImage: "default-og"
+tags: ["excel", "tutorial", "xlookup", "multiple-criteria", "lookup-formulas"]
+category: "Formulas & Functions"
+---
+
+What if a product code is not enough to identify the right row? The same product may appear in several regions, price lists, or effective periods. **XLOOKUP multiple criteria Excel** formulas let you match the product and the second condition together instead of returning the first product match by accident.
+
+You have three ways to combine the conditions: Boolean multiplication inside XLOOKUP, a concatenated lookup key, and a helper key column. The first is compact, the second keeps the logic in one formula, and the third is usually easiest for a team to audit.
+
+## Why one lookup condition is not enough
+
+Imagine a table with these columns:
+
+| Product | Region | Price |
+|---|---|---:|
+| P-100 | East | 18.50 |
+| P-100 | West | 21.00 |
+| P-200 | East | 12.75 |
+
+If cell `G2` contains `P-100` and you look up only that product, XLOOKUP returns the East row because it is the first match. If `H2` contains `West`, both conditions are needed to return 21.00.
+
+For the examples below, assume:
+
+- `A2:A100` contains Product values.
+- `B2:B100` contains Region values.
+- `C2:C100` contains the value to return.
+- `G2` contains the requested product.
+- `H2` contains the requested region.
+
+If you need a refresher on the basic function arguments, start with the [XLOOKUP multiple criteria in Excel basics guide](/blog/xlookup-complete-guide) before choosing a multi-criteria pattern.
+
+## Method 1: Multiply Boolean criteria inside XLOOKUP
+
+The most compact method converts each comparison into TRUE or FALSE, then multiplies the results. TRUE behaves as 1 and FALSE behaves as 0 in this calculation. Only the row where every condition is true produces 1.
+
+```excel
+=XLOOKUP(1,(A2:A100=G2)*(B2:B100=H2),C2:C100,"Not found")
+```
+
+For the example above, the first comparison identifies both `P-100` rows. The second comparison identifies the West row. Multiplication leaves a 1 only where both tests are true, so XLOOKUP returns 21.00.
+
+Add another condition by multiplying another comparison:
+
+```excel
+=XLOOKUP(1,(A2:A100=G2)*(B2:B100=H2)*(C2:C100=J2),D2:D100,"Not found")
+```
+
+In that version, `C2:C100` would be the effective date and `J2` the requested date, while `D2:D100` would contain the result. For dates that include times, compare the date portion explicitly:
+
+```excel
+=XLOOKUP(1,(A2:A100=G2)*(B2:B100=H2)*(INT(C2:C100)=INT(J2)),D2:D100,"Not found")
+```
+
+This approach is a good choice when the criteria are clear and the formula will be maintained by someone comfortable with array expressions. The [Excel dynamic array functions guide](/blog/excel-dynamic-array-functions-guide) explains why these range comparisons can produce an array for XLOOKUP to evaluate.
+
+## Method 2: Concatenate the criteria into one key
+
+A concatenated key turns the combination into a single lookup value. Use a delimiter that cannot appear in the source values, such as a vertical bar.
+
+```excel
+=XLOOKUP(G2&"|"&H2,A2:A100&"|"&B2:B100,C2:C100,"Not found")
+```
+
+The lookup value becomes `P-100|West`. Each row in the source becomes a matching combined key, and XLOOKUP searches those keys.
+
+A delimiter matters. Without one, `AB` plus `C` and `A` plus `BC` both become `ABC`, which can create a false match. If a vertical bar can occur in either field, choose another delimiter or use the Boolean method instead.
+
+For an Excel Table named `Sales`, the same idea reads more clearly:
+
+```excel
+=XLOOKUP(G2&"|"&H2,Sales[Product]&"|"&Sales[Region],Sales[Price],"Not found")
+```
+
+Table references expand as rows are added, but the combined expression still has to calculate every row. For teams that use structured references often, the [Excel tables and structured references guide](/blog/excel-tables-structured-references-guide) covers the naming model behind this formula.
+
+Concatenation works well when the criteria are text or simple dates. For dates, convert both sides to a consistent key before comparing. For example, `TEXT(C2:C100,"yyyymmdd")` can normalize displayed date differences, but test the result against real dates before using it in a financial workbook.
+
+## Method 3: Create a helper key column
+
+A helper column makes the combined key visible. In `D2`, enter this formula and fill it down:
+
+```excel
+=A2&"|"&B2
+```
+
+Then use the helper column in XLOOKUP:
+
+```excel
+=XLOOKUP(G2&"|"&H2,D2:D100,C2:C100,"Not found")
+```
+
+This is the most transparent method. A reviewer can inspect the key, filter it, and identify spaces or inconsistent values without unpacking an array formula. It also makes troubleshooting easier when a user reports `Not found`, because the key is a visible column instead of a calculation buried inside the lookup.
+
+The helper column is especially useful when:
+
+1. Many formulas use the same pair of criteria.
+2. The workbook must be easy for non-specialists to audit.
+3. You want to detect duplicate combined keys before returning a result.
+4. The source is large and you want to avoid repeating the same concatenation expression in many formulas.
+
+To check whether a combined key appears more than once, use:
+
+```excel
+=COUNTIF(D2:D100,G2&"|"&H2)
+```
+
+A result greater than 1 means the criteria do not identify a unique row. XLOOKUP still returns the first matching result, so duplicate detection should be part of the workbook design when accuracy depends on uniqueness.
+
+## Compare the three methods
+
+| Method | Readability | Maintenance | Performance | Best use |
+|---|---|---|---|---|
+| Boolean multiplication | Compact but technical | Easy to change in one formula | Good for occasional lookups | A few conditions in a modern workbook |
+| Concatenated key in formula | Moderate | Easy until delimiter rules get complex | Recalculates the combined arrays | Text-based criteria with a safe delimiter |
+| Helper key column | Highest for teams | Centralized and easy to inspect | Reuses a prebuilt key | Repeated lookups, audits, and large workbooks |
+
+All three methods use XLOOKUP's first-match behavior, and none of them automatically resolves duplicate rows. So decide whether duplicates are valid, report them with `COUNTIF`, or add another condition such as an effective date.
+
+## Troubleshoot no-match and duplicate results
+
+**Extra spaces:** A visually identical product can contain a trailing space. Clean the source with `TRIM` where appropriate, or inspect the raw values before changing the lookup formula.
+
+**Numbers stored as text:** `1001` and `"1001"` may not compare as expected in every workbook. Standardize the source and criteria types rather than adding random coercion to a finished formula.
+
+**Dates with times:** A cell displaying `8/18/2026` may contain a time value. Use `INT` when the time should not distinguish records, as shown in the Boolean example.
+
+**Wildcard behavior:** XLOOKUP uses exact match by default, but an explicit `match_mode` of 2 enables wildcard matching. Avoid wildcard mode when product codes contain literal `*` or `?` characters unless you escape and test the pattern carefully.
+
+**Not found versus duplicate:** The `if_not_found` argument handles zero matches, not multiple matches. Use `COUNTIF` or a separate validation formula to identify duplicates.
+
+## AI prompt idea
+
+After validating a small known result, you can ask an AI assistant to adapt the pattern to your workbook:
+
+> "I have an Excel table named Sales with Product, Region, EffectiveDate, and Price columns. Cell G2 contains a product, H2 contains a region, and J2 contains a date without a time. Write an XLOOKUP formula that matches all three fields, ignores the time portion in EffectiveDate, returns Not found when there is no match, and explains how to detect duplicate matches."
+
+Test the suggested formula against a row with a known answer, a missing combination, a duplicate combination, and a date containing a time. Do not treat a plausible-looking formula as verified until those cases return the expected results.
+
+## Summary
+
+Use Boolean multiplication when you want a compact formula with several explicit conditions. Use a concatenated key when a safe delimiter makes the combined lookup easy to understand. Use a helper key column when the workbook needs visible logic, repeated lookups, or simple auditing.
+
+Whichever method you choose, keep lookup and return ranges the same height, provide an `if_not_found` message, and check whether the criteria are truly unique. XLOOKUP can find the right combination, but your workbook still needs a deliberate rule for duplicates.

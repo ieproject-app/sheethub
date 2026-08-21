@@ -1,0 +1,200 @@
+---
+title: "Web Scraping Google Sheets: IMPORTHTML, IMPORTXML & DATA"
+date: "2026-08-16"
+updated: "2026-08-18"
+description: "Scrape websites into Google Sheets with IMPORTHTML, IMPORTXML and IMPORTDATA. Learn XPath, limits and error fixes."
+published: true
+featured: false
+heroImage: "default-og"
+tags: ["google-sheets", "import", "web-scraping", "data-analysis", "tutorial"]
+category: "Data Analysis"
+---
+
+The web scraping Google Sheets workflow starts with choosing the right import function for the source. Google Sheets has two very different kinds of import. `IMPORTRANGE` moves cells between spreadsheets you control. `IMPORTHTML`, `IMPORTXML`, and `IMPORTDATA` read public content from the web. The formulas look related, but the source, failure modes, and maintenance work are different.
+
+The three web functions cover public tables, HTML/XML nodes, and CSV/TSV files. They cannot execute JavaScript applications, bypass logins, or replace a full scraping system.
+
+## Two different kinds of import
+
+Use `IMPORTRANGE` when the source is another Google Sheet:
+
+```excel
+=IMPORTRANGE("https://docs.google.com/spreadsheets/d/your-file-id", "Data!A1:D100")
+```
+
+The source owner or editor must authorize the connection the first time. The first step in [web scraping Google Sheets functions](/blog/google-sheets-import-functions-guide) is separating internal spreadsheet imports from public web sources.
+
+Web import functions use a public URL instead:
+
+- `IMPORTHTML` reads an HTML table or list.
+- `IMPORTXML` evaluates an XPath expression against structured page content.
+- `IMPORTDATA` reads a CSV or TSV file at a URL.
+
+The page or file must be reachable by Google's fetcher; a URL that works in a browser is not automatically compatible.
+
+## IMPORTHTML: pull a table or list
+
+Use `IMPORTHTML` when the page contains a conventional HTML `<table>`, ordered list, or unordered list. Its syntax is:
+
+```excel
+=IMPORTHTML(url, query, index)
+```
+
+`query` is either `"table"` or `"list"`. The index starts at `1`, and tables and lists have separate index sequences. For example, this targets a public Wikipedia table:
+
+```excel
+=IMPORTHTML("https://en.wikipedia.org/wiki/List_of_countries_by_population_in_2015", "table", 1)
+```
+
+If the desired table is not first, try `2` or `3` after checking the page source. The index can change when a site changes its markup.
+
+To import a list instead:
+
+```excel
+=IMPORTHTML("https://en.wikipedia.org/wiki/List_of_countries_by_population_in_2015", "list", 1)
+```
+
+The result spills below and to the right of the formula, so leave that area empty. A page without a matching element returns an error.
+
+## IMPORTXML: extract specific nodes
+
+Use `IMPORTXML` when you need selected elements rather than an entire HTML table. Its syntax is:
+
+```excel
+=IMPORTXML(url, xpath_query)
+```
+
+XPath describes the nodes to return:
+
+| XPath | What it targets |
+|---|---|
+| `//h1` | All level-one headings |
+| `//a/@href` | Link destinations |
+| `//title` | The document title |
+| `//meta[@name='description']/@content` | A meta-description attribute |
+| `//table//tr` | Rows inside tables |
+
+This formula requests the title from a stable public Wikipedia page:
+
+```excel
+=IMPORTXML("https://en.wikipedia.org/wiki/List_of_countries_by_population_in_2015", "//title")
+```
+
+To return links from the same page, use:
+
+```excel
+=IMPORTXML("https://en.wikipedia.org/wiki/List_of_countries_by_population_in_2015", "//a/@href")
+```
+
+XPath is sensitive to page structure. Deep selectors and class names can fail after a redesign, so prefer short semantic paths.
+
+## IMPORTDATA: load CSV or TSV
+
+Use `IMPORTDATA` when the source is a publicly reachable comma-separated or tab-separated file:
+
+```excel
+=IMPORTDATA(url)
+```
+
+A reproducible CSV example is the United States Census Bureau's public state population estimates file:
+
+```excel
+=IMPORTDATA("https://www2.census.gov/programs-surveys/popest/datasets/2020-2023/states/totals/co-est2023-alldata.csv")
+```
+
+The file is parsed into rows and columns; the same function loads a TSV URL. Keep a changing source URL in a cell:
+
+```excel
+=IMPORTDATA(A1)
+```
+
+Confirm that the URL is a direct download rather than an HTML page containing a download button.
+
+## Limits you should expect
+
+### JavaScript-rendered pages may return nothing
+
+`IMPORTHTML` and `IMPORTXML` read the HTML response available to the fetcher. They do not operate a browser and generally cannot wait for a JavaScript application to render data after page load. If the browser's **View Source** does not contain the target table or text, the import formula may not see it either.
+
+A client-rendered catalog, dashboard, or infinite-scroll page needs a public API, export endpoint, or Apps Script. `IMPORTXML` cannot scrape every page a user can see.
+
+### Robots rules and terms still matter
+
+Read the site's terms, respect robots guidance, avoid aggressive refreshes, and do not collect private or access-controlled data. A formula is not a permission bypass.
+
+### Fetching and quota errors are normal
+
+Common messages include `#N/A Could not fetch URL`, an empty result, a wrong table index, or changed page structure. Google may require **Allow access** the first time an external import is edited.
+
+Google applies limits and recalculation quotas. Dozens of independent imports can become slow or hit fetch limits. Treat roughly 50 external imports as an operational warning, not a guarantee.
+
+| Symptom | Likely cause | First fix |
+|---|---|---|
+| `#N/A Could not fetch URL` | Blocked, changed, or unavailable source | Open the direct URL, check access, and retry later |
+| `#N/A` with IMPORTHTML | Wrong query or index | Inspect whether the page has a real table/list and try another index |
+| Empty IMPORTXML result | XPath matches no nodes or content is JavaScript-rendered | Test a simpler XPath such as `//title` |
+| Data appears in the wrong columns | CSV delimiter, quoting, or source layout changed | Download and inspect the file format |
+| Sheet recalculates slowly | Too many imports or large responses | Reduce imports and cache stable results |
+
+## Process imported data
+
+Nest an import inside other Sheets functions. This formula filters a table import with `QUERY`:
+
+```excel
+=QUERY(IMPORTHTML("https://en.wikipedia.org/wiki/List_of_countries_by_population_in_2015", "table", 1), "select * where Col1 is not null", 1)
+```
+
+The final `1` marks one header row. Confirm the imported table's actual layout before relying on column numbers.
+
+The [FILTER function for imported Google Sheets data](/blog/filter-function-google-sheets) works directly on the imported range:
+
+```excel
+=FILTER(IMPORTHTML("https://en.wikipedia.org/wiki/List_of_countries_by_population_in_2015", "table", 1), INDEX(IMPORTHTML("https://en.wikipedia.org/wiki/List_of_countries_by_population_in_2015", "table", 1),,1)<>"")
+```
+
+This repeats the import and may fetch twice. Prefer one import in a staging tab, then analyze the local result with the [Google Sheets QUERY function guide](/blog/query-function-google-sheets-guide).
+
+## When to move to Apps Script
+
+Use Apps Script with `UrlFetchApp` when you need any of the following:
+
+- The page needs JavaScript execution before the data exists.
+- The endpoint requires headers, an API key, or a login flow you are authorized to use.
+- The response needs parsing, pagination, deduplication, or transformation beyond a formula.
+- The sheet should cache a snapshot on a schedule rather than refetch on recalculation.
+
+Apps Script still needs to follow the source's terms and access rules; it is not a way to evade restrictions.
+
+## Practical tips
+
+- Import into a staging tab, then reference that local range from analysis sheets.
+- Put URLs and table indexes in cells so a source change does not require formula editing.
+- Cache stable data by copying the imported result and pasting values before a presentation or audit.
+- Keep one import per source and reuse the local result.
+- Test a simple selector such as `//title` before writing a long XPath.
+- Document the source URL, retrieval date, expected index, and known limitations.
+- Recheck after a redesign or source-schema change.
+
+## AI prompt idea
+
+Once you confirm that a source page is public and its HTML contains the target element, an AI assistant can help draft an XPath. Give it the URL, a small HTML fragment, and the exact field you need:
+
+> "I need a Google Sheets IMPORTXML formula for a public HTML page. The target is the text inside each table row's second cell. Given this HTML fragment, write the shortest robust XPath, explain whether it will return one value or a column, and list one reason it could fail after a redesign. Do not assume JavaScript execution."
+
+Test the XPath on a small result first. Never paste credentials, private content, or access tokens into an AI prompt.
+
+## FAQ
+
+**Can IMPORTHTML scrape a JavaScript website?** Usually not. It reads the fetched HTML rather than running the page's JavaScript. Look for a public API, export file, server-rendered page, or an authorized Apps Script workflow.
+
+**Why does IMPORTXML return `#N/A`?** The URL may be unavailable, the XPath may match nothing, the site may block automated fetches, or the desired content may be rendered only in the browser.
+
+**Why is IMPORTHTML returning the wrong table?** The index counts matching tables on the page and can change when the site changes its markup. Test nearby indexes and inspect the source.
+
+**How many import functions can a sheet use?** Google applies limits and quotas that vary by function and workload. Keep the number of external imports low, import once into a staging tab, and treat roughly 50 imports as a warning threshold rather than a promise.
+
+**What is the difference between IMPORTRANGE and IMPORTHTML?** `IMPORTRANGE` reads cells from another Google Sheet. `IMPORTHTML` reads a public HTML table or list. They solve different source and permission problems.
+
+## Summary
+
+`IMPORTHTML`, `IMPORTXML`, and `IMPORTDATA` are useful for lightweight, public web imports in Google Sheets. Use HTML tables for `IMPORTHTML`, XPath for targeted nodes, and direct CSV or TSV URLs for `IMPORTDATA`. Expect source changes, fetch errors, JavaScript limitations, and quotas. Import once into a staging area, process the local result, and move to Apps Script or an API when the page needs authentication, rendering, or complex transformation.

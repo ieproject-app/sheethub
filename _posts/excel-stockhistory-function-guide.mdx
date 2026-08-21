@@ -1,0 +1,127 @@
+---
+title: "Excel STOCKHISTORY Function: Pull Historical Prices"
+date: "2026-08-18"
+updated: "2026-08-21"
+description: "Use the Excel STOCKHISTORY function to pull daily, weekly, or monthly prices into a chart-ready table."
+published: true
+featured: false
+heroImage: "default-og"
+tags: ["excel", "tutorial", "stockhistory", "historical-data", "dynamic-arrays"]
+category: "Data Analysis"
+---
+
+A price table built by copy-pasting from a finance page is out of date as soon as the next market session closes. The **Excel STOCKHISTORY function** takes the opposite approach: one formula can spill a chart-ready table across your worksheet, but only when the ticker, dates, and data entitlement all cooperate.
+
+This guide shows how to retrieve historical prices, choose daily or longer intervals, select properties such as close and volume, and handle weekends, holidays, and blocked spill ranges. Historical data describes what happened. It is not a forecast or an investment recommendation.
+
+## What STOCKHISTORY returns
+
+`STOCKHISTORY` retrieves historical financial data for a stock or financial instrument between two dates. The result is a dynamic array, so Excel places the returned dates and values into neighboring cells automatically.
+
+The function uses this syntax:
+
+```excel
+=STOCKHISTORY(stock, start_date, [end_date], [interval], [headers], [property0], [property1], [property2], [property3], [property4], [property5])
+```
+
+The required arguments identify the instrument and the first date. `end_date` defaults to `start_date` when omitted. The optional arguments control the time interval, header row, and returned properties.
+
+**Availability:** STOCKHISTORY requires an eligible Microsoft 365 subscription and an internet connection. The exact data available can depend on the account, market, instrument, and service conditions. If a formula returns an unexpected result, verify availability in your Excel version before changing the formula.
+
+## Build a daily historical-price table
+
+The following example requests Microsoft closing-market data for January 2026. It returns a header row followed by the date, close, open, high, low, and volume columns.
+
+```excel
+=STOCKHISTORY("MSFT",DATE(2026,1,1),DATE(2026,1,31),0,1,0,1,2,3,4,5)
+```
+
+The arguments mean the following:
+
+| Argument | Value | Meaning |
+|---|---:|---|
+| `stock` | `"MSFT"` | The ticker or instrument identifier |
+| `start_date` | `DATE(2026,1,1)` | First date in the requested period |
+| `end_date` | `DATE(2026,1,31)` | Last date in the requested period |
+| `interval` | `0` | One row per trading day |
+| `headers` | `1` | Include column headings |
+| `property0` | `0` | Date |
+| `property1` | `1` | Closing price |
+| `property2` | `2` | Opening price |
+| `property3` | `3` | Highest price in the period |
+| `property4` | `4` | Lowest price in the period |
+| `property5` | `5` | Trading volume |
+
+The first row of the spill is the header row. The rows below it contain available trading sessions, not every calendar date. Format the date column as a date and the price columns as numbers or currency after the result appears.
+
+## Choose intervals, properties, and boundaries
+
+The `interval` argument determines how Excel groups the historical data:
+
+- `0` returns daily values.
+- `1` returns weekly values.
+- `2` returns monthly values.
+
+For weekly and monthly requests, the first returned period can begin before the exact `start_date` because Excel uses the requested period boundary. A monthly result may therefore represent the month containing the start date rather than only dates after that day.
+
+The property numbers let you return only the fields needed for a report. For example, this formula returns dates and closing prices at a weekly interval:
+
+```excel
+=STOCKHISTORY("MSFT",DATE(2026,1,1),DATE(2026,3,31),1,1,0,1)
+```
+
+This smaller output is easier to chart when open, high, low, and volume are not needed. To compare closing prices with volume, request properties `0`, `1`, and `5`:
+
+```excel
+=STOCKHISTORY("MSFT",DATE(2026,1,1),DATE(2026,3,31),0,1,0,1,5)
+```
+
+The property order controls the output column order. Put the date property first when you want the spill to work naturally as a time series. If your workbook already uses [Excel dynamic array functions](/blog/excel-dynamic-array-functions-guide), you can reference the entire returned range with the spill operator. For example, if the formula is in `A2`, `=A2#` refers to every cell in its current spill range.
+
+## Turn the result into a chart-ready range
+
+A clean chart usually needs dates in the first column and one or more numeric series beside them. Start with the smaller date-and-close formula, confirm that the output is correct, and then select the spilled range when creating a line chart.
+
+Do not type labels or formulas into cells where the result may expand. If the output grows into an occupied cell, Excel shows a `#SPILL!` error. Move the formula, clear the obstruction, or remove merged cells from the expected spill area. The [Excel formula errors guide](/blog/excel-formula-errors-troubleshooting-guide) covers the same error pattern in more detail.
+
+Price and volume often need different display choices. Prices may use two decimal places, while volume may be easier to scan with thousands separators or scaled units. Apply [Excel STOCKHISTORY function results](/blog/excel-custom-number-formats-guide) to the output cells without changing the underlying values.
+
+Use this workflow:
+
+1. Enter the formula in an empty area with room to spill.
+2. Confirm that the ticker and date columns contain the expected data.
+3. Format dates, prices, and volume separately.
+4. Create a chart from the spilled range.
+5. Add a note showing the retrieval date if the workbook will be shared.
+
+## Why dates may be missing
+
+STOCKHISTORY does not invent a row for every calendar day. Weekends and market holidays have no trading session, so a daily result normally skips them. A requested start or end date that falls on a non-trading day may also produce a first or last row on the nearest valid trading date in the period.
+
+A missing row is therefore not automatically a formula failure. Check whether the date was a weekend or holiday before changing the interval. Weekly and monthly results summarize the period instead of listing each session, so they will contain fewer rows by design.
+
+The service can also return limited or delayed data. Ticker formats differ across exchanges, and an identifier that works in one market may need an exchange-qualified form in another. If the result is empty or unexpected, test a well-known ticker, shorten the date range, and confirm that the account and Excel build support the function.
+
+## Troubleshoot unexpected results
+
+Check the ticker spelling, date order, and whether `start_date` is a valid Excel date when the function returns an error. Test the formula with `DATE(year,month,day)` rather than a text date that may be interpreted differently by regional settings.
+
+Remove properties you do not need when the output is too wide. A chart of closing prices normally needs only date and close, not every available field.
+
+Inspect every cell below and to the right of the formula when the output shows `#SPILL!`. Clear accidental text, formulas, merged cells, or table boundaries that block the result.
+
+Sources can use different market conventions, timing, adjustments, or delayed values when the price looks different from another website. Compare the instrument, interval, and property, then verify important figures against a trusted source.
+
+Check the user's Microsoft 365 eligibility and connection when the formula does not work for that user. A workbook that contains STOCKHISTORY may not behave identically for every account or Excel environment.
+
+## Use the data responsibly
+
+Historical prices are observations, not promises about what happens next. Avoid describing a rising or falling series as proof that a security will continue in that direction. For analysis, document the ticker, date range, interval, property selection, and retrieval date so another person can reproduce the table.
+
+Before relying on a value in a report, reconcile it with the source's definition of close, volume, and any adjustment policy. The function is useful for organizing historical information, but it does not replace independent research or professional financial advice.
+
+## Summary
+
+`STOCKHISTORY` can turn a ticker and date range into a dynamic, chart-ready table. Use interval `0` for daily data, `1` for weekly data, or `2` for monthly data. Select only the properties you need, keep the spill area clear, and expect weekends and market holidays to produce no daily row.
+
+When a result looks wrong, check the instrument, dates, account eligibility, and data source before rewriting the formula. A well-documented historical table is useful for analysis precisely because its limits are visible.
