@@ -1,7 +1,7 @@
 ---
 title: "Google Sheets Slicers: Filter Charts and Pivot Tables"
 date: "2026-08-19"
-description: "Learn how Google Sheets slicers filter charts and pivot tables, how to combine controls, and why formulas may not change."
+description: "Learn how Google Sheets slicers filter charts and pivot tables, combine controls, and why formulas stay unchanged."
 published: true
 featured: false
 heroImage: "default-og"
@@ -9,7 +9,7 @@ tags: ["google-sheets", "tutorial", "slicers", "dashboards", "pivot-tables"]
 category: "Data Analysis"
 ---
 
-Why does a slicer change a chart while an ordinary `SUM` result stays exactly the same? The answer is not that the control is broken. A Google Sheets slicer filters connected charts, tables, and pivot tables, but it does not automatically rewrite every formula in the spreadsheet.
+Why does a slicer change a chart while an ordinary `SUM` result stays exactly the same? The answer is not that the control is broken. Google Sheets slicers filter connected charts, tables, and pivot tables, but they do not automatically rewrite every formula in the spreadsheet.
 
 That distinction matters when you build a dashboard. A viewer may select one region and see a chart update, then wonder why a KPI cell still shows the total for every region. Once the source range and slicer scope are clear, the behavior becomes predictable.
 
@@ -21,7 +21,7 @@ Slicers are useful for interactive views because the control gives readers a vis
 
 A slicer is not a general-purpose condition that every formula can read. Selecting `West` in a slicer does not automatically make `SUM(B2:B100)` calculate only West rows. If a metric must respond to a selection, build that metric around a cell containing the selected value, or calculate from a deliberately filtered result. Do not promise that a slicer will change ordinary formulas just because it changes a chart.
 
-For the dashboard layer itself, [Google Sheets pivot tables](/blog/google-sheets-pivot-tables-guide) are a useful companion because they summarize the same source data in a structure that slicers can control.
+For dashboard summaries, [Google Sheets slicers and pivot tables](/blog/google-sheets-pivot-tables-guide) work well together because they summarize the same source data in a structure that slicers can control.
 
 ## Add a slicer to a data range
 

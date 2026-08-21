@@ -36,7 +36,7 @@ The following example requests Microsoft closing-market data for January 2026. I
 =STOCKHISTORY("MSFT",DATE(2026,1,1),DATE(2026,1,31),0,1,0,1,2,3,4,5)
 ```
 
-Here is what each argument does:
+The arguments mean the following:
 
 | Argument | Value | Meaning |
 |---|---:|---|
@@ -86,7 +86,7 @@ Do not type labels or formulas into cells where the result may expand. If the ou
 
 Price and volume often need different display choices. Prices may use two decimal places, while volume may be easier to scan with thousands separators or scaled units. Apply [Excel STOCKHISTORY function results](/blog/excel-custom-number-formats-guide) to the output cells without changing the underlying values.
 
-A useful workflow is:
+Use this workflow:
 
 1. Enter the formula in an empty area with room to spill.
 2. Confirm that the ticker and date columns contain the expected data.
@@ -104,15 +104,15 @@ The service can also return limited or delayed data. Ticker formats differ acros
 
 ## Troubleshoot unexpected results
 
-**The function returns an error:** Check the ticker spelling, date order, and whether `start_date` is a valid Excel date. Test the formula with `DATE(year,month,day)` rather than a text date that may be interpreted differently by regional settings.
+Check the ticker spelling, date order, and whether `start_date` is a valid Excel date when the function returns an error. Test the formula with `DATE(year,month,day)` rather than a text date that may be interpreted differently by regional settings.
 
-**The output is too wide:** Remove properties you do not need. A chart of closing prices normally needs only date and close, not every available field.
+Remove properties you do not need when the output is too wide. A chart of closing prices normally needs only date and close, not every available field.
 
-**The output shows `#SPILL!`:** Inspect every cell below and to the right of the formula. Clear accidental text, formulas, merged cells, or table boundaries that block the result.
+Inspect every cell below and to the right of the formula when the output shows `#SPILL!`. Clear accidental text, formulas, merged cells, or table boundaries that block the result.
 
-**The price looks different from another website:** Sources can use different market conventions, timing, adjustments, or delayed values. Compare the instrument, interval, and property, then verify important figures against a trusted source.
+Sources can use different market conventions, timing, adjustments, or delayed values when the price looks different from another website. Compare the instrument, interval, and property, then verify important figures against a trusted source.
 
-**The formula does not work for a user:** Check the user's Microsoft 365 eligibility and connection. A workbook that contains STOCKHISTORY may not behave identically for every account or Excel environment.
+Check the user's Microsoft 365 eligibility and connection when the formula does not work for that user. A workbook that contains STOCKHISTORY may not behave identically for every account or Excel environment.
 
 ## Use the data responsibly
 

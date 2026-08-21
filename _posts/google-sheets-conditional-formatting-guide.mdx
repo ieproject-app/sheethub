@@ -9,21 +9,17 @@ tags: ["google-sheets", "conditional-formatting", "formatting", "tutorial"]
 category: "Formatting & Layout"
 ---
 
-Why does a row turn red the moment a checkbox is ticked? Why does a color scale make a high value green while a status label stays unchanged? Google Sheets conditional formatting connects a cell’s appearance to its value, and custom formulas let one cell control the formatting of an entire range.
+Why does a row turn red the moment a checkbox is ticked? A color scale can make a high value green while leaving a status label unchanged. Google Sheets conditional formatting connects a cell’s appearance to its value, and custom formulas let one cell control the formatting of an entire range.
 
 The basic rules are quick to apply. The difficult part is writing references correctly: `$A1` and `$A$1` behave differently across many rows.
 
-## Where Conditional Formatting Lives
+## Where conditional formatting lives
 
-Select the cells to format, then choose **Format** → **Conditional formatting**. Sheets opens a panel with three important fields:
-
-1. **Apply to range** defines the cells that can receive the formatting.
-2. **Format cells if** chooses a preset rule or **Custom formula is**.
-3. **Formatting style** defines the fill, text color, bold, or other visual treatment.
+Select the cells to format, then choose **Format** → **Conditional formatting**. Sheets opens a panel with three fields. **Apply to range** defines the cells that can receive the formatting. **Format cells if** chooses a preset rule or **Custom formula is**. **Formatting style** defines the fill, text color, bold, or other visual treatment.
 
 The rule updates when cell values change. Reopen the panel to edit or remove it.
 
-## Single Color or Color Scale?
+## Single color or color scale?
 
 Choose the rule style based on the type of question the sheet needs to answer:
 
@@ -36,7 +32,7 @@ Choose the rule style based on the type of question the sheet needs to answer:
 
 A single-color rule says “this condition is true”; a color scale shows relative values. Use a single color for a fixed business threshold.
 
-## Preset Rules: Quick Wins
+## Preset rules
 
 Preset rules are useful when no custom reference is needed:
 
@@ -51,7 +47,7 @@ To flag sales above `$1,000`, select the range, choose **Format** → **Conditio
 
 For a status column, choose **Text is exactly** and enter `Overdue`; exact matching is safer than broad “contains” matching.
 
-## Custom Formulas: The Important Part
+## Custom formulas: the important part
 
 Choose **Custom formula is** when a preset cannot express the condition. The formula must return `TRUE` or `FALSE` for each cell or row in the applied range.
 
@@ -81,7 +77,7 @@ To highlight the row when the task is overdue and not complete:
 
 Apply it to `A2:D100`, not only the due-date column, when the entire row should change color.
 
-## `$A1` Versus `$A$1`
+## `$A1` versus `$A$1`
 
 The anchor controls how a reference moves:
 
@@ -96,7 +92,7 @@ For an entire-row rule, `$A1` or `$D2` is usually the useful pattern. A formula 
 
 This is the most common reason a custom rule highlights the wrong rows. First identify the cell that should control the decision, then lock only the dimension that must stay fixed.
 
-## More Custom Formula Examples
+## More custom formula examples
 
 ### Highlight rows with an active status
 
@@ -144,7 +140,7 @@ The shorter version also works:
 
 The explicit comparison is often easier for a shared rule to understand.
 
-## Highlight an Entire Row
+## Highlight an entire row
 
 To color the whole row when one value matches a condition:
 
@@ -158,13 +154,13 @@ The first row of the selected range is the reference point. If the range starts 
 
 For interactive task sheets, pair checkbox rules with the [Google Sheets checkboxes guide](/blog/google-sheets-checkbox-guide). For numeric dashboards, keep conditional rules separate from charts so the color still communicates a clear threshold.
 
-## Copy and Manage Rules
+## Copy and manage rules
 
 To reuse a rule, copy the formatted range and choose **Edit** → **Paste special** → **Conditional formatting only** when that option is available in the sheet. Alternatively, duplicate the rule in the side panel and change **Apply to range**.
 
 Review rule order when several rules can apply to the same cell. A broad rule may override or visually compete with a more specific rule. Keep the most important rule easy to identify, and remove old rules after a range is redesigned.
 
-## Performance Tips
+## Performance tips
 
 Conditional formatting can slow a large sheet when many rules cover more cells than necessary. Improve responsiveness by:
 
@@ -178,7 +174,7 @@ For a data report that also uses query-driven summaries, the [advanced Google Sh
 
 For a presentation-ready dashboard, [Google Sheets Canvas dashboard layouts](/blog/google-sheets-canvas-dashboard-guide) can give the same carefully scoped data a cleaner surface.
 
-## Google Sheets Versus Excel
+## Google Sheets versus Excel
 
 The concept is shared across both spreadsheet tools: select a range, choose a condition, and define a style. The menu names and rule panels differ, however. Custom formulas also depend on the first cell of the applied range, so copy a rule carefully rather than assuming an Excel range will behave identically in Sheets. If you also work in Excel, [Excel's conditional formatting guide covers rules, color scales, and data bars](/blog/conditional-formatting-guide).
 

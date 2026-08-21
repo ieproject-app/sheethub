@@ -14,7 +14,7 @@ A 3D bar chart Google Sheets import can now preserve the original Excel chart re
 
 The important qualification is easy to miss: this is an import improvement, not a new native 3D chart builder. Google Sheets can display the 3D bar chart that came from Excel, but the update does not add a 3D bar option to the Sheets chart editor.
 
-## What Changed in July 2026?
+## What changed in July 2026?
 
 Google Workspace Updates announced the change on July 1, 2026. Before the update, importing a file containing a 3D bar chart into Sheets converted the chart to a 2D bar chart. The data arrived, but the visual design did not.
 
@@ -22,7 +22,7 @@ For Rapid Release domains, the feature was available immediately. Scheduled Rele
 
 That makes the change useful for teams that move an existing Excel workbook into Sheets for collaboration. The imported chart is more likely to keep the visual form prepared by the original author.
 
-## How to Import a 3D Bar Chart from Excel
+## How to import a 3D bar chart from Excel
 
 Prepare an `.xlsx` file containing the 3D bar chart. Then import the workbook into Google Sheets:
 
@@ -37,11 +37,11 @@ You can also drag an Excel file into Google Drive and open or convert it with Sh
 
 The chart remains an object on the sheet. Keep the source workbook until the conversion has been checked, especially if the chart is part of a recurring report or executive presentation.
 
-## The Honest Limitation: No Native 3D Builder
+## What Sheets still cannot do
 
 The July update does not mean that Sheets can create every Excel chart type from scratch. In a blank Google Sheet, the chart editor still offers the chart types supported by Sheets. The announcement is specifically about importing 3D bar charts and rendering them correctly after import.
 
-The practical workflow is therefore:
+Use this workflow:
 
 - Build the 3D bar chart in Excel or another compatible tool.
 - Save the workbook as `.xlsx`.
@@ -50,7 +50,7 @@ The practical workflow is therefore:
 
 If a chart must be created and redesigned entirely inside Sheets, choose a supported 2D chart instead. Do not promise a native 3D workflow to a Sheets-only user based on this import update.
 
-## 3D or 2D: Which Should a Report Use?
+## 3D or 2D: Which should a report use?
 
 Preserving a 3D chart can solve a file-conversion problem, but it does not automatically make the chart easier to read. Perspective, depth, and occlusion can make small differences harder to compare. A 3D chart may look more dramatic while communicating less precise information.
 
@@ -64,7 +64,7 @@ Preserving a 3D chart can solve a file-conversion problem, but it does not autom
 
 Use 3D when the visual context matters and the audience understands the trade-off. Use 2D when the main question is which value is larger, by how much, and how that ranking changes.
 
-## Compatibility Notes
+## Compatibility notes
 
 The feature applies to imported 3D bar charts, including charts brought over from Microsoft Excel. It is available to Workspace customers and personal Google accounts, and Google states that no admin setting is required.
 
@@ -74,7 +74,7 @@ A conversion can preserve the chart's appearance while changing how easily the o
 
 For other chart migration and reporting patterns, the [3D bar chart Google Sheets import update](/blog/google-sheets-combo-scatter-charts-update) covers a different set of chart improvements. A PivotTable remains a better fit when the report needs interactive grouping and summaries; see the [Google Sheets Pivot Tables guide](/blog/google-sheets-pivot-tables-guide).
 
-## Quick Verification Checklist
+## Quick verification checklist
 
 Before sharing an imported report, check:
 
