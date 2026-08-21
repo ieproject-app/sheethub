@@ -1,0 +1,116 @@
+---
+title: "Excel TRANSLATE and DETECTLANGUAGE: Formula Guide"
+date: "2026-08-21"
+description: "Use Excel TRANSLATE and DETECTLANGUAGE to process text columns, check limits, and handle failures safely."
+published: true
+featured: false
+heroImage: "default-og"
+tags: ["excel", "translate-function", "detectlanguage", "text-functions", "tutorial"]
+category: "Formulas & Functions"
+---
+
+Can Excel translate a column of customer messages without sending each cell to another tool? Yes, but a reliable workflow needs more than one formula. Use `DETECTLANGUAGE` to identify the source text, `TRANSLATE` to produce a target-language version, and a review column to keep the original beside the machine-generated result.
+
+These functions are designed for Microsoft 365 Excel environments that support connected language services. They are not a replacement for a legal, medical, or customer-facing translation review. Treat the output as a fast first draft, then check names, numbers, product terms, and ambiguous phrases before sharing it.
+
+## What TRANSLATE and DETECTLANGUAGE do
+
+`DETECTLANGUAGE` returns a language code for text. `TRANSLATE` converts text from one language to another. The basic syntax is:
+
+```excel
+=DETECTLANGUAGE(A2)
+```
+
+```excel
+=TRANSLATE(A2, B2, "en")
+```
+
+In the second formula, `A2` contains the text, `B2` contains the detected source-language code, and `"en"` is the target language. You can also provide a source code directly when every row is known to use the same language:
+
+```excel
+=TRANSLATE(A2, "es", "en")
+```
+
+The functions work with language codes rather than language names. Keep a small reference list for the codes your team uses, such as `en` for English, `es` for Spanish, `fr` for French, and `de` for German. Verify the supported-language list in your Excel version before building a production workflow because language coverage can change.
+
+## Detect a source language first
+
+Suppose column A contains incoming messages and row 1 contains the header `Original text`. Put `Detected language` in B1 and enter this formula in B2:
+
+```excel
+=IF(A2="", "", DETECTLANGUAGE(A2))
+```
+
+The blank check prevents empty rows from becoming noisy errors or unnecessary service requests. Fill the formula down only as far as the working data, or use an Excel Table so the calculated column expands with new records.
+
+A detected code is evidence, not a complete quality check. Very short text, names, product codes, and mixed-language messages can be ambiguous. For example, a single word may belong to more than one language, while a support message may contain an English product name inside a Spanish sentence. Flag short or mixed entries for review instead of translating them automatically.
+
+The [Excel data cleaning techniques](/blog/excel-data-cleaning-techniques-guide) guide is useful before this step when the source column contains stray spaces, inconsistent capitalization, or hidden characters that can make detection less reliable.
+
+## Translate a cell or a column
+
+Add `Translated text` in C1. If B contains the detected code and English is the destination, use:
+
+```excel
+=IF(A2="", "", IFERROR(TRANSLATE(A2, B2, "en"), "Translation review needed"))
+```
+
+This preserves blank rows and replaces a failed service response with a readable review flag. It also keeps the original message in column A, which matters when a reviewer needs to compare the result with the source.
+
+If the source language is fixed, the formula is simpler:
+
+```excel
+=IF(A2="", "", IFERROR(TRANSLATE(A2, "fr", "en"), "Translation review needed"))
+```
+
+Do not overwrite the source column with the translated output. Keep at least four fields in the workflow:
+
+| Column | Purpose |
+|---|---|
+| Original text | Immutable source for comparison |
+| Detected language | Input used by the translation formula |
+| Translated text | First-pass output |
+| Review status | Human decision such as Pending or Approved |
+
+A separate status column makes it clear which rows are ready to use. It also gives you a place to record corrections without hiding the original machine output.
+
+## Build a reviewable translation workflow
+
+For a support log, add `Review status` in D1 and start each new row as `Pending`. A reviewer can change it to `Approved`, `Needs edit`, or `Skip`. If a translation contains a customer name, a quoted product label, a currency amount, or a technical instruction, compare those details against the original before approval.
+
+You can use a simple formula to identify rows that still need attention:
+
+```excel
+=FILTER(A2:D100, D2:D100<>"Approved", "No pending translations")
+```
+
+This returns the original, language, translation, and status for every row that is not approved. If your workbook already uses dynamic arrays, the [Excel dynamic array functions](/blog/excel-dynamic-array-functions-guide) guide explains how spilled results behave and how to keep the output area clear.
+
+For repeated workbooks, [Excel named ranges](/blog/excel-named-ranges-guide) can give the source and review ranges readable names. That makes formulas easier to audit, especially when the translation sheet is shared with people who did not create it.
+
+## Fix limits, throttling, and unavailable functions
+
+Translation and language detection use connected services, so a formula can fail even when its syntax is correct. Test a small sample first, then increase the batch gradually. Microsoft discussions describe throttling concerns for large workloads, including guidance around very large text batches. Do not assume that a workbook with 50,000 rows will process in one uninterrupted calculation.
+
+Use these safeguards:
+
+1. **Start with a representative sample.** Include short text, long text, punctuation, names, and mixed-language rows.
+2. **Process in smaller batches.** Split a large import into manageable groups instead of recalculating every row repeatedly.
+3. **Keep the original data.** Never make the translated column the only copy.
+4. **Retry deliberately.** A temporary failure should create a review flag, not an endless recalculation loop.
+5. **Check availability.** If Excel shows an unknown-function error, the account, channel, or version may not support the function.
+6. **Inspect formula errors separately.** The [Excel formula error fixes](/blog/excel-formula-errors-troubleshooting-guide) guide can help distinguish a bad reference from a service or calculation problem.
+
+If a workbook will be distributed outside your organization, test it with the recipient's Excel version and account type. A formula that works in one Microsoft 365 environment may not be available in an older perpetual edition or a restricted tenant.
+
+## AI prompt for a safer translation plan
+
+After validating a small sample manually, you can ask an AI assistant to design the worksheet structure. Give it the column layout, target language, review rules, and failure behavior. For example:
+
+> I have an Excel table with an OriginalText column containing mixed-language customer messages. Design formulas that detect the source language, translate each row to English, preserve blank rows, show a review flag when a service call fails, and keep the original text unchanged. Explain how I should test names, numbers, product terms, and long messages before approving the results.
+
+Validate the suggested formulas against a few known translations before applying them to the whole table. The AI should help plan the workflow, not decide whether a customer-facing translation is accurate.
+
+## Summary
+
+Use `DETECTLANGUAGE` when the source language varies, and use `TRANSLATE` with explicit language codes when you know the source and target. Keep original, detected language, translated text, and review status in separate columns. Start with a small sample, expect connected-service limits, and handle failures with a visible review flag. Before publishing or sending the results, confirm function availability and review the output with a human who understands the source text.
