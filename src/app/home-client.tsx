@@ -58,7 +58,7 @@ export function HomeClient({
 
   const seenSlugs = new Set<string>();
 
-  // Ambil semua featured post — hero sudah support jumlah berapapun
+  // Take all featured posts — the hero supports any count
   const featuredPosts = allPosts
     .filter((post) =>
       post.frontmatter.published && post.frontmatter.featured

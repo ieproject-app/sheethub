@@ -4,11 +4,11 @@ import type { ComponentType } from "react";
 type Loader<T> = () => Promise<{ default: ComponentType<T> }>;
 
 /**
- * Loadable — lazy-load komponen dengan Suspense boundary otomatis.
+ * Loadable — lazy-load a component with an automatic Suspense boundary.
  *
- * - `ssr: true`  → di-render server + hydrasi di client
- * - `ssr: false` → skip SSR (wajib buat komponen yg pakai
- *                   browser API seperti Firebase, localStorage, dll)
+ * - `ssr: true`  → rendered on the server + hydrated on the client
+ * - `ssr: false` → skip SSR (required for components that use
+ *                   browser APIs like Firebase, localStorage, etc.)
  *
  * @example
  * ```tsx
@@ -18,7 +18,7 @@ type Loader<T> = () => Promise<{ default: ComponentType<T> }>;
  *   fallback: <Skeleton className="h-80" />,
  * });
  *
- * // SSR-enabled (berat, tapi bisa di-render server):
+ * // SSR-enabled (heavy, but can be rendered on the server):
  * const HeavyChart = Loadable(() => import("./Chart"), {
  *   ssr: true,
  *   fallback: <ChartSkeleton />,
@@ -28,9 +28,9 @@ type Loader<T> = () => Promise<{ default: ComponentType<T> }>;
 export function Loadable<T>(
   loader: Loader<T>,
   options?: {
-    /** Fallback yang muncul selama loading */
+    /** Fallback shown while loading */
     fallback?: React.ReactNode;
-    /** Default: false — aman buat kebanyakan client components */
+    /** Default: false — safe for most client components */
     ssr?: boolean;
   },
 ): ComponentType<T> {

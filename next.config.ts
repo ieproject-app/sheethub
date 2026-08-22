@@ -55,13 +55,56 @@ const nextConfig: NextConfig = {
         permanent: true,
       },
       // ── Locale transition: bilingual → English-only ────────────────
-      // Old /id/* URLs redirect to English equivalents
+      // The bilingual-era posts, notes, tools, and downloads no longer
+      // exist, so those old /id/* and /en/* URLs must go straight to a
+      // live page — dropping only the prefix would land on a 404.
+      {
+        source: "/id/blog/:slug*",
+        destination: "/blog",
+        permanent: true,
+      },
+      {
+        source: "/en/blog/:slug*",
+        destination: "/blog",
+        permanent: true,
+      },
+      {
+        source: "/id/notes/:path*",
+        destination: "/blog",
+        permanent: true,
+      },
+      {
+        source: "/en/notes/:path*",
+        destination: "/blog",
+        permanent: true,
+      },
+      {
+        source: "/id/download/:slug*",
+        destination: "/blog",
+        permanent: true,
+      },
+      {
+        source: "/en/download/:slug*",
+        destination: "/blog",
+        permanent: true,
+      },
+      {
+        source: "/id/tools/:path*",
+        destination: "/",
+        permanent: true,
+      },
+      {
+        source: "/en/tools/:path*",
+        destination: "/",
+        permanent: true,
+      },
+      // Static pages from the bilingual era (about, contact, privacy,
+      // terms, disclaimer, tags) still exist — drop the locale prefix.
       {
         source: "/id/:path*",
         destination: "/:path*",
         permanent: true,
       },
-      // Old /en/* URLs (if any were indexed) redirect to clean paths
       {
         source: "/en/:path*",
         destination: "/:path*",
@@ -70,7 +113,7 @@ const nextConfig: NextConfig = {
       // ── Legacy slug redirects ──────────────────────────────────────
       {
         source: "/blog/hapus-folder-onedrive-duplikat-explorer",
-        destination: "/blog/remove-duplicate-onedrive-windows-11",
+        destination: "/blog",
         permanent: true,
       },
     ];
