@@ -10,8 +10,8 @@ import { buttonVariants } from "@/components/ui/button";
 export type CalendarProps = React.ComponentProps<typeof DayPicker>;
 
 /**
- * Komponen Kalender yang telah diperbarui untuk kompatibilitas react-day-picker v9.
- * Memperbaiki masalah ikon navigasi yang melenceng dan nama hari yang tidak sejajar.
+ * Calendar component updated for react-day-picker v9 compatibility.
+ * Fixes misaligned navigation icons and weekday names.
  */
 function Calendar({
   className,

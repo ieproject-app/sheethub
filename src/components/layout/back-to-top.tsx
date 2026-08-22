@@ -13,10 +13,10 @@ export function LayoutBackToTop() {
         const handleScroll = () => {
             const currentScrollY = window.scrollY;
 
-            // Muncul jika:
-            // 1. Sudah scroll cukup jauh (> 600px)
-            // 2. Sedang scroll ke atas (current < last)
-            // 3. User tidak sedang benar-benar di paling bawah (opsional, tapi lebih baik)
+            // Show when:
+            // 1. Scrolled far enough down (> 600px)
+            // 2. Currently scrolling up (current < last)
+            // 3. User isn't all the way at the bottom (optional, but nicer)
             if (currentScrollY > 600 && currentScrollY < lastScrollY) {
                 setIsVisible(true);
             } else {
