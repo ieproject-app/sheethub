@@ -1,6 +1,7 @@
 ---
 title: "Google Sheets Dependent Dropdown: Dynamic Lists"
 date: "2026-08-19"
+updated: "2026-08-22"
 description: "Create Google Sheets dependent dropdowns with FILTER, helper ranges, and reliable validation for changing lists."
 published: true
 featured: false
@@ -9,7 +10,7 @@ tags: ["google-sheets", "tutorial", "dependent-dropdown", "data-validation", "dy
 category: "Productivity"
 ---
 
-A regular dropdown always shows the same choices. A dependent dropdown narrows the second list after someone makes a first selection. In Google Sheets, you can build that relationship with a clean source table, `FILTER`, and a helper range. You do not need to copy Excel's named-range and `INDIRECT` pattern.
+A regular dropdown always shows the same choices. A Google Sheets dependent dropdown changes the second list after someone makes a first selection. In Google Sheets, you can build that relationship with a clean source table, `FILTER`, and a helper range. You do not need to copy Excel's named-range and `INDIRECT` pattern.
 
 This guide builds a category-to-item dropdown. The same design works for departments and employees, countries and cities, or any other parent-child list.
 
@@ -128,7 +129,7 @@ For more complex helper transformations, the [advanced QUERY in Google Sheets](/
 
 ## Google Sheets versus Excel
 
-The concept is shared, but the implementation is not. In Excel, dependent dropdowns often use named ranges and `INDIRECT`, or a spill reference such as `=$E$4#`. Google Sheets uses its own validation panel and a source range populated by formulas. See the [Excel dependent dropdowns](/blog/excel-dependent-dropdown-guide) guide for the Excel-specific methods instead of copying its validation source unchanged.
+The concept is shared, but the implementation is not. In Excel, dependent dropdowns often use named ranges and `INDIRECT`, or a spill reference such as `=$E$4#`. Google Sheets uses its own validation panel and a source range populated by formulas. See the [Google Sheets dependent dropdown compared with Excel's named-range method](/blog/excel-dependent-dropdown-guide) guide for the Excel-specific methods instead of copying its validation source unchanged.
 
 A dependent dropdown is also different from a checkbox. A checkbox stores a TRUE/FALSE choice, while a dropdown stores one selected label. If your interface needs a yes/no switch alongside the category and item fields, [Google Sheets checkboxes](/blog/google-sheets-checkbox-guide) explains the formula behavior.
 

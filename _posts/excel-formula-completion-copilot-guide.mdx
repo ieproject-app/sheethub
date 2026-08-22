@@ -13,13 +13,13 @@ What if Excel suggested the formula while you were still typing the equals sign?
 
 The feature is rolling out gradually. It requires a qualifying Microsoft 365 Copilot license, and availability varies by channel and account type. Check the current Microsoft documentation for your build before you rely on it in a shared workbook.
 
-## What Excel Formula Completion Does
+## What Excel formula completion does
 
 Formula completion is a worksheet-native Copilot workflow. You stay in the grid, type an equals sign, and Copilot proposes a full formula instead of the usual list of matching functions. The suggestion is based on your data: nearby headers, the column you are typing in, and the values Excel can see around the cell.
 
 This is different from asking a chatbot for a formula. With a chat prompt you describe the problem, copy the answer, and paste it into the cell. With formula completion the proposal appears in place, carries an explanation of what it does, and can be accepted with a single keystroke. The other route is [Excel formula completion via written prompts](/blog/ai-excel-formulas-prompt-guide), which lets you describe the goal in plain English and review the formula before inserting it.
 
-## Start a Formula Completion Suggestion
+## Start a formula completion suggestion
 
 Formula completion works best when Excel can infer intent from a clean layout. Use a proper Excel table when the data is structured, and keep headers in the first row.
 
@@ -45,20 +45,20 @@ A `Quarter` column next to dates produces a date-based calculation such as:
 
 The exact formula depends on your data. The pattern to recognize is the same: one formula, one clear description, and references that point at the cells you intended.
 
-## Review Before Accepting the Formula
+## Review before accepting the formula
 
 A suggestion is a starting point, not a verdict. Before you press <Kbd>Tab</Kbd>, check four things:
 
-1. **The function matches the goal.** If the column is named `Quarter`, the suggestion should calculate a quarter, not concatenate text.
-2. **The references point at the right cells.** A formula that uses `C2` should be in a row where column C holds the source value.
-3. **The range makes sense.** The proposal should cover the rows you expect and stop where the data stops.
-4. **The explanation matches the formula.** If the tooltip says "calculate quarter from invoice date," the formula should do exactly that.
+1. Check the function against the goal. If the column is named `Quarter`, the suggestion should calculate a quarter, not concatenate text.
+2. Check the references. A formula that uses `C2` should be in a row where column C holds the source value.
+3. Check the range. The proposal should cover the rows you expect and stop where the data stops.
+4. Compare the explanation with the formula. If the tooltip says "calculate quarter from invoice date," the formula should do exactly that.
 
 When a suggestion uses repeated expressions, consider whether the result stays readable. The [Excel LET function guide](/blog/excel-let-function-guide) shows how a named intermediate value keeps a longer formula easy to audit.
 
 Do not accept a formula you cannot explain. If the proposal looks wrong, keep typing to dismiss it and write the formula yourself.
 
-## Validate the Result with a Known Example
+## Validate the result with a known example
 
 Formula completion can be wrong in a way that looks confident. The safest habit is to verify the inserted formula against a result you already know.
 
@@ -81,20 +81,20 @@ should produce `100` in C2. If it produces anything else, the suggestion used th
 
 For errors that appear after insertion, the [Excel formula errors guide](/blog/excel-formula-errors-troubleshooting-guide) covers the common `#REF!`, `#VALUE!`, and `#DIV/0!` causes and the fastest way to trace them.
 
-## When Suggestions Are Missing or Wrong
+## When suggestions are missing or wrong
 
 Formula completion is a helpful feature with real limits. Expect the proposal to be missing or incorrect in these situations:
 
-- **No qualifying license.** The feature requires a Microsoft 365 Copilot license. A standard Microsoft 365 subscription may not show suggestions at all.
-- **Preview or channel restrictions.** The feature may be limited to specific channels such as Current Channel or Insider builds, depending on the rollout stage.
-- **Ambiguous headers.** A column named `Data` gives Excel little to work with. Clear, specific headers produce better suggestions.
-- **Wrong or partial ranges.** If the table has blank rows or mixed types, the proposal may reference too many cells or skip rows.
-- **Formula displayed as text.** When a cell shows the formula text instead of a result, the cell is formatted as text or the formula starts with an apostrophe. Change the format or remove the apostrophe and re-enter the formula.
-- **Sensitive data in context.** The suggestion is generated from the sheet context. Do not use formula completion with data that must not leave your organization, and follow your administrator's Copilot policies.
+- The feature requires a Microsoft 365 Copilot license. A standard Microsoft 365 subscription may not show suggestions at all.
+- The feature may be limited to specific channels such as Current Channel or Insider builds, depending on the rollout stage.
+- A column named `Data` gives Excel little to work with. Clear, specific headers produce better suggestions.
+- Blank rows or mixed types can make the proposal reference too many cells or skip rows.
+- If a cell shows the formula text instead of a result, the cell is formatted as text or the formula starts with an apostrophe. Change the format or remove the apostrophe and re-enter the formula.
+- The suggestion is generated from the sheet context. Do not use formula completion with data that must not leave your organization, and follow your administrator's Copilot policies.
 
 A missing suggestion is not a broken workbook. It is a signal to check the license, the channel, and the layout before assuming Excel is malfunctioning.
 
-## Summary and Safe-Use Checklist
+## Summary and safe-use checklist
 
 Excel formula completion puts a Copilot-generated formula directly in the grid while you type. Use it to speed up routine formula writing, but keep the same discipline you would apply to any formula:
 

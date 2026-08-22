@@ -1,7 +1,8 @@
 ---
 title: "Google Sheets Slicers: Filter Charts and Pivot Tables"
 date: "2026-08-19"
-description: "Learn how Google Sheets slicers filter charts and pivot tables, combine controls, and why formulas stay unchanged."
+updated: "2026-08-22"
+description: "Google Sheets slicers filter charts and pivot tables, combine controls, and why formulas stay unchanged."
 published: true
 featured: false
 heroImage: "default-og"
@@ -9,7 +10,7 @@ tags: ["google-sheets", "tutorial", "slicers", "dashboards", "pivot-tables"]
 category: "Data Analysis"
 ---
 
-Why does a slicer change a chart while an ordinary `SUM` result stays exactly the same? The answer is not that the control is broken. Google Sheets slicers filter connected charts, tables, and pivot tables, but they do not automatically rewrite every formula in the spreadsheet.
+Google Sheets slicers change charts and pivot tables, while an ordinary `SUM` result stays exactly the same. The answer is not that the control is broken. These slicers filter connected charts, tables, and pivot tables, but they do not automatically rewrite every formula in the spreadsheet.
 
 That distinction matters when you build a dashboard. A viewer may select one region and see a chart update, then wonder why a KPI cell still shows the total for every region. Once the source range and slicer scope are clear, the behavior becomes predictable.
 

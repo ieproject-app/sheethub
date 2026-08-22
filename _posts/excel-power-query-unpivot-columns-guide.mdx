@@ -12,7 +12,7 @@ category: "Data Analysis"
 
 Twelve month columns can look tidy on a screen, but they make filtering, charting, and pivot analysis harder. Unpivoting turns that wide layout into a long table with one Month column and one Value column, so each record has a consistent shape.
 
-This Excel Power Query unpivot columns guide shows the native Excel workflow. You will learn when to use **Unpivot Columns**, when **Unpivot Other Columns** is safer, and how to clean the result before loading it back into a worksheet.
+Use the native Excel workflow for Excel Power Query unpivot columns, with no extra code. You will learn when to use **Unpivot Columns**, when **Unpivot Other Columns** is safer, and how to clean the result before loading it back into a worksheet.
 
 ## Why wide data becomes difficult to analyze
 
@@ -48,7 +48,7 @@ Start with a proper Excel table whenever possible. A table gives Power Query a s
 
 Before changing the shape, identify the columns that describe each record. In the example, Product and Region are identifiers. January, February, and March are measures that should become rows.
 
-If Power Query detects a wrong data type, you can correct it later. The important decision at this stage is which columns should remain attached to each value.
+If Power Query detects a wrong data type, you can correct it later. At this stage, decide which columns should remain attached to each value.
 
 ## Use Unpivot Columns
 
@@ -79,7 +79,7 @@ For the sales example:
 
 Power Query keeps Product and Region as they are and unpivots every other column. If April is added to the source table before the next refresh, Power Query can include it without requiring you to edit the column selection manually.
 
-This option is powerful, but it requires discipline. Any column that is not an identifier will be treated as a measure. If you later add a Notes or Manager column and forget to classify it as an identifier, that text may appear in the unpivoted Value column.
+This option saves selection work, but it requires more care. Any column that is not an identifier will be treated as a measure. If you later add a Notes or Manager column and forget to classify it as an identifier, that text may appear in the unpivoted Value column.
 
 Choose **Unpivot Columns** for a tightly controlled schema. Choose **Unpivot Other Columns** for a growing set of period or measure columns with a clearly defined identifier section.
 
@@ -87,17 +87,17 @@ Choose **Unpivot Columns** for a tightly controlled schema. Choose **Unpivot Oth
 
 Unpivoting changes the shape, not the quality, of the source values. Review these details before loading the result:
 
-- **Null values:** A blank source cell may become a row with a null Value. Filter out nulls when an empty period should not be part of the analysis.
-- **Empty strings:** A formula that returns an empty string is not always treated like a true blank. Filter or replace those values according to the reporting rule.
-- **Numeric values:** Set the Value column to **Whole Number**, **Decimal Number**, or **Currency** as appropriate. This prevents text values from breaking totals.
-- **Month labels:** If the original headings are dates, preserve them as dates when possible. If they are words such as January, add a separate sort field if chronological order matters.
-- **Column names:** Replace generic Attribute and Value names with terms that describe the business data, such as Month and Sales.
+- A blank source cell may become a row with a null Value. Filter out nulls when an empty period should not be part of the analysis.
+- A formula that returns an empty string is not always treated like a true blank. Filter or replace those values according to the reporting rule.
+- Set the Value column to **Whole Number**, **Decimal Number**, or **Currency** as appropriate. This prevents text values from breaking totals.
+- If the original headings are dates, preserve them as dates when possible. If they are words such as January, add a separate sort field if chronological order matters.
+- Replace generic Attribute and Value names with terms that describe the business data, such as Month and Sales.
 
 You can change a type by selecting the column and choosing the data type icon in its header. If a conversion produces errors, inspect the error rows before loading. A stray text label or a currency symbol may need to be removed or replaced first.
 
 ## Load, refresh, and troubleshoot
 
-When the output looks correct, select **Home > Close & Load**. You can load the result to a new worksheet or use **Close & Load To** to choose a table, connection, or data model destination.
+After you verify the output, select **Home > Close & Load**. You can load the result to a new worksheet or use **Close & Load To** to choose a table, connection, or data model destination.
 
 The transformation is saved as query steps. When the source table changes, select **Data > Refresh All** to run the steps again. A new row should flow through automatically. A new month column will be included automatically when you used Unpivot Other Columns and kept the identifier columns selected.
 
