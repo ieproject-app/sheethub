@@ -10,7 +10,7 @@ tags: ["google-sheets", "tutorial", "slicers", "dashboards", "pivot-tables"]
 category: "Data Analysis"
 ---
 
-Google Sheets slicers change charts and pivot tables, while an ordinary `SUM` result stays exactly the same. The answer is not that the control is broken. These slicers filter connected charts, tables, and pivot tables, but they do not automatically rewrite every formula in the spreadsheet.
+Google Sheets slicers change charts and pivot tables, while an ordinary `SUM` result stays exactly the same. The control is working as designed: slicers filter connected charts, tables, and pivot tables, but they do not automatically rewrite every formula in the spreadsheet.
 
 That distinction matters when you build a dashboard. A viewer may select one region and see a chart update, then wonder why a KPI cell still shows the total for every region. Once the source range and slicer scope are clear, the behavior becomes predictable.
 
@@ -28,7 +28,7 @@ For dashboard summaries, [Google Sheets slicers and pivot tables](/blog/google-s
 
 Start with a clean table. Put field names in the first row, keep one record per row, and avoid merged cells inside the source range. For example, a sales table might contain `Date`, `Region`, `Product`, `Units`, and `Revenue`.
 
-To add the control:
+Add the slicer with these steps:
 
 1. Select a cell inside the source range, or select the complete range you want to use.
 2. Open **Data** and choose **Add a slicer**.
@@ -42,7 +42,7 @@ After creating the slicer, test it with a chart that uses the same source data. 
 
 ## Connect slicers to charts and pivot tables
 
-A slicer is only useful when the object it should control is connected to the same data context. Build a simple dashboard workflow:
+A slicer is only useful when the object it should control is connected to the same data context. Connect the objects in this order:
 
 1. Prepare the source table with stable headers.
 2. Add a chart from that table.
@@ -58,7 +58,7 @@ For a richer dashboard layout, you can combine the control with [Google Sheets c
 
 Multiple slicers can make a dashboard easier to explore, but only when each control has a clear job. A common arrangement uses one slicer for Region and another for Product. A viewer can then narrow the same dashboard in two dimensions.
 
-Use these conventions:
+Keep the controls consistent:
 
 - Give every slicer a label that matches its source column.
 - Place related controls together above the chart or pivot table.
@@ -86,15 +86,19 @@ This separation also helps when you troubleshoot a report. If the chart changes 
 
 ## Troubleshoot a slicer that appears not to work
 
-Check the following in order:
+Check the data range first. Make sure the slicer includes the rows and columns used by the chart or pivot table.
 
-1. **Confirm the data range.** Make sure the slicer includes the rows and columns used by the chart or pivot table.
-2. **Check the selected column.** A slicer configured for Product cannot filter by Region until its column is changed.
-3. **Inspect headers and values.** Remove accidental blanks, inconsistent spelling, and text dates from the source data.
-4. **Compare source ranges.** Open the chart and pivot settings to verify that they use the intended data.
-5. **Test a single value.** A one-value selection makes it easier to see whether the chart responds.
-6. **Check other filters.** A pivot filter, filter view, or hidden source condition may already exclude the rows you expect.
-7. **Separate formula behavior.** If only a formula result fails to change, the issue may be an expected scope limitation rather than a broken slicer.
+Check the selected column next. A slicer configured for Product cannot filter by Region until you change its column.
+
+Inspect the headers and values for accidental blanks, inconsistent spelling, and text dates.
+
+Compare the source ranges in the chart and pivot settings to confirm that both use the intended data.
+
+Test a single value so you can see more easily whether the chart responds.
+
+Check other filters because a pivot filter, filter view, or hidden source condition may already exclude the rows you expect.
+
+Separate formula behavior from slicer behavior. If only a formula result fails to change, the issue may be an expected scope limitation rather than a broken slicer.
 
 For larger dashboards, document the source range and the purpose of each control near the build notes. You can also use [Google Sheets Canvas dashboards](/blog/google-sheets-canvas-dashboard-guide) as a design reference when arranging several interactive elements, while keeping the slicer's data scope explicit.
 

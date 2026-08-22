@@ -1,6 +1,7 @@
 ---
 title: "Excel Evaluate Formula: Debug Complex Calculations"
 date: "2026-08-21"
+updated: "2026-08-22"
 description: "Use Excel Evaluate Formula to step through nested calculations, find the first wrong value, and fix it safely."
 published: true
 featured: false
@@ -56,7 +57,7 @@ If a highlighted reference points to a formula in another cell, use **Step In** 
 
 Suppose a report shows a margin of 72.00 when you expected 80.00. Evaluate Formula might show that the quantity and unit price are correct, but D2 evaluates to `0.20` instead of the expected `0.10`. The margin formula is behaving consistently; the discount input is wrong.
 
-A different result points to a reference problem. If C2 evaluates to a price from the wrong product row, inspect the lookup or source reference that supplies C2. The [Excel formula error troubleshooting](/blog/excel-formula-errors-troubleshooting-guide) guide is useful when an intermediate value is an error such as `#REF!`, `#VALUE!`, or `#N/A`.
+A different result points to a reference problem. If C2 evaluates to a price from the wrong product row, inspect the lookup or source reference that supplies C2. For a structured audit, start with [Excel Evaluate Formula and formula error troubleshooting](/blog/excel-formula-errors-troubleshooting-guide) when an intermediate value is an error such as `#REF!`, `#VALUE!`, or `#N/A`.
 
 Keep a small audit record while you work:
 
