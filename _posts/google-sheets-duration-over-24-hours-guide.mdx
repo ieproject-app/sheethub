@@ -116,15 +116,15 @@ The same numeric value can therefore display differently without changing the ca
 
 ## Troubleshoot a duration that still wraps
 
-**The cell still shows 06:00.** Check the exact format. `hh:mm` wraps at 24; replace it with `[h]:mm`. Also confirm that you applied the format to the total cell, not only to the source range.
+The cell still shows `06:00`. Check the exact format. `hh:mm` wraps at 24; replace it with `[h]:mm`. Also confirm that you applied the format to the total cell, not only to the source range.
 
-**The result is a decimal such as 1.25.** The value is valid, but the cell is formatted as a number. Apply `[h]:mm` to show elapsed time, or multiply by 24 if decimal hours are what you need.
+A decimal such as `1.25` is a valid result, but the cell is formatted as a number. Apply `[h]:mm` to show elapsed time, or multiply by 24 if decimal hours are what you need.
 
-**The formula returns a negative duration.** Check for a shift crossing midnight. Use the date-aware subtraction formula, or add one day when the end time is earlier than the start time.
+A negative duration usually means the shift crosses midnight. Use the date-aware subtraction formula, or add one day when the end time is earlier than the start time.
 
-**The format does not behave as expected after import.** Confirm the spreadsheet locale and inspect whether the source values are real times or text. Text that looks like `8:30` may not participate in time arithmetic until it is converted. Enter a test value directly, calculate a known total, and compare the result before changing the whole column.
+After import, confirm the spreadsheet locale and inspect whether the source values are real times or text. Text that looks like `8:30` may not participate in time arithmetic until it is converted. Enter a test value directly, calculate a known total, and compare the result before changing the whole column.
 
-**Minutes appear as hours.** Use `[m]:ss` for total minutes. The ordinary `mm:ss` pattern shows minutes and seconds within a clock-style time and can wrap after an hour.
+If minutes appear as hours, use `[m]:ss` for total minutes. The ordinary `mm:ss` pattern shows minutes and seconds within a clock-style time and can wrap after an hour.
 
 ## Practical checklist
 
