@@ -1,0 +1,108 @@
+---
+title: "Excel Formula Completion with Copilot: How It Works"
+date: "2026-08-20"
+description: "Learn how Excel formula completion suggests formulas as you type, how to review them, and how to validate results."
+published: true
+featured: false
+heroImage: "default-og"
+tags: ["excel", "copilot", "formula-completion", "news", "update", "tutorial"]
+category: "Productivity"
+---
+
+What if Excel suggested the formula while you were still typing the equals sign? That is the idea behind Excel formula completion, a Copilot feature that proposes a complete formula built from the context around the cell. Type `=` next to a column of existing data, and Excel shows a suggestion with an explanation of what it does. Formula completion does not replace knowing what your data means, but it removes the part of formula writing that is mostly mechanical: choosing the function, mapping the columns, and getting the reference syntax right.
+
+The feature is rolling out gradually. It requires a qualifying Microsoft 365 Copilot license, and availability varies by channel and account type. Check the current Microsoft documentation for your build before you rely on it in a shared workbook.
+
+## What Excel formula completion does
+
+Formula completion is a worksheet-native Copilot workflow. You stay in the grid, type an equals sign, and Copilot proposes a full formula instead of the usual list of matching functions. The suggestion is based on your data: nearby headers, the column you are typing in, and the values Excel can see around the cell.
+
+This is different from asking a chatbot for a formula. With a chat prompt you describe the problem, copy the answer, and paste it into the cell. With formula completion the proposal appears in place, carries an explanation of what it does, and can be accepted with a single keystroke. The other route is [Excel formula completion via written prompts](/blog/ai-excel-formulas-prompt-guide), which lets you describe the goal in plain English and review the formula before inserting it.
+
+## Start a formula completion suggestion
+
+Formula completion works best when Excel can infer intent from a clean layout. Use a proper Excel table when the data is structured, and keep headers in the first row.
+
+To start a suggestion:
+
+1. Place the cursor in the first empty cell next to the data, in the column you want to fill.
+2. Type `=`.
+3. Read the proposal that appears. It usually includes the suggested formula, a short description of what it calculates, and the data range it references.
+4. Press <Kbd>Tab</Kbd> to accept the suggestion, or keep typing to ignore it.
+5. Check the inserted formula, then press <Kbd>Enter</Kbd> to confirm.
+
+Excel uses what it can see: column headers, the values above and beside the cell, and any Excel table structure. A column named `First Name` next to a full-name column typically produces something like:
+
+```excel
+=LEFT(C2, SEARCH(" ", C2) - 1)
+```
+
+A `Quarter` column next to dates produces a date-based calculation such as:
+
+```excel
+=ROUNDUP(MONTH(F2) / 3, 0)
+```
+
+The exact formula depends on your data. The pattern to recognize is the same: one formula, one clear description, and references that point at the cells you intended.
+
+## Review before accepting the formula
+
+A suggestion is a starting point, not a verdict. Before you press <Kbd>Tab</Kbd>, check four things:
+
+1. Check the function against the goal. If the column is named `Quarter`, the suggestion should calculate a quarter, not concatenate text.
+2. Check the references. A formula that uses `C2` should be in a row where column C holds the source value.
+3. Check the range. The proposal should cover the rows you expect and stop where the data stops.
+4. Compare the explanation with the formula. If the tooltip says "calculate quarter from invoice date," the formula should do exactly that.
+
+When a suggestion uses repeated expressions, consider whether the result stays readable. The [Excel LET function guide](/blog/excel-let-function-guide) shows how a named intermediate value keeps a longer formula easy to audit.
+
+Do not accept a formula you cannot explain. If the proposal looks wrong, keep typing to dismiss it and write the formula yourself.
+
+## Validate the result with a known example
+
+Formula completion can be wrong in a way that looks confident. The safest habit is to verify the inserted formula against a result you already know.
+
+Use a small sales table as the test case. Assume the data starts in row 2, with `Rep` in column A, `Amount` in column B, and an empty `Bonus` column in C:
+
+| A | B | C |
+|---|---|---|
+| Rep | Amount | Bonus |
+| Ana | 1,000 |  |
+| Ben | 2,500 |  |
+| Cid | 1,400 |  |
+
+Type `=` in C2 next to a value you can predict. If Excel suggests a bonus formula, check it against the known amount first, then copy the formula down. A suggested formula such as:
+
+```excel
+=B2 * 0.1
+```
+
+should produce `100` in C2. If it produces anything else, the suggestion used the wrong column or the wrong multiplier.
+
+For errors that appear after insertion, the [Excel formula errors guide](/blog/excel-formula-errors-troubleshooting-guide) covers the common `#REF!`, `#VALUE!`, and `#DIV/0!` causes and the fastest way to trace them.
+
+## When suggestions are missing or wrong
+
+Formula completion is a helpful feature with real limits. Expect the proposal to be missing or incorrect in these situations:
+
+- The feature requires a Microsoft 365 Copilot license. A standard Microsoft 365 subscription may not show suggestions at all.
+- The feature may be limited to specific channels such as Current Channel or Insider builds, depending on the rollout stage.
+- A column named `Data` gives Excel little to work with. Clear, specific headers produce better suggestions.
+- Blank rows or mixed types can make the proposal reference too many cells or skip rows.
+- If a cell shows the formula text instead of a result, the cell is formatted as text or the formula starts with an apostrophe. Change the format or remove the apostrophe and re-enter the formula.
+- The suggestion is generated from the sheet context. Do not use formula completion with data that must not leave your organization, and follow your administrator's Copilot policies.
+
+A missing suggestion is not a broken workbook. It is a signal to check the license, the channel, and the layout before assuming Excel is malfunctioning.
+
+## Summary and safe-use checklist
+
+Excel formula completion puts a Copilot-generated formula directly in the grid while you type. Use it to speed up routine formula writing, but keep the same discipline you would apply to any formula:
+
+- Type `=` and review the proposal and its explanation before pressing <Kbd>Tab</Kbd>.
+- Check that the function, references, and range match the column's purpose.
+- Validate the result against a known example before copying it down or sharing the sheet.
+- Confirm the Microsoft 365 Copilot license and channel support the feature in your build.
+- Keep sensitive data out of sheets used with AI-assisted features.
+- Treat the suggestion as a draft, never as proof that the calculation is correct.
+
+Formula completion changes how a formula enters the cell. It does not change the rule that the formula owner is responsible for what the formula does.
