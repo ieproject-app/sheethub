@@ -135,11 +135,15 @@ A dependent dropdown is also different from a checkbox. A checkbox stores a TRUE
 
 ## Troubleshooting checklist
 
-- **The second list is empty:** Confirm the parent text matches the source category.
-- **The formula shows `#N/A`:** Keep `IFNA` and check whether the category has matches.
-- **The list stops early:** Expand the validation source range beyond the first helper cell.
-- **The formula shows `#REF!`:** Clear cells below the helper formula.
-- **Duplicates or row conflicts appear:** Keep `UNIQUE`, check spelling, and give each row its own spill area.
+The second list is empty when the parent text does not match a source category. Check the spelling in E2 and the category column on the `Lists` sheet.
+
+Keep `IFNA` around the helper formula when it shows `#N/A`, then check whether the selected category has any matching items.
+
+If the list stops early, expand the validation source range beyond the first helper cell. A source such as `H2:H50` must cover the cells the formula can fill.
+
+Clear the cells below the helper formula when it shows `#REF!`. Text or another formula in the spill path blocks the result.
+
+Keep `UNIQUE`, check category spelling, and give each input row its own spill area when duplicates or row conflicts appear.
 
 ## AI prompt callout
 
