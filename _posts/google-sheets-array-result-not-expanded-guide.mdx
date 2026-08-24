@@ -1,7 +1,7 @@
 ---
 title: "Google Sheets Array Result Not Expanded: Fix Errors"
 date: "2026-08-19"
-updated: "2026-08-22"
+updated: "2026-08-24"
 description: "Fix the Google Sheets array result not expanded error by finding blocked cells and hidden values."
 published: true
 featured: false
@@ -50,6 +50,15 @@ The most frustrating cases involve cells that look blank. Check these common cau
 - **Merged cells:** Merged ranges do not provide normal individual cells for an array to occupy. Unmerge the range or place the formula outside it.
 - **Hidden rows and columns:** Hiding a row does not clear its contents. Temporarily unhide the surrounding rows and columns, then inspect the entire output rectangle.
 - **Formatting beyond the visible data:** Formatting alone normally does not block an array, but a cell with a value, formula, note, or data validation may be easy to miss in a large formatted area.
+
+| Symptom | Likely blocker | Action |
+|---|---|---|
+| Sheets names a specific cell | A value, space, note, or formula occupies the first collision | Open that reference, inspect the formula bar, then move or clear the content |
+| The cell looks blank but the error remains | A formula returns `\"\"`, or the cell contains whitespace or an apostrophe | Select the cell and remove the hidden content before recalculating |
+| Clearing one cell reveals another error | A second blocker exists farther down or across the output rectangle | Inspect the full expected spill area, including hidden rows and columns |
+| The output stops beside a merged header | A merged range interrupts the array's destination cells | Unmerge the range or move the formula to a dedicated output zone |
+
+<Callout variant="info" title="Quick check">A formula that returns `\"\"` is still occupying its cell. It looks empty in the grid, but Google Sheets cannot write an array value there.</Callout>
 
 A quick diagnostic is to copy the formula to a new, empty sheet. If it expands there, the source ranges and formula are probably valid; the original sheet has a layout collision. Do not use the copy as the permanent fix if the original sheet contains important references.
 

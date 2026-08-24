@@ -37,7 +37,7 @@ When an empty result is a legitimate outcome, give FILTER something to return in
 
 The fallback can be a number, a text label, or a small array. A message such as "No rows match" is often more useful than a bare 0 in a report. Choose a fallback that matches the rest of the workbook: if the column normally holds numbers, return 0; if it holds text, return "No data". Wrapping the formula in IFERROR is possible, but the `if_empty` argument is more precise because it only handles the empty-array case and leaves other errors visible.
 
-For a broader guide to error values and their meaning, see the [Excel formula error troubleshooting](/blog/excel-formula-errors-troubleshooting-guide) article.
+For a broader guide to error values and their meaning, see the [Excel #CALC! error troubleshooting](/blog/excel-formula-errors-troubleshooting-guide) article.
 
 ## Check nested arrays and LAMBDA results
 

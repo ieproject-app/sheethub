@@ -1,7 +1,7 @@
 ---
 title: "Google Sheets REGEX Functions: Extract, Match, Replace"
 date: "2026-08-21"
-updated: ""
+updated: "2026-08-23"
 description: "Master Google Sheets REGEXEXTRACT, REGEXMATCH, and REGEXREPLACE for practical text cleanup and validation."
 published: true
 featured: false
@@ -13,6 +13,8 @@ category: "Formulas & Functions"
 Why does `REGEXEXTRACT` spill text into columns while `REGEXMATCH` returns only one TRUE or FALSE value? The answer is that Google Sheets REGEX functions solve three different problems: extracting a matching value, testing whether a pattern exists, and replacing matching text.
 
 Once you choose the right function, tasks such as pulling an email address from a note, validating an order code, or removing an imported prefix become one formula. This guide uses Google Sheets syntax and RE2-compatible patterns, so you can build formulas that are useful without relying on unsupported regex features.
+
+> **Availability:** `REGEXEXTRACT`, `REGEXMATCH`, and `REGEXREPLACE` are Google Sheets functions that use the RE2 regular-expression engine. Check the behavior in your current Google Sheets environment before rolling a pattern out to a shared workbook, especially when your data depends on a newer function or a complex expression.
 
 ## Choose the right Google Sheets REGEX function
 
@@ -26,7 +28,7 @@ Start with the result you want rather than the function name.
 
 A regular expression is a pattern. For example, `[0-9]+` means one or more digits, while `@` matches a literal at sign. In Sheets, the pattern is usually written as a quoted text argument.
 
-If the job is simply splitting a value at a known delimiter, the [Google Sheets text functions](/blog/split-text-functions-google-sheets) guide may be simpler. REGEX is most useful when the separator varies or the text has a recognizable pattern rather than one fixed character.
+If the job is simply splitting a value at a known delimiter, the [Google Sheets REGEX functions for text cleanup](/blog/split-text-functions-google-sheets) guide may be simpler. REGEX is most useful when the separator varies or the text has a recognizable pattern rather than one fixed character.
 
 ## Extract values with REGEXEXTRACT
 
@@ -91,7 +93,7 @@ Use `REGEXMATCH` when you need a yes-or-no test instead of the matching text.
 To check whether A2 contains a simple company email address, test the domain:
 
 ```excel
-=REGEXMATCH(A2, "@example\\.com$")
+=REGEXMATCH(A2, "@example\.com$")
 ```
 
 The backslash escapes the dot, so the pattern means a literal period followed by `com`. The dollar sign anchors the match to the end of the text.
@@ -131,7 +133,7 @@ Use `REGEXREPLACE` to return the original text after replacing every matching po
 Remove a leading label such as `ID:` from A2:
 
 ```excel
-=REGEXREPLACE(A2, "^ID:\\s*", "")
+=REGEXREPLACE(A2, "^ID:\s*", "")
 ```
 
 The pattern removes the label and any spaces after it, but leaves the rest of the value unchanged.
@@ -139,7 +141,7 @@ The pattern removes the label and any spaces after it, but leaves the rest of th
 Normalize repeated spaces inside imported text:
 
 ```excel
-=REGEXREPLACE(TRIM(A2), "\\s+", " ")
+=REGEXREPLACE(TRIM(A2), "\s+", " ")
 ```
 
 `TRIM` removes leading and trailing spaces, while `REGEXREPLACE` turns runs of internal whitespace into one regular space.
@@ -185,7 +187,7 @@ Text extracted by `REGEXEXTRACT` is not automatically a number. Wrap it with `VA
 If the source uses currency symbols or commas, remove those characters before conversion:
 
 ```excel
-=IFERROR(VALUE(REGEXREPLACE(REGEXEXTRACT(A2, "\\$[0-9,]+"), "[$,]", "")), "")
+=IFERROR(VALUE(REGEXREPLACE(REGEXEXTRACT(A2, "\$[0-9,]+"), "[$,]", "")), "")
 ```
 
 ### Know the RE2 limitations
