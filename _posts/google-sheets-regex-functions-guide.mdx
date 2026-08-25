@@ -40,7 +40,7 @@ Use `REGEXEXTRACT` when you need the matching text as a result.
 =REGEXEXTRACT(text, regular_expression)
 ```
 
-Suppose A2 contains `Order 48291 — customer: Maya Chen`. To extract the order number, match the consecutive digits:
+Suppose A2 contains `Order 48291, customer: Maya Chen`. To extract the order number, match the consecutive digits:
 
 ```excel
 =REGEXEXTRACT(A2, "[0-9]+")
@@ -200,10 +200,10 @@ When a pattern fails unexpectedly, simplify it into smaller checks. Extract the 
 
 Use this five-step workflow before putting a REGEX formula into a shared workbook:
 
-1. **Write down the desired output.** Decide whether you need text, TRUE/FALSE, or cleaned text.
-2. **Test one real value.** Start with the shortest pattern that matches the example.
-3. **Add boundaries.** Use `^` and `$` when the whole cell must follow one format.
-4. **Check failure cases.** Test a blank cell, a missing match, an extra space, and an unexpected suffix.
-5. **Protect the output area.** Capture groups and array results need empty cells available for expansion.
+1. Decide whether you need text, TRUE/FALSE, or cleaned text.
+2. Start with one real value and the shortest pattern that matches it.
+3. Use `^` and `$` when the whole cell must follow one format.
+4. Test a blank cell, a missing match, an extra space, and an unexpected suffix.
+5. Leave the output area empty because capture groups and array results need room to expand.
 
-Use `REGEXEXTRACT` for pulling values, `REGEXMATCH` for validation, and `REGEXREPLACE` for cleanup. Keep the original data intact, convert extracted numbers explicitly, and remember that RE2 support—not another regex engine's feature list—defines what works in Google Sheets.
+Use `REGEXEXTRACT` for pulling values, `REGEXMATCH` for validation, and `REGEXREPLACE` for cleanup. Keep the original data intact, convert extracted numbers explicitly, and remember that RE2 support, not another regex engine's feature list, defines what works in Google Sheets.
