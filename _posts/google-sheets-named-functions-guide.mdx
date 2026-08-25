@@ -1,6 +1,7 @@
 ---
 title: "Google Sheets Named Functions: Reuse Complex Formulas"
 date: "2026-08-21"
+updated: "2026-08-25"
 description: "Create Google Sheets named functions to reuse complex formulas, document arguments, and reduce helper columns."
 tags: ["google-sheets", "named-functions", "formulas", "reusable-formulas", "tutorial"]
 category: "Formulas & Functions"
@@ -58,9 +59,7 @@ You can then use it with different cells:
 =GROSS_UP(B2,C2)
 ```
 
-The important detail is that `amount` and `rate` are placeholders, not fixed cell addresses. The same definition can therefore be used for row 2, row 20, or a value typed directly into a formula.
-
-Choose names that describe the inputs. `amount` and `rate` are easier to understand than `x` and `y,` especially when someone opens the named-function editor months later. Keep the description specific: mention the expected input and the result, and state whether a percentage must be entered as a decimal such as `0.08`.
+`amount` and `rate` are placeholders, not fixed cell addresses, so the definition works for any row or direct value. Use descriptive names and document the expected input, result, and decimal-rate format such as `0.08`.
 
 ## Use placeholders and test the result
 
@@ -114,19 +113,39 @@ For reporting workflows that primarily select, group, and label rows, compare th
 
 A named function can fail even when the underlying idea is correct. Check these common causes:
 
-1. **Placeholder mismatch:** Every placeholder used in the formula definition must be declared, and each call must supply the required arguments. Rename or add the missing placeholder in the editor.
-2. **Wrong argument order:** `GROSS_UP(rate,amount)` produces a plausible-looking but incorrect result. Keep the function description and examples in the same order as the definition.
-3. **Range-size mismatch:** Functions such as `FILTER` require the data and condition ranges to align. Check the starting row and ending row on both ranges.
-4. **Table-reference assumptions:** Structured table references from other spreadsheet tools may not behave like ordinary A1 ranges in Sheets. Replace them with explicit ranges while testing, then confirm the result in the real workbook.
-5. **Circular references:** A named function that refers to a range containing its own output can create a circular dependency. Move the output range or pass only the input range.
-6. **Name collisions:** A function name that resembles a cell address, named range, or built-in function can cause confusion or a parse error. Choose a more descriptive name.
+1. **Placeholder mismatch:** Declare every placeholder used in the definition and supply each required argument.
+2. **Wrong argument order:** `GROSS_UP(rate,amount)` can return a plausible but wrong result. Keep the documented order consistent.
+3. **Range-size mismatch:** `FILTER` requires aligned data and condition ranges with matching start and end rows.
+4. **Table-reference assumptions:** Structured references from other spreadsheet tools may not behave like A1 ranges. Test with explicit ranges.
+5. **Circular references:** Keep the output outside any input range used by the function.
+6. **Name collisions:** Avoid names resembling cell addresses, named ranges, or built-in functions.
 
-When debugging, first replace the named-function call with its full formula and test the pieces separately. Once the full formula works, compare each placeholder with the corresponding expression in the definition.
+For debugging, replace the named-function call with its full formula and test the pieces separately. Then compare each placeholder with its corresponding expression.
 
 ## When to use a named function
 
 Use a named function when the same multi-step calculation appears in multiple places and its inputs can be described clearly. Use `LET` when the logic is local to one formula and you mainly need readable intermediate variables. The [LET guide for Google Sheets](/blog/google-sheets-let-function-guide) is a useful comparison for that pattern.
 
 Use a helper column when intermediate values need to be visible, inspected row by row, or reused by several unrelated formulas. Use Apps Script when the operation needs external services, custom JavaScript, scheduled actions, or capabilities that spreadsheet formulas do not provide.
+
+| Tool | Best fit | Main trade-off |
+|---|---|---|
+| Named function | The same multi-step logic is called across several formulas or sheets | The definition is stored per spreadsheet and can be easy to overlook during maintenance |
+| `LET` | One formula needs readable intermediate variables | The logic is not automatically reusable in other formulas |
+| Helper column | People need to inspect intermediate values row by row | It adds worksheet structure and may require extra cleanup |
+| Named range | A stable cell or range needs a descriptive reference | It names data, not a reusable calculation |
+| Apps Script | The workflow needs JavaScript, external services, or scheduled actions | It introduces code, permissions, and a separate maintenance surface |
+
+### Quick validation checklist
+
+Before importing or sharing a named function, run the same small set of checks against the definitions you plan to distribute:
+
+- **Normal input:** Confirm `=GROSS_UP(1250,0.08)` returns `1350`.
+- **Blank input:** Decide whether a blank amount or rate should return zero, an error, or a deliberate fallback, then test that choice.
+- **Invalid input:** Confirm `=GROSS_UP(-10,0.08)` returns the intended `#N/A` result.
+- **No match:** Call `FILTER_BY_STATUS` with a status that does not exist and verify the expected empty-result behavior.
+- **Range size:** Pass a data range and condition range with the same starting and ending rows, then test a deliberately mismatched pair so the failure is understood.
+
+Record the expected result beside each test while the definition is still easy to change. This catches argument-order mistakes and range assumptions before they spread to other spreadsheets.
 
 A good named function has a narrow purpose, descriptive placeholders, a useful description, and tests for normal, blank, invalid, and no-match inputs. Build those checks before distributing the definition to other sheets, and reusable formulas become a maintainable part of the workbook rather than another layer of hidden complexity.

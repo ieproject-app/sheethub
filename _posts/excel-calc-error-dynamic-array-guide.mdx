@@ -85,10 +85,10 @@ The [Excel dynamic array functions](/blog/excel-dynamic-array-functions-guide) g
 ## Test the fix safely
 
 A #CALC! error usually involves a chain of data, criteria, and output shape, so test the fix before applying it to a large range:
-1. **Check the source data.** Confirm the filtered column contains the values you expect and that no criteria refer to a wrong column.
-2. **Check the calculation mode.** If the workbook is in manual mode, press <Kbd>F9</Kbd> to recalculate and confirm the error is current rather than stale.
-3. **Check the output shape.** For a LAMBDA or helper function, verify that each iteration returns the shape the function expects.
-4. **Check edge cases.** Test with a small sample where you know the expected result, then expand to the full range.
+1. Confirm that the filtered column contains the values you expect and that no criteria refer to the wrong column.
+2. If the workbook is in manual mode, press <Kbd>F9</Kbd> to recalculate and confirm that the error is current rather than stale.
+3. For a LAMBDA or helper function, verify that each iteration returns the shape the function expects.
+4. Test a small sample with a known result before expanding the formula to the full range.
 
 If the formula still fails, isolate it. Copy the formula to a blank sheet, replace the range references with a small typed sample, and step through the arguments. The reduced version usually reveals whether the problem is the data or the formula structure.
 

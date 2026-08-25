@@ -1,0 +1,155 @@
+---
+title: "Linear Interpolation in Excel: Fill Missing Values"
+date: "2026-08-25"
+description: "Use linear interpolation in Excel to estimate missing values between known points without confusing it with forecasting."
+published: true
+featured: false
+heroImage: "default-og"
+tags: ["excel", "linear-interpolation", "data-analysis", "forecasting", "tutorial"]
+category: "Data Analysis"
+---
+
+What value belongs between two recorded measurements when the middle reading is missing? **Linear interpolation in Excel** estimates that value from the two known points on either side. It is useful for filling a missing production reading, temperature, delivery time, or other measurement when a straight-line change is a reasonable assumption.
+
+Interpolation is an estimate inside an observed range. It is not a forecast beyond the range, and it is not automatically a substitute for a trend model. This guide shows the two-point formula, a lookup-based version for a sorted table, and the checks that keep the result honest.
+
+## What linear interpolation answers
+
+Suppose a production line recorded output on January 10 and January 24, but the January 17 reading is missing:
+
+| Date | Production units |
+|---|---:|
+| January 10, 2026 | 128 |
+| January 17, 2026 | Missing |
+| January 24, 2026 | 160 |
+
+January 17 is halfway between the two known dates. If production changed at a constant rate between those dates, the estimated value is halfway between 128 and 160: 144 units.
+
+That assumption matters. A linear interpolation does not discover the true value. It applies a straight line between two known coordinates. Use it when the interval is short enough and the process is reasonably stable. If a machine starts a new shift, demand changes sharply, or the measurement follows a curve, the estimate may be misleading.
+
+For date-based data, Excel stores dates as serial numbers. Subtracting two dates therefore gives the number of days between them. The same approach works with numeric x-values such as distance, age, elapsed hours, or batch number.
+
+## The two-point interpolation formula
+
+The mathematical form is:
+
+```excel
+=y1+(x-x1)*(y2-y1)/(x2-x1)
+```
+
+Here, `x` is the position where you need an estimate. `x1` and `x2` are the lower and upper known x-values. `y1` and `y2` are the corresponding measured values.
+
+The fraction `(x-x1)/(x2-x1)` tells Excel how far the target is between the two endpoints. When the target is exactly halfway, the fraction is 0.5. When it equals the lower endpoint, the fraction is 0, so the result is `y1`. When it equals the upper endpoint, the result is `y2`.
+
+For the production example, place the data in cells A3:B5:
+
+| Cell | Value |
+|---|---|
+| A3 | January 10, 2026 |
+| B3 | 128 |
+| A4 | January 17, 2026 |
+| B4 | blank |
+| A5 | January 24, 2026 |
+| B5 | 160 |
+
+Enter this formula in B4:
+
+```excel
+=B3+(A4-A3)*(B5-B3)/(A5-A3)
+```
+
+Excel calculates `7*32/14`, which is 16, and adds it to 128. The result is 144. The formula also works when the target is not centered. For example, if A4 is January 13, the result is closer to the lower endpoint because only three of the fourteen days have elapsed.
+
+## Build and validate the formula in Excel
+
+Format the x-values as dates and the y-values with the unit that matches the source data. Do not convert dates to text before using the formula. If a date appears left-aligned as text, convert it to a real Excel date first.
+
+Validate the calculation against the endpoints before relying on it:
+
+1. Replace the target with the lower known date. The formula should return the lower known value.
+2. Replace it with the upper known date. The formula should return the upper known value.
+3. Test a midpoint and confirm that the result is between the two y-values when the series is increasing.
+4. Check the unit and sensible precision. A production estimate of 143.999999 may need to be displayed as 144, but do not round before checking the underlying calculation.
+
+For time-based datasets, [Excel date functions for time-based data](/blog/excel-date-time-functions-guide) can help you inspect date serials, month boundaries, and elapsed intervals before you interpolate.
+
+If the target date is already recorded, do not overwrite the measured value with an estimate. Return the measured value and reserve interpolation for genuinely missing points. A simple `IF` wrapper can preserve an existing value when one is available:
+
+```excel
+=IF(B4<>"",B4,B3+(A4-A3)*(B5-B3)/(A5-A3))
+```
+
+This formula assumes the lower and upper observations are in the surrounding rows. For a larger table, use the lookup version below instead of manually selecting each pair.
+
+## Interpolate from a sorted table
+
+A table may contain irregular observations, such as readings on January 3, January 10, January 24, and February 2. When the missing target is in H2, keep the known dates in `A3:A100` and measurements in `B3:B100`. Sort the x-values from smallest to largest, and use this formula:
+
+```excel
+=LET(target,H2,xs,A3:A100,ys,B3:B100,IF(OR(target<MIN(xs),target>MAX(xs)),NA(),LET(lowerPos,XMATCH(target,xs,-1),upperPos,XMATCH(target,xs,1),x1,INDEX(xs,lowerPos),x2,INDEX(xs,upperPos),y1,INDEX(ys,lowerPos),y2,INDEX(ys,upperPos),IF(x1=x2,y1,y1+(target-x1)*(y2-y1)/(x2-x1)))))
+```
+
+`XMATCH` with `-1` finds an exact match or the next smaller item. The `1` match mode finds an exact match or the next larger item. `INDEX` retrieves the matching y-values. If the target exactly matches an existing date, `x1=x2` returns the recorded measurement rather than dividing by zero.
+
+The outer boundary check returns `#N/A` when the target is outside the known range. That is deliberate: a value before the first observation or after the last one is extrapolation, not interpolation. The formula also depends on numeric, sorted x-values and aligned y-values. If your Excel version does not support `LET` or `XMATCH`, use helper cells for the lower and upper positions and the two-point formula separately.
+
+When historical observations come from market or other time-series data, [Excel STOCKHISTORY historical data](/blog/excel-stockhistory-function-guide) can provide a source table. Check missing trading days and market closures before treating a gap as a measurement that should be filled.
+
+## Interpolation versus extrapolation and forecasting
+
+Interpolation estimates between known bounds. Extrapolation estimates outside them. The second operation is riskier because the straight-line assumption has no observed endpoint on one side.
+
+A regression forecast is different again. `FORECAST.LINEAR` fits one straight line through all supplied observations:
+
+```excel
+=FORECAST.LINEAR(H2,B3:B20,A3:A20)
+```
+
+That can be useful when you want a best-fit trend from the entire dataset. It is not equivalent to local interpolation between the two nearest observations. A curved or irregular series may produce a global forecast that differs substantially from the segment estimate.
+
+Use local interpolation for a missing value inside a known interval when the neighboring points are the most relevant evidence. Use `FORECAST.LINEAR` when a broader trend is the question. If the target is outside the observed bounds, label the result as extrapolated or forecast rather than interpolated.
+
+For grouped analysis after the missing values are handled, [Excel GROUPBY LAMBDA analysis](/blog/excel-groupby-lambda-guide) can summarize the completed data. Keep estimated rows identifiable so a later summary does not imply that every value was directly measured.
+
+## Limitations and validation checks
+
+**The x-values are unsorted.** The lookup formula can select the wrong neighbors. Sort the table or create a sorted helper range before using `XMATCH`.
+
+**Two rows share the same x-value.** The denominator can become zero, and duplicate measurements may disagree. Decide whether to average the duplicates, select a trusted measurement, or flag the target for review before interpolating.
+
+**The gap is too large.** A straight line across several weeks or a process change can hide a meaningful event. Break the series into comparable periods, gather more observations, or use a model that reflects the process.
+
+**The relationship is not linear.** Seasonal demand, accelerating growth, and threshold behavior can make a line a poor fit. Compare the estimate with neighboring points, a chart, and domain knowledge. Do not add precision merely because the formula returns many decimals.
+
+**The target is outside the known range.** Return `#N/A` or route the value to a separately labeled extrapolation or forecasting method. Do not silently call it interpolation.
+
+**The y-values are not comparable.** Mixed units, revised definitions, and changes in measurement method can invalidate the calculation. Normalize the units and record any methodology change before estimating a missing value.
+
+A practical check is to hide a known interior observation, calculate it from its neighbors, and compare the estimate with the actual value. Repeating that test across several rows gives you a rough sense of whether local linear assumptions are acceptable for the dataset.
+
+## Quick reference and FAQ
+
+| Need | Recommended approach | Main caution |
+|---|---|---|
+| One missing point between two known points | Two-point formula | Confirm the straight-line assumption |
+| Many gaps in a sorted table | `LET` with `XMATCH` and `INDEX` | Keep x-values sorted and unique |
+| Value outside known bounds | Separate extrapolation or forecast | Label it clearly |
+| Broad trend across many observations | `FORECAST.LINEAR` | It is not local interpolation |
+
+### Can I interpolate between dates in Excel?
+
+Yes. Excel date serials support subtraction, so the two-point formula can use dates directly. Keep the cells as real dates, not text, and check the interval in days.
+
+### What happens if the missing point is exactly halfway?
+
+The position fraction is 0.5, so the estimate is the average of the two endpoint values. That result is valid only under the straight-line assumption.
+
+### Should I use `FORECAST.LINEAR` instead?
+
+Only when you want a regression line based on many observations. For a missing point inside two known bounds, local interpolation usually answers a different and more specific question.
+
+### How do I prevent an invalid estimate?
+
+Check sorted order, duplicate x-values, units, boundary position, and whether the process changed inside the gap. Preserve an existing measurement and label any estimated row.
+
+Linear interpolation is a useful gap-filling tool when its assumptions are visible. Keep the endpoints, formula, source period, and validation result with the workbook so another person can tell which values were measured and which were estimated.
