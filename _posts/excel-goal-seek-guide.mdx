@@ -1,0 +1,128 @@
+---
+title: "Excel Goal Seek: Solve for a Target Value"
+date: "2026-08-25"
+description: "Use Excel Goal Seek to work backward from a target result, then verify the one input it changes."
+published: true
+featured: false
+heroImage: "default-og"
+tags: ["excel", "goal-seek", "what-if-analysis", "data-analysis", "tutorial"]
+category: "Data Analysis"
+---
+
+A price of $25 may look reasonable until a margin report shows that it misses the target by several percentage points. You could keep changing the price, recalculating the model, and repeating the process. Or you can let Excel work backward from the result. **Excel Goal Seek** finds the one input value needed to reach a target output in a formula-driven worksheet.
+
+Goal Seek is useful when the model already works and only one assumption needs to change. It is not a general optimizer, and it does not replace a sound financial model. Used within those limits, it turns trial and error into a repeatable calculation.
+
+## What Excel Goal Seek solves
+
+Goal Seek changes one input cell until a formula cell reaches a value you specify. The formula cell is the result, the target is the value you want, and the changing cell is the assumption Excel is allowed to modify.
+
+For example, a pricing model might contain 1,000 units, a unit cost of $18, and a current selling price of $25. The margin formula is:
+
+```excel
+=($B$4-$B$3)/$B$4
+```
+
+If the target margin is 40%, Goal Seek works backward to find the selling price. With a $18 cost, the answer is $30 because ($30 - $18) / $30 equals 0.40. You do not need to rearrange the formula yourself.
+
+Goal Seek works best for a continuous numeric input such as price, interest rate, hours, volume, or a discount percentage. It changes one cell only and evaluates the existing formula repeatedly.
+
+## Prepare the worksheet
+
+Build the model before opening the What-If Analysis menu. Put labels in column A and values or formulas in column B:
+
+| Cell | Label | Value or formula |
+|---|---|---|
+| B2 | Units sold | 1,000 |
+| B3 | Unit cost | 18 |
+| B4 | Selling price | 25 |
+| B5 | Revenue | `=B2*B4` |
+| B6 | Total cost | `=B2*B3` |
+| B7 | Profit | `=B5-B6` |
+| B8 | Margin | `=B7/B5` |
+
+Format B8 as a percentage. At a $25 price, the margin is 28%. The model has a clear result cell, B8, and one assumption that can change, B4.
+
+Keep the changing cell numeric. Do not store `$25` as text, add a currency symbol directly inside the cell, or replace the formula in B8 with a typed result. Goal Seek needs a formula relationship to evaluate.
+
+## Run Goal Seek step by step
+
+1. Select any cell in the worksheet.
+2. Open **Data > What-If Analysis > Goal Seek** in desktop Excel.
+3. In **Set cell**, enter `B8`, the margin formula cell.
+4. In **To value**, enter `0.4` for a 40% target. You can enter `40%` if the field accepts the percentage format, but the decimal is unambiguous.
+5. In **By changing cell**, enter `B4`, the selling-price input.
+6. Select **OK** and let Excel calculate.
+
+The Goal Seek dialog should resemble this setup:
+
+| Field | Entry |
+|---|---|
+| Set cell | B8 |
+| To value | 0.4 |
+| By changing cell | B4 |
+
+Excel changes B4 until B8 is as close as its calculation process can get to 0.4. The result dialog reports whether it found a solution. Choose **OK** to keep the returned price or **Cancel** to restore the original value.
+
+The procedure is the same for a loan model. Set the cell containing the payment formula to a target monthly payment, then change the loan amount, interest rate, or term, but only one of those inputs in a single Goal Seek run.
+
+## Review and keep the result safely
+
+Treat the returned number as a proposed assumption, not as an automatic decision. Recheck the model after Goal Seek finishes:
+
+- Confirm that the target formula displays the intended result after rounding.
+- Check that the changed input remains in a realistic business range.
+- Review revenue, cost, profit, and any dependent outputs for unexpected effects.
+- Record the original assumption before accepting the new value.
+- Save a copy if the workbook is a shared planning model.
+
+Goal Seek may display a rounded value while the underlying result is slightly different. If a target is sensitive to decimal precision, review more decimal places and apply a deliberate rounding rule. Our guide to [Excel floating-point rounding issues](/blog/excel-floating-point-errors-guide) explains why displayed values and calculated values can differ.
+
+If the model returns an error during the search, fix the model first. The [Excel formula error troubleshooting guide](/blog/excel-formula-errors-troubleshooting-guide) can help separate a broken reference or invalid value from a legitimate Goal Seek limitation.
+
+## Goal Seek versus Solver
+
+Goal Seek and Solver both work backward from a worksheet model, but they solve different problems.
+
+| Need | Goal Seek | Solver |
+|---|---|---|
+| Change one input cell | Yes | Yes |
+| Reach one target result | Yes | Yes |
+| Change multiple variables | No | Yes |
+| Apply constraints such as minimums or maximums | No | Yes |
+| Maximize or minimize an objective | No | Yes |
+| Simple built-in what-if calculation | Best fit | More setup |
+
+Use Goal Seek for a single-variable question such as “What price reaches a 40% margin?” Use Solver when the question is “Which combination of price, units, and budget maximizes profit while staying within these limits?” For broader summary work after changing assumptions, you can continue with [Excel PivotTable analysis](/blog/pivot-table-beginner-guide).
+
+## Limitations and common mistakes
+
+**The result cell is not a formula.** Goal Seek cannot work backward from a typed number. Put the calculation in the result cell and confirm that it changes when the input changes.
+
+**The changing cell contains text.** A value such as `25 dollars` cannot be adjusted numerically. Store 25 as a number and use cell formatting to show the currency symbol.
+
+**The target is unrealistic.** A 90% margin may require a price that customers will not accept. Add a reasonableness check after every run instead of treating the first solution as a recommendation.
+
+**Rounding hides the real result.** A displayed 40% may be 39.96% or 40.04% internally. Increase decimal places or add a separate check formula before approving the result.
+
+**The model has multiple possible paths.** Goal Seek changes only one input. If several assumptions must move together, use Solver or build separate scenarios. Do not run Goal Seek repeatedly on different cells and present the last combination as if Excel optimized it.
+
+**The formula is not monotonic.** Some formulas can reach the same target at more than one input value or fail to approach the target smoothly. Try a sensible starting value, test the result, and compare alternatives manually.
+
+## Quick checklist and FAQ
+
+Before running Goal Seek, confirm that the result cell contains a working formula, the target is numeric, and exactly one input is available to change. After running it, verify the returned value, preserve the original assumption, and test the model with nearby inputs.
+
+**Can Goal Seek change two cells?** No. It changes one cell per run. Use Solver for multiple changing cells or constraints.
+
+**Does Goal Seek save the result automatically?** No. Choose **OK** in the result dialog to keep the value, or **Cancel** to restore the original input. Save a copy before accepting a material change.
+
+**Why does Goal Seek say it cannot find a solution?** The target may be unreachable, the model may contain an error, or the changing cell may not influence the result. Test the formula manually by changing the input a small amount.
+
+**Is Goal Seek available in Excel for the web?** The workflow described here is for desktop Excel. Menu availability and What-If Analysis support can vary by edition and update channel, so confirm the command in the version your team uses.
+
+**When should I use Solver instead?** Use Solver when you need multiple variable cells, constraints, or an objective to maximize or minimize. Goal Seek is the simpler choice for one input and one target.
+
+## Summary
+
+Excel Goal Seek replaces repeated guessing with a controlled one-variable calculation. Build a formula-driven model, set the result cell and target value, choose one changing input, and inspect the returned number before keeping it. For a single target question, it is quick and transparent. For constraints or multiple variables, move to Solver instead.

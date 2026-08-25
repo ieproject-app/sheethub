@@ -12,9 +12,9 @@ category: "Formulas & Functions"
 
 The **Google Sheets array result not expanded** error can come from a blank-looking cell. The message usually identifies the first collision, not every cell that will block the output. Clear that one cell, and another hidden blocker may appear farther down the expected range.
 
-This guide shows how to find the full obstruction, distinguish it from an import or formula error, and design an output area that stays clear.
+Two checks matter: find the full obstruction, then separate a blocked destination from an import or formula error. A reserved output area prevents the same failure later.
 
-## What “array result was not expanded” means
+## What "array result was not expanded" means
 
 An array formula returns more than one value. Google Sheets needs to place those values in a rectangle beginning at the formula cell. If any destination cell already contains content, Sheets refuses to overwrite it and reports that the result was not expanded.
 
@@ -32,11 +32,11 @@ An array can expand vertically, horizontally, or in both directions. Always thin
 
 Use this sequence before changing the formula:
 
-1. **Read the cell reference in the error.** Click the error cell and note the location Sheets identifies.
-2. **Go to that destination.** Use the Name box or press <Kbd>Ctrl</Kbd> + <Kbd>G</Kbd> and enter the reference.
-3. **Inspect the cell's real contents.** Look at the formula bar, not only the grid. A cell may look empty while containing a space, a formula, or an apostrophe.
-4. **Move or delete the content.** Preserve anything important somewhere outside the output zone.
-5. **Recalculate.** Edit the formula and press <Kbd>Enter</Kbd>, or reload the sheet if the result does not refresh immediately.
+1. Read the cell reference in the error. Click the error cell and note the location Sheets identifies.
+2. Go to that destination. Use the Name box or press <Kbd>Ctrl</Kbd> + <Kbd>G</Kbd> and enter the reference.
+3. Inspect the cell's real contents. Look at the formula bar, not only the grid. A cell may look empty while containing a space, a formula, or an apostrophe.
+4. Move or delete the content. Preserve anything important somewhere outside the output zone.
+5. Recalculate. Edit the formula and press <Kbd>Enter</Kbd>, or reload the sheet if the result does not refresh immediately.
 
 If the error moves to another cell, repeat the check. That normally means the first blocker was removed successfully and the next one is now visible.
 
@@ -44,12 +44,12 @@ If the error moves to another cell, repeat the check. That normally means the fi
 
 The most frustrating cases involve cells that look blank. Check these common causes:
 
-- **Formula-generated empty text:** A cell containing `=""` is still occupied even though it displays nothing. Move the formula or reserve that column for the array output.
-- **Whitespace:** A single space is content. Select the suspected range and use the formula bar, or clear the cells and re-enter only the values you need.
-- **Apostrophes:** A cell containing an apostrophe may display no obvious value but can still prevent expansion.
-- **Merged cells:** Merged ranges do not provide normal individual cells for an array to occupy. Unmerge the range or place the formula outside it.
-- **Hidden rows and columns:** Hiding a row does not clear its contents. Temporarily unhide the surrounding rows and columns, then inspect the entire output rectangle.
-- **Formatting beyond the visible data:** Formatting alone normally does not block an array, but a cell with a value, formula, note, or data validation may be easy to miss in a large formatted area.
+- A cell containing `=""` is still occupied even though it displays nothing. Move the formula or reserve that column for the array output.
+- A single space is content. Select the suspected range and use the formula bar, or clear the cells and re-enter only the values you need.
+- A cell containing an apostrophe may display no obvious value but can still prevent expansion.
+- Merged ranges do not provide normal individual cells for an array to occupy. Unmerge the range or place the formula outside it.
+- Hiding a row does not clear its contents. Temporarily unhide the surrounding rows and columns, then inspect the entire output rectangle.
+- Formatting alone normally does not block an array, but a cell with a value, formula, note, or data validation may be easy to miss in a large formatted area.
 
 | Symptom | Likely blocker | Action |
 |---|---|---|
@@ -98,11 +98,11 @@ Syntax errors, invalid ranges, and permission errors must be repaired in the for
 
 Use these rules when building a reusable sheet:
 
-1. **Reserve the output zone before writing the formula.** Mark it with a header and keep manual notes outside it.
-2. **Avoid merged cells across calculated areas.** Use borders and alignment instead of merging when an array must expand.
-3. **Keep one owner per output range.** Do not mix hand-entered values with a formula-driven result.
-4. **Limit source ranges when practical.** A bounded range such as `A2:C1000` is easier to inspect than an entire-column formula and reduces unexpected output.
-5. **Test with extra rows.** Add a sample record and confirm that the result expands without touching notes, totals, or helper formulas.
-6. **Document the landing area.** A short label such as “Formula output: keep clear” prevents accidental edits.
+1. Reserve the output zone before writing the formula. Mark it with a header and keep manual notes outside it.
+2. Avoid merged cells across calculated areas. Use borders and alignment instead of merging when an array must expand.
+3. Keep one owner per output range. Do not mix hand-entered values with a formula-driven result.
+4. Limit source ranges when practical. A bounded range such as `A2:C1000` is easier to inspect than an entire-column formula and reduces unexpected output.
+5. Test with extra rows. Add a sample record and confirm that the result expands without touching notes, totals, or helper formulas.
+6. Document the landing area. A short label such as "Formula output: keep clear" prevents accidental edits.
 
 When a result stops expanding, use this checklist: read the referenced blocker, inspect the formula bar, unhide nearby rows and columns, check merged cells and empty-string formulas, confirm that enough rows exist, and then separate collision errors from import permissions or no-match results. In most cases, the formula was not broken. Its destination was simply occupied.
