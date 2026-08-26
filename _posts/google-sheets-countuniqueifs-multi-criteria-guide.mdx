@@ -1,0 +1,90 @@
+﻿---
+title: "Google Sheets COUNTUNIQUEIFS: Count Unique by Criteria"
+date: "2026-08-26"
+description: "Count unique distinct values based on single or multiple conditions in Google Sheets using the native COUNTUNIQUEIFS function."
+published: true
+featured: false
+heroImage: "default-og"
+tags: ["google-sheets", "countuniqueifs", "formulas", "data-analysis", "tutorial"]
+category: "Google Sheets"
+---
+
+Calculating how many distinct customers placed orders or how many unique SKUs were sold in a specific region is a common reporting challenge. Standard `COUNTIF` formulas count total rows rather than unique values, leading to overreported numbers when rows duplicate. Google Sheets COUNTUNIQUEIFS solves this directly, calculating the number of unique distinct items that meet one or more specified criteria.
+
+This guide demonstrates how to use the `=COUNTUNIQUEIFS()` function in Google Sheets, apply multiple criteria with text and dates, compare it with Excel equivalents, and avoid common calculation errors.
+
+## What is COUNTUNIQUEIFS and how does it work?
+
+Google Sheets includes native support for `COUNTUNIQUE` and `COUNTUNIQUEIFS`. While Excel users often build multi-layered formulas combining `COUNTA`, `UNIQUE`, and `FILTER`, Google Sheets provides this functionality in a single optimized formula.
+
+### Syntax
+
+```excel
+=COUNTUNIQUEIFS(range, criteria_range1, criterion1, [criteria_range2, criterion2, ...])
+```
+
+- **range**: The range of cells containing the values whose unique count you want to calculate.
+- **criteria_range1**: The range of cells to evaluate against the first criterion.
+- **criterion1**: The condition that determines which rows to include.
+- **criteria_range2, criterion2** *(optional)*: Additional ranges and conditions evaluated with AND logic.
+
+If you are transitioning between spreadsheet platforms, review our [Excel vs Google Sheets formula differences](/blog/excel-vs-google-sheets-formula-differences) to see other exclusive Google Sheets functions.
+
+## Pattern 1: Count unique customers by region
+
+Suppose your sales transaction table spans `A2:D100`:
+- Column A: Transaction ID
+- Column B: Customer Name
+- Column C: Region (`"North"`, `"South"`, `"East"`, `"West"`)
+- Column D: Order Amount
+
+To count how many **distinct customers** purchased in the North region:
+
+```excel
+=COUNTUNIQUEIFS(B2:B100, C2:C100, "North")
+```
+
+If Customer A placed five separate orders in the North region, `COUNTUNIQUEIFS` counts Customer A exactly once.
+
+## Pattern 2: Count unique items with multiple criteria (AND logic)
+
+To calculate how many unique customers in the North region made a purchase exceeding $500:
+
+```excel
+=COUNTUNIQUEIFS(B2:B100, C2:C100, "North", D2:D100, ">500")
+```
+
+Both conditions must be satisfied for a row to contribute its customer name to the unique set.
+
+For dashboards that summarize complex extracts, combining this with [Google Sheets FILTER optional criteria](/blog/google-sheets-filter-optional-criteria-guide) provides dynamic multi-selector filtering.
+
+## Pattern 3: Dynamic counting with cell references and wildcards
+
+Hardcoding values like `"North"` inside formulas makes templates brittle. Point your criterion argument to selector cells or use wildcards:
+
+```excel
+=COUNTUNIQUEIFS(B2:B100, C2:C100, G2, D2:D100, ">=" & G3)
+```
+
+- If cell `G2` contains `"East"` and `G3` contains `100`, the formula recalculates instantly when either selector changes.
+- To count customers whose company name contains `"Tech"`, use wildcards:
+
+```excel
+=COUNTUNIQUEIFS(B2:B100, B2:B100, "*Tech*")
+```
+
+For advanced matrix calculations that need dynamic row generation, pair your criteria with [Google Sheets LET formulas](/blog/google-sheets-let-function-guide) to keep formulas clean and readable.
+
+## Troubleshooting and common errors
+
+Before relying on unique counts in executive dashboards, verify these common spreadsheet pitfalls:
+
+| Issue | Root Cause | Solution |
+|---|---|---|
+| Mismatched range dimensions | `range` and `criteria_range` have different row counts (e.g., `B2:B100` vs `C2:C50`). | Ensure all range arguments have identical start and end rows. |
+| Inconsistent spacing | `"Acme Corp"` and `"Acme Corp "` are treated as two distinct entities. | Clean raw source data with `TRIM` before running unique counts. |
+| Case sensitivity | `COUNTUNIQUEIFS` is case-insensitive by default (`"Apple"` and `"apple"` count as one). | Use `FILTER` with `EXACT` if case-sensitive distinct counts are required. |
+
+## Summary
+
+The `COUNTUNIQUEIFS` function gives Google Sheets users an efficient, single-step method for counting distinct items across multiple business conditions. By eliminating nested array formulas, your workbooks stay faster and easier to audit.

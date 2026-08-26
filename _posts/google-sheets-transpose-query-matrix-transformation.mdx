@@ -1,0 +1,79 @@
+﻿---
+title: "Google Sheets TRANSPOSE: Flip Rows and Columns"
+date: "2026-08-26"
+description: "Rotate tables, flip matrix dimensions, and combine TRANSPOSE with QUERY in Google Sheets for dynamic data reshaping."
+published: true
+featured: false
+heroImage: "default-og"
+tags: ["google-sheets", "transpose", "formulas", "matrix", "tutorial"]
+category: "Google Sheets"
+---
+
+Restructuring tables from horizontal wide formats to vertical tall layouts (or vice versa) is a frequent task when preparing data for charts and pivot tables. Copy-pasting data with "Paste Special > Transposed" creates static values that become instantly outdated when source cells change. Google Sheets TRANSPOSE provides a dynamic formula solution, flipping rows and columns automatically while keeping formulas and live data in sync.
+
+This guide explains how to use `=TRANSPOSE()` in Google Sheets, pair it with `QUERY` and `FILTER`, and solve common orientation challenges.
+
+## What is TRANSPOSE and how does it work?
+
+`TRANSPOSE` rotates the orientation of a given range or array. The first row of the source range becomes the first column of the output, and the first column becomes the first row.
+
+### Syntax
+
+```excel
+=TRANSPOSE(array_or_range)
+```
+
+- **array_or_range**: The source array or cell range to flip (e.g., `A1:E5`).
+
+For advanced SQL-like data reshaping in Google Sheets, see our [Google Sheets QUERY function complete guide](/blog/query-function-google-sheets-guide).
+
+## Pattern 1: Basic table rotation
+
+Suppose you have monthly revenue organized horizontally in `A1:M2`:
+- Row 1: Headers (`Month`, `Jan`, `Feb`, `Mar`, ... `Dec`)
+- Row 2: Revenue amounts
+
+To flip this into a vertical 2-column list suitable for reporting:
+
+```excel
+=TRANSPOSE(A1:M2)
+```
+
+The output immediately occupies two vertical columns from `A4:B16`. If any monthly revenue number changes in row 2, the transposed table updates in real time.
+
+## Pattern 2: Combining TRANSPOSE with QUERY for matrix transformation
+
+When you need to filter and transpose in one step:
+
+```excel
+=TRANSPOSE(QUERY(A1:F50, "SELECT B, C, D WHERE A = 'Active'", 1))
+```
+
+This filters the source dataset to only rows marked `"Active"`, extracts columns B through D, and flips the resulting summary table horizontally.
+
+If your workflow requires dynamic conditions that handle empty selector inputs, see our [Google Sheets filter optional criteria guide](/blog/google-sheets-filter-optional-criteria-guide).
+
+## Pattern 3: Dynamic array reshaping with LET
+
+When performing multi-stage calculations (such as transposing, filtering, and sorting), wrap intermediate arrays in named variables:
+
+```excel
+=LET(
+  raw_data, A1:D20,
+  cleaned, FILTER(raw_data, INDEX(raw_data, , 1)<>""),
+  TRANSPOSE(cleaned)
+)
+```
+
+To explore more variable-naming techniques for clean workbooks, review our [guide to Google Sheets LET formulas](/blog/google-sheets-let-function-guide).
+
+## Troubleshooting checklist
+
+| Issue | Cause | Fix |
+|---|---|---|
+| `#REF! (Array result not expanded)` | Target cells contain existing data blocking the rotated range. | Clear all cells within the new row-and-column dimensions. |
+| Formulas inside source range break | Source range used relative references that shifted during transposition. | Use absolute references (`$A$1:$D$10`) in the source formulas before transposing. |
+
+## Summary
+
+The `TRANSPOSE` function keeps transformed layouts live and reactive in Google Sheets. Combining it with `QUERY` and `FILTER` allows seamless table flipping without manual copy-paste routines.
