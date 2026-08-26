@@ -10,11 +10,11 @@ tags: ["google-sheets", "filter", "optional-criteria", "dashboards", "tutorial"]
 category: "Google Sheets"
 ---
 
-A dashboard can show every region when its Region selector is blank, then narrow to one region as soon as someone chooses East. That behavior feels simple to a viewer, but a basic `=FILTER()` formula does not know whether a blank selector means “show all” or “find blank cells.” You have to define that rule yourself.
+A dashboard can show every region when its Region selector is blank, then narrow to one region as soon as someone chooses East. That behavior feels simple to a viewer, but a basic `=FILTER()` formula does not know whether a blank selector means "show all" or "find blank cells." You have to define that rule yourself.
 
-This Google Sheets FILTER optional criteria guide shows three practical patterns. You will build one optional filter, combine two optional filters with AND logic, and add OR logic for a dashboard with dropdown controls. The formulas assume a data table in `A2:D100`, with the region in column B and the status in column C.
+The three patterns cover one optional filter, two optional filters with AND logic, and OR logic for a dashboard with dropdown controls. The formulas assume a data table in `A2:D100`, with the region in column B and the status in column C.
 
-## The Optional-Criteria Pattern
+## The optional-criteria pattern
 
 A normal filter applies a condition every time:
 
@@ -30,7 +30,7 @@ That returns only rows whose region is East. If the selector is in `G2`, replace
 
 The problem appears when `G2` is blank. Google Sheets interprets the comparison as a request to find blank cells in column B. For a dashboard, you usually want a blank selector to disable that condition instead.
 
-The general pattern is an `IF` inside the filter condition:
+Put an `IF` inside the filter condition:
 
 ```excel
 =FILTER(A2:D100, IF(G2="", B2:B100<>"", B2:B100=G2))
@@ -40,7 +40,7 @@ When `G2` is blank, the formula accepts nonblank region cells. When `G2` contain
 
 If you need a refresher on the function itself, start with this [Google Sheets FILTER optional criteria guide](/blog/filter-function-google-sheets), then return here for the selector logic.
 
-## Pattern 1: One Optional Criterion
+## Pattern 1: One optional criterion
 
 Assume the dashboard selector is in `G2` and the source table has headers in row 1. Put the formula in the dashboard output area:
 
@@ -63,9 +63,9 @@ Test the formula with three values:
 
 This pattern is enough for a small report. It also works with numbers, dates, and other criteria. For a numeric selector, compare the target column to `$G$2`; for a date selector, compare it to a valid date cell instead of relying on text that only looks like a date.
 
-## Pattern 2: Two Optional Criteria with AND Logic
+## Pattern 2: Two optional criteria with AND logic
 
-Now add a second selector in `G3` for status. The output should include a row only when it passes every active criterion. A blank selector should allow all populated values in that column:
+Add a second selector in `G3` for status. The output should include a row only when it passes every active criterion. A blank selector should allow all populated values in that column:
 
 ```excel
 =IFERROR(
@@ -84,7 +84,7 @@ For example, with `G2` set to East and `G3` set to Open, the output includes onl
 
 This is easier to maintain than nesting several `AND()` calls because each optional rule is visible on its own line. It also makes testing systematic. Change one selector at a time and compare the result count against a known small sample.
 
-## Pattern 3: OR Logic and Dropdown Controls
+## Pattern 3: OR logic and dropdown controls
 
 AND logic asks whether a row satisfies every active condition. OR logic asks whether a row matches at least one selected value. Suppose `G2` contains a primary region and `G3` contains a second region. You want rows from either region, while still showing all populated rows when both selectors are blank:
 
@@ -107,23 +107,23 @@ Each comparison produces TRUE or FALSE for every row. Adding the results convert
 
 The outer `AND` handles the special case where both selectors are blank. Without it, the dashboard would return no rows when the user clears both controls.
 
-For a cleaner user experience, apply dropdown data validation to `G2` and `G3`. Use a fixed list of regions or a range containing approved region names. Keep the spelling and spaces consistent with the source data; a dropdown cannot correct a source value that has an extra space or different capitalization.
+Apply dropdown data validation to `G2` and `G3`. Use a fixed list of regions or a range containing approved region names. Keep the spelling and spaces consistent with the source data; a dropdown cannot correct a source value that has an extra space or different capitalization.
 
 If the dashboard needs grouping, sorting, or aggregation rather than a direct row extract, compare this approach with [advanced QUERY filters](/blog/google-sheets-query-advanced-guide). QUERY is often a better fit when the output needs a summary table instead of the original rows.
 
-## Handle No Matches and Bad Inputs
+## Handle no matches and bad inputs
 
 Optional filters fail most often because the data and controls are not as consistent as they appear. Check these cases before sharing the dashboard:
 
-- **No match:** Wrap the formula in `IFERROR` and choose a clear message such as `No matching rows`.
-- **Extra spaces:** Clean imported criteria with `TRIM` or standardize the source column before filtering.
-- **Different labels:** Make dropdown values come from the same approved list used by the source data.
-- **Open-ended ranges:** Use a bounded range such as `A2:D1000` when performance matters. Whole-column formulas recalculate more cells.
-- **Blank source rows:** Use a populated key column in the blank-selector branch so empty rows do not spill into the dashboard.
+- If no row matches, wrap the formula in `IFERROR` and choose a clear message such as `No matching rows`.
+- Clean imported criteria with `TRIM` or standardize the source column before filtering when extra spaces are possible.
+- Take dropdown values from the same approved list used by the source data so labels stay consistent.
+- Use a bounded range such as `A2:D1000` when performance matters. Whole-column formulas recalculate more cells.
+- Use a populated key column in the blank-selector branch so empty source rows do not spill into the dashboard.
 
 For dashboards that need totals after the row extraction, the related [Google Sheets filtered sums](/blog/google-sheets-sum-filtered-data-custom-criteria) patterns explain when to use SUMIFS, SUMPRODUCT, and SUBTOTAL instead of summing a displayed result blindly.
 
-## Testing Checklist
+## Testing checklist
 
 Before publishing the dashboard, test every meaningful combination:
 
@@ -137,4 +137,4 @@ Before publishing the dashboard, test every meaningful combination:
 
 ## Summary
 
-An optional criterion is an instruction to apply a filter only when its selector has a value. Use an `IF` inside each FILTER condition for one or more optional criteria, rely on separate conditions for AND logic, and add the conditions together for OR logic. Pair the formulas with consistent dropdowns, explicit no-match handling, and a short combination test. That turns a blank dashboard control from an error source into a useful “show everything” option.
+An optional criterion is an instruction to apply a filter only when its selector has a value. Use an `IF` inside each FILTER condition for one or more optional criteria, rely on separate conditions for AND logic, and add the conditions together for OR logic. Pair the formulas with consistent dropdowns, explicit no-match handling, and a short combination test. That turns a blank dashboard control from an error source into a useful "show everything" option.
