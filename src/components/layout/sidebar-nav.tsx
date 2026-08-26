@@ -118,7 +118,7 @@ export function SidebarNav({ onItemClick }: { onItemClick?: () => void }) {
       </div>
 
       {/* 2. SCROLLABLE MIDDLE NAVIGATION TREE */}
-      <div className="flex-1 overflow-y-auto px-4 py-5 scrollbar-thin scrollbar-thumb-border">
+      <div className="flex-1 overflow-y-auto px-4 py-5 scrollbar-thin scrollbar-thumb-border overscroll-contain">
         <nav className="flex flex-col gap-6" aria-label="Documentation Sidebar Navigation">
           {DOCS_NAV.map((section) => (
             <div key={section.title} className="flex flex-col gap-1">

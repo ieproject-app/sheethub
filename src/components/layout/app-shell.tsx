@@ -76,12 +76,12 @@ export function AppShell({ children }: { children: React.ReactNode }) {
       {/* 3. FULL-VIEWPORT DESKTOP LAYOUT (Fixed Sidebar at Left: 0px) */}
       <div className="w-full flex-1 flex relative">
         {/* Left Fixed Sidebar (Desktop lg+) */}
-        <aside className="hidden lg:block fixed left-0 top-0 bottom-0 w-72 border-r border-border/50 bg-background z-40 overflow-hidden">
+        <aside className="hidden lg:block fixed left-0 top-0 bottom-0 w-80 border-r border-border/50 bg-background z-40 overflow-hidden isolate overscroll-contain">
           <SidebarNav />
         </aside>
 
-        {/* Main Content Area (Fluid with lg:pl-72) */}
-        <div className="w-full lg:pl-72 flex-1 flex flex-col min-w-0">
+        {/* Main Content Area (Fluid with lg:pl-80) */}
+        <div className="w-full lg:pl-80 flex-1 flex flex-col min-w-0">
           {/* Sticky Top Quick Search & Banner Bar */}
           <div className="sticky top-0 z-30 bg-background/95 backdrop-blur-md border-b border-border/50 px-4 sm:px-8 lg:px-12 py-3 shadow-2xs">
             <div className="w-full max-w-7xl mx-auto flex items-center gap-4">
