@@ -1,0 +1,85 @@
+﻿---
+title: "Google Sheets SEQUENCE: Generate Numbers, Dates & Grids"
+date: "2026-08-26"
+description: "Generate dynamic number sequences, custom date ranges, and 2D matrix grids in Google Sheets using the SEQUENCE function."
+published: true
+featured: false
+heroImage: "default-og"
+tags: ["google-sheets", "sequence", "formulas", "productivity", "tutorial"]
+category: "Google Sheets"
+---
+
+Manually dragging the fill handle to create sequential numbers, monthly dates, or test grids is tedious and prone to accidental breaks when rows are inserted or deleted. Google Sheets SEQUENCE provides a dynamic formula solution, generating entire arrays of sequential numbers, dates, times, and matrix grids instantly from a single cell.
+
+This tutorial covers how to use `=SEQUENCE()` in Google Sheets, build auto-incrementing serial numbers, create custom date series, and avoid spill errors.
+
+## What is the SEQUENCE function and how does it work?
+
+`SEQUENCE` is a dynamic array function that outputs a grid of sequential numbers based on specified dimensions, starting values, and step intervals.
+
+### Syntax
+
+```excel
+=SEQUENCE(rows, [columns], [start], [step])
+```
+
+- **rows**: The number of rows to generate.
+- **columns** *(optional)*: The number of columns to generate (default is `1`).
+- **start** *(optional)*: The starting number (default is `1`).
+- **step** *(optional)*: The increment between each number (default is `1`).
+
+For full array capabilities in Google Sheets, see our complete guide on [Google Sheets dynamic ARRAYFORMULA patterns](/blog/arrayformula-google-sheets-complete-guide).
+
+## Pattern 1: Automatic row numbering that updates dynamically
+
+Instead of hardcoding row numbers, generate an index that automatically expands with your data:
+
+```excel
+=SEQUENCE(COUNTA(B2:B))
+```
+
+If you add 20 new rows of customer names in Column B, the sequence in Column A extends automatically without manual dragging.
+
+## Pattern 2: Generate a list of dates (daily, weekly, or monthly)
+
+In Google Sheets, dates are stored internally as serial numbers. You can use `SEQUENCE` to build entire project schedules:
+
+To generate 30 consecutive days starting from September 1, 2026:
+
+```excel
+=SEQUENCE(30, 1, DATE(2026, 9, 1), 1)
+```
+
+*(Format the output cells as **Format > Number > Date**).*
+
+To generate **weekly meeting dates** (stepping by 7 days):
+
+```excel
+=SEQUENCE(12, 1, DATE(2026, 9, 1), 7)
+```
+
+For complex dashboards that combine dynamic date grids with multi-criteria filters, see our [Google Sheets filter optional criteria guide](/blog/google-sheets-filter-optional-criteria-guide).
+
+## Pattern 3: Create a 2D matrix or multiplication table
+
+To generate a 5-row by 5-column grid starting at 10 and counting by 10s:
+
+```excel
+=SEQUENCE(5, 5, 10, 10)
+```
+
+This immediately creates a 5x5 grid from 10 to 250.
+
+To reuse sequence indices inside advanced logic without cluttering your spreadsheet, combine your steps with [Google Sheets LET formulas](/blog/google-sheets-let-function-guide) for clean, self-contained calculations.
+
+## Troubleshooting and common errors
+
+| Error / Symptom | Root Cause | Solution |
+|---|---|---|
+| `#REF! (Array not expanded)` | Existing content blocks the cells where SEQUENCE needs to spill. | Delete all text or numbers in the target output area. |
+| Numbers appear as integers instead of dates | Cells are formatted as standard numbers. | Highlight the range and apply **Format > Number > Date**. |
+| Negative sequence needed | `step` was left as default `1`. | Use negative step (e.g., `=SEQUENCE(10, 1, 100, -10)` to count down). |
+
+## Summary
+
+The `SEQUENCE` function eliminates manual number dragging in Google Sheets. By generating dynamic single-column indices, custom date calendars, and multi-column grids from a single formula, your spreadsheets become resilient and automated.

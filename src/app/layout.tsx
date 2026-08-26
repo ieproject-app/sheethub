@@ -3,6 +3,7 @@ import { LayoutBackToTop } from "@/components/layout/back-to-top";
 import { AppShell } from "@/components/layout/app-shell";
 import "./globals.css";
 import type { Metadata, Viewport } from "next";
+import Script from "next/script";
 import { ThemeProvider } from "@/components/theme-provider";
 import { ReadArticlesProvider } from "@/hooks/use-read-articles";
 import { NotificationProvider } from "@/hooks/use-notification";
@@ -148,6 +149,13 @@ export default async function RootLayout({
       suppressHydrationWarning
     >
       <body className="font-sans antialiased fade-in-on-load">
+        <Script
+          id="google-adsense-script"
+          async
+          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7485721934561798"
+          crossOrigin="anonymous"
+          strategy="afterInteractive"
+        />
         <WebVitalsReporter />
         <a href="#main-content" className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-50 focus:px-4 focus:py-2 focus:bg-primary focus:text-primary-foreground focus:rounded-md">
           Skip to main content

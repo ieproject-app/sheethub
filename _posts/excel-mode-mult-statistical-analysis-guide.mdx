@@ -1,0 +1,86 @@
+﻿---
+title: "Excel MODE.MULT: Find Multiple Modal Values in Data"
+date: "2026-08-26"
+description: "Calculate and display bimodal and multimodal distributions in Excel using the dynamic array MODE.MULT function."
+published: true
+featured: false
+heroImage: "default-og"
+tags: ["excel", "statistics", "mode-mult", "data-analysis", "tutorial"]
+category: "Data Analysis"
+---
+
+When analyzing test scores, survey responses, or customer purchase sizes, finding the most frequent value provides critical statistical insight. Standard `MODE` or `MODE.SNGL` formulas return only a single value. If your dataset is bimodal or multimodal (having two or more numbers that share the highest frequency), single-mode functions arbitrarily ignore the other modes. Excel MODE.MULT solves this statistical limitation by returning all modal values as a dynamic array.
+
+This tutorial explains how to use `=MODE.MULT()` in Excel, handle multimodal data distributions, format spill ranges, and avoid `#N/A` errors.
+
+## What is MODE.MULT and how does it work?
+
+Available in modern Excel versions, `MODE.MULT` calculates statistical mode and automatically spills multiple results vertically into adjacent rows when more than one number ties for peak frequency.
+
+### Syntax
+
+```excel
+=MODE.MULT(number1, [number2, ...])
+```
+
+- **number1, number2**: Numbers, cell ranges, or arrays containing numeric data.
+
+If you are performing broader descriptive statistics, see our guide on [Excel SUBTOTAL and AGGREGATE functions](/blog/excel-subtotal-aggregate-guide) for filtered dataset calculations.
+
+## Example: Analyzing bimodal test scores
+
+Suppose a dataset in `A2:A15` contains customer satisfaction ratings:
+`[7, 8, 9, 7, 6, 8, 5, 7, 8, 10, 4, 3, 9, 2]`
+
+In this set:
+- Rating `7` appears 3 times.
+- Rating `8` appears 3 times.
+
+Using standard `=MODE.SNGL(A2:A15)` returns only `7`, hiding the fact that rating `8` was equally popular.
+
+In cell `C2`, enter:
+
+```excel
+=MODE.MULT(A2:A15)
+```
+
+### Result:
+Excel automatically spills:
+- Cell `C2`: `7`
+- Cell `C3`: `8`
+
+## Pattern 1: Horizontal spilling with TRANSPOSE
+
+If your dashboard layout requires results across columns instead of rows, wrap `MODE.MULT` in `TRANSPOSE`:
+
+```excel
+=TRANSPOSE(MODE.MULT(A2:A15))
+```
+
+This places modal values neatly across `C2` and `D2`.
+
+For multi-column data transformations that require dynamic restructuring, review our [Excel TOCOL, TOROW, and WRAPCOLS guide](/blog/excel-tocol-torow-wrapcols-wraprows-expand-guide).
+
+## Pattern 2: Error-safe modal calculations
+
+If every number in a dataset appears only once (no repeated values), `MODE.MULT` returns a `#N/A` error.
+
+To ensure professional dashboard presentation, wrap the formula in `IFERROR`:
+
+```excel
+=IFERROR(MODE.MULT(A2:A15), "No duplicates / No mode")
+```
+
+To structure clean statistical calculation models without repeating messy raw ranges, combine your statistical metrics with [Excel LET function formulas](/blog/excel-let-function-guide).
+
+## Common errors and troubleshooting checklist
+
+| Error | Root Cause | Practical Fix |
+|---|---|---|
+| `#N/A` | No duplicate values exist in the dataset. | Wrap with `=IFERROR(MODE.MULT(...), "No Mode")`. |
+| `#SPILL!` | Cells below the formula contain existing values. | Clear cells below the formula to allow the array to expand. |
+| `#VALUE!` | The range contains text strings instead of numbers. | Filter out text or clean data with `VALUE` before running statistical modes. |
+
+## Summary
+
+The `MODE.MULT` function ensures complete statistical accuracy in Excel. By returning every tied modal value rather than an arbitrary first match, your reporting reflects true data distribution.
