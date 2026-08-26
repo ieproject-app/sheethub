@@ -1,0 +1,71 @@
+---
+title: "Import Excel Tables into Google Sheets: What to Check"
+date: "2026-08-21"
+updated: "2026-08-25"
+description: "Import Excel tables and pivot tables into Google Sheets, then verify relationships, formulas, and converted data."
+published: true
+featured: false
+heroImage: "default-og"
+tags: ["google-sheets", "excel-import", "pivot-tables", "news", "update", "tutorial"]
+category: "Google Sheets"
+---
+
+An Excel workbook can now arrive in Google Sheets with more of its table structure intact. That helps when a report depends on a table-backed pivot, but conversion still needs a check. Before sharing, import Excel tables into Google Sheets, inspect the relationships, and test known values.
+
+## What changed in Excel-to-Sheets import
+
+Google's August 2026 Workspace Updates describe two related improvements. An Excel table can import as a Google Sheets table, and an Excel pivot table backed by a table range can import with support for that relationship. The rollout is available to Google Workspace customers and people using personal Google accounts, although visibility can still depend on the rollout reaching your account.
+
+This improves fidelity, but does not promise identical behavior for every Excel feature. Table structure, pivot sources, formulas, and formatting still require review. For compatibility expectations, compare [Excel vs Google Sheets formulas](/blog/excel-vs-google-sheets-formula-differences) before converting a critical workbook.
+
+## Import an Excel file safely
+
+Use a copy of the workbook first. Keep the original `.xlsx` file unchanged so you can compare the converted result or start again if a relationship does not survive.
+
+1. Open Google Drive and select **New > File upload**.
+2. Upload the Excel workbook.
+3. Open the uploaded file with Google Sheets, or use **Open with > Google Sheets**.
+4. If Sheets asks whether to convert the file, confirm the conversion and wait for the new spreadsheet to open.
+5. Rename the converted file so the original and the test copy are easy to distinguish.
+
+Before importing, note each table name, pivot source range, and one or two totals you expect to remain unchanged.
+
+## Check tables and pivot relationships
+
+Start with the table itself. Confirm that the header row is intact, columns still have the expected names, and new rows belong to the table rather than sitting outside its range. Check a few dates, text labels, and numeric values for shifts caused by formatting or type conversion.
+
+Next, open each pivot table. Verify its row fields, column fields, filters, and value summaries. The most important check is the source: confirm that the pivot still reads from the converted table or the intended range. Then compare a known subtotal with the original Excel report.
+
+For a refresher after you [import Excel tables into Google Sheets](/blog/google-sheets-pivot-tables-guide), review the pivot-table setup. The conversion and pivot editor are separate, so a successful import does not prove every filter or calculated field is equivalent.
+
+## Verify formulas and formatting
+
+Test formulas that feed the table or pivot instead of judging appearance alone. Check lookup results, totals, date calculations, and formulas that reference table columns. A value that looks correct may still be stale.
+
+Inspect number formats, conditional formatting, frozen rows, and named ranges. If the workbook contains a chart, compare its series, labels, and axes. For chart compatibility, see [Google Sheets combo charts](/blog/google-sheets-combo-scatter-charts-update).
+
+## When manual cleanup is still needed
+
+Pause before sharing if a pivot shows old totals, a table stops before the final row, or a formula returns an error. Recheck the source range and formula references against the untouched Excel copy. Macros, external connections, and complex formatting may still need a manual rebuild.
+
+Use this comparison to decide where to investigate first:
+
+| Area | What to compare | Warning sign |
+|---|---|---|
+| Table structure | Headers, table range, row count, and column types | The final rows or a header are outside the converted table |
+| Pivot source and fields | Source range, row fields, filters, and value summaries | A filter or subtotal no longer matches the Excel copy |
+| Formulas | Lookup results, totals, dates, and table-column references | A formula shows an error, a stale value, or a changed result |
+| Charts | Series, labels, axes, and source ranges | A series is missing or the scale tells a different story |
+
+Keep the original file as a rollback copy. If the converted version passes the checklist, publish it as the working Google Sheets file. Otherwise, fix the smallest affected area first.
+
+> **Quick validation check:** Compare one known subtotal, one date and value pair, one pivot-filter result, and one chart or external-reference behavior against the untouched `.xlsx` copy. Record any difference before you share the converted file.
+
+## Summary checklist
+
+- Upload a copy of the Excel workbook.
+- Confirm tables, headers, and source ranges.
+- Check pivot fields, filters, and totals.
+- Test formulas and formatting, not just appearance.
+- Compare charts and external references.
+- Keep the original before sharing the converted file.

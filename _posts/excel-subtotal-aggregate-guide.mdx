@@ -1,0 +1,146 @@
+---
+title: "SUBTOTAL vs AGGREGATE: Sum Only Visible Rows in Excel"
+date: "2026-08-09"
+description: "Use SUBTOTAL and AGGREGATE in Excel to sum only visible rows. Compare codes 9 vs 109 to skip hidden rows and errors."
+published: true
+featured: false
+heroImage: "default-og"
+tags: ["excel", "tutorial", "subtotal", "aggregate", "formulas"]
+category: "Formulas & Functions"
+---
+
+Why does SUM still count the rows you just hid? Hide rows 12 through 14 in a monthly report and `=SUM(B2:B100)` quietly keeps them in the total. Filter a list down to one region and the sum still includes every region underneath. Plain SUM reads every cell in its range, hidden or not, filtered or not. The Excel SUBTOTAL function exists for exactly this problem: it can total only the rows that are visible right now. Its sibling AGGREGATE goes further and can skip error values at the same time.
+
+## Why SUM Lies About Hidden Rows
+
+A hidden row is still a cell with a value, and SUM does not care about visibility. It adds whatever sits inside the range you gave it. That becomes a real problem in reports where people hide completed months, archive old entries, or filter to a subset, so the headline number stops matching what the reader can see. Filter the sheet, hide a few rows, and the total stays exactly the same. When the visible rows are what matter, SUM is the wrong tool.
+
+## What Is SUBTOTAL?
+
+SUBTOTAL is a wrapper around eleven aggregation functions. One first argument chooses the operation, and the same argument also decides whether hidden rows count:
+
+```excel
+=SUBTOTAL(function_num, ref1, [ref2], ...)
+```
+
+| Code (1–11) | Code (101–111) | Operation |
+|-------------|----------------|-----------|
+| 1 | 101 | AVERAGE |
+| 2 | 102 | COUNT |
+| 3 | 103 | COUNTA |
+| 4 | 104 | MAX |
+| 5 | 105 | MIN |
+| 9 | 109 | SUM |
+
+The golden rule: codes **1–11 include manually hidden rows**, codes **101–111 ignore them**. Rows hidden by a filter are always excluded, no matter which code you use. Filtered-out cells are simply not part of the visible set.
+
+## SUBTOTAL 9 vs 109: The Visible-Row Sum
+
+The two SUM variants behave differently when rows are hidden by hand:
+
+```excel
+=SUBTOTAL(9,B2:B100)
+=SUBTOTAL(109,B2:B100)
+```
+
+With no hidden rows, both return the same number. Hide rows inside the range and the difference appears: `SUBTOTAL(9,...)` still counts them, `SUBTOTAL(109,...)` does not. For a report where people hide rows to focus on what matters, 109 is the number you want in the footer.
+
+When a filter is active the two codes agree. Both skip the filtered-out rows. That is why you can safely use 109 everywhere: it matches 9 in every filtered scenario and adds protection against manual hiding.
+
+## How AutoSum Chooses SUBTOTAL
+
+Have you ever hit AutoSum and noticed the formula came out as `SUBTOTAL(109,...)` instead of `SUM`? Excel does that on purpose. When a filter is active on the range, AutoSum writes a visible-only total so the result matches what you see.
+
+SUBTOTAL also has a second safety behavior: it ignores other SUBTOTAL results inside its range. A grand total that sums several subtotaled blocks does not double-count them. SUM has no such protection. If you sum a column that already contains totals, you add them twice.
+
+## What Is AGGREGATE?
+
+AGGREGATE is SUBTOTAL's more powerful cousin, available since Excel 2010. It adds a second argument that controls what gets ignored:
+
+```excel
+=AGGREGATE(function_num, options, ref1, [ref2], ...)
+```
+
+| Option | What it ignores |
+|--------|-----------------|
+| 0 | Nested SUBTOTAL and AGGREGATE functions |
+| 1 | Hidden rows |
+| 2 | Error values |
+| 3 | Hidden rows and error values |
+| 4 | Nothing |
+| 5 | Hidden rows |
+| 6 | Error values |
+| 7 | Everything |
+
+The classic visible-total formula combines SUM with everything-ignored:
+
+```excel
+=AGGREGATE(9,7,B2:B100)
+```
+
+It sums only visible rows and skips `#DIV/0!` or `#N/A` cells along the way, something SUBTOTAL cannot do. The 14–19 codes (LARGE, SMALL, MEDIAN, PERCENTILE, QUARTILE) use a different array syntax where the last argument is the rank:
+
+```excel
+=AGGREGATE(14,6,B2:B100,3)
+```
+
+That returns the third-largest visible value while ignoring errors.
+
+## SUBTOTAL vs AGGREGATE: Decision Table
+
+| Need | Function |
+|------|----------|
+| Sum visible rows (filtered or hidden) | `SUBTOTAL(109,...)` |
+| Sum visible rows and ignore errors | `AGGREGATE(9,7,...)` |
+| Average visible rows, ignore errors | `AGGREGATE(1,7,...)` |
+| Works in older Excel (2007+) | SUBTOTAL |
+| Array-friendly (LARGE, MEDIAN, PERCENTILE) | AGGREGATE |
+
+When you need a conditional sum on visible rows only, [SUBTOTAL and AGGREGATE extend the SUMIF family](/blog/sumif-vs-sumifs-vs-sumproduct-comparison). The criteria-based totals cover matching, while these two cover visibility.
+
+## Real Use Cases
+
+| Scenario | Formula |
+|----------|---------|
+| Total of visible sales | `=SUBTOTAL(109,D2:D500)` |
+| Average without errors | `=AGGREGATE(1,6,D2:D500)` |
+| Max from visible rows | `=AGGREGATE(4,5,D2:D500)` |
+| Count non-empty visible cells | `=SUBTOTAL(103,D2:D500)` |
+
+A filtered sales report is the most common setup: apply the filter, and the subtotal row updates itself to match the visible slice. Counting works the same way: count visible entries with SUBTOTAL(103) just like [COUNTIFS counts matching cells](/blog/countif-countifs-guide), only without criteria. For grouped summaries that used to rely on manual subtotal rows, [GROUPBY replaces the manual subtotal rows](/blog/excel-groupby-pivotby-deep-dive) you used to build by hand.
+
+## Error Handling & Limitations
+
+- **SUBTOTAL cannot skip errors.** A `#DIV/0!` anywhere in the range poisons the total. AGGREGATE with option 2, 3, 6, or 7 handles it.
+- **9 vs 109 is easy to mix up.** With manually hidden rows the two return different numbers. Verify which one your report actually needs.
+- **Nested subtotals are ignored.** A formula that sums a range containing other SUBTOTAL calls will quietly skip them, which can look like a wrong total if you expected plain addition.
+- **Grouping vs filtering behaves differently.** Rows collapsed by grouping count as manually hidden: codes 1–11 include them, 101–111 do not. Filtered rows are excluded by both.
+- **AGGREGATE's 14–19 codes need the array syntax** with the rank argument. Using the plain reference form for LARGE, SMALL, or MEDIAN returns `#VALUE!`.
+
+## Pro Tips
+
+- **Wrap the function code in LET** so the report reads itself: `=LET(data,B2:B100,SUBTOTAL(109,data))`.
+- **Use the built-in Total Row** of an Excel table. It defaults to SUBTOTAL and stays correct as the table grows.
+- **Toggle filters fast** with <Kbd>Ctrl</Kbd> + <Kbd>Shift</Kbd> + <Kbd>L</Kbd> to see your subtotal react live.
+- **Combine with data validation** for a dashboard where the user picks a region from a dropdown and every total adjusts.
+
+## Common Mistakes to Avoid
+
+- **Using SUM on filtered data.** The total ignores the filter and misleads everyone reading the report.
+- **Choosing 9 when you mean 109.** Hidden rows creep back into the total.
+- **Assuming AGGREGATE is just SUBTOTAL.** The options argument changes behavior dramatically, so check it before trusting the result.
+- **Summing a range that already contains subtotals** with plain SUM, then wondering why the grand total is double.
+
+## FAQ
+
+**Does SUBTOTAL count hidden rows?** Codes 101–111 ignore manually hidden rows; codes 1–11 include them. Filtered rows are always excluded.
+
+**Why did my AutoSum become SUBTOTAL?** A filter is active on the range, so Excel chose the visible-only total to match what you see on screen.
+
+**What is the difference between SUBTOTAL and SUMIF?** SUMIF adds cells that match a criterion. SUBTOTAL adds cells that are visible. They solve different problems and can be combined when you need both.
+
+**Availability:** SUBTOTAL is available in Excel 2007 and later. AGGREGATE requires Excel 2010 or later, including Excel for Microsoft 365.
+
+## Summary
+
+SUM counts rows you cannot see. SUBTOTAL with code 109 totals only what is visible, whether filtered or manually unhidden, and ignores nested subtotals so nothing is counted twice. AGGREGATE adds error-skipping and array-friendly functions like LARGE and MEDIAN. For any report where "the number on screen" must match "the number in the total," make SUBTOTAL or AGGREGATE your default instead of SUM.

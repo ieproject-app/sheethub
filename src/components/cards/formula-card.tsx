@@ -1,0 +1,105 @@
+"use client";
+
+import React from "react";
+import Link from "next/link";
+import { Clock, ArrowUpRight } from "lucide-react";
+import { formatRelativeTime, cn } from "@/lib/utils";
+import type { Post } from "@/lib/posts";
+import type { Dictionary } from "@/lib/get-dictionary";
+
+interface FormulaCardProps {
+  post: Post;
+  dictionary?: Dictionary;
+  showExcerpt?: boolean;
+}
+
+function getFormulaSignature(post: Post) {
+  const tags = post.frontmatter.tags || [];
+  const title = post.frontmatter.title.toLowerCase();
+  const category = (post.frontmatter.category || "").toLowerCase();
+
+  const isSheets = tags.includes("google-sheets") || category.includes("google sheets");
+  const isExcel = tags.includes("excel") || category.includes("excel") || !isSheets;
+  const isAi = tags.includes("ai") || tags.includes("copilot") || category.includes("ai");
+
+  let appName = isSheets ? "Google Sheets" : "Excel";
+  let appColor = isSheets
+    ? "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/20"
+    : "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/20";
+
+  if (isAi) {
+    appName = "Copilot AI";
+    appColor = "bg-purple-500/10 text-purple-600 dark:text-purple-400 border-purple-500/20";
+  }
+
+  let formula = "=XLOOKUP(...)";
+  if (title.includes("xlookup")) formula = "=XLOOKUP(...)";
+  else if (title.includes("vlookup")) formula = "=VLOOKUP(...)";
+  else if (title.includes("index") && title.includes("match")) formula = "=INDEX(MATCH())";
+  else if (title.includes("sumifs") || title.includes("sumif")) formula = "=SUMIFS(...)";
+  else if (title.includes("query")) formula = `=QUERY(...)`;
+  else if (title.includes("filter")) formula = "=FILTER(...)";
+  else if (title.includes("copilot") || title.includes("agent")) formula = "AI Copilot Prompt";
+  else if (title.includes("date") || title.includes("time")) formula = "=EDATE() / =TODAY()";
+  else if (title.includes("dropdown") || title.includes("validation")) formula = "Data Validation";
+  else if (title.includes("conditional formatting")) formula = "=MOD(ROW(),2)=0";
+  else if (title.includes("dynamic array")) formula = "=UNIQUE(SORT(...))";
+  else {
+    const firstWord = post.frontmatter.title.split(" ")[0];
+    formula = firstWord && firstWord.length > 2 ? `=${firstWord.toUpperCase()}(...)` : "=FORMULA(...)";
+  }
+
+  return { appName, appColor, formula, isSheets, isExcel, isAi };
+}
+
+export function FormulaCard({
+  post,
+  showExcerpt = true,
+}: FormulaCardProps) {
+  const meta = getFormulaSignature(post);
+
+  return (
+    <article className="group relative flex flex-col h-full rounded-xl border border-border/70 bg-card p-5 transition-all duration-300 hover:-translate-y-1 hover:border-emerald-500/50 hover:shadow-md">
+      {/* Header Pill & Formula Chip */}
+      <div className="flex items-center justify-between gap-2 mb-3.5">
+        <div className="flex items-center gap-1.5 flex-wrap">
+          <span className={cn("text-[10px] font-mono font-semibold px-2 py-0.5 rounded-md border", meta.appColor)}>
+            {meta.appName}
+          </span>
+          <code className="text-[10px] font-mono px-2 py-0.5 rounded-md bg-muted/60 text-foreground/80 border border-border/50 truncate max-w-[140px]">
+            {meta.formula}
+          </code>
+        </div>
+
+        <ArrowUpRight className="w-3.5 h-3.5 text-muted-foreground/40 group-hover:text-emerald-500 transition-colors" />
+      </div>
+
+      {/* Title */}
+      <Link href={`/blog/${post.slug}`} className="block mb-2">
+        <h3 className="font-display text-base font-bold tracking-tight text-foreground group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition-colors leading-snug">
+          {post.frontmatter.title}
+        </h3>
+      </Link>
+
+      {/* Excerpt */}
+      {showExcerpt && post.frontmatter.description && (
+        <p className="text-xs text-muted-foreground line-clamp-2 leading-relaxed mb-4 flex-1">
+          {post.frontmatter.description}
+        </p>
+      )}
+
+      {/* Footer */}
+      <div className="mt-auto pt-3 border-t border-border/40 flex items-center justify-between text-[11px] font-mono text-muted-foreground">
+        <div className="flex items-center gap-1.5">
+          <Clock className="w-3 h-3 text-muted-foreground/60" />
+          <time dateTime={post.frontmatter.date}>
+            {formatRelativeTime(new Date(post.frontmatter.date))}
+          </time>
+        </div>
+        <span className="text-[10px] font-mono font-medium text-emerald-700 dark:text-emerald-400 opacity-0 group-hover:opacity-100 transition-opacity">
+          Explore ↗
+        </span>
+      </div>
+    </article>
+  );
+}

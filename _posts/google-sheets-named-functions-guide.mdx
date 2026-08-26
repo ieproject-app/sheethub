@@ -1,0 +1,151 @@
+---
+title: "Google Sheets Named Functions: Reuse Complex Formulas"
+date: "2026-08-21"
+updated: "2026-08-25"
+description: "Create Google Sheets named functions to reuse complex formulas, document arguments, and reduce helper columns."
+tags: ["google-sheets", "named-functions", "formulas", "reusable-formulas", "tutorial"]
+category: "Formulas & Functions"
+published: true
+heroImage: "default-og"
+---
+
+A formula that is readable in one cell can become a maintenance problem when you copy it across six tabs. Google Sheets named functions let you package that logic once, give its inputs clear names, and call it with a short function name. The result is easier to audit than a repeated formula and more portable than a helper-column workaround.
+
+This guide shows how to create Google Sheets named functions, test their arguments, import them into another spreadsheet, and decide when a named function is better than `LET`, a named range, or Apps Script.
+
+## What a named function is
+
+A named function is a reusable formula definition that you create inside a Google Sheets file. It can use built-in Sheets functions, references, and argument placeholders. After you save it, you can call it like a regular function:
+
+```excel
+=GROSS_UP(B2,C2)
+```
+
+Here, `GROSS_UP` is the function name, while `B2` and `C2` are the values passed to its placeholders.
+
+Named functions are different from named ranges. A named range gives a name to a cell or range, such as `SalesData`. A named function contains calculation logic and can accept different inputs each time you call it. It is also different from an Apps Script custom function: named functions use formulas already available in Sheets and do not require a script project, authorization flow, or JavaScript code.
+
+For a large array calculation, [Google Sheets named functions with ARRAYFORMULA](/blog/arrayformula-google-sheets-complete-guide) can help you decide whether the logic should spill down a range or be packaged as a reusable function.
+
+> **Availability:** Named functions are a built-in Google Sheets feature. Menu labels can vary slightly by account or interface language, but the feature is managed from **Data > Named functions**.
+
+## Create a named function step by step
+
+Suppose a finance sheet needs to add a tax rate to many positive amounts. First test the ordinary formula in a cell:
+
+```excel
+=IF(AND(B2>=0,C2>=0),B2*(1+C2),NA())
+```
+
+The formula expects an amount in `B2` and a decimal tax rate in `C2`. To make that logic reusable:
+
+1. Open **Data > Named functions**.
+2. Choose **Add new function**.
+3. Enter a function name such as `GROSS_UP`.
+4. Add two argument placeholders: `amount` and `rate`.
+5. Put the formula definition in the formula field, replacing the cell references with the placeholders.
+6. Add a description that tells another editor what the function returns.
+7. Save the function and call it from a worksheet.
+
+The definition should look like this:
+
+```excel
+=IF(AND(amount>=0,rate>=0),amount*(1+rate),NA())
+```
+
+You can then use it with different cells:
+
+```excel
+=GROSS_UP(B2,C2)
+```
+
+`amount` and `rate` are placeholders, not fixed cell addresses, so the definition works for any row or direct value. Use descriptive names and document the expected input, result, and decimal-rate format such as `0.08`.
+
+## Use placeholders and test the result
+
+Test a named function with a known result before replacing repeated formulas. If `B2` contains `1250` and `C2` contains `0.08`, this call should return `1350`:
+
+```excel
+=GROSS_UP(1250,0.08)
+```
+
+Then compare it with the original formula in a separate cell:
+
+```excel
+=IF(AND(1250>=0,0.08>=0),1250*(1+0.08),NA())
+```
+
+The two results should match. Also test an invalid input so you know the error behavior is intentional:
+
+```excel
+=GROSS_UP(-10,0.08)
+```
+
+In this definition, the result is `#N/A` because the amount is negative. If a blank should be treated as zero instead, define that behavior explicitly rather than assuming Sheets will infer it.
+
+Placeholders can represent values, ranges, or expressions depending on the formula. For example, a reusable filter can accept a data range and a status criterion:
+
+```excel
+=FILTER_BY_STATUS(data,status,chosen_status)
+```
+
+Its definition might be:
+
+```excel
+=FILTER(data,status=chosen_status)
+```
+
+When you pass a range, make sure the range and criteria have compatible dimensions. A one-column status range cannot filter a three-column data range unless the rows line up as intended. Test both a match and a no-match case before sharing the function.
+
+If the result is meant to feed a report, an [advanced QUERY in Google Sheets](/blog/google-sheets-query-advanced-guide) may be a better fit when grouping, labeling, or sorting is the main task. A named function is most useful when the same piece of logic appears in several formulas.
+
+## Import and manage reusable functions
+
+Named functions belong to the spreadsheet where they are created. To reuse one in another file, open the destination spreadsheet and go to **Data > Named functions**. Choose the import option, select the source spreadsheet, review the available definitions, and import the functions you need.
+
+Importing copies the definition into the destination file. It does not create a live dependency on the source spreadsheet. If the source function changes later, update the destination definition separately or repeat the import process according to the available options.
+
+Treat the description as lightweight documentation. Record what each placeholder means, the expected data type, and important edge cases. When several editors maintain the workbook, use a naming convention such as `FILTER_BY_STATUS`, `NET_PRICE`, or `SAFE_DIVIDE`. Avoid spaces and names that look like cell references or conflict with built-in functions. A name such as `A1` is confusing because it resembles a cell address, while `SUM` can make a formula ambiguous.
+
+For reporting workflows that primarily select, group, and label rows, compare the reusable logic with the [Google Sheets QUERY function](/blog/query-function-google-sheets-guide) before creating a large library of named functions.
+
+## Fix parse errors and reference problems
+
+A named function can fail even when the underlying idea is correct. Check these common causes:
+
+1. **Placeholder mismatch:** Declare every placeholder used in the definition and supply each required argument.
+2. **Wrong argument order:** `GROSS_UP(rate,amount)` can return a plausible but wrong result. Keep the documented order consistent.
+3. **Range-size mismatch:** `FILTER` requires aligned data and condition ranges with matching start and end rows.
+4. **Table-reference assumptions:** Structured references from other spreadsheet tools may not behave like A1 ranges. Test with explicit ranges.
+5. **Circular references:** Keep the output outside any input range used by the function.
+6. **Name collisions:** Avoid names resembling cell addresses, named ranges, or built-in functions.
+
+For debugging, replace the named-function call with its full formula and test the pieces separately. Then compare each placeholder with its corresponding expression.
+
+## When to use a named function
+
+Use a named function when the same multi-step calculation appears in multiple places and its inputs can be described clearly. Use `LET` when the logic is local to one formula and you mainly need readable intermediate variables. The [LET guide for Google Sheets](/blog/google-sheets-let-function-guide) is a useful comparison for that pattern.
+
+Use a helper column when intermediate values need to be visible, inspected row by row, or reused by several unrelated formulas. Use Apps Script when the operation needs external services, custom JavaScript, scheduled actions, or capabilities that spreadsheet formulas do not provide.
+
+| Tool | Best fit | Main trade-off |
+|---|---|---|
+| Named function | The same multi-step logic is called across several formulas or sheets | The definition is stored per spreadsheet and can be easy to overlook during maintenance |
+| `LET` | One formula needs readable intermediate variables | The logic is not automatically reusable in other formulas |
+| Helper column | People need to inspect intermediate values row by row | It adds worksheet structure and may require extra cleanup |
+| Named range | A stable cell or range needs a descriptive reference | It names data, not a reusable calculation |
+| Apps Script | The workflow needs JavaScript, external services, or scheduled actions | It introduces code, permissions, and a separate maintenance surface |
+
+### Quick validation checklist
+
+Before importing or sharing a named function, run the same small set of checks against the definitions you plan to distribute:
+
+- **Normal input:** Confirm `=GROSS_UP(1250,0.08)` returns `1350`.
+- **Blank input:** Decide whether a blank amount or rate should return zero, an error, or a deliberate fallback, then test that choice.
+- **Invalid input:** Confirm `=GROSS_UP(-10,0.08)` returns the intended `#N/A` result.
+- **No match:** Call `FILTER_BY_STATUS` with a status that does not exist and verify the expected empty-result behavior.
+- **Range size:** Pass a data range and condition range with the same starting and ending rows, then test a deliberately mismatched pair so the failure is understood.
+
+Record the expected result beside each test while the definition is still easy to change. This catches argument-order mistakes and range assumptions before they spread to other spreadsheets.
+
+A good named function has a narrow purpose, descriptive placeholders, a useful description, and tests for normal, blank, invalid, and no-match inputs. Build those checks before distributing the definition to other sheets, and reusable formulas become a maintainable part of the workbook rather than another layer of hidden complexity.

@@ -1,10 +1,9 @@
-
 import React, { useId } from 'react';
 
 type SheetHubLogoProps = React.SVGProps<SVGSVGElement>;
 
 /**
- * SheetHubLogo - Spreadsheet-inspired mark aligned with favicon/app icons.
+ * SheetHubLogo - Modern Minimalist Formula Equal & fx mark.
  */
 export const SheetHubLogo = ({
   className,
@@ -20,28 +19,30 @@ export const SheetHubLogo = ({
       {...props}
     >
       <defs>
-        <linearGradient id={`sheet-bg-${id}`} x1="0" y1="0" x2="1" y2="1">
-          <stop offset="0" stopColor="#22c55e" />
-          <stop offset="1" stopColor="#15803d" />
-        </linearGradient>
-        <linearGradient id={`sheet-cell-${id}`} x1="0" y1="0" x2="1" y2="1">
-          <stop offset="0" stopColor="#86efac" />
-          <stop offset="1" stopColor="#4ade80" />
+        <linearGradient id={`sh-grad-${id}`} x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0%" stopColor="#10b981" />
+          <stop offset="100%" stopColor="#047857" />
         </linearGradient>
       </defs>
 
-      <rect x="3" y="3" width="58" height="58" rx="14" fill={`url(#sheet-bg-${id})`} />
-      <rect x="12" y="12" width="40" height="40" rx="7" fill="#14532d" fillOpacity="0.34" />
+      {/* Base Rounded Container */}
+      <rect x="4" y="4" width="56" height="56" rx="14" fill={`url(#sh-grad-${id})`} />
 
-      <line x1="12" y1="25" x2="52" y2="25" stroke="#86efac" strokeOpacity="0.5" strokeWidth="1.2" />
-      <line x1="12" y1="39" x2="52" y2="39" stroke="#86efac" strokeOpacity="0.5" strokeWidth="1.2" />
-      <line x1="25" y1="12" x2="25" y2="52" stroke="#86efac" strokeOpacity="0.5" strokeWidth="1.2" />
-      <line x1="39" y1="12" x2="39" y2="52" stroke="#86efac" strokeOpacity="0.5" strokeWidth="1.2" />
+      {/* Subtle Inner Inset Border */}
+      <rect x="4" y="4" width="56" height="56" rx="14" fill="none" stroke="#6ee7b7" strokeWidth="1.5" strokeOpacity="0.35" />
 
-      <rect x="26" y="26" width="13" height="13" rx="3" fill={`url(#sheet-cell-${id})`} />
-      <rect x="26" y="26" width="13" height="13" rx="3" fill="none" stroke="#dcfce7" strokeWidth="1.1" />
+      {/* Left: Formula Equal sign '=' */}
+      <rect x="15" y="24" width="13" height="4" rx="2" fill="#ffffff" />
+      <rect x="15" y="36" width="13" height="4" rx="2" fill="#ffffff" />
 
-      <path d="M45 17h6v6" fill="none" stroke="#dcfce7" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" />
+      {/* Right: Modern 'fx' Function Symbol */}
+      {/* 'f' stem and crossbar */}
+      <path d="M38 18c-3.5 0-5 2-5 5v23" fill="none" stroke="#dcfce7" strokeWidth="4.5" strokeLinecap="round" strokeLinejoin="round" />
+      <path d="M30 30h11" fill="none" stroke="#dcfce7" strokeWidth="4" strokeLinecap="round" />
+
+      {/* 'x' crossing stroke */}
+      <path d="M43 35l8 11" fill="none" stroke="#a7f3d0" strokeWidth="4" strokeLinecap="round" />
+      <path d="M51 35l-8 11" fill="none" stroke="#a7f3d0" strokeWidth="4" strokeLinecap="round" />
     </svg>
   );
 };

@@ -15,7 +15,7 @@ Most people reach for SUMIF, COUNTIF, or QUERY when they need a grouped total. T
 
 If you already work with [Excel PivotTable reports](/blog/excel-pivottable-spill-error-guide), the Google Sheets version feels familiar. The idea is the same; the editor panel simply looks different. This guide walks through the Sheets workflow from a blank spreadsheet to an interactive summary.
 
-## What Is a Pivot Table?
+## What is a pivot table?
 
 A pivot table takes a flat data range and lets you rearrange it. Rows become categories, columns become extra groupings, and values become the numbers you want to summarize. It never touches your original data. It builds a separate summary you can reshape at any time.
 
@@ -30,9 +30,9 @@ The four building blocks live in the editor panel:
 
 The result is a cross-tabulation: one dimension down the side, another across the top, and the summarized numbers filling the grid.
 
-## Creating Your First Pivot Table
+## Creating your first pivot table
 
-The whole flow takes four clicks.
+The setup takes four clicks.
 
 **Step 1: Select any cell inside your data.** Include the header row. Google Sheets detects the full range automatically.
 
@@ -42,22 +42,21 @@ The whole flow takes four clicks.
 
 **Step 4: Click Create.** An empty pivot table editor opens alongside a blank table on the sheet.
 
-That is the entire setup. From here the editor panel does the work.
+After you create the empty pivot, use the editor panel to configure it.
 
-## The Editor Panel: Rows, Columns, Values, Filters
+## The editor panel: rows, columns, values, filters
 
 The editor appears on the right with four sections, mirroring the table above. Each section has an **Add** dropdown listing every column in your source range.
 
-For a sales report, a minimal setup looks like this:
+For a sales report, start with this setup:
 
-- **Rows:** Region
-- **Values:** Sales (summarized by SUM)
+Add **Region** under Rows and **Sales** under Values, summarized by SUM.
 
 As soon as you add both, the pivot table fills with total sales per region. No formula appears in any cell.
 
 To add a second dimension, drag **Product** to **Columns**. The table now shows regions down the side and products across the top, with a sales total in every intersection.
 
-## Summarize By and Show As
+## Summarize by and show as
 
 Google Sheets lets you choose how each value is summarized. Click the value field in the editor, then pick **Summarize by**:
 
@@ -72,12 +71,13 @@ Google Sheets lets you choose how each value is summarized. Click the value fiel
 
 The **Show as** menu changes how a value is displayed without altering the underlying data. Two settings you will use often:
 
-- **% of grand total** — each value as a percentage of the whole table. Handy for market-share or budget breakdowns.
-- **Running total** — a running sum down the rows. Useful for cumulative sales or growth over time.
+A **% of grand total** shows each value as a percentage of the whole table. It is useful for market-share or budget breakdowns.
 
-Here is a common trap: if a value column contains text instead of numbers, Sheets defaults to **COUNT** rather than **SUM**. Make sure the source column is genuinely numeric before you expect a total.
+A **running total** adds the values down the rows. Use it for cumulative sales or growth over time.
 
-## Calculated Fields
+A common trap is a value column that contains text instead of numbers. Sheets defaults to **COUNT** rather than **SUM** in that case, so make sure the source column is numeric before expecting a total.
+
+## Calculated fields
 
 A calculated field lets you add a formula-driven column inside the pivot, without touching the source data.
 
@@ -93,7 +93,7 @@ The pivot table now shows a profit figure for every row and column intersection.
 
 Formulas in calculated fields follow normal Google Sheets syntax. If you get a parse error, the usual cause is a column name that does not match the source header exactly, or a missing operator.
 
-## Grouping by Date
+## Grouping by date
 
 Date columns get automatic grouping in Sheets. Click the date field under **Rows**, then choose **Create pivot date group** and pick the interval:
 
@@ -106,17 +106,17 @@ Group a transaction date by **Month** and the pivot instantly collapses thousand
 
 Date grouping is a headline reason to use pivot tables over manual summaries. The same view in a formula would need MONTH(), YEAR(), and a SUMIF per period.
 
-## Slicers and Filters
+## Slicers and filters
 
 Filters narrow the data before it is summarized. Add one under **Filters** in the editor and pick the value you want to keep.
 
 A slicer is the visual version. From the menu choose **Insert > Slicer**, then link it to a pivot. A small panel appears on the sheet with buttons for every value in the linked field. Clicking a button filters the pivot instantly, which makes slicers ideal for interactive dashboards.
 
-For example, a dashboard with a **Region** slicer lets anyone on the team flip between regions without touching the pivot structure.
+A dashboard with a **Region** slicer lets anyone on the team switch between regions without touching the pivot structure.
 
-## Pivot vs. the Alternatives
+## Pivot vs. the alternatives
 
-Depending on what you need, a different tool may fit better:
+Choose a different tool when your goal is more specific:
 
 | Need | Use |
 |------|-----|
@@ -127,27 +127,35 @@ Depending on what you need, a different tool may fit better:
 
 For a formula-driven alternative to a [Google Sheets pivot table](/blog/google-sheets-query-advanced-guide), QUERY's GROUP BY and PIVOT clauses do the same job and stay live as new rows arrive. For an Excel alternative that summarizes visible rows, [SUBTOTAL and AGGREGATE](/blog/excel-subtotal-aggregate-guide) keep the calculation formula-driven while Sheets pivots remain the no-formula path.
 
-## Error Handling and Limitations
+## Error handling and limitations
 
 Pivots are forgiving, but a few situations produce confusing output:
 
-- **Empty or duplicate headers** — Sheets needs a clean header row. Duplicate column names make the panel ambiguous, so rename them first.
-- **Text in a value column** — counts instead of sums. Coerce the column to numbers, or use **COUNTA** deliberately.
-- **Calculated field syntax errors** — usually a header mismatch. Reference the exact source column names.
-- **Source range too small** — if you add rows later, a fixed range misses them. Use a named range or a full-column reference as the pivot source.
-- **No auto-refresh on edited cells** — pivots in Sheets refresh when the source data changes, but a calculated field that depends on a formula result may need a manual refresh to pick up recalculated values.
+Sheets needs a clean header row. If headers are empty or duplicated, rename them before creating the pivot so the editor can distinguish each field.
 
-## Pro Tips
+If a value column contains text, Sheets counts it instead of summing it. Convert the column to numbers, or choose **COUNTA** deliberately.
 
-- **Format numbers inside the pivot.** Select the value cells and apply currency or thousands separators from the **Format** menu.
-- **Sort the result.** Click a value cell and use **Sort** to rank regions or products instead of default order.
-- **Build a dashboard with slicers.** Link two or three pivots to one slicer to filter the whole page at once.
+A calculated field syntax error usually comes from a header mismatch. Reference the source column names exactly as they appear in the data.
 
-## Common Mistakes to Avoid
+A fixed source range misses rows you add later. Use a named range or a full-column reference as the pivot source.
 
-- Forgetting to check whether a field added to **Rows** or **Values** is the one you meant. The pivot changes shape immediately.
-- Expecting SUM but getting COUNT because the value column holds text.
-- Leaving duplicate headers in the source, which makes fields ambiguous in the editor.
+Sheets refreshes pivots when the source data changes, but a calculated field that depends on a formula result may need a manual refresh after that formula recalculates.
+
+## Pro tips
+
+Select the value cells and use the **Format** menu to apply currency or thousands separators.
+
+Click a value cell and use **Sort** to rank regions or products instead of leaving them in the default order.
+
+Link multiple pivots to one slicer to filter an entire dashboard from a single control.
+
+## Common mistakes to avoid
+
+Check that a field added to **Rows** or **Values** is the one you intended. The pivot changes shape as soon as you add it.
+
+If you expect SUM but get COUNT, check whether the value column contains text.
+
+Rename duplicate headers before creating the pivot so the editor can distinguish the fields.
 
 ## FAQ
 

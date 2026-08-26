@@ -1,0 +1,118 @@
+---
+title: "Excel Stale Values: Fix Formulas That Have Not Recalculated"
+date: "2026-08-24"
+description: "Fix Excel stale values by checking calculation mode, refreshing formulas, and understanding the warning safely."
+published: true
+featured: false
+heroImage: "default-og"
+tags: ["excel", "stale-values", "recalculation", "troubleshooting", "tutorial"]
+category: "Formulas & Functions"
+---
+
+A sales total can look normal and still be wrong. If a source cell changed while Excel was not recalculating, the formula may display its previous result. **Excel stale values** warn you about that gap. They are not the same as `#VALUE!`, `#N/A`, or another formula error: Excel has a result, but it may be out of date.
+
+## Why Excel stale values matter
+
+Imagine a weekly sales workbook. Cell B2 contains the latest regional total, and cell C2 calculates commission from B2. A colleague changes B2 from 125,000 to 140,000 while the workbook is in Manual Calculation mode. Until Excel recalculates, C2 can still show the commission for 125,000.
+
+For a simple commission check, the dependent formula might look like this:
+
+```excel
+=B2*10%
+```
+
+After recalculation, compare the displayed commission with the current B2 input rather than assuming that the old number updated automatically.
+
+This is different from a broken formula. Use the [Excel formula error troubleshooting guide](/blog/excel-formula-errors-troubleshooting-guide) when Excel shows an error code such as `#VALUE!` or `#N/A`. Stale-value formatting describes calculation state, not formula syntax.
+
+## What stale-value formatting means
+
+Excel can mark a stale cell with strikethrough formatting and show a warning icon when you select it. Microsoft documents this behavior primarily for Partial and Manual Calculation modes; it can also appear with Python formulas or Data Table cells in Partial mode. When calculation finishes, Excel removes the stale formatting. **Format Stale Values** under **Formulas > Calculation Options** controls the warning, not the calculation.
+
+Turning it off only removes the signal; it does not calculate the workbook.
+
+**Availability note:** Stale Value Formatting is a Microsoft 365 feature whose behavior depends on the Excel build and formula types. Do not assume every perpetual Excel edition exposes it. If the option is missing, use the calculation-mode and recalculation steps below.
+
+## Check calculation mode first
+
+Open the **Formulas** tab and inspect **Calculation Options**. Excel generally offers these choices:
+
+- **Automatic:** Excel recalculates dependent formulas when relevant inputs change.
+- **Manual:** Excel waits until you explicitly request calculation. This is useful for very large workbooks, but it makes old results easy to mistake for current ones.
+- **Automatic Except for Data Tables:** ordinary formulas calculate automatically while Data Table calculations are controlled separately.
+
+A workbook can inherit calculation behavior from another open workbook, so check the setting rather than relying on memory. Choose **Automatic** for routine reporting and test a known dependent formula. Manual mode can help with heavy models, but requires a deliberate recalculation before sharing.
+
+## Recalculate the workbook safely
+
+Use the smallest calculation that answers your question first.
+
+### Recalculate changed formulas
+
+Press <Kbd>F9</Kbd> to recalculate the workbook in Manual or Partial mode, then check whether stale formatting disappears. You can also select **Calculate Now** on the **Formulas** tab.
+
+### Recalculate the active sheet
+
+If only one worksheet changed, use **Calculate Sheet**. This limits the operation to the active sheet, but check formulas that pull values from other sheets afterward.
+
+### Force a full recalculation
+
+When results remain suspicious, press <Kbd>Ctrl</Kbd>+<Kbd>Alt</Kbd>+<Kbd>F9</Kbd> to force a full recalculation, even for formulas Excel believes are unchanged. This can take longer in a large file.
+
+Use a controlled sequence:
+
+1. Save a backup or work on a copy.
+2. Record key outputs before recalculation.
+3. Recalculate, force a full recalculation if needed, and compare important outputs with current inputs.
+4. Save only after the results make sense.
+
+Do not treat a disappearing strikethrough as proof of correctness. A recalculated formula can still contain a wrong reference or business rule.
+
+## Fix the cause, not only the warning
+
+If the workbook repeatedly produces stale results, make the calculation policy explicit. Restore **Automatic** mode for routine reporting. If Manual mode is necessary for performance, add an instruction near the main output to recalculate before publishing or exporting.
+
+Inspect expensive formulas too. Volatile functions such as `INDIRECT`, `OFFSET`, `TODAY`, and `NOW`, along with external links, large arrays, Data Tables, and Python formulas, can increase calculation work. The [Excel workbook performance guide](/blog/excel-check-performance-guide) covers ways to reduce it.
+
+Finally, distinguish a stale numeric result from a precision issue. A value that has recalculated may still contain a tiny binary rounding difference. The guide to [Excel floating-point precision issues](/blog/excel-floating-point-errors-guide) explains why displayed numbers can look equal while their stored values differ.
+
+## Limitations and common mistakes
+
+**Hiding the format does not refresh the result.** Turning off **Format Stale Values** only removes the signal. Workaround: recalculate first, then change the display preference if needed.
+
+**The warning does not cover every dependency.** Some external data sources and Data Table relationships may not receive stale formatting. Workaround: refresh external data separately and compare a known input/output pair.
+
+**Full recalculation can be expensive.** A large workbook may appear frozen while Excel processes formulas. Workaround: save a copy, calculate the active sheet first, and force a full recalculation only when necessary.
+
+**Circular references need a structural fix.** Recalculation will not solve the loop. Workaround: inspect the circular-reference warning and redesign the dependency chain.
+
+**The warning is not a quality guarantee.** A current result can still use a wrong range or flawed formula. Workaround: verify key inputs and one worked example before distribution.
+
+## Quick checklist and FAQ
+
+Before sharing a workbook:
+
+- Check **Formulas > Calculation Options**.
+- Recalculate with <Kbd>F9</Kbd> or **Calculate Now**.
+- Use a full recalculation if a key result remains questionable.
+- Confirm important outputs against changed inputs.
+- Refresh external data and inspect links separately.
+- Save only after the workbook passes a practical spot check.
+
+### Does F9 fix every stale value?
+
+F9 recalculates formulas, but it does not repair an incorrect formula, refresh every external connection, or resolve a circular reference. Verify the result afterward.
+
+### Why are my values stale when calculation is Automatic?
+
+Check the status bar and formula dependencies. A special formula type, delayed external source, Data Table, or unfinished calculation may be involved. Use Calculate Now before investigating the formula itself.
+
+### Should I disable stale-value formatting?
+
+Usually not. The strikethrough is a safety signal. If you disable it, keep a separate recalculation step in your reporting checklist because the setting does not update values.
+
+### Why does Excel recalculate slowly?
+
+Large ranges, volatile formulas, external links, Data Tables, and complex dynamic arrays can increase calculation time. Reduce unnecessary dependencies before making Manual mode permanent.
+
+The safest habit is simple: treat a stale-looking cell as unverified, recalculate deliberately, and validate the outputs that matter before you share the file.

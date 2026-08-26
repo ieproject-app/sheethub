@@ -12,7 +12,7 @@ category: "Data Analysis"
 
 Can a worksheet cell run Python without turning your workbook into a separate developer project? Yes, if your Excel account supports Python in Excel. The workflow stays inside the grid: the **Python in Excel xl function** reads selected workbook data through `xl()`, analyzes it in Microsoft's cloud environment, and returns a value or Python object to the worksheet.
 
-## What Python in Excel actually means
+## What Python in Excel does
 
 Python in Excel lets you write Python in a cell by selecting **Formulas > Insert Python** or entering `=PY` and choosing the `PY` function. The cell receives a PY indicator, and the formula bar becomes the place where you edit the Python code.
 
@@ -46,7 +46,7 @@ You can also select a range while the Python cell is in Edit mode. Excel inserts
 
 Python results can return as Excel values or as Python objects. Use Excel values when the result should feed ordinary Excel formulas, charts, conditional formatting, or other worksheet analysis. Use a Python object when you plan to pass the result into another Python calculation.
 
-A grouped result can be returned directly to the grid. In this example, Python reads the table, groups sales by region, and returns a two-column result:
+You can return a grouped result directly to the grid. In this example, Python reads the table, groups sales by region, and returns a two-column result:
 
 ```excel
 =PY("import pandas as pd\nsales = xl('Sales[#All]', headers=True)\nresult = sales.groupby('Region', as_index=False)['Amount'].sum()\nreturn result")
@@ -66,7 +66,7 @@ Do not place passwords, API keys, or unnecessary personal data in examples. A se
 
 ## A safe first workflow
 
-Use this sequence for a small analysis:
+For a small analysis, follow these steps:
 
 1. Confirm that your platform, license, update channel, and administrator settings support Python in Excel.
 2. Put a small, representative dataset in an Excel table with clear headers.
@@ -84,6 +84,6 @@ Python in Excel fits workbook-based analysis that needs pandas-style grouping, r
 
 ## Summary
 
-The Python in Excel `xl()` function reads workbook objects into a cloud-hosted Python calculation. Use it for cells, ranges, tables, queries, and defined names; return results as Excel values when the worksheet needs them, or as Python objects when another Python step will reuse them. Check availability first, import external data through Power Query, and keep sensitive values out of examples. With those limits understood, Python can extend an Excel workbook without requiring a separate local Python setup.
+The Python in Excel `xl()` function reads workbook objects into a cloud-hosted Python calculation. Use it for cells, ranges, tables, queries, and defined names; return results as Excel values when the worksheet needs them, or as Python objects when another Python step will reuse them. Check availability first, import external data through Power Query, and keep sensitive values out of examples. Within those limits, Python can extend an Excel workbook without requiring a separate local Python setup.
 
 **Sources:** [Get started with Python in Excel](https://support.microsoft.com/en-us/excel/python/get-started-with-python-in-excel), [Introduction to Python in Excel](https://support.microsoft.com/en-us/excel/python/introduction-to-python-in-excel), and [Data security and Python in Excel](https://support.microsoft.com/en-us/excel/python/data-security-and-python-in-excel).

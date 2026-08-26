@@ -1,61 +1,46 @@
 import Link from "next/link";
-import { Button } from "@/components/ui/button";
-import "./globals.css";
-import { Home, BookOpen } from "lucide-react";
+import { Compass, BookOpen } from "lucide-react";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "404 - Page Not Found",
+  title: "404 - Formula or Page Not Found",
   robots: { index: false, follow: false },
 };
 
-const navItems = [
-  {
-    href: "/",
-    label: "Go Back Home",
-    icon: Home,
-  },
-  {
-    href: "/blog",
-    label: "Browse Blog",
-    icon: BookOpen,
-  },
-];
-
 export default function NotFound() {
   return (
-    <div className="w-full min-h-screen flex items-center justify-center py-20">
-      <div className="max-w-xl mx-auto px-6 text-center">
-        <header className="mb-8">
-          <h1 className="font-display text-6xl font-extrabold tracking-tighter text-primary mb-4">
-            404
-          </h1>
-          <p className="font-display text-3xl font-bold tracking-tight text-primary">
-            Page Not Found
-          </p>
-        </header>
+    <div className="w-full min-h-[60vh] flex items-center justify-center py-16">
+      <div className="max-w-md w-full mx-auto px-6 text-center flex flex-col items-center gap-5">
+        {/* Error Chip */}
+        <span className="text-[11px] font-mono font-bold px-2.5 py-1 rounded-md bg-rose-500/10 text-rose-600 dark:text-rose-400 border border-rose-500/20 uppercase tracking-wider">
+          Error: #REF! / #N/A (404)
+        </span>
 
-        <div className="mb-12">
-          <p className="text-muted-foreground text-lg leading-relaxed">
-            The page you are looking for might have been moved or deleted.
-          </p>
-        </div>
+        <h1 className="font-display text-3xl sm:text-4xl font-extrabold tracking-tight text-foreground">
+          Page or Formula Not Found
+        </h1>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-12">
-          {navItems.map(({ href, label, icon: Icon }) => (
-            <Button
-              key={href}
-              asChild
-              variant="outline"
-              size="lg"
-              className="rounded-xl h-16 group"
-            >
-              <Link href={href}>
-                <Icon className="mr-2 h-5 w-5 transition-transform group-hover:scale-110" />
-                <span>{label}</span>
-              </Link>
-            </Button>
-          ))}
+        <p className="text-sm text-muted-foreground leading-relaxed max-w-sm">
+          The tutorial or documentation page you are looking for might have been moved, renamed, or is currently under revision.
+        </p>
+
+        {/* Quick Navigation Buttons */}
+        <div className="flex flex-wrap items-center justify-center gap-3 pt-2">
+          <Link
+            href="/"
+            className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-emerald-600 text-white font-medium text-xs hover:bg-emerald-700 transition-colors shadow-xs"
+          >
+            <Compass className="w-4 h-4" />
+            <span>Learning Roadmap</span>
+          </Link>
+
+          <Link
+            href="/blog"
+            className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-card border border-border/80 text-foreground font-medium text-xs hover:bg-muted transition-colors"
+          >
+            <BookOpen className="w-4 h-4 text-muted-foreground" />
+            <span>Browse All Tutorials</span>
+          </Link>
         </div>
       </div>
     </div>

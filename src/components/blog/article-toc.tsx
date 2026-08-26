@@ -1,123 +1,128 @@
 "use client";
 
-import { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { cn } from "@/lib/utils";
 import type { Heading } from "@/lib/mdx-utils";
-import { ChevronRight, ListIcon } from "lucide-react";
+import { ListIcon, ChevronDown } from "lucide-react";
 
 interface ArticleTOCProps {
   headings: Heading[];
-  title: string;
+  title?: string;
+  isDesktopRail?: boolean;
 }
 
 export function ArticleTOC({
   headings,
-  title,
+  title = "On this page",
+  isDesktopRail = false,
 }: ArticleTOCProps) {
-  const [isOpen, setIsOpen] = useState(false);
+  const [activeId, setActiveId] = useState<string>("");
+  const [mobileOpen, setMobileOpen] = useState(false);
 
-  const handleHeadingClick = (
-    event: React.MouseEvent<HTMLAnchorElement>,
-    headingId: string,
-  ) => {
-    event.preventDefault();
-    setIsOpen(false);
+  useEffect(() => {
+    if (!headings.length) return;
 
-    window.setTimeout(() => {
-      const target = document.getElementById(headingId);
-      if (!target) return;
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            setActiveId(entry.target.id);
+          }
+        });
+      },
+      { rootMargin: "-80px 0% -60% 0%" }
+    );
 
-      // Dynamically measure header height so offset stays correct
-      // whether it has one or two rows (primary nav + secondary nav)
-      const headerEl = document.querySelector("header");
-      const headerHeight = headerEl
-        ? headerEl.getBoundingClientRect().height
-        : 104;
-      const MARGIN = 16;
-      const targetTop =
-        target.getBoundingClientRect().top + window.scrollY - headerHeight - MARGIN;
+    headings.forEach((h) => {
+      const el = document.getElementById(h.id);
+      if (el) observer.observe(el);
+    });
 
-      window.scrollTo({
-        top: Math.max(targetTop, 0),
-        behavior: "smooth",
-      });
-
-      window.history.replaceState(null, "", `#${headingId}`);
-    }, 280);
-  };
+    return () => observer.disconnect();
+  }, [headings]);
 
   if (headings.length === 0) return null;
 
-  return (
-    <div
-      className={cn(
-        "my-8 overflow-hidden rounded-2xl border border-primary/10 bg-card/60 shadow-sm transition-all duration-300",
-        "border-l-4 border-l-primary/50",
-      )}
-    >
-      <button
-        onClick={() => setIsOpen(!isOpen)}
-        className="group flex w-full items-center justify-between p-5 text-left transition-all duration-200 hover:bg-muted/30 active:scale-[0.99]"
-        aria-expanded={isOpen}
-        aria-label={title}
-      >
-        <div className="flex items-center gap-3">
-          <div className="rounded-lg bg-primary/10 p-2 transition-transform duration-300 group-hover:rotate-12">
-            <ListIcon className="h-5 w-5 text-primary" />
-          </div>
-          <div className="flex flex-col">
-            <span className="font-display text-base font-bold tracking-wide text-primary">
-              {title}
-            </span>
-            <span className="text-xs font-medium text-muted-foreground">
-              {headings.length} {headings.length === 1 ? "section" : "sections"}
-            </span>
-          </div>
-        </div>
-        <div
-          className={cn(
-            "flex h-8 w-8 items-center justify-center rounded-full bg-muted/50 transition-all duration-300",
-            isOpen && "rotate-90 bg-primary text-primary-foreground",
-          )}
-        >
-          <ChevronRight className="h-5 w-5" />
-        </div>
-      </button>
+  const handleHeadingClick = (e: React.MouseEvent, id: string) => {
+    e.preventDefault();
+    setMobileOpen(false);
+    const target = document.getElementById(id);
+    if (!target) return;
+    const headerOffset = 80;
+    const elementPosition = target.getBoundingClientRect().top;
+    const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
 
-      <div
-        className={cn(
-          "overflow-hidden transition-all duration-300 ease-out",
-          isOpen
-            ? "max-h-250 translate-y-0 opacity-100"
-            : "max-h-0 -translate-y-2 opacity-0",
-        )}
-      >
-        <div className="mx-4 border-t border-primary/5" />
-        <ul className="space-y-1 p-5 text-sm max-h-125 overflow-y-auto overscroll-contain [&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-primary/20 hover:[&::-webkit-scrollbar-thumb]:bg-primary/40">
-          {headings.map((heading) => {
+    window.scrollTo({
+      top: offsetPosition,
+      behavior: "smooth",
+    });
+    window.history.replaceState(null, "", `#${id}`);
+  };
+
+  // Sticky Right Rail for Desktop xl+
+  if (isDesktopRail) {
+    return (
+      <div className="w-full text-xs font-medium">
+        <div className="flex items-center gap-2 mb-3 font-mono font-semibold text-muted-foreground uppercase tracking-wider">
+          <ListIcon className="w-3.5 h-3.5 text-emerald-500" />
+          <span>{title}</span>
+        </div>
+        <ul className="space-y-2 border-l border-border/80 pl-3">
+          {headings.map((h) => {
+            const isActive = activeId === h.id;
             return (
-              <li
-                key={heading.id}
-                className={cn(
-                  "transition-all duration-300",
-                  heading.level === 3
-                    ? "ml-4 border-l-2 border-muted-foreground/15 pl-4"
-                    : "",
-                )}
-              >
+              <li key={h.id} className={h.level === 3 ? "pl-2.5" : ""}>
                 <a
-                  href={`#${heading.id}`}
-                  onClick={(event) => handleHeadingClick(event, heading.id)}
-                  className="group -mx-2 flex items-center gap-3 rounded-md px-2 py-2 text-muted-foreground transition-all duration-200 hover:bg-muted/30 hover:text-foreground hover:translate-x-1"
+                  href={`#${h.id}`}
+                  onClick={(e) => handleHeadingClick(e, h.id)}
+                  className={cn(
+                    "block transition-colors py-0.5 leading-snug",
+                    isActive
+                      ? "text-emerald-600 dark:text-emerald-400 font-semibold"
+                      : "text-muted-foreground hover:text-foreground"
+                  )}
                 >
-                  <span className="h-1.5 w-1.5 rounded-full bg-muted-foreground/30 transition-all duration-200 group-hover:bg-primary/60" />
-                  <span className="line-clamp-1">{heading.text}</span>
+                  {h.text}
                 </a>
               </li>
             );
           })}
         </ul>
       </div>
+    );
+  }
+
+  // Mobile In-Article Collapsible TOC
+  return (
+    <div className="xl:hidden my-6 rounded-xl border border-border/70 bg-card/60 overflow-hidden">
+      <button
+        onClick={() => setMobileOpen(!mobileOpen)}
+        className="w-full flex items-center justify-between p-3.5 text-xs font-mono font-medium text-foreground hover:bg-muted/40 transition-colors"
+      >
+        <div className="flex items-center gap-2">
+          <ListIcon className="w-4 h-4 text-emerald-500" />
+          <span>{title} ({headings.length} sections)</span>
+        </div>
+        <ChevronDown className={cn("w-4 h-4 transition-transform", mobileOpen && "rotate-180")} />
+      </button>
+
+      {mobileOpen && (
+        <div className="p-3.5 pt-0 border-t border-border/50 text-xs">
+          <ul className="space-y-1.5 pt-2">
+            {headings.map((h) => (
+              <li key={h.id} className={h.level === 3 ? "pl-3" : ""}>
+                <a
+                  href={`#${h.id}`}
+                  onClick={(e) => handleHeadingClick(e, h.id)}
+                  className="block text-muted-foreground hover:text-foreground py-0.5 leading-snug"
+                >
+                  {h.text}
+                </a>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
     </div>
   );
 }

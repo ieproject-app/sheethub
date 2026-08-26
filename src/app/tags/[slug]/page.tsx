@@ -1,8 +1,8 @@
 import { getSortedPostSummaries } from "@/lib/posts";
 import { getAllTags, shouldIndexTag } from "@/lib/tags";
 import { notFound } from "next/navigation";
-import Link from "next/link";
 import { LayoutBreadcrumbs } from "@/components/layout/layout-breadcrumbs";
+import { FormulaCard } from "@/components/cards/formula-card";
 import type { Metadata } from "next";
 
 export const dynamic = "force-dynamic";
@@ -55,60 +55,33 @@ export default async function TagPage({
   );
 
   return (
-    <div className="w-full">
-      <main className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 pt-10 pb-16 sm:pb-24">
-        <header className="mb-12 text-center">
-          <LayoutBreadcrumbs
-            segments={[
-              { label: "Home", href: "/" },
-              { label: "Topics", href: "/tags" },
-              { label: match.name },
-            ]}
-            className="mb-6 justify-center"
+    <div className="w-full max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+      <header className="mb-6 border-b border-border/40 pb-4">
+        <LayoutBreadcrumbs
+          segments={[
+            { label: "Home", href: "/" },
+            { label: "Topics", href: "/tags" },
+            { label: match.name },
+          ]}
+          className="mb-2"
+        />
+
+        <h1 className="font-display text-2xl sm:text-3xl font-extrabold tracking-tight text-foreground mb-1">
+          #{match.name}
+        </h1>
+        <p className="text-xs font-mono text-muted-foreground/70">
+          {posts.length} {posts.length === 1 ? "formula guide" : "formula guides"}
+        </p>
+      </header>
+
+      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
+        {posts.map((post) => (
+          <FormulaCard
+            key={post.slug}
+            post={post}
           />
-
-          <div className="inline-flex items-center gap-4 rounded-2xl border border-primary/10 bg-card/60 p-6 mb-6 shadow-md">
-            <span className="font-display text-5xl font-extrabold text-primary">
-              {match.name.charAt(0).toUpperCase()}
-            </span>
-            <div className="text-left">
-              <h1 className="font-display text-2xl font-bold text-primary">
-                {match.name}
-              </h1>
-              <p className="text-sm text-muted-foreground mt-1">
-                {match.count} {match.count === 1 ? "article" : "articles"}
-              </p>
-            </div>
-          </div>
-        </header>
-
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {posts.map((post) => {
-            const postFirstLetter = post.frontmatter.title.trim().charAt(0).toUpperCase();
-
-            return (
-              <Link
-                key={post.slug}
-                href={"/blog/" + post.slug}
-                className="group block"
-              >
-                <div className="h-full rounded-2xl border border-primary/5 bg-card/50 transition-all duration-300 hover:-translate-y-1 hover:border-primary/20 hover:shadow-xl overflow-hidden">
-                  <div className="relative aspect-[8/5] bg-gradient-to-b from-primary/80 via-primary/70 to-accent/70 flex items-center justify-center">
-                    <span className="font-display text-4xl font-extrabold text-white/95">
-                      {postFirstLetter || "S"}
-                    </span>
-                  </div>
-                  <div className="p-5">
-                    <h2 className="font-display text-base font-bold tracking-tight text-primary line-clamp-2 transition-colors group-hover:text-primary">
-                      {post.frontmatter.title}
-                    </h2>
-                  </div>
-                </div>
-              </Link>
-            );
-          })}
-        </div>
-      </main>
+        ))}
+      </div>
     </div>
   );
 }

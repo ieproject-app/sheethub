@@ -2,17 +2,8 @@ import { MDXRemote } from "next-mdx-remote/rsc";
 import remarkGfm from "remark-gfm";
 import rehypeShiki from "@shikijs/rehype";
 import excelFormulaGrammar from "@/grammars/excel-formula.tmLanguage.json";
-import { ScrollReveal } from "@/components/ui/scroll-reveal";
 import { mdxComponents } from "@/components/mdx-components";
-import { cn } from "@/lib/utils";
 import type { ComponentType, SVGProps } from "react";
-import {
-  Shield,
-  FileText,
-  Mail,
-  ScrollText,
-  BadgeInfo,
-} from "lucide-react";
 
 type IconComponent = ComponentType<SVGProps<SVGSVGElement>>;
 
@@ -24,24 +15,12 @@ type StaticPageTemplateProps = {
   badgeLabel?: string;
   icon?: IconComponent;
   maxWidthClassName?: string;
-  contentClassName?: string;
   footerNote?: string;
 };
 
-const iconMap: Record<string, IconComponent> = {
-  shield: Shield,
-  filetext: FileText,
-  mail: Mail,
-  scrolltext: ScrollText,
-  badgeinfo: BadgeInfo,
-};
-
-export function resolveStaticPageIcon(icon?: string | IconComponent): IconComponent {
-  if (!icon) return FileText;
-  if (typeof icon !== "string") return icon;
-
-  const normalized = icon.replace(/[\s_-]/g, "").toLowerCase();
-  return iconMap[normalized] || FileText;
+export function resolveStaticPageIcon(..._args: unknown[]): undefined {
+  void _args;
+  return undefined;
 }
 
 export function LayoutStaticPageTemplate({
@@ -49,86 +28,64 @@ export function LayoutStaticPageTemplate({
   description,
   lastUpdated,
   content,
-  badgeLabel = "Official Document",
-  icon: Icon = FileText,
-  maxWidthClassName = "max-w-3xl",
-  contentClassName,
+  badgeLabel = "Legal",
   footerNote,
 }: StaticPageTemplateProps) {
   return (
-    <div className="w-full">
-      <div
-        className={cn(
-          "mx-auto px-4 pt-12 pb-24 sm:px-6 lg:px-8",
-          maxWidthClassName,
-        )}
-      >
-        <ScrollReveal direction="down" delay={0.05}>
-          <header className="mb-14 space-y-4 text-center">
-            <div className="inline-flex items-center gap-2 rounded-full border border-accent/20 bg-accent/10 px-3 py-1.5 text-[11px] font-black uppercase tracking-widest text-accent">
-              <Icon className="h-3.5 w-3.5" />
+    <div className="w-full py-4">
+      {/* Hyper-Minimalist Technical Docs Canvas (Fixed ~800px) */}
+      <div className="w-full max-w-[800px]">
+        {/* Document Header */}
+        <header className="mb-8 pb-6 border-b border-border/40">
+          <div className="flex items-center gap-2 mb-2">
+            <span className="text-[11px] font-mono font-bold uppercase tracking-widest text-emerald-600 dark:text-emerald-400">
               {badgeLabel}
-            </div>
-
-            <h1
-              className="font-display font-black tracking-tighter text-primary"
-              style={{
-                fontSize: "clamp(2rem, 1.75rem + 1.25vw, 3rem)",
-                lineHeight: "1.1",
-                letterSpacing: "-0.03em",
-              }}
-            >
-              {title}
-            </h1>
-
-            {description ? (
-              <p className="mx-auto max-w-2xl text-lg leading-relaxed text-muted-foreground">
-                {description}
-              </p>
-            ) : null}
-
-            {lastUpdated ? (
-              <p className="text-sm font-mono text-muted-foreground/60">
-                Last updated: <time dateTime={lastUpdated}>{lastUpdated}</time>
-              </p>
-            ) : null}
-          </header>
-        </ScrollReveal>
-
-        <ScrollReveal direction="up" delay={0.1}>
-          <article
-            className={cn(
-              "rounded-2xl border border-primary/10 bg-card/40 p-6 shadow-sm backdrop-blur-sm sm:p-8",
-              contentClassName,
+            </span>
+            {lastUpdated && (
+              <>
+                <span className="text-muted-foreground/40">•</span>
+                <span className="text-xs font-mono text-muted-foreground/60">
+                  Last updated: <time dateTime={lastUpdated}>{lastUpdated}</time>
+                </span>
+              </>
             )}
-          >
-            <div className="prose-content text-lg text-foreground/80">
-              <MDXRemote
-                source={content}
-                components={mdxComponents}
-                options={{
-                  mdxOptions: {
-                    remarkPlugins: [remarkGfm],
-                    rehypePlugins: [[rehypeShiki, {
-                      theme: "github-dark",
-                      langs: [excelFormulaGrammar],
-                      langAlias: { excel: "excel-formula" },
-                      fallbackLanguage: "text",
-                    }]],
-                  },
-                }}
-              />
-            </div>
-          </article>
-        </ScrollReveal>
+          </div>
 
-        {footerNote ? (
-          <ScrollReveal direction="up" delay={0.15}>
-            <div className="mt-10 rounded-xl border border-accent/20 bg-accent/5 p-5 text-center">
-              <p className="text-sm text-muted-foreground">{footerNote}</p>
-            </div>
-          </ScrollReveal>
-        ) : null}
+          <h1 className="font-display text-2xl sm:text-3xl lg:text-4xl font-extrabold tracking-tight text-foreground mb-3">
+            {title}
+          </h1>
+
+          {description && (
+            <p className="text-sm sm:text-base text-muted-foreground leading-relaxed">
+              {description}
+            </p>
+          )}
+        </header>
+
+        {/* Pure Flowing MDX Prose (Zero Card Wrappers) */}
+        <article className="prose-content text-base sm:text-lg text-foreground/90 leading-relaxed">
+          <MDXRemote
+            source={content}
+            components={mdxComponents}
+            options={{
+              mdxOptions: {
+                remarkPlugins: [remarkGfm],
+                rehypePlugins: [[rehypeShiki, {
+                  theme: "github-dark",
+                  langs: [excelFormulaGrammar],
+                  langAlias: { excel: "excel-formula" },
+                  fallbackLanguage: "text",
+                }]],
+              },
+            }}
+          />
+        </article>
+
+        {footerNote && (
+          <div className="mt-12 pt-6 border-t border-border/40 text-xs font-mono text-muted-foreground">
+            <p>{footerNote}</p>
+          </div>
+        )}
       </div>
     </div>
   );
