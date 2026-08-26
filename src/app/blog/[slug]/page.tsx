@@ -15,6 +15,7 @@ import { ArticleRelated } from "@/components/blog/article-related";
 import { ArticleTOC } from "@/components/blog/article-toc";
 import { ArticleTags } from "@/components/blog/article-tags";
 import { ArticleTracker } from "@/components/blog/article-tracker";
+import { AdSenseSlot } from "@/components/ads/adsense-slot";
 import { extractHeadings } from "@/lib/mdx-utils";
 import { LayoutBreadcrumbs } from "@/components/layout/layout-breadcrumbs";
 import remarkGfm from "remark-gfm";
@@ -255,19 +256,12 @@ export default async function Page({
           <aside className="hidden xl:block xl:col-span-4 sticky top-20 pl-2 space-y-8 min-w-[300px]">
             <ArticleTOC headings={headings} isDesktopRail={true} />
 
-            {/* Reserved Right Rail Sticky AdSense Container (Guaranteed >= 300px) */}
-            <div
+            {/* Reserved Right Rail Sticky AdSense Container (Localhost Dev Preview Only) */}
+            <AdSenseSlot
               id="sheethub-right-rail-ad-slot"
-              className="w-full min-h-[250px] min-w-[300px] rounded-xl border border-dashed border-border/60 bg-muted/10 p-3 flex flex-col items-center justify-center text-center transition-colors"
-              aria-label="Sidebar Advertisement"
-            >
-              <span className="text-[9px] font-mono font-semibold uppercase tracking-widest text-muted-foreground/40 mb-1">
-                Ad Placement
-              </span>
-              <p className="text-[10px] font-mono text-muted-foreground/50">
-                Standard 300x250 Medium Rectangle / Responsive Sticky Slot
-              </p>
-            </div>
+              slotType="right-rail-sticky"
+              label="Right Rail Ad Placement"
+            />
           </aside>
 
         </div>

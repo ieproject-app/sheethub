@@ -1,6 +1,6 @@
 'use client';
 
-import React, { createContext, useContext, useState, useCallback } from 'react';
+import React, { createContext, useContext, useState, useSyncExternalStore, useCallback } from 'react';
 
 type ReadArticlesState = {
   [pathOrSlug: string]: number; // timestamp in ms when read
@@ -8,6 +8,7 @@ type ReadArticlesState = {
 
 interface ReadArticlesContextType {
   readMap: ReadArticlesState;
+  isMounted: boolean;
   markAsRead: (pathOrSlug: string) => void;
   isRead: (pathOrSlug: string) => boolean;
 }
@@ -16,6 +17,10 @@ const ReadArticlesContext = createContext<ReadArticlesContextType | undefined>(u
 
 const LOCAL_STORAGE_KEY = 'sheethub_read_articles_v1';
 const EXPIRY_MS = 30 * 24 * 60 * 60 * 1000; // 30 days retention
+
+function emptySubscribe() {
+  return () => {};
+}
 
 function getInitialReadState(): ReadArticlesState {
   if (typeof window === 'undefined') return {};
@@ -40,6 +45,13 @@ function getInitialReadState(): ReadArticlesState {
 
 export function ReadArticlesProvider({ children }: { children: React.ReactNode }) {
   const [readMap, setReadMap] = useState<ReadArticlesState>(getInitialReadState);
+  
+  // Hydration-safe mount tracker via useSyncExternalStore
+  const isMounted = useSyncExternalStore(
+    emptySubscribe,
+    () => true,
+    () => false
+  );
 
   const markAsRead = useCallback((pathOrSlug: string) => {
     if (!pathOrSlug) return;
@@ -59,15 +71,15 @@ export function ReadArticlesProvider({ children }: { children: React.ReactNode }
 
   const isRead = useCallback(
     (pathOrSlug: string) => {
-      if (!pathOrSlug) return false;
+      if (!isMounted || !pathOrSlug) return false;
       const cleanKey = pathOrSlug.startsWith('/') ? pathOrSlug : `/blog/${pathOrSlug}`;
       return !!readMap[cleanKey];
     },
-    [readMap]
+    [isMounted, readMap]
   );
 
   return (
-    <ReadArticlesContext.Provider value={{ readMap, markAsRead, isRead }}>
+    <ReadArticlesContext.Provider value={{ readMap, isMounted, markAsRead, isRead }}>
       {children}
     </ReadArticlesContext.Provider>
   );
@@ -78,6 +90,7 @@ export function useReadArticles() {
   if (!context) {
     return {
       readMap: {},
+      isMounted: false,
       markAsRead: () => {},
       isRead: () => false,
     };

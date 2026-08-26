@@ -38,22 +38,23 @@ export function LayoutFooter({
   ];
 
   return (
-    <footer className="w-full mt-20 border-t border-border/40 bg-background pt-8 pb-14">
-      <div className="w-full max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4 text-xs font-sans text-muted-foreground">
-        {/* Brand & Clean Copyright */}
-        <div className="flex items-center gap-3">
-          <SheetHubLogo className="w-5 h-5 opacity-80" />
-          <span className="font-display font-bold text-sm tracking-tight text-foreground">
-            SheetHub
-          </span>
-          <span className="text-muted-foreground/30">•</span>
-          <span className="text-xs text-muted-foreground/70 font-sans">
-            &copy; {new Date().getFullYear()} SheetHub Docs. All rights reserved.
-          </span>
+    <footer className="w-full mt-20 border-t border-border/40 bg-background pt-10 pb-16">
+      <div className="w-full max-w-7xl mx-auto flex flex-col md:flex-row items-start md:items-center justify-between gap-6 text-xs font-sans text-muted-foreground">
+        {/* Left Column: Larger Icon + 2-Line Brand Info */}
+        <div className="flex items-center gap-3.5">
+          <SheetHubLogo className="w-9 h-9 shrink-0 shadow-xs" />
+          <div className="flex flex-col">
+            <span className="font-display font-extrabold text-base tracking-tight text-foreground leading-tight">
+              SheetHub
+            </span>
+            <span className="text-[11px] text-muted-foreground/75 font-sans mt-0.5">
+              &copy; {new Date().getFullYear()} SheetHub Docs. All rights reserved.
+            </span>
+          </div>
         </div>
 
-        {/* Minimal Nav Links */}
-        <nav className="flex flex-wrap items-center gap-x-6 gap-y-2">
+        {/* Right Column: Minimal Nav Links */}
+        <nav className="flex flex-wrap items-center gap-x-6 gap-y-2 pt-1 md:pt-0">
           {footerNavItems.map((item) => (
             <Link
               key={item.id}

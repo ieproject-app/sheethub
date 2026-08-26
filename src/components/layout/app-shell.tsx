@@ -2,6 +2,7 @@
 
 import React, { useState } from "react";
 import { SidebarNav } from "@/components/layout/sidebar-nav";
+import { AdSenseSlot } from "@/components/ads/adsense-slot";
 import { Menu, X, Search } from "lucide-react";
 import { useRouter } from "next/navigation";
 
@@ -85,19 +86,12 @@ export function AppShell({ children }: { children: React.ReactNode }) {
           {/* Inner Content Area */}
           <div className="w-full flex-1 px-4 sm:px-8 lg:px-12 py-6">
             <div className="w-full max-w-7xl mx-auto flex flex-col gap-6">
-              {/* Reserved Clean AdSense Leaderboard Slot */}
-              <div
+              {/* Top Leaderboard AdSense Slot (Localhost Dev Preview Only) */}
+              <AdSenseSlot
                 id="sheethub-top-ad-slot"
-                className="w-full min-h-[90px] rounded-xl border border-dashed border-border/60 bg-muted/10 p-3 flex flex-col items-center justify-center text-center transition-colors"
-                aria-label="Advertisement Area"
-              >
-                <span className="text-[10px] font-mono font-semibold uppercase tracking-widest text-muted-foreground/40 mb-1">
-                  Advertisement Area
-                </span>
-                <p className="text-[11px] font-mono text-muted-foreground/50">
-                  Reserved Responsive Leaderboard Banner Slot
-                </p>
-              </div>
+                slotType="top-leaderboard"
+                label="Top Banner Placement"
+              />
 
               {/* Dynamic Page Content */}
               <main id="main-content" className="w-full">{children}</main>

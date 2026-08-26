@@ -1,6 +1,9 @@
+"use client";
+
 import React from "react";
 import Link from "next/link";
 import { ArrowRight, Compass, CheckCircle2, BookOpen } from "lucide-react";
+import { AdSenseSlot } from "@/components/ads/adsense-slot";
 import type { Post } from "@/lib/posts";
 
 interface HomeClientProps {
@@ -109,7 +112,8 @@ export function HomeClient({ initialPosts }: HomeClientProps) {
         </div>
 
         <div className="flex flex-col gap-8">
-          {MODULES.map((mod) => (
+          {/* Module 1 */}
+          {MODULES.slice(0, 2).map((mod) => (
             <div
               key={mod.number}
               className="flex flex-col gap-4 p-5 sm:p-6 rounded-xl border border-border/60 bg-card/40 transition-colors hover:border-border"
@@ -129,7 +133,56 @@ export function HomeClient({ initialPosts }: HomeClientProps) {
                 {mod.description}
               </p>
 
-              {/* Module Tutorials Grid */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-2.5 pt-1">
+                {mod.tutorials.map((tut) => (
+                  <Link
+                    key={tut.href}
+                    href={tut.href}
+                    className="group flex items-center justify-between gap-3 p-3 rounded-lg border border-border/50 bg-background/80 hover:bg-muted/40 hover:border-emerald-500/40 transition-all"
+                  >
+                    <div className="flex items-center gap-2.5 min-w-0">
+                      <CheckCircle2 className="w-4 h-4 text-emerald-500/70 shrink-0" />
+                      <span className="text-xs font-semibold text-foreground group-hover:text-emerald-700 dark:group-hover:text-emerald-400 truncate">
+                        {tut.title}
+                      </span>
+                    </div>
+                    <span className="text-[10px] font-mono px-1.5 py-0.5 rounded bg-muted/60 text-muted-foreground shrink-0">
+                      {tut.tag}
+                    </span>
+                  </Link>
+                ))}
+              </div>
+            </div>
+          ))}
+
+          {/* Mid-Feed AdSense Plan Placement (Localhost Dev Preview Only) */}
+          <AdSenseSlot
+            id="sheethub-home-mid-ad-slot"
+            slotType="in-feed"
+            label="In-Feed Native Curriculum Placement"
+          />
+
+          {/* Module 3, 4, 5 */}
+          {MODULES.slice(2).map((mod) => (
+            <div
+              key={mod.number}
+              className="flex flex-col gap-4 p-5 sm:p-6 rounded-xl border border-border/60 bg-card/40 transition-colors hover:border-border"
+            >
+              <div className="flex flex-col sm:flex-row sm:items-baseline justify-between gap-1 border-b border-border/40 pb-3">
+                <div className="flex items-center gap-2.5">
+                  <span className="font-mono text-xs font-bold px-2 py-0.5 rounded bg-muted text-muted-foreground">
+                    {mod.number}
+                  </span>
+                  <h3 className="font-display text-lg font-bold text-foreground">
+                    {mod.title}
+                  </h3>
+                </div>
+              </div>
+
+              <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed">
+                {mod.description}
+              </p>
+
               <div className="grid grid-cols-1 md:grid-cols-2 gap-2.5 pt-1">
                 {mod.tutorials.map((tut) => (
                   <Link
