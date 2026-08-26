@@ -1,25 +1,27 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" width="128" height="128">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
   <defs>
-    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0" stop-color="#22c55e"/>
-      <stop offset="1" stop-color="#15803d"/>
-    </linearGradient>
-    <linearGradient id="cell" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0" stop-color="#86efac"/>
-      <stop offset="1" stop-color="#4ade80"/>
+    <linearGradient id="sh-brand-grad-icon" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#10b981"/>
+      <stop offset="100%" stop-color="#047857"/>
     </linearGradient>
   </defs>
 
-  <rect x="6" y="6" width="116" height="116" rx="28" fill="url(#bg)"/>
-  <rect x="24" y="24" width="80" height="80" rx="14" fill="#14532d" fill-opacity="0.34"/>
+  <!-- Base Rounded Container -->
+  <rect x="4" y="4" width="56" height="56" rx="14" fill="url(#sh-brand-grad-icon)"/>
 
-  <line x1="24" y1="50" x2="104" y2="50" stroke="#86efac" stroke-opacity="0.5" stroke-width="2"/>
-  <line x1="24" y1="76" x2="104" y2="76" stroke="#86efac" stroke-opacity="0.5" stroke-width="2"/>
-  <line x1="50" y1="24" x2="50" y2="104" stroke="#86efac" stroke-opacity="0.5" stroke-width="2"/>
-  <line x1="76" y1="24" x2="76" y2="104" stroke="#86efac" stroke-opacity="0.5" stroke-width="2"/>
+  <!-- Subtle Inner Inset Border -->
+  <rect x="4" y="4" width="56" height="56" rx="14" fill="none" stroke="#6ee7b7" stroke-width="1.5" stroke-opacity="0.3"/>
 
-  <rect x="51" y="51" width="25" height="25" rx="6" fill="url(#cell)"/>
-  <rect x="51" y="51" width="25" height="25" rx="6" fill="none" stroke="#dcfce7" stroke-width="2"/>
+  <!-- Left: Formula Equal sign '=' -->
+  <rect x="15" y="24" width="13" height="4" rx="2" fill="#ffffff"/>
+  <rect x="15" y="36" width="13" height="4" rx="2" fill="#ffffff"/>
 
-  <path d="M88 34h10v10" fill="none" stroke="#dcfce7" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+  <!-- Right: Modern 'fx' Function Symbol -->
+  <!-- 'f' stem and crossbar -->
+  <path d="M38 18c-3.5 0-5 2-5 5v23" fill="none" stroke="#dcfce7" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M30 30h11" fill="none" stroke="#dcfce7" stroke-width="4" stroke-linecap="round"/>
+
+  <!-- 'x' crossing stroke -->
+  <path d="M43 35l8 11" fill="none" stroke="#a7f3d0" stroke-width="4" stroke-linecap="round"/>
+  <path d="M51 35l-8 11" fill="none" stroke="#a7f3d0" stroke-width="4" stroke-linecap="round"/>
 </svg>

@@ -2,8 +2,8 @@
 
 import React, { useMemo } from "react";
 import Link from "next/link";
-import { EditorialPostItem } from "@/components/cards/formula-card";
-import { ArrowRight } from "lucide-react";
+import { FormulaCard } from "@/components/cards/formula-card";
+import { ArrowRight, Compass } from "lucide-react";
 import type { Dictionary } from "@/lib/get-dictionary";
 import type { Post } from "@/lib/posts";
 
@@ -71,11 +71,14 @@ export function ArticleRelated({
   if (allRelated.length === 0) return null;
 
   return (
-    <section className="w-full mt-12 pt-8 border-t border-border/40">
-      <div className="flex items-center justify-between gap-4 mb-4 pb-2 border-b border-border/40">
-        <h3 className="text-xs font-mono font-semibold uppercase tracking-widest text-muted-foreground">
-          Recommended Reading
-        </h3>
+    <section className="w-full mt-14 pt-8 border-t border-border/40">
+      <div className="flex items-center justify-between gap-4 mb-6 pb-2 border-b border-border/40">
+        <div className="flex items-center gap-2">
+          <Compass className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" />
+          <h3 className="text-xs font-mono font-bold uppercase tracking-wider text-muted-foreground">
+            Recommended Next Reading
+          </h3>
+        </div>
 
         <Link
           href="/blog"
@@ -86,9 +89,10 @@ export function ArticleRelated({
         </Link>
       </div>
 
-      <div className="flex flex-col">
+      {/* Grid 3 Kolom dengan Gap yang Longgar dan Lega */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5">
         {allRelated.map((item) => (
-          <EditorialPostItem
+          <FormulaCard
             key={item.slug}
             post={item as unknown as Post}
             dictionary={dictionary}
