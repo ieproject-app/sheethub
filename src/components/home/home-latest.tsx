@@ -3,7 +3,7 @@
 import React from "react";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
-import { EditorialPostItem } from "@/components/cards/formula-card";
+import { FormulaCard } from "@/components/cards/formula-card";
 import type { Post, PostFrontmatter } from "@/lib/posts";
 import type { Dictionary } from "@/lib/get-dictionary";
 
@@ -12,7 +12,7 @@ interface HomeLatestProps {
   dictionary: Dictionary;
 }
 
-export const HomeLatest = ({ posts, dictionary }: HomeLatestProps) => {
+export const HomeLatest = ({ posts }: HomeLatestProps) => {
   if (posts.length === 0) return null;
 
   return (
@@ -31,12 +31,11 @@ export const HomeLatest = ({ posts, dictionary }: HomeLatestProps) => {
         </Link>
       </div>
 
-      <div className="flex flex-col">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5">
         {posts.map((post) => (
-          <EditorialPostItem
+          <FormulaCard
             key={post.slug}
             post={post as unknown as Post}
-            dictionary={dictionary}
           />
         ))}
       </div>

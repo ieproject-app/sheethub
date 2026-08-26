@@ -119,13 +119,6 @@ export default async function Page({
   const wordCount = (initialPost.content || "").trim().split(/\s+/).filter(Boolean).length || 0;
   const readingTime = Math.max(1, Math.ceil(wordCount / 200));
 
-  const itemForMeta = {
-    slug: initialPost.slug,
-    title: initialPost.frontmatter.title,
-    description: initialPost.frontmatter.description,
-    href: "/blog/" + initialPost.slug,
-    type: "blog" as const,
-  };
 
   const breadcrumbSegments = [
     { label: "Home", href: "/" },
@@ -186,10 +179,7 @@ export default async function Page({
 
               <ArticleMeta
                 frontmatter={initialPost.frontmatter}
-                item={itemForMeta}
-                dictionary={dictionary}
                 readingTime={readingTime}
-                isOverlay={false}
                 isCentered={false}
               />
             </header>

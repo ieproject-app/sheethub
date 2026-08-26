@@ -34,7 +34,6 @@ export function HomeTopics({
   posts,
   title,
   viewAllText,
-  dictionary,
   tag,
   viewAllHref,
 }: HomeTopicsProps) {
@@ -71,8 +70,6 @@ export function HomeTopics({
           <ScrollReveal key={post.slug} direction="up" delay={index * 0.05}>
             <FormulaCard
               post={post as unknown as Post}
-              dictionary={dictionary}
-              variant="horizontal"
             />
           </ScrollReveal>
         ))}

@@ -9,7 +9,6 @@ import {
   type CarouselApi,
 } from '@/components/ui/carousel';
 import { ChevronLeft, ChevronRight, Calculator, ArrowRight } from 'lucide-react';
-import type { Dictionary } from '@/lib/get-dictionary';
 import { ScrollReveal } from '@/components/ui/scroll-reveal';
 import { FormulaCard } from '@/components/cards/formula-card';
 import type { Post } from '@/lib/posts';
@@ -31,11 +30,10 @@ interface HomeTutorialsProps {
   posts: SliderPost[];
   title: string;
   viewMoreText: string;
-  dictionary: Dictionary;
   tag?: string;
 }
 
-export function HomeTutorials({ posts, title, viewMoreText, dictionary, tag }: HomeTutorialsProps) {
+export function HomeTutorials({ posts, title, viewMoreText, tag }: HomeTutorialsProps) {
   const [api, setApi] = React.useState<CarouselApi>();
   const [canScrollPrev, setCanScrollPrev] = React.useState(false);
   const [canScrollNext, setCanScrollNext] = React.useState(false);
@@ -129,8 +127,6 @@ export function HomeTutorials({ posts, title, viewMoreText, dictionary, tag }: H
                   <div className="w-full">
                     <FormulaCard
                       post={post as unknown as Post}
-                      dictionary={dictionary}
-                      variant="default"
                     />
                   </div>
                 </CarouselItem>

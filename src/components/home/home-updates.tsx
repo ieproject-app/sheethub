@@ -3,7 +3,6 @@
 import * as React from 'react';
 import Link from 'next/link';
 import { ArrowRight, Bell } from 'lucide-react';
-import type { Dictionary } from '@/lib/get-dictionary';
 import { ScrollReveal } from '@/components/ui/scroll-reveal';
 import { FormulaCard } from '@/components/cards/formula-card';
 import type { Post } from '@/lib/posts';
@@ -25,12 +24,11 @@ interface HomeUpdatesProps {
   posts: SliderPost[];
   title: string;
   viewMoreText: string;
-  dictionary: Dictionary;
   tag?: string;
   viewMoreHref?: string;
 }
 
-export function HomeUpdates({ posts, title, viewMoreText, dictionary, tag, viewMoreHref }: HomeUpdatesProps) {
+export function HomeUpdates({ posts, title, viewMoreText, tag, viewMoreHref }: HomeUpdatesProps) {
   const finalViewMoreHref = viewMoreHref || (tag ? `/tags/${tag.toLowerCase()}` : '/blog');
 
   if (posts.length === 0) return null;
@@ -68,8 +66,6 @@ export function HomeUpdates({ posts, title, viewMoreText, dictionary, tag, viewM
               <FormulaCard
                 key={post.slug}
                 post={post as unknown as Post}
-                dictionary={dictionary}
-                variant="default"
               />
             ))}
           </div>

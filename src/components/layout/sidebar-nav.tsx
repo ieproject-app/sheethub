@@ -95,8 +95,8 @@ export function SidebarNav({ onItemClick }: { onItemClick?: () => void }) {
 
   return (
     <div className="flex flex-col h-full w-full select-none">
-      {/* 1. STICKY TOP BRAND HEADER */}
-      <div className="shrink-0 px-5 py-4 border-b border-border/50 bg-background/95 backdrop-blur-md">
+      {/* 1. STICKY TOP BRAND HEADER (Precision 64px Height Aligned with Right Search Bar) */}
+      <div className="shrink-0 h-16 px-5 border-b border-border/50 bg-background/95 backdrop-blur-md flex items-center">
         <Link
           href="/"
           onClick={onItemClick}

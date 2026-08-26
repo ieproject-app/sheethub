@@ -2,41 +2,40 @@
 
 import React from "react";
 import Link from "next/link";
-import { cn } from "@/lib/utils";
-import { formatRelativeTime } from "@/lib/utils";
-import { AddToReadingListButton } from "@/components/layout/add-to-reading-list-button";
+import { Clock, ArrowUpRight } from "lucide-react";
+import { formatRelativeTime, cn } from "@/lib/utils";
 import type { Post } from "@/lib/posts";
 import type { Dictionary } from "@/lib/get-dictionary";
-import { ArrowUpRight, Clock } from "lucide-react";
 
 interface FormulaCardProps {
   post: Post;
   dictionary?: Dictionary;
   showExcerpt?: boolean;
-  variant?: string;
 }
 
-// Smart formula signature extraction
 function getFormulaSignature(post: Post) {
-  const title = (post.frontmatter.title || "").toLowerCase();
-  const tags = (post.frontmatter.tags || []).map((t) => t.toLowerCase());
+  const tags = post.frontmatter.tags || [];
+  const title = post.frontmatter.title.toLowerCase();
+  const category = (post.frontmatter.category || "").toLowerCase();
 
-  const isSheets = tags.includes("google-sheets") || title.includes("google sheets") || title.includes("sheets");
-  const isExcel = tags.includes("excel") || title.includes("excel") || !isSheets;
-  const isAi = tags.includes("ai") || title.includes("copilot") || title.includes("ai");
+  const isSheets = tags.includes("google-sheets") || category.includes("google sheets");
+  const isExcel = tags.includes("excel") || category.includes("excel") || !isSheets;
+  const isAi = tags.includes("ai") || tags.includes("copilot") || category.includes("ai");
 
-  const appName = isSheets ? "Google Sheets" : isExcel ? "Excel" : "Spreadsheet";
-  const appColor = isSheets
-    ? "bg-teal-500/10 text-teal-700 dark:text-teal-400 border-teal-500/20"
-    : isExcel
-    ? "bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 border-emerald-500/20"
-    : "bg-blue-500/10 text-blue-700 dark:text-blue-400 border-blue-500/20";
+  let appName = isSheets ? "Google Sheets" : "Excel";
+  let appColor = isSheets
+    ? "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/20"
+    : "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/20";
 
-  let formula = "=ARRAYFORMULA(...)";
+  if (isAi) {
+    appName = "Copilot AI";
+    appColor = "bg-purple-500/10 text-purple-600 dark:text-purple-400 border-purple-500/20";
+  }
+
+  let formula = "=XLOOKUP(...)";
   if (title.includes("xlookup")) formula = "=XLOOKUP(...)";
   else if (title.includes("vlookup")) formula = "=VLOOKUP(...)";
-  else if (title.includes("index") && title.includes("match")) formula = "=INDEX(..., MATCH(...))";
-  else if (title.includes("countif")) formula = "=COUNTIFS(...)";
+  else if (title.includes("index") && title.includes("match")) formula = "=INDEX(MATCH())";
   else if (title.includes("sumifs") || title.includes("sumif")) formula = "=SUMIFS(...)";
   else if (title.includes("query")) formula = `=QUERY(...)`;
   else if (title.includes("filter")) formula = "=FILTER(...)";
@@ -55,18 +54,9 @@ function getFormulaSignature(post: Post) {
 
 export function FormulaCard({
   post,
-  dictionary,
   showExcerpt = true,
 }: FormulaCardProps) {
   const meta = getFormulaSignature(post);
-
-  const readingItem = {
-    slug: post.slug,
-    title: post.frontmatter.title,
-    description: post.frontmatter.description,
-    href: `/blog/${post.slug}`,
-    type: "blog" as const,
-  };
 
   return (
     <article className="group relative flex flex-col h-full rounded-xl border border-border/70 bg-card p-5 transition-all duration-300 hover:-translate-y-1 hover:border-emerald-500/50 hover:shadow-md">
@@ -81,14 +71,7 @@ export function FormulaCard({
           </code>
         </div>
 
-        {dictionary && (
-          <AddToReadingListButton
-            item={readingItem}
-            dictionary={dictionary}
-            showText={false}
-            className="opacity-0 group-hover:opacity-100 transition-opacity text-muted-foreground hover:text-foreground"
-          />
-        )}
+        <ArrowUpRight className="w-3.5 h-3.5 text-muted-foreground/40 group-hover:text-emerald-500 transition-colors" />
       </div>
 
       {/* Title */}
@@ -113,17 +96,10 @@ export function FormulaCard({
             {formatRelativeTime(new Date(post.frontmatter.date))}
           </time>
         </div>
-
-        <Link
-          href={`/blog/${post.slug}`}
-          className="inline-flex items-center gap-1 font-semibold text-emerald-600 dark:text-emerald-400 group-hover:translate-x-0.5 transition-transform"
-        >
-          <span>Explore</span>
-          <ArrowUpRight className="w-3.5 h-3.5" />
-        </Link>
+        <span className="text-[10px] font-mono font-medium text-emerald-700 dark:text-emerald-400 opacity-0 group-hover:opacity-100 transition-opacity">
+          Explore ↗
+        </span>
       </div>
     </article>
   );
 }
-
-export const EditorialPostItem = FormulaCard;
