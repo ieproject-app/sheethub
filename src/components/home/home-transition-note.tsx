@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { ChevronRight } from "lucide-react";
+import { ArrowRight, Terminal } from "lucide-react";
 import { ScrollReveal } from "@/components/ui/scroll-reveal";
 
 interface HomeTransitionNoteProps {
@@ -22,37 +22,41 @@ export function HomeTransitionNote({
   ctaHref,
 }: HomeTransitionNoteProps) {
   return (
-    <section className="container max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 pb-12 sm:pb-14 overflow-hidden">
+    <section className="container max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-10">
       <ScrollReveal direction="up">
-        <div className="mb-4 text-left">
-          <p className="font-sans text-[10px] font-black uppercase tracking-[0.16em] text-accent/85 mb-2">
-            {eyebrow}
-          </p>
-          <h3 className="font-display text-2xl sm:text-3xl font-extrabold tracking-tight text-primary mb-1.5">
-            {title}
-          </h3>
-          <p className="text-sm sm:text-base text-muted-foreground">
-            {subtitle}
-          </p>
-          <div className="mt-4 h-0.5 w-14 bg-[linear-gradient(to_right,#0078D4,#E95420)]" />
-        </div>
+        <div className="relative rounded-xl border border-border/80 bg-card/60 p-6 sm:p-8 backdrop-blur-xs overflow-hidden">
+          {/* Subtle Grid Accent */}
+          <div className="absolute inset-0 bg-grid-pattern opacity-40 pointer-events-none" />
 
-        <div className="rounded-lg border border-dashed border-primary/30 bg-card/60 px-5 py-4 sm:px-6 sm:py-5 shadow-[0_10px_28px_-22px_rgba(0,0,0,0.7)]">
-          <p className="text-sm sm:text-base leading-relaxed text-foreground/85">
-            {description}
-          </p>
-
-          {ctaText && ctaHref && (
-            <div className="mt-3">
-              <Link
-                href={ctaHref}
-                className="group inline-flex items-center gap-1 text-sm font-medium text-muted-foreground hover:text-accent transition-colors"
-              >
-                <span>{ctaText}</span>
-                <ChevronRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
-              </Link>
+          <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-6">
+            <div className="max-w-2xl">
+              <div className="flex items-center gap-2 text-xs font-mono font-bold uppercase tracking-wider text-emerald-600 dark:text-emerald-400 mb-2">
+                <Terminal className="w-3.5 h-3.5" />
+                <span>{eyebrow}</span>
+              </div>
+              <h3 className="font-display text-xl sm:text-2xl font-bold tracking-tight text-foreground mb-1">
+                {title}
+              </h3>
+              <p className="text-xs sm:text-sm text-muted-foreground mb-3 font-medium">
+                {subtitle}
+              </p>
+              <p className="text-sm text-foreground/80 leading-relaxed">
+                {description}
+              </p>
             </div>
-          )}
+
+            {ctaText && ctaHref && (
+              <div className="shrink-0">
+                <Link
+                  href={ctaHref}
+                  className="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg bg-foreground text-background font-medium text-xs sm:text-sm hover:opacity-90 transition-all shadow-sm"
+                >
+                  <span>{ctaText}</span>
+                  <ArrowRight className="w-4 h-4" />
+                </Link>
+              </div>
+            )}
+          </div>
         </div>
       </ScrollReveal>
     </section>

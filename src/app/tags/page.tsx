@@ -16,22 +16,27 @@ export default async function TagsPage() {
 
   return (
     <div className="w-full">
-      <main className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 pt-10 pb-16 sm:pb-24">
-        <header className="mb-12 text-center">
+      <main className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pt-8 pb-16 sm:pb-24">
+        <header className="mb-10 text-left border-b border-border/60 pb-8">
           <LayoutBreadcrumbs
             segments={[
               { label: "Home", href: "/" },
               { label: "Topics" },
             ]}
-            className="mb-6 justify-center"
+            className="mb-4"
           />
 
-          <h1 className="font-display text-4xl font-extrabold tracking-tighter text-primary mb-4 sm:text-5xl">
-            Topics
-          </h1>
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-600 dark:text-emerald-400 text-xs font-mono font-medium mb-3">
+            <span>Tag Taxonomy</span>
+            <span>•</span>
+            <span>{tags.length} Topics</span>
+          </div>
 
-          <p className="max-w-xl mx-auto text-muted-foreground text-sm sm:text-base leading-relaxed">
-            Browse articles by topic — Excel, Google Sheets, formulas, automation, and more.
+          <h1 className="font-display text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight text-foreground mb-3">
+            Explore by Topic
+          </h1>
+          <p className="max-w-2xl text-muted-foreground text-sm sm:text-base leading-relaxed">
+            Index of topics covering Excel functions, Google Sheets scripts, pivot tables, dynamic arrays, and productivity tips.
           </p>
         </header>
 
@@ -40,33 +45,31 @@ export default async function TagsPage() {
             <Link
               key={tag.name}
               href={"/tags/" + encodeURIComponent(tag.name.toLowerCase())}
-              className="group relative overflow-hidden rounded-2xl border border-primary/5 bg-card/50 p-5 transition-all duration-300 hover:-translate-y-1 hover:border-primary/20 hover:shadow-xl hover:shadow-primary/5"
+              className="group relative overflow-hidden rounded-xl border border-border/70 bg-card p-4 transition-all duration-300 hover:-translate-y-1 hover:border-emerald-500/50 hover:shadow-lg flex items-center justify-between"
             >
-              <div className="flex items-start justify-between">
-                <div className="flex flex-col gap-3">
-                  <div className="inline-flex h-10 w-10 items-center justify-center rounded-xl border transition-colors duration-300 group-hover:bg-primary/5">
-                    <Hash className="h-5 w-5" />
-                  </div>
-                  <div>
-                    <h2 className="text-lg font-bold tracking-tight text-primary transition-colors group-hover:text-primary">
-                      {tag.name}
-                    </h2>
-                    <div className="mt-1 flex items-center gap-2 text-xs font-medium text-muted-foreground/60">
-                      <span>{tag.count} {tag.count === 1 ? "article" : "articles"}</span>
-                    </div>
-                  </div>
+              <div className="flex items-center gap-3 min-w-0">
+                <div className="inline-flex h-9 w-9 items-center justify-center rounded-lg border border-border/80 bg-muted/50 text-foreground group-hover:border-emerald-500/50 group-hover:text-emerald-500 transition-colors shrink-0">
+                  <Hash className="h-4 w-4" />
                 </div>
-                <div className="rounded-full bg-primary/5 p-2 text-primary opacity-0 transition-all duration-300 group-hover:translate-x-1 group-hover:opacity-100">
-                  <ArrowRight className="h-4 w-4" />
+                <div className="min-w-0">
+                  <h2 className="text-sm font-bold tracking-tight text-foreground group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition-colors truncate">
+                    {tag.name}
+                  </h2>
+                  <p className="text-[11px] font-mono text-muted-foreground">
+                    {tag.count} {tag.count === 1 ? "article" : "articles"}
+                  </p>
                 </div>
+              </div>
+              <div className="rounded-lg p-1.5 text-muted-foreground transition-all duration-300 group-hover:text-emerald-500 group-hover:translate-x-0.5">
+                <ArrowRight className="h-4 w-4" />
               </div>
             </Link>
           ))}
         </div>
 
         {tags.length === 0 && (
-          <div className="py-20 text-center">
-            <p className="text-muted-foreground">No topics yet.</p>
+          <div className="py-20 text-center rounded-2xl border border-dashed border-border/80 bg-card/40">
+            <p className="text-muted-foreground text-sm">No topics yet.</p>
           </div>
         )}
       </main>

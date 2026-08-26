@@ -147,35 +147,55 @@ export default async function Page({
 
   return (
     <div className="w-full">
-      <main className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 pt-10 pb-16 sm:pb-24">
-        <article>
-          <header className="mb-12 text-center">
-            <LayoutBreadcrumbs
-              segments={breadcrumbSegments}
-              className="mb-6 justify-center"
-            />
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8 pb-16 sm:pb-24">
+        {/* Main Article & Right TOC 2-Column Grid */}
+        <div className="grid grid-cols-1 xl:grid-cols-12 gap-10 items-start">
+          
+          {/* Center Main Article */}
+          <article className="xl:col-span-8 min-w-0">
+            <header className="mb-8 text-left border-b border-border/60 pb-6">
+              <LayoutBreadcrumbs
+                segments={breadcrumbSegments}
+                className="mb-4"
+              />
 
-            <h1 className="font-display text-h1 font-extrabold tracking-tighter text-primary mb-6 max-w-3xl mx-auto">
-              {initialPost.frontmatter.title}
-            </h1>
+              {initialPost.frontmatter.category && (
+                <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-600 dark:text-emerald-400 text-xs font-mono font-medium mb-4">
+                  <span>{initialPost.frontmatter.category}</span>
+                  {readingTime ? (
+                    <>
+                      <span>•</span>
+                      <span>{readingTime} min read</span>
+                    </>
+                  ) : null}
+                </div>
+              )}
 
-            <ArticleMeta
-              frontmatter={initialPost.frontmatter}
-              item={itemForMeta}
-              dictionary={dictionary}
-              readingTime={readingTime}
-              isOverlay={false}
-              isCentered={true}
-            />
-          </header>
+              <h1 className="font-display text-2xl sm:text-3xl lg:text-4xl font-extrabold tracking-tight text-foreground mb-4">
+                {initialPost.frontmatter.title}
+              </h1>
 
-          <div className="max-w-3xl mx-auto">
-            <ArticleTOC
-              headings={headings}
-              title="Table of Contents"
-            />
+              {initialPost.frontmatter.description && (
+                <p className="text-sm sm:text-base text-muted-foreground leading-relaxed mb-6">
+                  {initialPost.frontmatter.description}
+                </p>
+              )}
 
-            <div className="text-lg text-foreground/80 prose-content">
+              <ArticleMeta
+                frontmatter={initialPost.frontmatter}
+                item={itemForMeta}
+                dictionary={dictionary}
+                readingTime={readingTime}
+                isOverlay={false}
+                isCentered={false}
+              />
+            </header>
+
+            {/* In-Article Mobile TOC */}
+            <ArticleTOC headings={headings} />
+
+            {/* Core MDX Content — Completely Untouched Logic */}
+            <div className="text-base sm:text-lg text-foreground/90 prose-content">
               <MDXRemote
                 source={initialPost.content || ""}
                 components={mdxComponents}
@@ -201,9 +221,19 @@ export default async function Page({
               className="mt-14 bg-muted/20"
             />
 
-            <div className="mt-16 flex flex-col gap-4 text-center border-t pt-12">
-              <h3 className="text-lg font-semibold tracking-tight text-primary">
-                Share this article
+            {/* Sequential Learning Path & Deep Dives */}
+            <ArticleRelated
+              type="blog"
+              currentSlug={initialPost.slug}
+              currentTags={currentTags}
+              currentCategory={currentCategory}
+              initialRelatedContent={initialRelatedContent}
+              dictionary={dictionary}
+            />
+
+            <div className="mt-14 flex flex-col gap-4 text-center border-t border-border/60 pt-10">
+              <h3 className="text-sm font-mono font-bold tracking-tight text-foreground uppercase">
+                Share this tutorial
               </h3>
               <ArticleShare
                 title={initialPost.frontmatter.title}
@@ -217,8 +247,28 @@ export default async function Page({
               }}
               type="blog"
             />
-          </div>
-        </article>
+          </article>
+
+          {/* Right Rail: Sticky On-This-Page TOC + Reserved AdSense Slot (Desktop xl+) */}
+          <aside className="hidden xl:block xl:col-span-4 sticky top-20 pl-2 space-y-8 min-w-[300px]">
+            <ArticleTOC headings={headings} isDesktopRail={true} />
+
+            {/* Reserved Right Rail Sticky AdSense Container (Guaranteed >= 300px) */}
+            <div
+              id="sheethub-right-rail-ad-slot"
+              className="w-full min-h-[250px] min-w-[300px] rounded-xl border border-dashed border-border/60 bg-muted/10 p-3 flex flex-col items-center justify-center text-center transition-colors"
+              aria-label="Sidebar Advertisement"
+            >
+              <span className="text-[9px] font-mono font-semibold uppercase tracking-widest text-muted-foreground/40 mb-1">
+                Ad Placement
+              </span>
+              <p className="text-[10px] font-mono text-muted-foreground/50">
+                Standard 300x250 Medium Rectangle / Responsive Sticky Slot
+              </p>
+            </div>
+          </aside>
+
+        </div>
       </main>
       <script
         type="application/ld+json"

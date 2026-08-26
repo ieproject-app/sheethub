@@ -85,7 +85,7 @@
     }
 
     .prose-content {
-        @apply leading-relaxed;
+        @apply leading-relaxed text-foreground/90;
     }
 }
 

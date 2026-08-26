@@ -1,13 +1,12 @@
-import { LayoutHeader } from "@/components/layout/layout-header";
 import { LayoutFooter } from "@/components/layout/layout-footer";
 import { LayoutBackToTop } from "@/components/layout/back-to-top";
+import { AppShell } from "@/components/layout/app-shell";
 import "./globals.css";
 import type { Metadata, Viewport } from "next";
 import { ThemeProvider } from "@/components/theme-provider";
 import { ReadingListProvider } from "@/hooks/use-reading-list";
 import { NotificationProvider } from "@/hooks/use-notification";
 import dictionary from "@/dictionaries/en.json";
-import { getSortedPostSummaries } from "@/lib/posts";
 
 import {
   Manrope,
@@ -136,16 +135,6 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const posts = await getSortedPostSummaries();
-  const searchableData = posts.map((post) => ({
-    slug: post.slug,
-    title: post.frontmatter.title,
-    description: post.frontmatter.description,
-    type: "blog" as const,
-    href: "/blog/" + post.slug,
-    category: post.frontmatter.category,
-    tags: post.frontmatter.tags,
-  }));
   return (
     <html
       lang="en"
@@ -166,14 +155,10 @@ export default async function RootLayout({
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
           <NotificationProvider>
             <ReadingListProvider>
-              <LayoutHeader
-                searchableData={searchableData}
-                dictionary={dictionary}
-              />
-              <main id="main-content">{children}</main>
-              <LayoutFooter
-                dictionary={dictionary}
-              />
+              <AppShell>
+                {children}
+                <LayoutFooter dictionary={dictionary} />
+              </AppShell>
               <LayoutBackToTop />
             </ReadingListProvider>
           </NotificationProvider>

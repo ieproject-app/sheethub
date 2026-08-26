@@ -521,7 +521,7 @@ export function LayoutHeader({
           isScrolled && "shadow-sm border-border/90",
         )}
       >
-        <div className="max-w-4xl mx-auto h-16 min-h-16 px-4 md:px-6 flex items-center justify-between relative overflow-visible">
+        <div className="max-w-6xl mx-auto h-16 min-h-16 px-4 md:px-6 flex items-center justify-between relative overflow-visible">
           {/* Left: Branding & Back to Site */}
           <div
             className={cn(

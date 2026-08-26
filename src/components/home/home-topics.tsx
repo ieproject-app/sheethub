@@ -1,13 +1,12 @@
 "use client";
 
+import React from "react";
 import Link from "next/link";
-import { ChevronRight } from "lucide-react";
-import { AddToReadingListButton } from "@/components/layout/add-to-reading-list-button";
+import { ArrowRight, Layers } from "lucide-react";
 import type { Dictionary } from "@/lib/get-dictionary";
-import { cn } from "@/lib/utils";
-import { getMulticolorSeed, getMulticolorTheme } from "@/lib/multicolor";
-
 import { ScrollReveal } from "@/components/ui/scroll-reveal";
+import { FormulaCard } from "@/components/cards/formula-card";
+import type { Post } from "@/lib/posts";
 
 interface TopicPost {
   slug: string;
@@ -18,6 +17,7 @@ interface TopicPost {
     date: string;
     heroImage?: string;
     imageAlt?: string;
+    tags?: string[];
   };
 }
 
@@ -38,90 +38,45 @@ export function HomeTopics({
   tag,
   viewAllHref,
 }: HomeTopicsProps) {
-  const renderHorizontalCard = (post: TopicPost, index: number) => {
-    const firstLetter = post.frontmatter.title.trim().charAt(0).toUpperCase();
-    const multicolor = getMulticolorTheme(
-      getMulticolorSeed(post.slug, post.frontmatter.category, post.frontmatter.title),
-    );
-
-    const item = {
-      slug: post.slug,
-      title: post.frontmatter.title,
-      description: post.frontmatter.description,
-      href: `/blog/${post.slug}`,
-      type: "blog" as const,
-    };
-
-    return (
-      <ScrollReveal key={post.slug} direction="up" delay={index * 0.1}>
-        <div className="group relative flex items-center gap-4 py-3 border-b border-primary/5 transition-all duration-300">
-          <Link
-            href={`/blog/${post.slug}`}
-            className="flex items-center gap-4 flex-1 min-w-0"
-          >
-            {/* First-letter gradient box instead of image/icon */}
-            <div className={cn(
-              "shrink-0 w-12 h-12 rounded-lg bg-gradient-to-br flex items-center justify-center shadow-sm",
-              multicolor.gradient,
-            )}>
-              <span className="font-display text-lg font-extrabold text-white">
-                {firstLetter || "S"}
-              </span>
-            </div>
-
-            <div className="flex-1 min-w-0 flex flex-col justify-center">
-              <h3 className="font-display text-[15px] sm:text-base font-medium text-primary leading-snug transition-colors group-hover:text-accent">
-                {post.frontmatter.title}
-              </h3>
-            </div>
-          </Link>
-          <AddToReadingListButton
-            item={item}
-            dictionary={dictionary}
-            showText={false}
-            className="shrink-0 text-muted-foreground hover:text-primary opacity-0 group-hover:opacity-100 [@media(hover:none)]:opacity-100 transition-opacity"
-          />
-        </div>
-      </ScrollReveal>
-    );
-  };
-
   if (posts.length === 0) return null;
 
   return (
-    <section
-      className="container max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 pb-12 sm:pb-16 overflow-hidden"
-    >
-      <ScrollReveal direction="left">
-        <div className="mb-8 text-left">
-          <h2 className="text-sm font-medium font-display text-primary mb-2 italic">
+    <section className="container max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16">
+      {/* Section Header */}
+      <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-8 pb-4 border-b border-border/60">
+        <ScrollReveal direction="left">
+          <div className="flex items-center gap-2 text-xs font-mono font-semibold text-teal-600 dark:text-teal-400 uppercase tracking-wider mb-1">
+            <Layers className="w-3.5 h-3.5" />
+            <span>Curated Highlights</span>
+          </div>
+          <h2 className="text-2xl sm:text-3xl font-bold font-display tracking-tight text-foreground">
             {title}
           </h2>
-          <div className="w-full h-0.5 bg-[linear-gradient(to_right,#0078D4,#E95420,transparent)]" />
-        </div>
-      </ScrollReveal>
+        </ScrollReveal>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-x-12">
-        {posts.map((post, index) => renderHorizontalCard(post, index))}
-      </div>
-
-      <ScrollReveal direction="up" delay={0.3}>
-        <footer className="mt-10 flex justify-center">
+        <ScrollReveal direction="right">
           <Link
             href={viewAllHref || `/tags/${tag.toLowerCase()}`}
-            className="flex items-center gap-2 bg-accent/5 px-3 py-1.5 rounded-full border border-accent/30 hover:bg-accent/10 transition-all group"
+            className="inline-flex items-center gap-1.5 text-xs sm:text-sm font-semibold text-emerald-600 dark:text-emerald-400 hover:text-emerald-700 transition-colors group"
           >
-            <div className="flex items-center gap-1 pr-2.5 border-r border-accent/20">
-              <div className="h-1 w-5 bg-accent rounded-full" />
-              <div className="h-0.75 w-0.75 bg-accent rounded-full" />
-            </div>
-            <span className="text-[10px] font-bold uppercase tracking-wide text-accent/90 group-hover:text-accent transition-all flex items-center gap-1">
-              {viewAllText}
-              <ChevronRight className="h-3 w-3 transition-transform group-hover:translate-x-0.5" />
-            </span>
+            <span>{viewAllText}</span>
+            <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
           </Link>
-        </footer>
-      </ScrollReveal>
+        </ScrollReveal>
+      </div>
+
+      {/* Modern 2-column horizontal stream */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        {posts.map((post, index) => (
+          <ScrollReveal key={post.slug} direction="up" delay={index * 0.05}>
+            <FormulaCard
+              post={post as unknown as Post}
+              dictionary={dictionary}
+              variant="horizontal"
+            />
+          </ScrollReveal>
+        ))}
+      </div>
     </section>
   );
 }
