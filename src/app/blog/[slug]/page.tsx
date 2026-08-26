@@ -14,6 +14,7 @@ import { ArticleShare } from "@/components/blog/article-share";
 import { ArticleRelated } from "@/components/blog/article-related";
 import { ArticleTOC } from "@/components/blog/article-toc";
 import { ArticleTags } from "@/components/blog/article-tags";
+import { ArticleTracker } from "@/components/blog/article-tracker";
 import { extractHeadings } from "@/lib/mdx-utils";
 import { LayoutBreadcrumbs } from "@/components/layout/layout-breadcrumbs";
 import remarkGfm from "remark-gfm";
@@ -153,6 +154,7 @@ export default async function Page({
           
           {/* Center Main Article */}
           <article className="xl:col-span-8 min-w-0">
+            <ArticleTracker slug={initialPost.slug} />
             <header className="mb-8 text-left border-b border-border/60 pb-6">
               <LayoutBreadcrumbs
                 segments={breadcrumbSegments}

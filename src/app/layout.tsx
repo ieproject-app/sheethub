@@ -5,6 +5,7 @@ import "./globals.css";
 import type { Metadata, Viewport } from "next";
 import { ThemeProvider } from "@/components/theme-provider";
 import { ReadingListProvider } from "@/hooks/use-reading-list";
+import { ReadArticlesProvider } from "@/hooks/use-read-articles";
 import { NotificationProvider } from "@/hooks/use-notification";
 import dictionary from "@/dictionaries/en.json";
 
@@ -155,11 +156,13 @@ export default async function RootLayout({
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
           <NotificationProvider>
             <ReadingListProvider>
-              <AppShell>
-                {children}
-                <LayoutFooter dictionary={dictionary} />
-              </AppShell>
-              <LayoutBackToTop />
+              <ReadArticlesProvider>
+                <AppShell>
+                  {children}
+                  <LayoutFooter dictionary={dictionary} />
+                </AppShell>
+                <LayoutBackToTop />
+              </ReadArticlesProvider>
             </ReadingListProvider>
           </NotificationProvider>
         </ThemeProvider>

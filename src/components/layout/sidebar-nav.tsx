@@ -6,6 +6,7 @@ import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
 import { SheetHubLogo } from "@/components/icons/sheethub-logo";
 import { useThemeMode } from "@/hooks/use-theme-mode";
+import { useReadArticles } from "@/hooks/use-read-articles";
 import {
   Sun,
   Moon,
@@ -13,6 +14,7 @@ import {
   BookOpen,
   Compass,
   Hash,
+  Check,
 } from "lucide-react";
 
 interface NavItem {
@@ -89,6 +91,7 @@ const DOCS_NAV: NavSection[] = [
 export function SidebarNav({ onItemClick }: { onItemClick?: () => void }) {
   const pathname = usePathname();
   const { currentMode, cycleTheme, tooltipLabel } = useThemeMode();
+  const { isRead } = useReadArticles();
 
   return (
     <div className="flex flex-col h-full w-full select-none">
@@ -125,6 +128,7 @@ export function SidebarNav({ onItemClick }: { onItemClick?: () => void }) {
               <div className="flex flex-col gap-0.5">
                 {section.items.map((item) => {
                   const isActive = pathname === item.href;
+                  const itemIsRead = item.href.startsWith('/blog/') && isRead(item.href);
                   const Icon = item.icon;
 
                   return (
@@ -133,7 +137,7 @@ export function SidebarNav({ onItemClick }: { onItemClick?: () => void }) {
                       href={item.href}
                       onClick={onItemClick}
                       className={cn(
-                        "flex items-center justify-between px-2.5 py-1.5 rounded-md text-xs font-medium transition-colors",
+                        "group flex items-center justify-between px-2.5 py-1.5 rounded-md text-xs font-medium transition-colors",
                         isActive
                           ? "bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 font-semibold border-l-2 border-emerald-500 rounded-l-none"
                           : "text-muted-foreground hover:text-foreground hover:bg-muted/40"
@@ -144,11 +148,22 @@ export function SidebarNav({ onItemClick }: { onItemClick?: () => void }) {
                         <span className="truncate">{item.name}</span>
                       </div>
 
-                      {item.badge && (
-                        <span className="text-[9px] font-mono font-bold px-1.5 py-0.2 rounded bg-muted text-muted-foreground border border-border/50">
-                          {item.badge}
-                        </span>
-                      )}
+                      <div className="flex items-center gap-1 shrink-0">
+                        {itemIsRead && (
+                          <span
+                            title="Completed / Read in the last 30 days"
+                            className="inline-flex items-center justify-center w-4 h-4 rounded-full bg-emerald-500/15 text-emerald-600 dark:text-emerald-400"
+                          >
+                            <Check className="w-2.5 h-2.5 stroke-[2.5]" />
+                          </span>
+                        )}
+
+                        {item.badge && (
+                          <span className="text-[9px] font-mono font-bold px-1.5 py-0.2 rounded bg-muted text-muted-foreground border border-border/50">
+                            {item.badge}
+                          </span>
+                        )}
+                      </div>
                     </Link>
                   );
                 })}

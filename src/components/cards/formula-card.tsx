@@ -93,7 +93,7 @@ export function FormulaCard({
 
       {/* Title */}
       <Link href={`/blog/${post.slug}`} className="block mb-2">
-        <h3 className="font-display text-base font-bold tracking-tight text-foreground group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition-colors leading-snug line-clamp-2">
+        <h3 className="font-display text-base font-bold tracking-tight text-foreground group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition-colors leading-snug">
           {post.frontmatter.title}
         </h3>
       </Link>

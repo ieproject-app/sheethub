@@ -76,7 +76,7 @@ export function ArticleTOC({
                   href={`#${h.id}`}
                   onClick={(e) => handleHeadingClick(e, h.id)}
                   className={cn(
-                    "block transition-colors py-0.5 line-clamp-1",
+                    "block transition-colors py-0.5 leading-snug",
                     isActive
                       ? "text-emerald-600 dark:text-emerald-400 font-semibold"
                       : "text-muted-foreground hover:text-foreground"
@@ -114,7 +114,7 @@ export function ArticleTOC({
                 <a
                   href={`#${h.id}`}
                   onClick={(e) => handleHeadingClick(e, h.id)}
-                  className="block text-muted-foreground hover:text-foreground py-0.5 line-clamp-1"
+                  className="block text-muted-foreground hover:text-foreground py-0.5 leading-snug"
                 >
                   {h.text}
                 </a>
