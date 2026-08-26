@@ -1,0 +1,209 @@
+---
+title: "Google Sheets REGEX Functions: Extract, Match, Replace"
+date: "2026-08-21"
+updated: "2026-08-23"
+description: "Master Google Sheets REGEXEXTRACT, REGEXMATCH, and REGEXREPLACE for practical text cleanup and validation."
+published: true
+featured: false
+heroImage: "default-og"
+tags: ["google-sheets", "regex", "regexextract", "regexmatch", "tutorial"]
+category: "Formulas & Functions"
+---
+
+Why does `REGEXEXTRACT` spill text into columns while `REGEXMATCH` returns only one TRUE or FALSE value? The answer is that Google Sheets REGEX functions solve three different problems: extracting a matching value, testing whether a pattern exists, and replacing matching text.
+
+Once you choose the right function, tasks such as pulling an email address from a note, validating an order code, or removing an imported prefix become one formula. This guide uses Google Sheets syntax and RE2-compatible patterns, so you can build formulas that are useful without relying on unsupported regex features.
+
+> **Availability:** `REGEXEXTRACT`, `REGEXMATCH`, and `REGEXREPLACE` are Google Sheets functions that use the RE2 regular-expression engine. Check the behavior in your current Google Sheets environment before rolling a pattern out to a shared workbook, especially when your data depends on a newer function or a complex expression.
+
+## Choose the right Google Sheets REGEX function
+
+Start with the result you want rather than the function name.
+
+| Function | Returns | Best for |
+|---|---|---|
+| `REGEXEXTRACT` | Matching text or capture groups | Pulling part of a string into one or more cells |
+| `REGEXMATCH` | `TRUE` or `FALSE` | Validating IDs, domains, labels, or formats |
+| `REGEXREPLACE` | The original text with matches replaced | Cleaning prefixes, spaces, punctuation, or sensitive values |
+
+A regular expression is a pattern. For example, `[0-9]+` means one or more digits, while `@` matches a literal at sign. In Sheets, the pattern is usually written as a quoted text argument.
+
+If the job is simply splitting a value at a known delimiter, the [Google Sheets REGEX functions for text cleanup](/blog/split-text-functions-google-sheets) guide may be simpler. REGEX is most useful when the separator varies or the text has a recognizable pattern rather than one fixed character.
+
+## Extract values with REGEXEXTRACT
+
+Use `REGEXEXTRACT` when you need the matching text as a result.
+
+### Syntax
+
+```excel
+=REGEXEXTRACT(text, regular_expression)
+```
+
+Suppose A2 contains `Order 48291, customer: Maya Chen`. To extract the order number, match the consecutive digits:
+
+```excel
+=REGEXEXTRACT(A2, "[0-9]+")
+```
+
+The result is `48291`. The formula returns text, even when the match looks numeric. Convert it only when you need arithmetic:
+
+```excel
+=VALUE(REGEXEXTRACT(A2, "[0-9]+"))
+```
+
+### Capture groups return separate pieces
+
+Parentheses create capture groups. They let you extract multiple related values from one string. If A2 contains `Maya Chen <maya@example.com>`, use:
+
+```excel
+=REGEXEXTRACT(A2, "^(.+) <([^>]+)>$")
+```
+
+The first capture group returns `Maya Chen`, and the second returns `maya@example.com` in the next column. The full match is not returned separately; the captured groups are the useful output.
+
+For a structured order code such as `US-48291-2026`, extract the region, order number, and year together:
+
+```excel
+=REGEXEXTRACT(A2, "^([A-Z]{2})-([0-9]+)-([0-9]{4})$")
+```
+
+This works because each parenthesized part is a capture group. Keep the groups intentional: adding extra parentheses changes the number of output columns.
+
+### Handle missing matches
+
+If the pattern is not found, `REGEXEXTRACT` returns an error. Use `IFERROR` when a missing match is expected and should remain readable:
+
+```excel
+=IFERROR(REGEXEXTRACT(A2, "[0-9]+"), "No order number")
+```
+
+Do not hide every error automatically during troubleshooting. A visible error can reveal that the source format changed.
+
+## Validate text with REGEXMATCH
+
+Use `REGEXMATCH` when you need a yes-or-no test instead of the matching text.
+
+### Syntax
+
+```excel
+=REGEXMATCH(text, regular_expression)
+```
+
+To check whether A2 contains a simple company email address, test the domain:
+
+```excel
+=REGEXMATCH(A2, "@example\.com$")
+```
+
+The backslash escapes the dot, so the pattern means a literal period followed by `com`. The dollar sign anchors the match to the end of the text.
+
+For an order ID that must contain exactly two uppercase letters, a hyphen, and five digits, use anchors at both ends:
+
+```excel
+=REGEXMATCH(A2, "^[A-Z]{2}-[0-9]{5}$")
+```
+
+Without `^` and `$`, a longer value such as `REF-US-48291-OLD` could still contain a matching substring and incorrectly pass validation.
+
+You can use the Boolean result in `IF`:
+
+```excel
+=IF(REGEXMATCH(A2, "^[A-Z]{2}-[0-9]{5}$"), "Valid", "Check format")
+```
+
+For a case-insensitive check, use the RE2 inline flag `(?i)` when appropriate:
+
+```excel
+=REGEXMATCH(A2, "(?i)^approved$")
+```
+
+That accepts `approved`, `Approved`, and `APPROVED`. Use this deliberately; case can matter for codes and usernames.
+
+## Clean text with REGEXREPLACE
+
+Use `REGEXREPLACE` to return the original text after replacing every matching portion.
+
+### Syntax
+
+```excel
+=REGEXREPLACE(text, regular_expression, replacement)
+```
+
+Remove a leading label such as `ID:` from A2:
+
+```excel
+=REGEXREPLACE(A2, "^ID:\s*", "")
+```
+
+The pattern removes the label and any spaces after it, but leaves the rest of the value unchanged.
+
+Normalize repeated spaces inside imported text:
+
+```excel
+=REGEXREPLACE(TRIM(A2), "\s+", " ")
+```
+
+`TRIM` removes leading and trailing spaces, while `REGEXREPLACE` turns runs of internal whitespace into one regular space.
+
+Mask a phone number before sharing a report:
+
+```excel
+=REGEXREPLACE(A2, "[0-9]", "X")
+```
+
+This replaces every digit. Preserve the original column and put the cleaned or masked result in a separate column so the transformation is reversible.
+
+You can also remove punctuation while keeping letters, numbers, and spaces:
+
+```excel
+=REGEXREPLACE(A2, "[^A-Za-z0-9 ]", "")
+```
+
+The caret inside the brackets negates the character set. Review this carefully before using it on names or international text, because the pattern permits only unaccented A–Z letters, digits, and spaces.
+
+## Handle arrays, numbers, and RE2 limits
+
+### Apply a formula down a column
+
+For a single result per row, `ARRAYFORMULA` can reduce copy-and-paste work. If A2:A contains notes and you want the first order number from each row, try:
+
+```excel
+=ARRAYFORMULA(IF(A2:A="",,IFERROR(REGEXEXTRACT(A2:A, "[0-9]+"), "")))
+```
+
+The blank check prevents empty rows from displaying unnecessary errors. For a dependable explanation of column-wide processing, see the [Google Sheets ARRAYFORMULA](/blog/arrayformula-google-sheets-complete-guide) guide.
+
+Capture groups can spill into multiple columns. That makes the destination area important: clear the cells to the right before entering the formula. If another value blocks the result, Google Sheets reports an expansion error. For multi-column extraction across many rows, test a bounded range first and consider filling a row-level formula or using `MAP` when your Sheets account supports it.
+
+### Convert extracted text before calculating
+
+Text extracted by `REGEXEXTRACT` is not automatically a number. Wrap it with `VALUE` only after checking that a match exists:
+
+```excel
+=IFERROR(VALUE(REGEXEXTRACT(A2, "[0-9]+")), "")
+```
+
+If the source uses currency symbols or commas, remove those characters before conversion:
+
+```excel
+=IFERROR(VALUE(REGEXREPLACE(REGEXEXTRACT(A2, "\$[0-9,]+"), "[$,]", "")), "")
+```
+
+### Know the RE2 limitations
+
+Google Sheets uses the RE2 regular-expression engine. It supports common character classes, quantifiers, anchors, alternation, and capture groups, but it does not support every feature found in other regex engines. In particular, do not rely on backreferences or lookaround such as lookahead and lookbehind.
+
+When a pattern fails unexpectedly, simplify it into smaller checks. Extract the broad value first, validate the format separately, and use normal Sheets functions for the final transformation. If you are importing the source text from another workbook, review the [Google Sheets import functions](/blog/google-sheets-import-functions-guide) guide before debugging the regex itself.
+
+## A practical pattern checklist
+
+Use this five-step workflow before putting a REGEX formula into a shared workbook:
+
+1. Decide whether you need text, TRUE/FALSE, or cleaned text.
+2. Start with one real value and the shortest pattern that matches it.
+3. Use `^` and `$` when the whole cell must follow one format.
+4. Test a blank cell, a missing match, an extra space, and an unexpected suffix.
+5. Leave the output area empty because capture groups and array results need room to expand.
+
+Use `REGEXEXTRACT` for pulling values, `REGEXMATCH` for validation, and `REGEXREPLACE` for cleanup. Keep the original data intact, convert extracted numbers explicitly, and remember that RE2 support, not another regex engine's feature list, defines what works in Google Sheets.
