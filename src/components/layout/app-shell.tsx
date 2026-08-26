@@ -5,6 +5,7 @@ import { SidebarNav } from "@/components/layout/sidebar-nav";
 import { AdSenseSlot } from "@/components/ads/adsense-slot";
 import { Menu, X, Search } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { cn } from "@/lib/utils";
 
 export function AppShell({ children }: { children: React.ReactNode }) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -33,30 +34,44 @@ export function AppShell({ children }: { children: React.ReactNode }) {
         <span className="text-xs font-mono font-bold text-muted-foreground">SheetHub Docs</span>
       </header>
 
-      {/* 2. MOBILE DRAWER MODAL */}
-      {mobileMenuOpen && (
-        <div className="fixed inset-0 z-50 lg:hidden flex">
-          <div
-            className="fixed inset-0 bg-background/80 backdrop-blur-sm transition-opacity"
-            onClick={() => setMobileMenuOpen(false)}
-          />
-          <div className="relative w-4/5 max-w-xs bg-card border-r border-border h-full overflow-hidden z-10 shadow-2xl flex flex-col justify-between">
-            <div className="flex items-center justify-between px-4 py-3 border-b border-border/60 bg-muted/20">
-              <span className="font-mono text-xs font-bold text-foreground">Navigation Menu</span>
-              <button
-                onClick={() => setMobileMenuOpen(false)}
-                className="p-1 rounded-md text-muted-foreground hover:text-foreground"
-                aria-label="Close Navigation Menu"
-              >
-                <X className="w-5 h-5" />
-              </button>
-            </div>
-            <div className="flex-1 overflow-hidden">
-              <SidebarNav onItemClick={() => setMobileMenuOpen(false)} />
-            </div>
+      {/* 2. MOBILE DRAWER MODAL (With Smooth Slide & Fade Transitions) */}
+      <div
+        className={cn(
+          "fixed inset-0 z-50 lg:hidden flex transition-all duration-300 ease-in-out",
+          mobileMenuOpen ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"
+        )}
+      >
+        {/* Backdrop overlay */}
+        <div
+          className={cn(
+            "fixed inset-0 bg-background/80 backdrop-blur-sm transition-opacity duration-300 ease-in-out",
+            mobileMenuOpen ? "opacity-100" : "opacity-0"
+          )}
+          onClick={() => setMobileMenuOpen(false)}
+        />
+
+        {/* Sliding Panel */}
+        <div
+          className={cn(
+            "relative w-4/5 max-w-xs bg-card border-r border-border h-full overflow-hidden z-10 shadow-2xl flex flex-col justify-between transform transition-transform duration-300 ease-out",
+            mobileMenuOpen ? "translate-x-0" : "-translate-x-full"
+          )}
+        >
+          <div className="flex items-center justify-between px-4 py-3 border-b border-border/60 bg-muted/20">
+            <span className="font-mono text-xs font-bold text-foreground">Navigation Menu</span>
+            <button
+              onClick={() => setMobileMenuOpen(false)}
+              className="p-1.5 rounded-md text-muted-foreground hover:text-foreground hover:bg-muted/50 transition-colors"
+              aria-label="Close Navigation Menu"
+            >
+              <X className="w-4 h-4" />
+            </button>
+          </div>
+          <div className="flex-1 overflow-hidden">
+            <SidebarNav onItemClick={() => setMobileMenuOpen(false)} />
           </div>
         </div>
-      )}
+      </div>
 
       {/* 3. FULL-VIEWPORT DESKTOP LAYOUT (Fixed Sidebar at Left: 0px) */}
       <div className="w-full flex-1 flex relative">
