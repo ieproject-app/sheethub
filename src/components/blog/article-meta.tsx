@@ -84,7 +84,7 @@ export function ArticleMeta({ frontmatter, item, dictionary, readingTime, isOver
 
   // Standalone Style (Normal page header)
   return (
-    <div className="py-4 mb-8 border-b border-primary/5">
+    <div className="pt-2">
       <div className={cn(
         "flex gap-3 sm:gap-6",
         isCentered
