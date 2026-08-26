@@ -1,0 +1,199 @@
+﻿---
+title: "Google Sheets Import JSON API: Fetch Live Web Data"
+date: "2026-08-26"
+description: "Fetch live REST API data into Google Sheets using custom Apps Script functions, JSON parsing, and scheduled refresh triggers."
+published: true
+featured: false
+heroImage: "default-og"
+tags: ["google-sheets", "import-json", "rest-api", "apps-script", "data-analysis", "tutorial"]
+category: "Google Sheets"
+---
+
+Manual copy-pasting from web dashboards into a spreadsheet guarantees stale reports and calculation errors. While Google Sheets provides native tools like [IMPORT functions for tables and feeds](/blog/google-sheets-import-functions-guide), modern web services deliver live metrics, inventory levels, and CRM updates through REST APIs formatted as JSON. Connecting your spreadsheet directly to these endpoints gives you live operational reports that refresh automatically.
+
+This tutorial demonstrates how to import live JSON data into Google Sheets using a lightweight Apps Script function, parse nested objects, map fields into tabular ranges, and schedule automated background updates.
+
+## Why JSON APIs require a custom import approach
+
+Google Sheets includes built-in functions such as `IMPORTHTML` and `IMPORTXML`. However, these formulas fail when an endpoint returns raw JSON text rather than structured HTML tables. Without a specialized parser, the entire payload lands in a single cell as an unreadable text block.
+
+To convert API endpoints into functional tabular data, you need three elements:
+
+1. An HTTP client to call the endpoint (`UrlFetchApp.fetch`).
+2. A JSON deserializer to parse properties (`JSON.parse`).
+3. An array mapper that outputs headers in row 1 and values in subsequent rows.
+
+Before building automated web connectors, review [Google Sheets web scraping techniques](/blog/google-sheets-web-scraping-guide) to decide whether an API endpoint or page scraping best suits your source.
+
+## Step 1: Create the custom `IMPORTJSON` Apps Script
+
+Google Apps Script runs in the cloud alongside your spreadsheet. You do not need external libraries or paid add-ons to parse public or token-authenticated APIs.
+
+1. Open your Google Sheet.
+2. Navigate to **Extensions > Apps Script**.
+3. Replace any placeholder text in `Code.gs` with the following implementation:
+
+```javascript
+/**
+ * Imports JSON data from a REST API endpoint into Google Sheets.
+ *
+ * @param {string} url The URL of the JSON API endpoint.
+ * @param {string} path Optional property path (e.g., "data.items").
+ * @return {Array} Two-dimensional array representing rows and columns.
+ * @customfunction
+ */
+function IMPORTJSON(url, path) {
+  try {
+    const response = UrlFetchApp.fetch(url, {
+      muteHttpExceptions: true,
+      headers: {
+        "Accept": "application/json"
+      }
+    });
+
+    if (response.getResponseCode() !== 200) {
+      return [["Error: HTTP " + response.getResponseCode()]];
+    }
+
+    let json = JSON.parse(response.getContentText());
+
+    if (path) {
+      const parts = path.split(".");
+      for (let i = 0; i < parts.length; i++) {
+        if (json && json[parts[i]] !== undefined) {
+          json = json[parts[i]];
+        } else {
+          return [["Error: Property path not found"]];
+        }
+      }
+    }
+
+    if (!Array.isArray(json)) {
+      if (typeof json === "object" && json !== null) {
+        json = [json];
+      } else {
+        return [[json]];
+      }
+    }
+
+    if (json.length === 0) {
+      return [["No data found"]];
+    }
+
+    const headers = Object.keys(json[0]);
+    const rows = [headers];
+
+    for (let r = 0; r < json.length; r++) {
+      const row = [];
+      for (let c = 0; c < headers.length; c++) {
+        const val = json[r][headers[c]];
+        row.push(typeof val === "object" ? JSON.stringify(val) : val);
+      }
+      rows.push(row);
+    }
+
+    return rows;
+  } catch (err) {
+    return [["Error: " + err.toString()]];
+  }
+}
+```
+
+4. Click the **Save project** icon (<Kbd>Ctrl</Kbd> + <Kbd>S</Kbd>).
+5. Return to your spreadsheet tab.
+
+## Step 2: Use the formula in your spreadsheet
+
+Once saved, `IMPORTJSON` behaves like any native spreadsheet formula.
+
+To test with a live public endpoint (such as GitHub's public events API), enter the following formula in cell `A1`:
+
+```excel
+=IMPORTJSON("https://api.github.com/events")
+```
+
+The formula calls the endpoint, extracts all root properties, and spills headers across row 1 with corresponding event data below.
+
+If the API wraps records inside an object (for example: `{"status": "ok", "items": [...]}`), specify the nested property path in the second argument:
+
+```excel
+=IMPORTJSON("https://api.example.com/v1/inventory", "items")
+```
+
+For complex data workflows that require dynamic restructuring or variable naming, combine your imported outputs with [Google Sheets LET formulas](/blog/google-sheets-let-function-guide) to prevent redundant network calls across multiple downstream calculations.
+
+## Step 3: Handle API keys and authentication
+
+Private endpoints require an API key passed in either query parameters or request headers. For secure workbooks, avoid hardcoding secret tokens in public cell formulas.
+
+To authenticate via headers, add a dedicated helper function in your Apps Script project:
+
+```javascript
+function IMPORTJSON_AUTH(url, apiKey, path) {
+  const options = {
+    headers: {
+      "Authorization": "Bearer " + apiKey,
+      "Accept": "application/json"
+    },
+    muteHttpExceptions: true
+  };
+  const response = UrlFetchApp.fetch(url, options);
+  const json = JSON.parse(response.getContentText());
+  const data = path ? json[path] : json;
+  
+  if (!Array.isArray(data) || data.length === 0) return [["No records"]];
+  const headers = Object.keys(data[0]);
+  const output = [headers];
+  
+  data.forEach(item => {
+    output.push(headers.map(h => item[h]));
+  });
+  return output;
+}
+```
+
+Store your API key in a protected sheet or pass it as a reference from an admin settings cell.
+
+## Step 4: Automate data refresh with time-driven triggers
+
+Custom functions in Google Sheets cache their output. If the remote API updates every ten minutes, the spreadsheet formula will not recalculate unless the formula arguments change.
+
+To schedule automated background synchronization:
+
+1. In the Apps Script editor, write a dedicated sync function that writes directly into a named range:
+
+```javascript
+function refreshApiData() {
+  const sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName("Live_Feed");
+  const url = "https://api.example.com/v1/feed";
+  const data = IMPORTJSON(url, "results");
+  sheet.clearContents();
+  sheet.getRange(1, 1, data.length, data[0].length).setValues(data);
+}
+```
+
+2. Click the **Triggers** menu (clock icon) in the left sidebar.
+3. Click **Add Trigger**.
+4. Configure the settings:
+   - **Choose which function to run**: `refreshApiData`
+   - **Select event source**: `Time-driven`
+   - **Select type of time based trigger**: `Minutes timer` or `Hour timer`
+   - **Select interval**: `Every hour`
+5. Click **Save**.
+
+Your spreadsheet now updates automatically on Google's cloud servers, even when your browser is closed.
+
+## Common errors and troubleshooting checklist
+
+Before rolling out an API connector across production dashboards, check these common failure points:
+
+| Symptom | Root Cause | Practical Fix |
+|---|---|---|
+| `#ERROR! (Exceeded maximum execution time)` | Payload is too large (> 10MB) or network response is slow. | Add query parameters to limit page size (e.g., `?limit=100`). |
+| `Error: HTTP 429` | The third-party API rate limit has been reached. | Switch from cell formulas to a time-driven trigger running once per hour. |
+| Nested JSON renders as `[object Object]` | Value contains child objects or arrays. | Use `JSON.stringify()` in the script parser to inspect sub-fields. |
+| `#REF! (Array result was not expanded)` | Existing text or data blocks the spilled range. | Clear all cells below and to the right of the formula cell. |
+
+## Summary
+
+Importing JSON APIs directly into Google Sheets transforms static workbooks into automated reporting hubs. Use a custom `UrlFetchApp` script to fetch endpoints, parse nested keys into table arrays, and bind refresh cycles to time-driven triggers. This pattern eliminates manual CSV exports, protects API credentials, and ensures your team works from live data.
