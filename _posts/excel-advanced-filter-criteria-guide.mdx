@@ -1,0 +1,149 @@
+---
+title: "Excel Advanced Filter: Use Complex Criteria"
+date: "2026-08-27"
+description: "Learn Excel Advanced Filter criteria for AND, OR, and mixed conditions, then copy matching records."
+published: true
+featured: false
+heroImage: "default-og"
+tags: ["excel", "tutorial", "excel-advanced-filter"]
+category: "Data Analysis"
+---
+
+The shape of a criteria range changes the result before Excel filters a single record. Put two conditions on the same row and Excel treats them as AND. Put them on separate rows and Excel treats them as OR. That small layout rule is what makes **Excel Advanced Filter** useful when an ordinary dropdown cannot express the question you need to ask.
+
+Advanced Filter filters a list in place or copies matching records elsewhere. It is useful when a criteria grid or static extract is clearer than a long nested formula. Use one header row, unique source headers, and exact criteria-header matches.
+
+## Why Advanced Filter still matters
+
+A normal column dropdown is quick, but it applies conditions through the filter menu one column at a time. That is fine for a quick inspection. It becomes awkward when the requirement is something like this:
+
+- Sales from the West region above $1,500
+- Any record from the North region or the West region
+- Orders placed in July with a value above $1,500
+- Records whose customer name starts with a specific pattern
+
+The [Excel Advanced Filter versus dynamic array functions](/blog/excel-dynamic-array-functions-guide) choice comes down to output behavior. Advanced Filter creates a filtered view or copied extract through the Data tab; `FILTER` recalculates a result in cells. Use the former for controlled manual extraction and the latter for an automatically updating report.
+
+An Excel Table is another useful foundation for growing source data. The [Excel Tables guide](/blog/excel-tables-structured-references-guide) explains how structured ranges expand with new rows, while Advanced Filter supplies the criteria-based extraction step.
+
+## Build a criteria range
+
+Start with a small source list like this:
+
+| Order ID | Region | Customer | Order Date | Amount |
+|---|---|---|---|---:|
+| 1001 | West | Northwind Foods | 7/3/2026 | 1,850 |
+| 1002 | East | Alpine Retail | 7/5/2026 | 2,400 |
+| 1003 | West | Cedar Supply | 7/12/2026 | 950 |
+| 1004 | North | Bluebird Market | 7/18/2026 | 1,700 |
+| 1005 | South | Northwind Foods | 7/22/2026 | 2,100 |
+
+The criteria range is a separate small grid. Its headers must match the source-list headers exactly. If the source header is `Region`, do not use `Sales Region`; Excel uses these labels to map conditions to source columns.
+
+### Same row means AND
+
+To find West orders above $1,500, create this criteria range:
+
+| Region | Amount |
+|---|---:|
+| West | >1500 |
+
+Because both conditions are on the same row, a record must satisfy both. The result includes Order ID 1001, but not Order ID 1003 because its amount is only $950.
+
+Use comparison operators such as `>`, `<`, `>=`, `<=`, and `<>`. Text criteria can be exact values or wildcard patterns such as `North*` for text beginning with North.
+
+### Separate rows mean OR
+
+To find records from either the West or North region, use the same header once and put each alternative on its own row:
+
+| Region |
+|---|
+| West |
+| North |
+
+Excel treats the rows as alternatives. A record that matches either row is included. You can combine this with another column, but the row structure matters:
+
+| Region | Amount |
+|---|---:|
+| West | >1500 |
+| North | >1500 |
+
+This means `(Region = West AND Amount > 1500) OR (Region = North AND Amount > 1500)`, not West or North independently of the amount condition.
+
+## Filter with mixed conditions
+
+Suppose the workbook contains a monthly sales export and you want July orders from the West region or any July order above $2,000. Put the date boundaries and the alternatives into a criteria grid that reflects the logic you actually want:
+
+| Region | Order Date | Order Date | Amount |
+|---|---|---|---:|
+| West | >=7/1/2026 | <=7/31/2026 | |
+|  | >=7/1/2026 | <=7/31/2026 | >2000 |
+
+Duplicate `Order Date` headers let you place lower and upper boundaries on one row. The first row means West AND July; the second means July AND amount above $2,000. The rows are alternatives, so the expression is:
+
+`(West AND July) OR (July AND Amount > 2,000)`
+
+Dates are safest when the cells contain real Excel dates rather than text that only looks like a date. If a source export contains inconsistent values, use the [Excel data cleaning workflow](/blog/excel-data-cleaning-techniques-guide) before applying Advanced Filter.
+
+### Use a formula-based criterion
+
+A formula criterion is helpful when a condition does not fit a simple header-and-value pair. For example, you can test a date window and amount together with `AND`:
+
+```excel
+=AND($D2>=DATE(2026,7,1),$D2<DATE(2026,8,1),$E2>1500)
+```
+
+Place the formula below a blank criteria header, or a header that does not match a source column, and reference the first data row. The formula must return `TRUE` for a row that should be included. Keep the row reference relative so Excel can evaluate the condition against each record.
+
+Formula criteria are easier to misalign, so test the formula in a helper column first and confirm which rows return `TRUE` before transferring it to the criteria range.
+
+## Copy matching records elsewhere
+
+Advanced Filter can hide non-matching rows or copy matching records elsewhere. The copy option suits a review sheet, handoff extract, or temporary exception report.
+
+1. Give the destination area a header row. For a full-row extract, copy the source headers to the destination first.
+2. Click any cell inside the source list.
+3. Open the **Data** tab and select **Advanced** in the **Sort & Filter** group.
+4. Select **Copy to another location**.
+5. Confirm the **List range** covers the source headers and records.
+6. Enter the **Criteria range**, including its headers.
+7. Enter the destination in **Copy to** and run the filter.
+
+Keep the source list and criteria range stable while testing. Leave enough empty space for copied rows, and place the criteria grid and output area on a clearly labeled worksheet such as `Filtered Report`.
+
+Advanced Filter is not a live link. If the source changes, rerun it for a fresh extract or switch to `FILTER` for automatic recalculation.
+
+## Fix common criteria-range mistakes
+
+**The filter returns no rows.** Check criteria headers for spelling, spaces, and punctuation. Also confirm that numeric values are numbers and dates are real date serials, not text.
+
+**AND behaves like OR.** Look at the physical layout. Conditions intended to apply together must occupy the same criteria row. Conditions placed on different rows are alternatives.
+
+**OR behaves like AND.** Put each alternative on its own row under the same headers, not in adjacent columns that represent different fields.
+
+**A date condition misses expected records.** Use two identical date headers for the lower and upper boundary, and check that visible dates such as `7/3/2026` are real values rather than text.
+
+**A formula criterion filters the wrong rows.** Reference the first data row, use a non-matching header, and avoid absolute row references that stop row-by-row evaluation.
+
+**New records are ignored.** Expand the List range before running Advanced Filter. An Excel Table helps the source grow, but still confirm the range shown in the dialog.
+
+Keep an untouched source copy and use the [Excel data cleaning techniques](/blog/excel-data-cleaning-techniques-guide) before filtering so hidden spaces, inconsistent dates, and duplicates do not distort the result.
+
+## Advanced Filter versus modern alternatives
+
+| Tool | Best fit | Output behavior |
+|---|---|---|
+| Advanced Filter | A criteria grid and a controlled extract | Filters in place or copies records |
+| `FILTER` | A live formula-driven report | Recalculates into a spill range |
+| Excel Table filters | Quick interactive inspection | Hides non-matching rows |
+| Power Query | Repeatable import and transformation | Refreshes a query result |
+
+Choose Advanced Filter when the logic is easier to review as a grid. Choose `FILTER` for immediate updates, or Power Query for repeatable import, cleanup, and refresh steps.
+
+## Quick validation checklist
+
+Before using the extract, verify the source has one clear header row, every criteria header matches exactly, same-row conditions are intended as AND, and separate-row conditions are intended as OR. Also confirm date and amount data types, include all current records in the List range, and label the copied result with its source date and criteria.
+
+## Summary
+
+Excel Advanced Filter turns a small criteria grid into a precise extraction workflow. Put conditions on one row for AND, use separate rows for OR, repeat a header when a field needs two boundaries, and use **Copy to another location** when the result belongs on a review sheet. When the output must update automatically, move to `FILTER`; when the logic needs to be inspected and approved as a grid, Advanced Filter remains a practical choice.

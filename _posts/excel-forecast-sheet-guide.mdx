@@ -1,0 +1,160 @@
+---
+title: "Excel Forecast Sheet: Predict Future Values"
+date: "2026-08-27"
+description: "Use Excel Forecast Sheet to turn dated history into a forecast, chart, and confidence interval you can review."
+published: true
+featured: false
+heroImage: "default-og"
+tags: ["excel", "tutorial", "excel-forecast-sheet"]
+category: "Data Analysis"
+---
+
+A dated sales column can become a first-pass forecast worksheet without building the chart by hand. **Excel Forecast Sheet** takes a timeline and a matching value series, then creates a new worksheet with historical data, predicted values, and a chart. It is useful for planning inventory, sales, staffing, or demand, as long as the source data is clean and the result is treated as an estimate rather than a promise.
+
+Microsoft Support lists the wizard for Excel for Microsoft 365, Excel 2024, and Excel 2021 for Windows. Check the **Data** tab in your build before relying on it.
+
+## What Excel Forecast Sheet creates
+
+Forecast Sheet extends a historical series into future dates and creates a new worksheet containing:
+
+- The original timeline and historical values.
+- Forecasted values for the selected future dates.
+- Upper and lower confidence-bound columns when the confidence interval is enabled.
+- A line or column chart showing the historical and forecast series.
+
+The forecast uses the AAA version of the Exponential Smoothing, or ETS, algorithm. That makes it different from simply extending a straight line. The model can account for recurring patterns, but it still depends on the quality and regularity of the historical timeline. The underlying worksheet function can be written explicitly when you need a formula-based forecast:
+
+```excel
+=FORECAST.ETS(DATE(2026,1,1),B2:B13,A2:A13)
+```
+
+Here, `B2:B13` contains historical values, `A2:A13` contains the matching timeline, and the first argument is the future date to estimate. The wizard adds the table, chart, and forecast layout around that calculation.
+
+A default 95% confidence interval shows an uncertainty range around each predicted value, not a guarantee.
+
+## Prepare dated historical data
+
+Start with two adjacent columns: a timeline and the numeric value you want to predict. For example, a store might record monthly orders:
+
+| Month | Orders |
+|---|---:|
+| January 2025 | 1,180 |
+| February 2025 | 1,245 |
+| March 2025 | 1,310 |
+| April 2025 | 1,275 |
+| May 2025 | 1,360 |
+| June 2025 | 1,425 |
+| July 2025 | 1,510 |
+| August 2025 | 1,485 |
+| September 2025 | 1,560 |
+| October 2025 | 1,640 |
+| November 2025 | 1,720 |
+| December 2025 | 1,890 |
+
+Use real Excel dates rather than text such as `January 2025`. These [Excel Forecast Sheet date preparation techniques](/blog/excel-date-time-functions-guide) can help check serials and month boundaries.
+
+Keep the observations in chronological order and use a regular interval. Monthly data should normally use one point per month; weekly data should use a consistent weekly cadence. Microsoft notes that Excel can handle a timeline with up to 30% missing points, but summarizing and cleaning the data first usually produces a more useful result.
+
+If timestamps repeat, decide whether to sum or average them before forecasting. Do not mix monthly totals with individual daily rows.
+
+## Create a forecast step by step
+
+Create the forecast worksheet:
+
+1. Select both the date column and the matching value column, including the headers.
+2. Open **Data > Forecast Sheet**.
+3. Choose a line chart or column chart in the preview.
+4. Set the **Forecast End** date.
+5. Select **Create**.
+
+Excel adds the forecast worksheet next to the source worksheet, leaving the original table intact.
+
+The forecast end date controls the projection horizon. A short, reviewable horizon is easier to defend than a projection far beyond the available history.
+
+Select **Options** in the wizard when you need to inspect advanced settings:
+
+| Option | What it controls |
+|---|---|
+| Forecast Start | The point at which Excel begins predicting; an earlier start can help compare predictions with known history. |
+| Confidence Interval | Whether the upper and lower uncertainty bounds appear, and the confidence level used. |
+| Seasonality | Automatic detection or a manually supplied cycle length. |
+| Timeline Range | The date range used by the forecast. |
+| Values Range | The numeric range paired with the timeline. |
+| Fill Missing Points Using | Interpolation or zeros for missing observations. |
+| Aggregate Duplicates Using | The calculation used when timestamps repeat. |
+| Include Forecast Statistics | Whether Excel creates additional ETS statistics such as error measures. |
+
+If you set seasonality manually, use at least two complete cycles. For monthly yearly data, that means about 24 months before choosing 12-point seasonality. Otherwise, Excel may fall back to a linear trend.
+
+## Read the generated table and chart
+
+Separate three kinds of values when reviewing the result:
+
+1. **Historical values** are observations already recorded.
+2. **Forecast values** are model-generated estimates after the historical range.
+3. **Confidence bounds** show the uncertainty range around those estimates.
+
+Check the transition between the last actual observation and the first prediction. A sudden jump may indicate an outlier, data-cleaning problem, or setting that needs review.
+
+Use the chart as a communication aid, not proof that the model is correct. Record the source range, forecast end date, seasonality setting, and creation date for later review.
+
+For market or other time-series data, [Excel STOCKHISTORY historical data](/blog/excel-stockhistory-function-guide) can provide a refreshable source table. STOCKHISTORY describes historical prices; Excel Forecast Sheet then projects a selected time series. Keep those two jobs separate and do not present a historical retrieval as a prediction.
+
+## Troubleshoot weak or unavailable forecasts
+
+**Forecast Sheet is missing.** Check the Excel version, select both data series, and confirm that the **Data** tab is available.
+
+**The preview looks flat.** The history may be too short or lack detectable seasonality. Review the interval and compare it with a simple trend.
+
+**The forecast starts from the wrong date.** Check **Forecast Start**, **Timeline Range**, and **Values Range** in **Options**.
+
+**Missing values distort the result.** Check **Fill Missing Points Using**. Interpolation may suit a small stable gap; zeros can create an artificial drop.
+
+**Repeated dates produce unexpected values.** Inspect **Aggregate Duplicates Using** and choose a calculation that matches the data's meaning.
+
+**The chart hides the uncertainty.** Enable **Confidence Interval** and inspect the generated bounds. A wide interval signals uncertainty.
+
+## Forecast Sheet versus other Excel tools
+
+Choose the tool based on the question you need to answer:
+
+| Question | Better starting point |
+|---|---|
+| What might future dated values look like? | Forecast Sheet |
+| What price reaches a known target? | Goal Seek |
+| How do many values affect one or two inputs? | Data Table |
+| How did historical prices change? | STOCKHISTORY |
+| How are values distributed across ranges? | Histogram |
+| What happens under named groups of assumptions? | Scenario Manager |
+
+For distribution work, an [Excel Forecast Sheet chart and histogram comparison](/blog/excel-histogram-bins-guide) keeps frequency analysis separate from time-series prediction. A histogram groups observations; Forecast Sheet extends them over time.
+
+## Limits and safer sharing practice
+
+Forecast Sheet cannot know whether a promotion, supply interruption, policy change, or market shock will repeat. Before sharing the output:
+
+- Keep the original data unchanged and retain a dated copy of the generated worksheet.
+- Check for text dates, duplicate timestamps, missing values, and mixed intervals.
+- Compare it with a baseline, such as the latest period or seasonal average.
+- Review the confidence interval instead of reporting only one predicted number.
+- Test an earlier forecast start against known historical values when the data supports it.
+- Record the forecast end date, seasonality choice, confidence level, and source range.
+- Do not use a long-range projection as a precise budget commitment without independent review.
+
+## FAQ
+
+**Does Forecast Sheet need formulas?**  
+No. It uses a selected timeline and matching value series to generate the worksheet.
+
+**Can Forecast Sheet fill missing dates?**  
+It can handle some missing points using interpolation or zeros. Clean the source data first when possible.
+
+**Is a 95% confidence interval a guarantee?**  
+No. It is a model-based uncertainty range. A wider interval means the forecast has more uncertainty for that point.
+
+**How far into the future should the forecast go?**  
+Use a horizon that matches the amount and stability of your historical data. A shorter, reviewable planning horizon is generally easier to validate than a distant projection.
+
+## Summary
+
+Excel Forecast Sheet turns a clean dated series into a first-pass forecast worksheet with predicted values, a chart, and optional confidence bounds. Prepare regular timeline data, create the worksheet from the **Data** tab, inspect seasonality and missing-point settings, and document the assumptions before sharing. The result is a planning aid, not a substitute for checking the process behind the numbers.
