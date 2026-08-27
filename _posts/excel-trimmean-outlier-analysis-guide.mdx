@@ -1,0 +1,74 @@
+﻿---
+title: "Excel TRIMMEAN: Calculate Trimmed Mean and Remove Outliers"
+date: "2026-09-01"
+description: "Master Excel TRIMMEAN to compute trimmed averages, exclude statistical outliers, and analyze skewed business data accurately."
+published: true
+featured: false
+heroImage: "default-og"
+tags: ["excel", "trimmean", "data-analysis", "formulas", "tutorial"]
+category: "Data Analysis"
+---
+
+When calculating averages for operational metrics, response times, or athlete scores, a handful of extreme values can distort your results. The **Excel TRIMMEAN** function solves this by excluding a designated percentage of data points from the top and bottom tails of a dataset before computing the arithmetic mean. Unlike manual filtering, it automates outlier suppression inside a single dynamic formula.
+
+Standard averages like `AVERAGE` remain vulnerable to skewed distributions. By pairing robust statistical filtering with tools like the [LET function](/blog/excel-let-function-guide), you can build reproducible reporting pipelines that resist data spikes.
+
+## What is TRIMMEAN and how does it work?
+
+`TRIMMEAN` takes an array of numeric values, sorts them internally, discards an equal number of extreme data points from both ends based on a specified percentage, and calculates the mean of the remaining values.
+
+### Syntax
+
+```excel
+=TRIMMEAN(array, percent)
+```
+
+- **array**: The range or array of numerical values you want to evaluate.
+- **percent**: The fractional proportion of data points to exclude (between 0 and 1). For example, `0.2` trims 20% of the total dataset (10% from the bottom and 10% from the top).
+
+Excel determines the number of excluded points by multiplying the total count by `percent` and rounding down to the nearest multiple of 2. If you evaluate 20 data points with a 20% trim (`0.2 * 20 = 4`), Excel removes the 2 lowest and 2 highest values, averaging the remaining 16 numbers.
+
+For non-normal distributions, pairing trimmed averages with [statistical mode analysis](/blog/excel-mode-mult-statistical-analysis-guide) provides a clearer picture of central tendency.
+
+## Pattern 1: Basic trimmed average for performance scores
+
+Consider a scenario where customer service evaluation scores are recorded in cells `B2:B21` (20 sample ratings). Two scores were entered erroneously as `1` and `100`, dragging the normal average away from the operational baseline.
+
+```excel
+=TRIMMEAN(B2:B21, 0.2)
+```
+
+### How this works:
+1. `B2:B21` contains 20 ratings.
+2. The `0.2` argument instructs Excel to trim 20% total (4 values).
+3. Excel drops the 2 lowest scores and the 2 highest scores.
+4. The formula averages the remaining 16 scores without requiring helper columns.
+
+## Pattern 2: Dynamic trimmed mean with criteria using FILTER
+
+In modern Excel workflows, you frequently need to calculate trimmed averages for specific departments or product categories. You can nest the `FILTER` function inside `TRIMMEAN` to handle segmented datasets seamlessly.
+
+```excel
+=LET(
+    dept_scores, FILTER(C2:C100, A2:A100="Engineering"),
+    TRIMMEAN(dept_scores, 0.1)
+)
+```
+
+### How this works:
+1. `FILTER(C2:C100, A2:A100="Engineering")` extracts only the test scores belonging to the Engineering department into memory.
+2. `LET` stores this filtered array in the variable `dept_scores`.
+3. `TRIMMEAN` strips the top and bottom 5% of scores (10% total) from that filtered subset and returns the clean mean.
+4. You can expand this into multi-department summaries using [GROUPBY lambda aggregations](/blog/excel-groupby-lambda-guide).
+
+## Troubleshooting and common errors
+
+| Error / Symptom | Root Cause | Practical Fix |
+|---|---|---|
+| `#NUM!` | The `percent` parameter is `< 0` or `>= 1`. | Ensure the percentage is expressed as a decimal between 0 and 0.99 (e.g., `0.1` for 10%). |
+| `#VALUE!` | The `percent` argument contains text or non-numeric characters. | Verify that cell references passed to `percent` contain valid numbers. |
+| `#DIV/0!` | The array is empty or contains no numeric values. | Check your source range or wrap the calculation in `IFERROR`. |
+
+## Summary
+
+`TRIMMEAN` delivers reliable central tendency estimates by automatically trimming extreme values from both tails of your data. Use it whenever routine data entry spikes or outlier events threaten to distort standard averages.

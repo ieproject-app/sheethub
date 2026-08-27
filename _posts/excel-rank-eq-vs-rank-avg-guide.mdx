@@ -1,0 +1,70 @@
+﻿---
+title: "Excel RANK.EQ: How to Rank Numbers and Handle Duplicates"
+date: "2026-09-01"
+description: "Master Excel RANK.EQ to rank numerical values, resolve duplicate tie-breaks, and sort leaderboards accurately."
+published: true
+featured: false
+heroImage: "default-og"
+tags: ["excel", "rank-eq", "formulas", "tutorial", "data-analysis"]
+category: "Formulas & Functions"
+---
+
+Sorting lists manually just to see who finished first or which product sold best creates fragile spreadsheets. The **Excel RANK.EQ** function calculates dynamic rank positions for numbers against an entire dataset without altering row order. When combined with tie-breaking logic, it generates robust leaderboards that recalculate instantly as new figures arrive.
+
+While basic formulas assign identical ranks to duplicate values, pairing `RANK.EQ` with [dynamic array functions](/blog/excel-dynamic-array-functions-guide) allows you to automate full league tables cleanly.
+
+## What is RANK.EQ and how does it work?
+
+`RANK.EQ` returns the statistical rank of a specific number within a supplied list. If multiple numbers share the same value, `RANK.EQ` assigns them the top shared rank (as opposed to `RANK.AVG`, which returns the average of the tied ranks).
+
+### Syntax
+
+```excel
+=RANK.EQ(number, ref, [order])
+```
+
+- **number**: The single value or cell you want to rank.
+- **ref**: The array or range of numbers to compare against.
+- **order**: *(Optional)* `0` or omitted ranks in descending order (highest value = rank 1). Any non-zero value ranks in ascending order (lowest value = rank 1).
+
+If two sales reps both hit $50,000 in revenue and share rank 2, `RANK.EQ` assigns rank `2` to both, and the next highest rep receives rank `4`. You can look up ranked items in your reports using [XLOOKUP formulas](/blog/xlookup-complete-guide).
+
+## Pattern 1: Standard descending sales ranking
+
+In a sales tracker where revenues are listed in `B2:B20`, place this formula in cell `C2` and drag down:
+
+```excel
+=RANK.EQ(B2, $B$2:$B$20, 0)
+```
+
+### How this works:
+1. `B2` is the rep revenue being evaluated.
+2. `$B$2:$B$20` uses absolute references to lock the evaluation range across all rows.
+3. `0` ensures the highest revenue earns rank 1.
+
+## Pattern 2: Unique tie-breaking with COUNTIF
+
+When duplicate values exist, standard ranking creates duplicate positions (e.g., two 1st places, skipping 2nd place). To enforce distinct integer ranks (1 through N) for leaderboard lookups, add a sequential `COUNTIF` offset:
+
+```excel
+=RANK.EQ(B2, $B$2:$B$20) + COUNTIF($B$2:B2, B2) - 1
+```
+
+### How this works:
+1. `RANK.EQ(B2, $B$2:$B$20)` provides the baseline statistical rank.
+2. `COUNTIF($B$2:B2, B2)` expands dynamically as the formula copies down.
+3. For the first occurrence of a duplicate score, `COUNTIF` returns `1` (`1 - 1 = 0`), leaving the rank unchanged.
+4. For the second occurrence, `COUNTIF` returns `2` (`2 - 1 = 1`), incrementing the second entry to the next integer rank.
+5. This guarantees unique indexes for sorting and filtering dashboards via [SUMIF and SUMPRODUCT](/blog/sumif-vs-sumifs-vs-sumproduct-comparison).
+
+## Troubleshooting and common errors
+
+| Error / Symptom | Root Cause | Practical Fix |
+|---|---|---|
+| `#N/A` | The `number` being evaluated does not exist in the `ref` range. | Ensure the target cell is included inside the reference bounds. |
+| `#VALUE!` | Non-numeric text values are passed into `number` or `ref`. | Clean your dataset or convert text numbers using `VALUE()`. |
+| Shifting Ranks on Copy | Relative references used on the `ref` range. | Lock the comparison range using dollar signs (e.g., `$B$2:$B$50`). |
+
+## Summary
+
+`RANK.EQ` delivers fast, formulaic position calculations without disrupting source table layouts. Add `COUNTIF` tie-breaking whenever downstream dashboards require sequential, gap-free leaderboards.

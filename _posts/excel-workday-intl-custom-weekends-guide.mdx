@@ -1,0 +1,71 @@
+﻿---
+title: "Excel WORKDAY.INTL: Custom Weekends and Holiday Schedules"
+date: "2026-09-01"
+description: "Master Excel WORKDAY.INTL to calculate delivery deadlines and SLA target dates with custom weekend shifts and corporate holiday lists."
+published: true
+featured: false
+heroImage: "default-og"
+tags: ["excel", "workday-intl", "productivity", "formulas", "tutorial"]
+category: "Productivity"
+---
+
+Standard project management calculations fail when your team operates on Sunday–Thursday schedules or 4-day workweeks. The **Excel WORKDAY.INTL** function calculates precise delivery dates and task completions by adding working days to a start date while accommodating custom weekend definitions and holiday calendars.
+
+Unlike basic date arithmetic, `WORKDAY.INTL` automatically skips non-working days. To explore standard calendar mechanics, review our [Excel date functions guide](/blog/excel-date-time-functions-guide).
+
+## What is WORKDAY.INTL and how does it work?
+
+`WORKDAY.INTL` advances a given start date by a specified number of business days, automatically skipping designated weekend days and optional holiday dates.
+
+### Syntax
+
+```excel
+=WORKDAY.INTL(start_date, days, [weekend], [holidays])
+```
+
+- **start_date**: The initial project or task start date.
+- **days**: The number of working days to add (positive) or subtract (negative).
+- **weekend**: *(Optional)* A number code (e.g., `1` for Sat/Sun, `7` for Fri/Sat, `11` for Sunday only) or a 7-character binary string (e.g., `"0000011"` for Fri/Sat off).
+- **holidays**: *(Optional)* A range of specific non-working calendar dates.
+
+When structuring large project schedules, combine this with [Excel tables and structured references](/blog/excel-tables-structured-references-guide) for clean formula syntax.
+
+## Pattern 1: Middle East workweek (Friday/Saturday weekend)
+
+To calculate an 8-business-day turnaround starting on `2026-09-01` in a region where Friday and Saturday are non-working days:
+
+```excel
+=WORKDAY.INTL(DATE(2026, 9, 1), 8, 7, Holidays!$A$2:$A$20)
+```
+
+### How this works:
+1. `DATE(2026, 9, 1)` provides the anchor start date.
+2. `8` adds 8 working days.
+3. `7` specifies Friday and Saturday as the weekend.
+4. `Holidays!$A$2:$A$20` skips any corporate holiday dates falling within the span.
+
+## Pattern 2: Custom 7-character binary shift schedules
+
+For retail or warehouse operations where staff work Monday through Thursday with Friday, Saturday, and Sunday off (a 4-day workweek):
+
+```excel
+=WORKDAY.INTL(A2, B2, "0000111", $E$2:$E$15)
+```
+
+### How this works:
+1. The binary string `"0000111"` represents 7 days from Monday to Sunday.
+2. `0` indicates a working day (Mon, Tue, Wed, Thu).
+3. `1` indicates a weekend/non-working day (Fri, Sat, Sun).
+4. For managing dynamic conditional shift rules, check out our [SWITCH vs IFS performance guide](/blog/excel-switch-vs-nested-ifs-performance-guide).
+
+## Troubleshooting and common errors
+
+| Error / Symptom | Root Cause | Practical Fix |
+|---|---|---|
+| `#VALUE!` | Start date or holidays contain text strings formatted improperly. | Wrap inputs in `DATE()` or ensure cells contain true serial dates. |
+| `#NUM!` | The `weekend` string is not exactly 7 characters or contains digits other than 0 and 1. | Verify the binary string format: `"0000011"` (7 digits strictly 0 or 1). |
+| Results show as raw numbers (e.g., `46266`) | The output cell is formatted as General rather than Date. | Press `<Kbd>Ctrl</Kbd> + <Kbd>Shift</Kbd> + <Kbd>3</Kbd>` to apply Short Date formatting. |
+
+## Summary
+
+`WORKDAY.INTL` provides complete flexibility for global project timelines and non-standard shift rotations. Use 7-character binary masks to model any workplace schedule accurately.

@@ -1,0 +1,68 @@
+﻿---
+title: "Excel EXACT Function: Case-Sensitive Lookups and Text Matching"
+date: "2026-09-01"
+description: "Master the Excel EXACT function to perform strict case-sensitive lookups, validate inventory codes, and compare text strings."
+published: true
+featured: false
+heroImage: "default-og"
+tags: ["excel", "exact-function", "formulas", "tutorial", "data-analysis"]
+category: "Formulas & Functions"
+---
+
+Standard lookup formulas treat `"SKU-abc"` and `"SKU-ABC"` as identical values because Excel lookup engines default to case-insensitive matching. The **Excel EXACT function** provides strict, character-by-character text comparison that respects uppercase and lowercase distinctions. Pairing it with modern lookup arrays enables reliable case-sensitive searches.
+
+When building lookups across case-sensitive product IDs, license keys, or system tokens, standard tools fall short. Combining `EXACT` with [XLOOKUP formulas](/blog/excel-xlookup-multiple-criteria-guide) provides dependable accuracy.
+
+## What is the EXACT function and how does it work?
+
+`EXACT` compares two text strings and returns `TRUE` if they are completely identical (including case) or `FALSE` if any character differs.
+
+### Syntax
+
+```excel
+=EXACT(text1, text2)
+```
+
+- **text1**: The first text string or cell reference.
+- **text2**: The second text string or cell reference.
+
+Unlike the simple equality operator (`=`), which considers `"A" = "a"` to be `TRUE`, `EXACT("A", "a")` evaluates to `FALSE`. You can compare standard behavior in our [VLOOKUP vs XLOOKUP comparison guide](/blog/vlookup-vs-xlookup-comparison-guide).
+
+## Pattern 1: Basic case-sensitive text validation
+
+To verify whether an entered SKU in `A2` matches the official inventory master format in `B2`:
+
+```excel
+=IF(EXACT(A2, B2), "Match", "Case Mismatch / Typo")
+```
+
+### How this works:
+1. `EXACT(A2, B2)` checks character codes directly.
+2. If `A2` contains `"Pro"` and `B2` contains `"PRO"`, it returns `FALSE`.
+3. The `IF` statement flags formatting discrepancies before they corrupt database imports.
+
+## Pattern 2: Case-sensitive XLOOKUP using EXACT array comparison
+
+To look up the price of a case-sensitive product code (`E2`) from a master table where codes are in `A2:A50` and prices are in `B2:B50`:
+
+```excel
+=XLOOKUP(TRUE, EXACT(E2, A2:A50), B2:B50, "Not Found")
+```
+
+### How this works:
+1. `EXACT(E2, A2:A50)` iterates through the array and generates a vertical boolean vector of `TRUE`/`FALSE` values.
+2. Only the row with an exact case match produces `TRUE`.
+3. `XLOOKUP` searches for `TRUE` inside that boolean array and returns the corresponding price from `B2:B50`.
+4. If you are working with legacy Excel versions, you can achieve the same result using [INDEX and MATCH](/blog/index-match-formula-guide) with `Ctrl + Shift + Enter`.
+
+## Troubleshooting and common errors
+
+| Error / Symptom | Root Cause | Practical Fix |
+|---|---|---|
+| Returns `FALSE` on visually identical text | Hidden trailing spaces or non-breaking spaces in one of the cells. | Wrap inputs in `TRIM()` or `CLEAN()`: `EXACT(TRIM(A2), TRIM(B2))`. |
+| `#VALUE!` error | Non-text complex objects passed into arguments. | Ensure both parameters refer to standard cell strings or numbers. |
+| Inadvertent numeric formatting mismatch | Comparing a formatted date string with a raw serial number. | Use `TEXT()` to format both values into uniform strings before running `EXACT`. |
+
+## Summary
+
+`EXACT` is essential whenever working with case-sensitive identifiers, software keys, or strict audit controls. Nest `EXACT` inside `XLOOKUP(TRUE, EXACT(...), ...)` to perform bulletproof case-sensitive lookups.

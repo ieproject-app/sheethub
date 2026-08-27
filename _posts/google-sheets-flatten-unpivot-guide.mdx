@@ -1,0 +1,68 @@
+﻿---
+title: "Google Sheets FLATTEN: Unpivot Columns into Single Lists"
+date: "2026-09-01"
+description: "Master Google Sheets FLATTEN to collapse 2D matrices into single 1D columns, unpivot multi-column data, and clean messy grids."
+published: true
+featured: false
+heroImage: "default-og"
+tags: ["google-sheets", "flatten", "data-analysis", "formulas", "tutorial"]
+category: "Google Sheets"
+---
+
+When data is entered across multiple side-by-side columns, creating pivot tables or running lookups requires converting that 2D grid into a clean vertical list. The **Google Sheets FLATTEN** function takes ranges of any width or height and collapses them row-by-row into a single, vertical 1-column array. It handles matrix unpivoting instantly without complex scripts.
+
+Unlike standard spreadsheet reshaping tools, `FLATTEN` operates natively inside formulas. You can combine it with [matrix transformation functions](/blog/google-sheets-transpose-query-matrix-transformation) and array operators to automate high-volume data cleaning.
+
+## What is FLATTEN and how does it work?
+
+`FLATTEN` reads through a rectangular range or multiple disparate ranges and outputs all cell values sequentially into a single continuous column.
+
+### Syntax
+
+```excel
+=FLATTEN(range1, [range2, ...])
+```
+
+- **range1**: The primary 2D grid or array to collapse.
+- **range2, ...**: *(Optional)* Additional ranges or columns to append sequentially.
+
+`FLATTEN` traverses ranges horizontally across row 1, then row 2, and so on. To remove trailing blank cells from the flattened column, wrap the result inside a [FILTER function](/blog/filter-function-google-sheets).
+
+## Pattern 1: Flattening a multi-column employee attendance grid
+
+Suppose team members are recorded across columns `B2:D10` (Monday, Tuesday, Wednesday shifts), and you need a consolidated roster in column A.
+
+```excel
+=FILTER(FLATTEN(B2:D10), FLATTEN(B2:D10) <> "")
+```
+
+### How this works:
+1. `FLATTEN(B2:D10)` converts the 9-row by 3-column grid into 27 vertical cells.
+2. `FLATTEN(B2:D10) <> ""` creates a boolean mask that identifies non-empty cells.
+3. `FILTER` discards blank entries, giving you a dense single-column list of all scheduled workers.
+
+## Pattern 2: Generating cartesian product combinations (All-Pairs)
+
+You can generate all possible combinations of two lists (e.g., Sizes in `A2:A4` and Colors in `B2:B5`) without helper columns by pairing `FLATTEN` with `TRANSPOSE`:
+
+```excel
+=ARRAYFORMULA(FLATTEN(A2:A4 & " - " & TRANSPOSE(B2:B5)))
+```
+
+### How this works:
+1. `TRANSPOSE(B2:B5)` pivots the 4 colors into a 1x4 horizontal header array.
+2. `A2:A4 & " - "` broadcasts across the transposed colors, forming a 3x4 text matrix of all size-color pairings.
+3. `FLATTEN` reads through that matrix row-by-row, returning all 12 distinct SKU variations as a single list.
+4. You can split composite strings back into discrete columns using [text split functions](/blog/split-text-functions-google-sheets).
+
+## Troubleshooting and common errors
+
+| Error / Symptom | Root Cause | Practical Fix |
+|---|---|---|
+| Unwanted blank cells in output | Input range contained empty cells which `FLATTEN` preserves. | Wrap the formula in `FILTER(FLATTEN(...), FLATTEN(...) <> "")`. |
+| `#REF!` error | The vertical output collides with existing data below the formula cell. | Clear cells underneath the formula to allow room for the array expansion. |
+| Inverted order (columns instead of rows) | `FLATTEN` reads horizontally first by default. | Wrap the input in `TRANSPOSE(range)` before flattening: `FLATTEN(TRANSPOSE(A1:C10))`. |
+
+## Summary
+
+`FLATTEN` is one of the most versatile reshaping functions in Google Sheets. Use it to unpivot wide data tables and generate combinatoric product catalogs in a single formula.

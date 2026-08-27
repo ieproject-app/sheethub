@@ -1,0 +1,66 @@
+﻿---
+title: "Google Sheets TO_TEXT: Convert Numbers and Dates into Clean Strings"
+date: "2026-09-01"
+description: "Master Google Sheets TO_TEXT to convert raw numbers, dates, and currency values into text strings without losing leading zeros."
+published: true
+featured: false
+heroImage: "default-og"
+tags: ["google-sheets", "to-text", "data-analysis", "formulas", "tutorial"]
+category: "Google Sheets"
+---
+
+When exporting data or concatenating customer IDs, Google Sheets often drops leading zeros or forces dates into raw numeric serials. The **Google Sheets TO_TEXT** function converts any numerical value, date, or boolean directly into a plain text string exactly as formatted, preserving leading zeros and date masks.
+
+Preventing unexpected type coercion is critical when building complex pipelines. Understanding these nuances helps avoid common pitfalls outlined in our [Excel vs Google Sheets formula differences guide](/blog/excel-vs-google-sheets-formula-differences).
+
+## What is TO_TEXT and how does it work?
+
+`TO_TEXT` explicitly coerces an input value or array into a text data type without modifying its visible character structure.
+
+### Syntax
+
+```excel
+=TO_TEXT(value)
+```
+
+- **value**: The number, date, boolean, or cell reference to convert to text format.
+
+Unlike adding an apostrophe (`'`) manually to every cell, `TO_TEXT` can be wrapped in `ARRAYFORMULA` to process entire columns of zip codes, serial numbers, or phone numbers at once. For more date-specific transformations, refer to our [Google Sheets date functions guide](/blog/google-sheets-date-functions-guide).
+
+## Pattern 1: Batch preserving leading zeros across postal codes
+
+If column `A2:A100` contains 5-digit US ZIP codes where Northeastern codes (e.g., `07001`) lose their initial zero:
+
+```excel
+=ARRAYFORMULA(TO_TEXT(TEXT(A2:A100, "00000")))
+```
+
+### How this works:
+1. `TEXT(A2:A100, "00000")` pads numbers to 5 digits.
+2. `TO_TEXT` ensures the output is treated strictly as plain text across downstream sheets.
+3. `ARRAYFORMULA` spills the conversion down the full column instantly.
+
+## Pattern 2: Preparing clean text columns for SQL QUERY clauses
+
+The Google Sheets `QUERY` function fails or outputs blanks when a column contains mixed data types (numbers and text in the same column). Wrapping the range in `TO_TEXT` standardizes the column type:
+
+```excel
+=QUERY(ARRAYFORMULA(TO_TEXT(A2:C100)), "SELECT Col1, Col3 WHERE Col2 = 'Active'", 0)
+```
+
+### How this works:
+1. `ARRAYFORMULA(TO_TEXT(A2:C100))` homogenizes all mixed cells into uniform string data.
+2. `QUERY` reads the virtual array without dropping rows due to data type mismatch.
+3. This technique is detailed further in our [advanced Google Sheets QUERY guide](/blog/google-sheets-query-advanced-guide).
+
+## Troubleshooting and common errors
+
+| Error / Symptom | Root Cause | Practical Fix |
+|---|---|---|
+| Arithmetic fails on output | The resulting string cannot be added directly (`"5" + 2` may fail in strict contexts). | Use `VALUE()` or `--` to convert text back to numbers when calculations are needed. |
+| Dates turn into serial strings | Converting unformatted date serials directly to text. | Format using `TEXT(date, "yyyy-mm-dd")` before applying `TO_TEXT`. |
+| Formula array doesn't spill | Forgot to wrap multi-cell ranges in `ARRAYFORMULA`. | Always use `ARRAYFORMULA(TO_TEXT(A2:A))` for column-wide transformations. |
+
+## Summary
+
+`TO_TEXT` prevents frustrating type coercion issues in Google Sheets. Use it to preserve leading zeros in ID numbers and homogenize mixed columns before running `QUERY` operations.

@@ -1,0 +1,74 @@
+﻿---
+title: "Excel FREQUENCY Function: Calculate Frequency Distributions"
+date: "2026-09-01"
+description: "Master the Excel FREQUENCY function to calculate data distributions across intervals, bin numerical values, and build dynamic histograms."
+published: true
+featured: false
+heroImage: "default-og"
+tags: ["excel", "frequency-function", "data-analysis", "formulas", "tutorial"]
+category: "Data Analysis"
+---
+
+Summarizing large datasets into discrete score intervals or price buckets is essential for statistical reporting and histogram charting. The **Excel FREQUENCY function** counts how often numeric values fall within specified ranges (bins) and returns a vertical array of counts. In modern Excel, it automatically spills results across cells without manual array keystrokes.
+
+Unlike manual `COUNTIFS` ladders, `FREQUENCY` processes your entire dataset in a single calculation. You can combine it with [dynamic array functions](/blog/excel-dynamic-array-functions-guide) to generate automated summary tables.
+
+## What is the FREQUENCY function and how does it work?
+
+`FREQUENCY` takes a raw data array and a bin threshold array, returning the count of numbers that fall below or equal to each bin boundary.
+
+### Syntax
+
+```excel
+=FREQUENCY(data_array, bins_array)
+```
+
+- **data_array**: The source array or range of numeric values to count.
+- **bins_array**: An array or range of upper interval limits (thresholds) used to group the data.
+
+The function always returns `N + 1` counts for `N` bin thresholds, with the extra final cell representing all values greater than the highest bin boundary. Understanding how arrays expand is covered in our [spill ranges guide](/blog/excel-spill-ranges-guide).
+
+## Pattern 1: Basic customer age demographic distribution
+
+Suppose customer ages are listed in `A2:A100`, and you define upper bin limits in `C2:C5` as `18`, `35`, `50`, and `65`.
+
+```excel
+=FREQUENCY(A2:A100, C2:C5)
+```
+
+### How this works:
+1. First output row: counts ages `<= 18`.
+2. Second row: counts ages `> 18` and `<= 35`.
+3. Third row: counts ages `> 35` and `<= 50`.
+4. Fourth row: counts ages `> 50` and `<= 65`.
+5. Fifth row: counts ages `> 65` (the catch-all upper bracket).
+6. To visualize these buckets effectively, check out our [histogram bins guide](/blog/excel-histogram-bins-guide).
+
+## Pattern 2: Dynamic bins generated via SEQUENCE and LET
+
+In modern Excel, you can generate bins on the fly without dedicated helper cells:
+
+```excel
+=LET(
+    scores, A2:A200,
+    bins, SEQUENCE(5, 1, 20, 20),
+    FREQUENCY(scores, bins)
+)
+```
+
+### How this works:
+1. `scores` stores the raw test scores from `A2:A200`.
+2. `SEQUENCE(5, 1, 20, 20)` creates a dynamic vertical bin array `{20; 40; 60; 80; 100}` in memory.
+3. `FREQUENCY` evaluates the raw scores against these dynamic boundaries and spills 6 distribution counts seamlessly.
+
+## Troubleshooting and common errors
+
+| Error / Symptom | Root Cause | Practical Fix |
+|---|---|---|
+| Non-numeric values ignored | `FREQUENCY` automatically skips text strings, blank cells, and boolean values. | Convert text numbers to numeric format using `VALUE()` before evaluation. |
+| Extra unexpected row at the bottom | `FREQUENCY` intentionally returns `N+1` rows to capture values above the highest bin. | Account for the upper overflow bucket in your table headers. |
+| `#SPILL!` error | Cells directly below the formula cell contain existing text or data. | Clear all cells below the formula to allow room for the vertical array. |
+
+## Summary
+
+The `FREQUENCY` function provides fast, single-formula binning for large datasets. Use it to construct distribution tables and feed dynamic histogram visualizations without complex nested logic.

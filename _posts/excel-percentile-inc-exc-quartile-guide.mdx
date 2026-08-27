@@ -1,0 +1,69 @@
+﻿---
+title: "Excel PERCENTILE.INC: Calculate Percentiles and Quartiles"
+date: "2026-09-01"
+description: "Master Excel PERCENTILE.INC and PERCENTILE.EXC to calculate data percentiles, determine cutoffs, and analyze distributions."
+published: true
+featured: false
+heroImage: "default-og"
+tags: ["excel", "percentile", "data-analysis", "formulas", "tutorial"]
+category: "Data Analysis"
+---
+
+Setting performance thresholds or determining salary bands requires knowing where specific percentiles lie across your dataset. The **Excel PERCENTILE.INC** function calculates the k-th percentile of a range of values, including the minimum (0) and maximum (1) boundaries. It provides reliable threshold benchmarks for statistical reporting and business scoring models.
+
+When analyzing skewed test scores or salary bands, percentiles offer far more actionable insight than basic averages. You can combine percentile thresholds with [histogram binning](/blog/excel-histogram-bins-guide) to segment populations cleanly.
+
+## What is PERCENTILE.INC and how does it work?
+
+`PERCENTILE.INC` interpolates values within a sorted array to return the value at or below which a given percentage of data falls. The `.INC` suffix indicates that the percentile `k` is inclusive between `0` and `1`.
+
+### Syntax
+
+```excel
+=PERCENTILE.INC(array, k)
+```
+
+- **array**: The range or array of numerical data to evaluate.
+- **k**: The percentile value between `0` and `1` (e.g., `0.9` for the 90th percentile, `0.75` for the 3rd quartile).
+
+Excel also provides `PERCENTILE.EXC`, which excludes the extreme 0th and 100th percentiles (`k` must be strictly greater than `1/(N+1)` and less than `N/(N+1)`). For business and commercial reporting, `PERCENTILE.INC` is standard. For anomaly detection, pairing percentiles with [TRIMMEAN outlier analysis](/blog/excel-trimmean-outlier-analysis-guide) provides deep distribution clarity.
+
+## Pattern 1: Computing quarterly percentiles (P25, P50, P75, P90)
+
+To calculate benchmark compensation tiers for salaries in `C2:C100`:
+
+```excel
+=PERCENTILE.INC($C$2:$C$100, 0.90)
+```
+
+### How this works:
+1. `$C$2:$C$100` holds the employee compensation figures.
+2. `0.90` targets the 90th percentile threshold.
+3. Excel calculates the exact salary cutoff where 90% of employees earn less and 10% earn more.
+4. You can pass an array constant like `={0.25, 0.5, 0.75, 0.9}` to spill all cutoffs dynamically in modern Excel.
+
+## Pattern 2: Dynamic top-tier cohort flag
+
+To assign a dynamic badge to any customer whose annual spend falls in the top 10% (at or above the 90th percentile):
+
+```excel
+=IF(D2 >= PERCENTILE.INC($D$2:$D$500, 0.9), "Tier 1 Elite", "Standard")
+```
+
+### How this works:
+1. `PERCENTILE.INC($D$2:$D$500, 0.9)` computes the 90th percentile spend boundary across all 500 customers.
+2. The `IF` statement checks whether customer `D2` meets or exceeds that threshold.
+3. As new transactions are logged, the threshold recalculates automatically without hardcoded numbers.
+4. To analyze central clusters across these tiers, pair your results with [multimodal statistical analysis](/blog/excel-mode-mult-statistical-analysis-guide).
+
+## Troubleshooting and common errors
+
+| Error / Symptom | Root Cause | Practical Fix |
+|---|---|---|
+| `#NUM!` | `k` value is `< 0` or `> 1` in `PERCENTILE.INC`. | Verify that `k` is a valid decimal between 0.0 and 1.0 (e.g., `0.5` for median). |
+| `#VALUE!` | The input array contains non-numeric text strings. | Ensure numerical columns are cleaned of text characters or symbols. |
+| `#NUM!` in `PERCENTILE.EXC` | `k` is out of the exclusive range `(1/(N+1), N/(N+1))`. | Use `PERCENTILE.INC` for standard business percentiles. |
+
+## Summary
+
+`PERCENTILE.INC` provides precise distribution benchmarks across financial, operational, and performance datasets. Use inclusive percentiles to establish dynamic tier boundaries and data-driven KPIs.
