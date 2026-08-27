@@ -1,0 +1,123 @@
+---
+title: "Excel IMAGE function: Add Pictures to Cells"
+date: "2026-08-26"
+description: "Use the Excel IMAGE function to build accessible product catalogs from HTTPS URLs, with sizing and error fixes."
+published: true
+featured: false
+heroImage: "default-og"
+tags: ["excel", "tutorial", "excel-image-function"]
+category: "Formulas & Functions"
+---
+
+A URL in one column can become a sortable, accessible image catalog in the next. The Excel IMAGE function turns a web-hosted picture into a worksheet value, so an inventory table can keep its images beside product names, prices, and stock counts.
+
+This guide explains the syntax, shows a product catalog example, and gives you a practical path through `#VALUE!`, `#CONNECT!`, `#BLOCKED!`, and `#NAME?` errors.
+
+## What the IMAGE function does
+
+`IMAGE` displays an image inside a cell from a URL. Its syntax is:
+
+```excel
+=IMAGE(source, [alt_text], [sizing], [height], [width])
+```
+
+The arguments work as follows:
+
+| Argument | Purpose |
+|---|---|
+| `source` | A quoted HTTPS URL or a cell containing the image URL. |
+| `alt_text` | A short description for accessibility and for cases where the image cannot be displayed. |
+| `sizing` | A number from 0 to 3 that controls how the image fits. |
+| `height` | The custom height in pixels when `sizing` is 3. |
+| `width` | The custom width in pixels when `sizing` is 3. |
+
+The source must point to an image that Excel can retrieve. A normal web page URL is not the same as a direct image URL. If a browser opens a product page rather than the image itself, `IMAGE` may not have an image file to display.
+
+IMAGE is different from using **Insert > Pictures**. An inserted picture is an object placed over the worksheet. An IMAGE result belongs to the cell grid, which makes it easier to keep pictures aligned with a table, sort related records, and fill a column from a URL list.
+
+## Build an image catalog from a URL column
+
+Start with a table containing these columns:
+
+| Product | Image URL | Image | Price | Stock |
+|---|---|---|---:|---:|
+| Alpine mug | `https://example.com/alpine-mug.jpg` | formula | 14.95 | 42 |
+| Cedar notebook | `https://example.com/cedar-notebook.png` | formula | 9.50 | 18 |
+
+In `C2`, reference the URL in `B2` and add useful alt text:
+
+```excel
+=IMAGE(B2, A2, 0)
+```
+
+With sizing mode 0, Excel fits the image inside the cell while preserving its aspect ratio. Copy the formula down for the rest of the catalog. If the range is an Excel Table, the formula can fill the calculated column as new product rows are added. For a deeper explanation of how table columns expand with formulas, see the [Excel Tables structured references guide](/blog/excel-tables-structured-references-guide).
+
+You can also create a fixed thumbnail size. This is useful when a catalog needs consistent cards rather than image dimensions that vary from row to row:
+
+```excel
+=IMAGE(B2, "Product image for " & A2, 3, 96, 96)
+```
+
+Sizing mode 3 uses the height and width arguments in pixels. Keep the row height large enough to show the thumbnail, and widen the image column so the cell does not become difficult to read. The formula controls the image dimensions, but it does not automatically redesign the surrounding worksheet.
+
+For a simple list of URLs, the [Excel formula errors troubleshooting guide](/blog/excel-formula-errors-troubleshooting-guide) is a useful companion when a formula looks correct but the result is an error value.
+
+## Choose sizing and accessibility options
+
+IMAGE supports four sizing modes:
+
+| Mode | Behavior | Best use |
+|---:|---|---|
+| `0` | Fits the image inside the cell while preserving its aspect ratio. | General catalogs and reports. |
+| `1` | Fills the cell, which can change the image's proportions. | Situations where the cell shape matters more than the original ratio. |
+| `2` | Displays the image at its original size. | Small icons or images that already have consistent dimensions. |
+| `3` | Uses the custom `height` and `width` values. | Uniform thumbnails and fixed-size product grids. |
+
+Mode 0 is usually the safest starting point because it avoids stretching the picture. Mode 1 can distort a square product image if the cell is rectangular, so check the result before sharing the workbook.
+
+Do not leave `alt_text` blank when the image carries meaning. A phrase such as `"Product image for Alpine mug"` tells a screen reader what the cell represents. Keep the visible Product column as well. Alt text supports the image, but it is not a replacement for clear row labels or product data.
+
+If you need to clean or import the URL list first, keep that work separate from the IMAGE formula. For example, the [UTF-8 CSV guide](/blog/open-utf8-csv-excel-guide) explains how to bring text files into Excel without corrupting characters. Once the URLs are in a column, IMAGE can use them as its source.
+
+## Fix IMAGE errors
+
+### `#VALUE!`
+
+Check the source first. The URL should use HTTPS, point directly to a supported image, and be available without a sign-in or an interactive browser session. Also check the optional arguments: sizing must be 0, 1, 2, or 3, and custom height and width are needed for mode 3.
+
+A URL that returns an HTML page, redirects to a login form, or serves an unsupported image format can also produce `#VALUE!`. Test the exact address in a browser, then confirm that it returns the image rather than a product page.
+
+### `#CONNECT!`
+
+This error indicates that Excel could not connect to the source. Confirm that the device is online and that the URL still works. A temporary server failure, an expired link, or a host that blocks automated requests can interrupt retrieval. Try again later and test a second known-working HTTPS image URL to isolate the workbook from the source server.
+
+### `#BLOCKED!`
+
+Excel can block external content because of security or organizational policy. Review the workbook's external-content settings and your organization's rules before enabling anything. Do not bypass a warning blindly, especially when a workbook came from another person. Microsoft also documents a separate process for correcting blocked-content errors in Excel.
+
+### `#NAME?`
+
+This usually means the installed Excel version does not recognize `IMAGE`, or the formula name was entered incorrectly. Check the spelling first. Then verify that your Excel release and update channel support the function. If the same workbook is opened in an older release, the formula may not calculate there.
+
+## When IMAGE is the right tool
+
+Use IMAGE when the picture is already hosted at a stable HTTPS address and should travel with a row of worksheet data. It works well for product catalogs, asset registers, equipment lists, and status reports where sorting or filtering the table should keep each image with its record.
+
+Use inserted pictures instead when the source is a local file, when the image must be edited independently of the grid, or when a designer needs precise freeform placement. IMAGE is URL-driven; it is not a replacement for every picture-layout task. It also depends on the availability of the remote source, so an image can stop appearing when a URL changes or access rules change.
+
+## Practical checks before sharing
+
+Before sending the workbook to someone else, run this short review:
+
+1. Open several source URLs and confirm they are direct HTTPS image links.
+2. Check that each image has descriptive alt text and a visible row label.
+3. Inspect rows with `#VALUE!`, `#CONNECT!`, `#BLOCKED!`, or `#NAME?` instead of hiding the errors.
+4. Test the workbook in the Excel versions your recipients use.
+5. Adjust row height and column width so mode 0 or mode 3 images remain readable.
+6. Decide whether the workbook is allowed to retrieve external content before enabling any security exception.
+
+Once the worked example is correct, an AI assistant can help adapt the formula to your workbook without guessing at your columns. For example, you can ask:
+
+> I have product names in A2:A500 and direct HTTPS image URLs in B2:B500. Write an Excel IMAGE formula for C2 with descriptive alt text from the product name, sizing mode 3, and 96-by-96-pixel thumbnails. Explain what I should check if the source returns an error. Use commas as separators and do not invent a URL.
+
+Validate the generated formula against one known URL before filling the column. The final result should be a table whose image, label, price, and stock values remain aligned when you sort or filter it.
