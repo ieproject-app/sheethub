@@ -1,0 +1,133 @@
+---
+title: "Excel Scenario Manager: Compare What-If Cases"
+date: "2026-08-27"
+description: "Use Excel Scenario Manager to compare budget cases, switch assumptions, and build a reliable What-If Analysis summary."
+published: true
+featured: false
+heroImage: "default-og"
+tags: ["excel", "tutorial", "excel-scenario-manager"]
+category: "Data Analysis"
+---
+
+Three budget cases should not require three nearly identical worksheets. **Excel Scenario Manager** lets you save different sets of assumptions in one model, switch between them, and compare the resulting outputs without overwriting your original structure.
+
+The tool is part of Excel's What-If Analysis features. It is most useful when several inputs change together, such as units sold, price, and operating cost. For a question involving only one adjustable input, [Excel Goal Seek](/blog/excel-goal-seek-guide) is usually the simpler choice.
+
+## What Excel Scenario Manager is for
+
+A scenario is a saved set of values that Excel can substitute into selected worksheet cells. The worksheet formulas stay in place, but the changing cells receive the values associated with the scenario. You can then view the result for a Base Case, Conservative Case, or Stretch Case using the same model.
+
+Excel supports three built-in What-If Analysis tools:
+
+| Tool | Best for | Variables |
+|---|---|---|
+| Scenario Manager | Comparing named sets of assumptions | Up to 32 changing values per scenario |
+| Goal Seek | Finding one input that reaches a target result | One changing value |
+| Data Table | Testing many values for one or two inputs | One or two variables |
+
+Scenario Manager projects forward from inputs to results. Goal Seek works in the opposite direction: it starts with a desired result and searches for an input that reaches it. If your workbook contains more than a little scenario logic, also review the [Excel formula error troubleshooting guide](/blog/excel-formula-errors-troubleshooting-guide) before comparing outputs.
+
+## Prepare a model for scenarios
+
+Start with a small budget model. Put assumptions in separate cells and calculate the result in formula cells so every scenario uses the same relationships.
+
+| Cell | Label | Base value |
+|---|---|---:|
+| B2 | Units sold | 1,000 |
+| B3 | Price per unit | 25 |
+| B4 | Variable cost per unit | 15 |
+| B5 | Fixed costs | 8,000 |
+| B6 | Revenue | `=B2*B3` |
+| B7 | Variable costs | `=B2*B4` |
+| B8 | Profit | `=B6-B7-B5` |
+
+The base profit is $2,000. Cells B2:B5 are changing cells because each case can use different assumptions. Cells B6:B8 are result cells because their formulas should not be replaced by scenario values.
+
+```excel
+=B2*B3
+=B2*B4
+=B6-B7-B5
+```
+
+Keep the model readable before opening Scenario Manager. Give important cells clear labels, format currency and percentages, and keep assumptions separate from calculations. If the workbook is already slow or unusually large, the [Excel Check Performance guide](/blog/excel-check-performance-guide) covers cleanup for unwanted formatting.
+
+## Create and switch between cases
+
+1. Select any cell in the model.
+2. Open **Data > What-If Analysis > Scenario Manager**.
+3. Select **Add**.
+4. Enter `Base Case` as the scenario name.
+5. Set the changing cells to `B2:B5`.
+6. Select **OK**, enter the current values, and select **OK** again.
+7. Repeat the process for `Conservative Case` and `Stretch Case`.
+
+For this budget, use values such as these:
+
+| Scenario | Units sold | Price | Variable cost | Fixed costs |
+|---|---:|---:|---:|---:|
+| Base Case | 1,000 | 25 | 15 | 8,000 |
+| Conservative Case | 800 | 23 | 16 | 8,500 |
+| Stretch Case | 1,200 | 26 | 14 | 8,000 |
+
+When you select a scenario and choose **Show**, Excel substitutes its values into B2:B5. The formulas in B6:B8 recalculate, so the displayed profit changes with the assumptions. Showing a scenario changes the current worksheet values, so record or save the original assumptions before testing another case.
+
+A scenario can contain up to 32 changing values. You can create many scenarios, but each individual scenario must stay within that limit. If you need to test many values for only one or two variables, a Data Table may be a better fit.
+
+## Create a Scenario Summary
+
+A Scenario Summary turns the saved cases into a separate comparison report.
+
+1. Open **Data > What-If Analysis > Scenario Manager**.
+2. Select **Summary**.
+3. Choose **Scenario summary**.
+4. In **Result cells**, select the outputs you want to compare, such as `B8` for Profit.
+5. Select **OK**.
+
+Excel creates a new worksheet containing the scenario names, changing cells, and selected result cells. With named ranges, the report can use meaningful labels instead of only cell references. For example, a named `Profit` cell is easier to review than a report that only says `B8`.
+
+The summary is a snapshot, not a live dashboard. If you edit a scenario later, an existing report does not automatically update. Create a new Scenario Summary after changing the assumptions. This distinction matters when a report is shared with managers or attached to a planning package.
+
+You can also create a Scenario PivotTable report when you need a pivot-style view. A PivotTable summary requires result cells, while a regular Scenario Summary can be created without them. For most small budget comparisons, the regular summary is easier to read and maintain.
+
+## Scenario Manager versus other tools
+
+Use the question you are trying to answer to choose the right feature.
+
+| Question | Recommended tool | Why |
+|---|---|---|
+| What happens under Base, Conservative, and Stretch assumptions? | Scenario Manager | Saves named groups of changing values |
+| What price reaches a 40% margin? | Goal Seek | Searches for one input that reaches a target |
+| What happens at 800, 900, 1,000, and 1,100 units? | Data Table | Tests a sequence of values for one variable |
+| Which combination maximizes profit under constraints? | Solver | Adjusts multiple cells and applies constraints |
+| Should I keep separate copies for each plan? | Scenario Manager | Keeps the model and formulas in one workbook |
+
+Use Scenario Manager when the cases are meaningful business narratives, not just a list of arbitrary test values. Use a Data Table when you want a dense sensitivity grid. Use Solver when the goal is optimization rather than comparison.
+
+## Limits and sharing checks
+
+Scenario Manager is useful, but it does not validate whether your assumptions make business sense. Before sharing a comparison:
+
+- Confirm that every changing cell is included in the correct scenario.
+- Check that result cells still contain formulas rather than typed values.
+- Verify units, currency, percentages, and signs in every case.
+- Recalculate the model after showing each scenario.
+- Create a fresh summary after any scenario changes.
+- Label the report date and assumptions if the workbook will be distributed.
+- Keep a backup before merging scenarios from another workbook.
+
+Scenario merging also requires consistent cell structure. If one department stores revenue in B2 and another stores it in C7, their values may map incorrectly. Create a standard template first, then ask contributors to use the same changing-cell layout.
+
+## FAQ
+
+**How many cells can a scenario contain?**  
+Each scenario can contain up to 32 changing values. You can create as many scenarios as your workbook needs, subject to practical file and review limits.
+
+**Why did my Scenario Summary not change?**  
+The report is a snapshot. Create a new summary after changing a scenario or its underlying values.
+
+**Should I use Scenario Manager or Goal Seek?**  
+Use Scenario Manager for named groups of assumptions. Use Goal Seek when one input must be found for a known target result.
+
+## Summary
+
+Excel Scenario Manager keeps multiple What-If cases inside one formula-driven workbook. Define changing cells, save named cases, show each case to recalculate the model, and create a new Scenario Summary when you need a comparison snapshot. It is a strong fit for budget planning and other multi-variable decisions, while Goal Seek, Data Tables, and Solver handle different questions.

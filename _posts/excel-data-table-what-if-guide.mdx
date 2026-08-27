@@ -1,0 +1,119 @@
+---
+title: "Excel Data Table What-If Analysis: 1 or 2 Variables"
+date: "2026-08-27"
+description: "Use Excel Data Table What-If Analysis to test one or two inputs, compare outcomes, and troubleshoot model layouts."
+published: true
+featured: false
+heroImage: "default-og"
+tags: ["excel", "tutorial", "excel-data-table-what-if-analysis"]
+category: "Data Analysis"
+---
+
+What happens to a monthly payment when the interest rate and loan term change together? If the answer requires a new formula for every combination, the worksheet becomes difficult to audit. **Excel Data Table What-If Analysis** evaluates those combinations in a structured range so you can compare outcomes without replacing the original assumptions.
+
+Data Tables are one of Excel's three built-in What-If Analysis tools, alongside Scenarios and Goal Seek. They test one or two variables, not a large optimization model. The feature is available in Excel for Microsoft 365, Excel 2024, Excel 2021, Excel 2019, and Excel 2016; the menu may appear under **Data Tools** or **Forecast** depending on the version.
+
+## What a What-If Data Table is
+
+A What-If Data Table is a calculation range that temporarily substitutes a series of values into one or two input cells and records the resulting formula output. It is different from an ordinary Excel Table, which adds structured headers, filters, and automatic expansion to a dataset.
+
+Use a Data Table when you need to compare many rates, prices, volumes, or other values without changing the model's visible assumptions. Excel substitutes the table values during calculation and writes the resulting outputs into the table range.
+
+## Build the model first
+
+Start with a small loan model. Put the assumptions in visible cells so the table remains understandable after someone else opens the workbook:
+
+| Cell | Label | Value or formula |
+|---|---|---|
+| B2 | Loan amount | 225,000 |
+| B3 | Annual interest rate | 6% |
+| B4 | Term in months | 360 |
+| B5 | Monthly payment | Formula below |
+
+```excel
+=PMT(B3/12,B4,-B2)
+```
+
+The formula returns the payment for the current loan amount, rate, and term. A one-variable table tests one assumption; a two-variable table tests both.
+
+## Set up a one-variable data table
+
+A one-variable table tests many values for one input cell. This example tests annual interest rates while keeping the loan amount and term unchanged.
+
+1. Enter the rates in a single column, such as `C2:C6`: `4.5%`, `5.0%`, `5.5%`, `6.0%`, and `6.5%`.
+2. In the cell one row above and one column to the right of that list, enter a reference to the result formula. With the layout above, put this in `D1`:
+
+```excel
+=B5
+```
+
+3. Select the complete table range, `C1:D6`. The rate values are in the left column and the payment results will appear in the right column.
+4. Select **Data > What-If Analysis > Data Table**.
+5. Leave **Row input cell** blank. In **Column input cell**, select `$B$3`, the annual interest-rate input cell.
+6. Select **OK** and format the result column as currency if needed.
+
+Excel substitutes each rate from `C2:C6` into `B3`, recalculates `B5`, and places each payment in `D2:D6`. The original rate in `B3` remains the model's visible assumption after the table calculation.
+
+For a row-oriented table, place test values across a row, put the formula below and to the left of the first value, and use **Row input cell**. Every formula in a one-variable table must use the same input cell.
+
+## Set up a two-variable data table
+
+A two-variable table shows how one formula responds to combinations of two inputs. Here, the rows test interest rates and the columns test loan terms.
+
+1. Put a reference to the payment formula in the top-left corner, such as `C8`:
+
+```excel
+=B5
+```
+
+2. Put term values across `D8:H8`, such as `180`, `240`, `300`, `360`, and `480`.
+3. Put annual rates down `C9:C13`, such as `4.5%`, `5.0%`, `5.5%`, `6.0%`, and `6.5%`.
+4. Select the full matrix, `C8:H13`.
+5. Select **Data > What-If Analysis > Data Table**.
+6. Set **Row input cell** to `$B$4`, because the values across the top replace the term in months.
+7. Set **Column input cell** to `$B$3`, because the values down the left replace the annual interest rate.
+8. Select **OK**, then format `D9:H13` as currency.
+
+The formula belongs in the corner, not in the middle of the result matrix. The row and column input cells must be the actual assumptions used by the formula. A wrong input-cell selection can produce a table that looks complete but does not answer the intended question.
+
+## Read and troubleshoot the results
+
+Use the layout as a diagnostic map. Unchanged results usually mean the corner formula does not depend on the selected input cells. Wrong orientation means the row and column settings were reversed. If the table is blank, select the entire corner-plus-values range before opening **Data Table**.
+
+Data Tables recalculate with the worksheet and can slow large workbooks. Reduce unnecessary test values and document the table before changing calculation settings. Skipping automatic Data Table recalculation may improve performance, but results then need an intentional refresh.
+
+For a genuine formula error rather than a layout problem, use this [Excel formula error troubleshooting guide](/blog/excel-formula-errors-troubleshooting-guide). For models where tiny decimal differences affect thresholds, [Excel floating-point errors and precision](/blog/excel-floating-point-errors-guide) explains why displayed values can look equal while stored values differ.
+
+## Data Tables versus Scenario Manager and Goal Seek
+
+These tools answer different questions:
+
+| Tool | Best question | Variables | Output |
+|---|---|---:|---|
+| Data Table | What happens across many values or combinations? | One or two | Results matrix on the worksheet |
+| Scenario Manager | What does each named case look like? | Multiple | Switchable scenarios and summary report |
+| Goal Seek | What one input reaches this target result? | One | A single solved input |
+
+Use [Excel Goal Seek](/blog/excel-goal-seek-guide) when the desired result is known and one input must be found. Use Scenario Manager when a case such as “best,” “base,” or “worst” changes several assumptions together. Use a Data Table when the goal is comparison: many rates, terms, prices, or volumes shown side by side.
+
+## Limits and safer workbook practice
+
+A Data Table has several important boundaries:
+
+- **Two variables maximum:** A Data Table cannot test three changing inputs at once. Use Scenario Manager or Solver when the model needs more variables.
+- **One formula family:** The table is most reliable when the corner formula clearly depends on the selected row and column input cells. Keep unrelated assumptions outside the test layout.
+- **Recalculation cost:** Large matrices can add calculation work every time the sheet recalculates. Start with a small range and expand only when the comparison is useful.
+- **No automatic explanation:** Keep labels, units, and input-cell references visible beside the table.
+
+A practical safety check is to set `B3` and `B4` to one tested rate and term, then confirm that `B5` matches the corresponding matrix cell. This catches reversed inputs before sharing the table.
+
+## Quick reference
+
+| Task | Layout | Input setting |
+|---|---|---|
+| Test one variable down a column | Values in one column; formula above and to the right | Column input cell |
+| Test one variable across a row | Values across one row; formula below and to the left | Row input cell |
+| Test two variables | Formula in corner; values across top and down left | Row and column input cells |
+| Find one input for a target | Normal model, no result matrix required | Use Goal Seek |
+
+Data Tables are strongest when the question is comparative and the assumptions are easy to see. Build the formula first, place the test values around a single formula corner, and verify one result manually before trusting the full matrix.

@@ -11,7 +11,9 @@ category: "Formulas & Functions"
 
 A URL in one column can become a sortable, accessible image catalog in the next. The Excel IMAGE function turns a web-hosted picture into a worksheet value, so an inventory table can keep its images beside product names, prices, and stock counts.
 
-This guide explains the syntax, shows a product catalog example, and gives you a practical path through `#VALUE!`, `#CONNECT!`, `#BLOCKED!`, and `#NAME?` errors.
+The catalog example below covers the syntax and gives you a practical way to diagnose `#VALUE!`, `#CONNECT!`, `#BLOCKED!`, and `#NAME?` errors.
+
+> **Availability:** IMAGE is available in Excel for Microsoft 365, Excel for the web, Excel 2024, and Excel 2021. Older Excel releases may return `#NAME?`; check the version and update channel before sharing the workbook.
 
 ## What the IMAGE function does
 
@@ -50,7 +52,7 @@ In `C2`, reference the URL in `B2` and add useful alt text:
 =IMAGE(B2, A2, 0)
 ```
 
-With sizing mode 0, Excel fits the image inside the cell while preserving its aspect ratio. Copy the formula down for the rest of the catalog. If the range is an Excel Table, the formula can fill the calculated column as new product rows are added. For a deeper explanation of how table columns expand with formulas, see the [Excel Tables structured references guide](/blog/excel-tables-structured-references-guide).
+With sizing mode 0, Excel fits the image inside the cell while preserving its aspect ratio. Copy the formula down for the rest of the catalog. If the range is an Excel Table, the formula can fill the calculated column as new product rows are added. For a deeper explanation of how table columns expand with formulas, see the [Excel IMAGE function in a structured table](/blog/excel-tables-structured-references-guide).
 
 You can also create a fixed thumbnail size. This is useful when a catalog needs consistent cards rather than image dimensions that vary from row to row:
 
