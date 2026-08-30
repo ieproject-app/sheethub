@@ -1,0 +1,103 @@
+---
+title: "Excel CONVERT Function Guide: Unit Conversion Made Easy"
+date: "2026-08-30"
+description: "Master the Excel CONVERT function to convert weights, distances, temperatures, and compound units without manual conversion math."
+published: true
+featured: false
+heroImage: "default-og"
+tags: ["excel", "convert", "units", "measurement", "tutorial"]
+category: "Formulas & Functions"
+---
+
+Your supplier price list arrives with weights in pounds, your inventory system wants kilograms, and somewhere in the spreadsheet a hand-typed 2.20462 is quietly producing numbers that are almost right. That almost is the problem. Manual conversion factors invite copy-paste errors, rounding drift, and the occasional cell where someone typed the factor backwards. The Excel CONVERT function fixes this by converting a number from one measurement unit to another inside the formula itself, using official unit codes that Excel already knows. This guide covers how to use the Excel CONVERT function, step-by-step implementation patterns, and practical troubleshooting for real spreadsheets. Once the values are correct, you can make them look correct too, using the techniques in our [Excel custom number formats guide](/blog/excel-custom-number-formats-guide).
+
+## What the Excel CONVERT function does
+
+CONVERT transforms a number from one measurement unit to another within the same category, using official unit code strings to tell Excel what you have and what you want. Weight converts to weight, distance to distance, temperature to temperature. Excel applies the exact official factor instead of a rounded number someone remembered, and because the result is a genuine numeric value, it still works in SUM, AVERAGE, and every other formula downstream.
+
+### Syntax
+
+```excel
+=CONVERT(number, from_unit, to_unit)
+```
+
+- `number`: the value you want to convert. A cell reference such as B2 is the usual choice.
+- `from_unit`: the unit the value is currently in, as a quoted code string such as `lbm`.
+- `to_unit`: the unit you want back, such as `kg`. Both codes must belong to the same category or the formula returns #N/A.
+
+These are the codes you will reach for most often:
+
+| Category | Codes |
+| --- | --- |
+| Weight and mass | `g` (gram), `kg` (kilogram), `lbm` (pound), `ozm` (ounce) |
+| Distance | `m` (meter), `mi` (mile), `ft` (foot), `in` (inch), `yd` (yard) |
+| Temperature | `C` (Celsius), `F` (Fahrenheit), `K` (Kelvin) |
+| Liquid volume | `l` (liter), `gal` (gallon), `qt` (quart), `pt` (pint) |
+
+Two notes on the table. First, most codes are lowercase and case-sensitive, while the temperature codes use capitals, so `kg` and `C` are both exactly right as written. Second, CONVERT also supports area and pressure categories, and newer Excel versions add speed codes such as `mph`, `m/h`, `m/s`, `kn`, and `admkn`, with availability varying by version. When you need a speed result that must work in any workbook, the two-hop pattern in Pattern 2 below is the dependable route.
+
+One habit worth picking up: CONVERT returns full precision, so a pound-to-kilogram conversion produces long decimals by design. Wrap the result in ROUND when the stored value itself should be tidy, and see our [Excel ROUND, MROUND, CEILING and FLOOR guide](/blog/excel-rounding-functions-round-mround-ceiling-floor-guide) for choosing between the rounding functions.
+
+## Pattern 1: Convert a supplier price list from pounds to kilograms
+
+Say your product weights sit in B2:B20 in pounds, and the pricing calculation needs kilograms. In C2, enter:
+
+```excel
+=CONVERT(B2,"lbm","kg")
+```
+
+Then fill down through C20.
+
+### How this works:
+
+1. Excel reads the number in B2 and treats it as pounds because the `from_unit` code is `lbm`.
+2. CONVERT applies the exact official pound-to-kilogram factor held inside Excel, not a rounded value typed from memory.
+3. The result lands in C2 as a true number, so you can sum it, multiply it by unit price, or reference it from other sheets.
+4. Filling down converts every row with identical precision, which eliminates the row-to-row drift you get from retyped factors.
+
+The same pattern handles distances. For a spec sheet with component lengths in inches in column A:
+
+```excel
+=CONVERT(A2,"in","cm")
+```
+
+One caveat here. Older versions of Excel do not recognize `cm` as a unit code and return #N/A, while newer versions accept it. If your target workbook lives on a machine you cannot update, convert inches to meters and scale up:
+
+```excel
+=CONVERT(A2,"in","m")*100
+```
+
+Both approaches give the same centimeter value; the second one simply works everywhere.
+
+A practical warning before you roll this out: imported weight columns often arrive as text, with stray spaces or apostrophe-prefixed cells. CONVERT throws #VALUE! on those rows. Clean the column first using the methods in our [Excel data cleaning techniques guide](/blog/excel-data-cleaning-techniques-guide), then convert.
+
+## Pattern 2: Temperature conversion with mixed input formats
+
+Monitoring logs are notorious for mixed units, especially when two teams contribute rows. Suppose column C holds temperature readings and column D holds the unit for each row, either `C` or `F`. One formula normalizes everything to Fahrenheit:
+
+```excel
+=IF(D2="C",CONVERT(C2,"C","F"),CONVERT(C2,"F","C"))
+```
+
+If D2 says the reading is Celsius, the first branch converts it up to Fahrenheit. If D2 says Fahrenheit, the second branch converts down to Celsius. Either way, the output column ends up in a single unit, and you never had to sort the rows or convert anything by hand. Swap the codes in the branches to normalize to Celsius instead.
+
+CONVERT also handles compound units, but with one call per dimension. To turn a wind speed in miles per hour, sitting in B2, into meters per second:
+
+```excel
+=CONVERT(CONVERT(B2,"mi","m"),"hr","s")
+```
+
+Read it from the inside out. The inner call converts the distance dimension, miles to meters, which leaves you with a number expressed in meters per hour. The outer call rescales the time dimension, hours to seconds, and the result reads in meters per second. This two-hop trick works for any compound unit: convert each dimension with its own nested CONVERT call, one hop at a time.
+
+## Troubleshooting and common errors
+
+| Error or symptom | Root cause | Practical fix |
+| --- | --- | --- |
+| #N/A on a formula that looks right | Unit code misspelled or wrong case. Most codes are lowercase and exact: `kg` works, `KG` does not | Retype both codes in lowercase and compare them against the table above. Watch for lookalikes, such as `l` for liter versus the digit 1 |
+| #N/A with correctly spelled codes | The conversion crosses categories, such as `kg` to `m`. CONVERT refuses pairs that are physically meaningless | Confirm both codes sit in the same category. For compound units like speed, use the nested two-hop pattern instead of forcing a single call |
+| #VALUE! | The number argument is text. This is common after imports, CSV pastes, or values copied from web pages | Clean the column first: trim spaces, strip leading apostrophes, and re-enter stubborn cells as real numbers, then point CONVERT at the cleaned range |
+| Far more decimal places than you need | CONVERT returns full precision on purpose. The math is correct, the display is just noisy | Wrap the formula in ROUND to change the stored value, or leave the value intact and apply number formatting to the cells for a cleaner view |
+
+## Summary
+
+CONVERT replaces memorized conversion factors with unit codes Excel already knows, which removes the copy-paste mistakes that creep into manual math. Start with one column, wire up a single `=CONVERT(B2,"lbm","kg")`, fill down, and deal with text values before they trigger errors. Once the pattern is in place, mixed-unit sheets become routine instead of risky.

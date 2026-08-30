@@ -1,0 +1,91 @@
+---
+title: "Excel DATEDIF Function: Calculate Days, Months, Years"
+date: "2026-08-30"
+description: "Use the Excel DATEDIF function to get the difference between two dates in whole days, months, or years, with copy-ready formulas and fixes."
+published: true
+featured: false
+heroImage: "default-og"
+tags: ["excel", "datedif", "dates", "formulas", "tutorial"]
+category: "Formulas & Functions"
+---
+
+Your HR director wants a tenure column for the annual review packet: every employee's time at the company in years and months, not a raw day count. You try the obvious move and subtract the hire date from today's date. Excel returns either a bare number like 4187 or, if the cell is date-formatted, a calendar date in 1911. Neither output answers the question. This is the gap the Excel DATEDIF function fills. This guide covers how to use the Excel DATEDIF function, step-by-step implementation patterns, and practical troubleshooting for real spreadsheets. For the broader set of date tools, including TODAY, EDATE, and YEARFRAC, keep the [Excel date and time functions guide](/blog/excel-date-time-functions-guide) open alongside this one.
+
+## What the Excel DATEDIF function does
+
+DATEDIF is the function Microsoft never advertised. It arrived from Lotus 1-2-3 in the early 1990s for compatibility, and Excel still hides it: no insert list includes it, autocomplete never suggests it, and the formula bar shows no argument tooltip while you type. Microsoft's documentation acknowledges the omission. The function still calculates without complaint.
+
+What it returns is whole completed units between two dates, never partial ones. Ask for years on a tenure of 11 years and 5 months, and DATEDIF answers 11, not 11.4 rounded up. That completion rule is exactly what age and tenure reporting needs, because a person is 11 years old until their 12th birthday, not after some rounding threshold.
+
+### Syntax
+
+```excel
+=DATEDIF(start_date, end_date, unit)
+```
+
+The first argument is the earlier date, the second is the later date, and the third is a unit code wrapped in quotes. Six codes exist. For a start date of April 10, 2019 in A2 and an end date of August 30, 2026 in B2, the results are:
+
+| Unit | What it returns | Example result |
+| --- | --- | --- |
+| `"Y"` | Whole years | 7 |
+| `"M"` | Whole months | 88 |
+| `"D"` | Whole days | 2699 |
+| `"YM"` | Months ignoring years | 4 |
+| `"YD"` | Days ignoring years | 142 |
+| `"MD"` | Days ignoring months and years | 20 |
+
+Two codes deserve special attention. `"YM"` reports months since the last anniversary, and `"YD"` reports days since the last anniversary. Both ignore the year component entirely, which is what lets you assemble a readable string such as `11 yrs 5 mo` instead of a bare 88.
+
+DATEDIF measures raw calendar distance, weekends and holidays included. When your deadline math needs to skip Saturdays and Sundays, or respect a four-day week, that is a different job for WORKDAY.INTL, covered step-by-step in the [Excel WORKDAY.INTL custom weekends guide](/blog/excel-workday-intl-custom-weekends-guide).
+
+## Pattern 1: Employee tenure in years and months
+
+Say the HR workbook lists employee names in column A and hire dates in column B, starting at row 2. To show tenure in years and months, enter this in C2 and fill down:
+
+```excel
+=DATEDIF(B2,TODAY(),"Y")&" yrs "&DATEDIF(B2,TODAY(),"YM")&" mo"
+```
+
+An employee hired on March 14, 2015 currently shows `11 yrs 5 mo`.
+
+### How this works:
+
+1. The first DATEDIF call uses the `"Y"` unit, which returns complete years only. The count resets to zero at each work anniversary, so it never inflates tenure with a partial year.
+2. The second call uses `"YM"`, which returns the leftover months after whole years are stripped away. That is why the March 2015 hire reads 11 yrs 5 mo instead of 11 yrs 17 mo.
+3. TODAY() supplies the current date as the `end_date` argument, so tenure refreshes automatically every time the workbook opens. Nobody has to touch the sheet before the review cycle.
+4. Concatenation stitches the two numbers and their labels into one text value. Because the cell now holds text rather than a number, keep a separate numeric column if you plan to sort or average tenure.
+
+If you need a sortable number instead of a text string, use `=DATEDIF(B2,TODAY(),"Y")+DATEDIF(B2,TODAY(),"YM")/12` and display it with a custom format such as `0.0" yrs"`. The [Excel custom number formats guide](/blog/excel-custom-number-formats-guide) shows how to build that format without changing the underlying value.
+
+## Pattern 2: Contract days remaining with a live countdown
+
+Procurement trackers usually keep contract end dates in column C. To show how many days remain on the contract in row 2, enter this in D2 and label the column Days left:
+
+```excel
+=DATEDIF(TODAY(),C2,"D")
+```
+
+This time TODAY() sits in the `start_date` slot and the fixed end date sits second. DATEDIF still insists on start before end, so an already-expired contract returns `#NUM!`; the troubleshooting table below shows how to guard against that. For membership reports and customer records, the same three units from Pattern 1 build a complete age string:
+
+```excel
+=DATEDIF(B2,TODAY(),"Y")&" years, "&DATEDIF(B2,TODAY(),"YM")&" months, "&DATEDIF(B2,TODAY(),"MD")&" days"
+```
+
+For the March 14, 2015 hire date, that returns `11 years, 5 months, 16 days`, and the day count ticks up tomorrow without any edits.
+
+The countdown stays current because TODAY() is volatile: Excel recalculates it whenever the workbook opens or any cell changes. If a countdown ever looks frozen at yesterday's value, the [Excel stale values and recalculation guide](/blog/excel-stale-values-recalculation-guide) explains what causes stale results and how to force a refresh.
+
+## Troubleshooting and common errors
+
+Most DATEDIF problems fall into four buckets.
+
+| Error / Symptom | Root Cause | Practical Fix |
+| --- | --- | --- |
+| `#NUM!` in the result cell | start_date is later than end_date. With TODAY() involved, this usually means a contract has expired or two dates were entered in the wrong order. | Swap the two date arguments, or guard the formula with `=IF(TODAY()>=C2,"Expired",DATEDIF(TODAY(),C2,"D"))`. |
+| No tooltip and no autocomplete | DATEDIF is a hidden legacy function inherited from Lotus 1-2-3, so Excel never lists it and never offers argument help. | Type the function name and all three arguments manually. It still calculates correctly; only the on-screen guidance is missing. |
+| `"MD"` returns a negative or nonsense day count near month ends | Known quirk in how MD counts: late-month start dates such as the 29th through the 31st can produce a negative or inaccurate result, a behavior Microsoft documents openly. | Use `"D"` for a straight day count, or split the interval into `"Y"` and `"M"` results the way Pattern 1 does. |
+| Result shows a number like 45123, or a day count renders as a date in the early 1900s | The result cell inherited Date formatting from the source cells, and Excel stores dates as serial numbers, so the cell displays either the raw serial or a rendered calendar day. | Select the result cells, press Ctrl+1, and switch the format to General or Number. |
+
+## Summary
+
+DATEDIF returns whole completed units between two dates, and pairing the `"Y"`, `"YM"`, and `"MD"` units produces tenure and age strings that plain subtraction cannot deliver. Keep `start_date` earlier than `end_date`, treat late-month `"MD"` results with suspicion, and expect to type the function by hand, because autocomplete will never offer it.

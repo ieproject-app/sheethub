@@ -1,0 +1,98 @@
+---
+title: "Google Sheets IMPORTRANGE Function: Complete Guide"
+date: "2026-08-30"
+description: "Learn how IMPORTRANGE links Google Sheets files, consolidate regional data, filter imports with QUERY, and fix common import errors."
+published: true
+featured: false
+heroImage: "default-og"
+tags: ["google-sheets", "importrange", "data-import", "functions", "tutorial"]
+category: "Google Sheets"
+---
+
+Every Monday you copy summary ranges from three regional sales files into a master report, and by Wednesday those numbers are already stale. IMPORTRANGE ends that ritual by creating a live connection between separate spreadsheet files, so your master always reflects the source data as it changes. This guide covers how to use IMPORTRANGE, step-by-step implementation patterns, and practical troubleshooting for real spreadsheets. If you are new to pulling data into Sheets in general, the [Google Sheets import functions guide](/blog/google-sheets-import-functions-guide) maps every import option before you commit to one.
+
+## What IMPORTRANGE does in Google Sheets
+
+IMPORTRANGE connects two separate spreadsheet files. The source file stays exactly where it is, owned by whoever owns it, and your file displays a live copy of the range you point to. Edit a cell in the source and the imported value updates in your file without any action from you.
+
+That behavior is what separates it from the alternatives. Copy-paste produces a snapshot that ages the moment you make it. IMPORTDATA and IMPORTHTML pull content from external web pages and CSV files, not from other Google Sheets files. IMPORTRANGE is the only one of the three built for file-to-file connections inside Google Sheets. If your source data starts life in Excel workbooks rather than other Sheets, the route is different: see how to [import Excel tables and pivots](/blog/google-sheets-import-excel-tables-pivots-guide).
+
+| Method | Source | Stays in sync | Best for |
+| --- | --- | --- | --- |
+| Copy-paste | Anywhere | No | One-time snapshots |
+| IMPORTRANGE | Other Google Sheets files | Yes | Live cross-file reporting |
+| IMPORTDATA | CSV or TSV at a public URL | On reload | Regularly published external data |
+| IMPORTHTML | Tables and lists on web pages | On reload | Scraped reference data |
+
+### Syntax
+
+```excel
+=IMPORTRANGE(spreadsheet_url, range_string)
+```
+
+- `spreadsheet_url`: the full URL of the source file, or just the spreadsheet ID, the long string between `/d/` and `/edit` in the address bar.
+- `range_string`: the sheet name and range to pull, written as `"Sales!A2:D100"`. Include the sheet name whenever the source has more than one tab; if you omit it, the function reads the first sheet.
+
+One limit matters before you build anything large. IMPORTRANGE pulls values only. Formatting, conditional formatting rules, and the formulas behind calculated cells do not travel; a formula in the source arrives in your file as its current result.
+
+## Pattern 1: Consolidate weekly sales from regional files
+
+Picture the common setup. A master workbook for leadership reporting, plus three regional files: East, West, and Central. Each regional file has a sheet named Sales where columns A to D hold Date, Rep, Region, and Revenue, with data from row 2 down to row 100.
+
+You need those rows flowing into the master on their own. IMPORTRANGE requires a one-time permission grant per source and destination pair, so start with a small probe before wiring the full report.
+
+In a scratch column of the master, run a minimal version:
+
+```excel
+=IMPORTRANGE("https://docs.google.com/spreadsheets/d/FILE_ID/edit", "Sales!A2:D100")
+```
+
+The first run returns a #REF! error with an Allow access button. Click it once, and Sheets remembers the grant for this master file and this source file. The probe then loads a preview of your range.
+
+Once the preview appears, build the real integration. A clean layout gives each region its own tab in the master, and each tab starts with one formula:
+
+```excel
+=IMPORTRANGE("https://docs.google.com/spreadsheets/d/FILE_ID_EAST/edit", "Sales!A2:D100")
+```
+
+Repeat with the West and Central IDs, and the master carries all three regions permanently, no Monday copying required.
+
+### How this works:
+
+1. IMPORTRANGE opens a read-only link from the master file to the source file identified by the URL.
+2. The first formula targeting a given source file triggers the permission prompt; allowing it authorizes every future IMPORTRANGE call to that same file from this workbook.
+3. The function streams the current values of `Sales!A2:D100` into the master and refreshes as the source changes.
+4. The link tracks positions, not content. If a regional teammate inserts a column in the source, your master columns shift with it, so keep the source layout stable.
+
+One boundary worth knowing: IMPORTRANGE only reaches other Google Sheets files. When the data you need lives behind an API, the [Google Sheets IMPORTJSON guide](/blog/google-sheets-importjson-api-guide) covers the tool built for that job.
+
+## Pattern 2: Filter imported data with QUERY
+
+Importing a hundred rows when you need twelve wastes cells and attention. Wrapping IMPORTRANGE inside QUERY filters the stream at the door. This example keeps only rows where revenue in the fourth column exceeds 5000:
+
+```excel
+=QUERY(IMPORTRANGE("https://docs.google.com/spreadsheets/d/FILE_ID/edit", "Sales!A2:D100"), "select Col1, Col2, Col4 where Col4 > 5000", 0)
+```
+
+The `Col1`, `Col2` notation is mandatory here, and it trips up almost everyone once. When QUERY reads a plain range such as A2:D100, you can write `select A, B, D`. When QUERY reads an array produced by another function, as it does with an IMPORTRANGE result, the input has no column letters attached, so QUERY refers to positions instead. `Col1` is the first column of the imported array, `Col2` the second, and so on.
+
+The third argument, 0, tells QUERY the imported data starts at the first data row with no header. If your source range includes headers in row 1, import from A1 and change the last argument to 1 so the labels flow through cleanly.
+
+For deeper filtering, sorting, and aggregation on top of imported arrays, the [Google Sheets QUERY advanced guide](/blog/google-sheets-query-advanced-guide) shows where to take it next.
+
+## Troubleshooting and common errors
+
+Most IMPORTRANGE failures trace back to a short list of causes. Match your symptom to the table before rewriting anything.
+
+| Error or symptom | Root cause | Practical fix |
+| --- | --- | --- |
+| #REF! with "You don't have permission to access" | The one-time grant has not been made for this source and destination pair | Click Allow access on a small test IMPORTRANGE in the destination file, then rebuild the full formula |
+| #ERROR! stuck on "Loading..." | The range is very large or the file holds many IMPORTRANGE calls competing to calculate | Reduce the range to the rows you actually use, split one giant import into several smaller ones, and give slow files a few minutes |
+| Result too large | IMPORTRANGE caps the number of cells a single call can return | Split the request into multiple ranges or trim unused columns before importing |
+| Imported values lag behind the source | Refresh cadence is not instant, and very heavy workbooks recalculate less often | Make a small edit to force recalculation, reload the browser tab when a value looks frozen, and keep the master lean |
+
+Two permission details cause the most confusion. The grant is per pair, so a master that already loads the East file still needs its own approval for the West file. And the grant belongs to the account that clicked Allow access, which means a teammate who copies your master may see #REF! until they approve access under their own account. That also requires view access to the source file itself.
+
+## Summary
+
+IMPORTRANGE turns scattered files into one reporting surface: grant access with a small probe formula, then scale to full ranges or QUERY-filtered imports. Keep source layouts stable and ranges tight, and the Monday copy-paste ritual disappears for good.

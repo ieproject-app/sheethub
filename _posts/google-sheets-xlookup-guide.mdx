@@ -1,0 +1,91 @@
+---
+title: "Google Sheets XLOOKUP Function: Complete Guide with Examples"
+date: "2026-08-30"
+description: "Learn how to use XLOOKUP in Google Sheets to replace VLOOKUP, search in any direction, handle missing values, and fix common lookup errors."
+published: true
+featured: false
+heroImage: "default-og"
+tags: ["google-sheets", "xlookup", "lookup", "formulas", "tutorial"]
+category: "Google Sheets"
+---
+
+You inherit an order sheet where the price column breaks every time someone inserts a column in the source table. The formula was built with VLOOKUP, and its third argument counts columns from the left edge of the range, so any structural change silently shifts the result. An INDEX/MATCH rebuild fixes it once, then you repeat the same work on the next sheet. Google Sheets XLOOKUP removes that fragility: you point it at the column you search and the column you return, in either direction, with no counting at all. This guide covers how to use XLOOKUP in Google Sheets, step-by-step implementation patterns, and practical troubleshooting for real spreadsheets. If you also maintain Excel workbooks, the [Excel XLOOKUP complete guide](/blog/xlookup-complete-guide) maps the small syntax differences between platforms.
+
+## What XLOOKUP does in Google Sheets
+
+XLOOKUP searches a range in any direction and returns a matching value from another range. You give it three things: what to find, where to search, and what to bring back. That is the entire contract. It works top-down, bottom-up, left-to-right, and right-to-left, because the lookup range and the result range are supplied separately instead of being cut from one table. A VLOOKUP forced you to build the table around the formula; XLOOKUP adapts to the table you already have.
+
+It beats VLOOKUP on four fronts. There is no column-count math, so inserting a column between the search column and the return column changes nothing. The default match is exact, which kills the silent approximate-match problem that VLOOKUP ships with. It can look left, so a product code in column C can retrieve a name from column A. And the result range can span multiple columns, so one formula returns code, name, and price side by side.
+
+Compared with INDEX/MATCH, XLOOKUP does the same job in one function instead of two nested ones, with the same immunity to column insertions and the same freedom to look left. If you still maintain older sheets built on that pair, the [INDEX MATCH formula guide](/blog/index-match-formula-guide) explains when the legacy approach still earns its keep. For a focused head-to-head, read the [VLOOKUP vs XLOOKUP comparison guide](/blog/vlookup-vs-xlookup-comparison-guide).
+
+| Capability | XLOOKUP | VLOOKUP | INDEX/MATCH |
+|---|---|---|---|
+| Looks left | Yes | No | Yes |
+| Default match | Exact | Approximate | Exact when you add 0 |
+| Column insertion safety | Immune | Breaks | Immune |
+
+### Syntax
+
+The full signature has six arguments, two of them optional:
+
+```excel
+=XLOOKUP(search_key, lookup_range, result_range, [missing_value], [match_mode], [search_mode])
+```
+
+- search_key: the value to find, such as a product code in B2.
+- lookup_range: the single column or row to search, such as Products!$A$2:$A$100.
+- result_range: the column or row of return values, the same size as the lookup range.
+- missing_value: optional text or number returned when nothing matches, such as "Code not found".
+- match_mode: 0 for exact match (the default), -1 for exact or the next smaller item, 1 for exact or the next larger item, and 2 for wildcard matching.
+- search_mode: 1 to search first to last (the default), -1 to search last to first, 2 for a binary search on data sorted ascending, and -2 for a binary search on data sorted descending.
+
+## Pattern 1: Product price lookup with a friendly missing message
+
+Picture an order sheet where the product code lands in B2 and the inventory table lives in Products!A2:C100, with codes in column A, names in column B, and prices in column C.
+
+```excel
+=XLOOKUP(B2,Products!$A$2:$A$100,Products!$C$2:$C$100,"Code not found")
+```
+
+### How this works:
+
+1. XLOOKUP takes the code in B2 and scans Products!$A$2:$A$100 for the first exact match.
+2. It finds the code in row 37, so it returns the value from Products!$C$37, the same relative position inside the result range.
+3. If the code is missing from the inventory list, the formula returns the text "Code not found" instead of an #N/A error.
+4. The fourth argument replaces the old IFERROR wrapper. The fallback is scoped to this one lookup, so genuine mistakes elsewhere still surface instead of being swallowed.
+
+The same shape returns several columns at once. Change the result range to Products!$B$2:$C$100 and the name and price spill into adjacent cells, side by side. Spilled output needs empty space to its right, and when something blocks the expansion the [Google Sheets array result not expanded guide](/blog/google-sheets-array-result-not-expanded-guide) walks through clearing the obstacle.
+
+## Pattern 2: Reverse lookup and last match
+
+Two situations call for the optional arguments. The first is a price log where the same SKU appears many times and the newest entry sits at the bottom. A2:A100 holds the SKU entries, C2:C100 holds the recorded prices, and E2 holds the SKU you care about.
+
+```excel
+=XLOOKUP(E2,A2:A100,C2:C100,,0,-1)
+```
+
+The double comma leaves the missing value empty, so a genuinely absent SKU still returns #N/A. Match mode 0 pins the comparison to exact, and search mode -1 makes XLOOKUP read the range from the bottom up, stopping at the newest match. This matters on log-style sheets where each day appends rows and the last occurrence is the current one. A plain first-to-last search would hand you last January's price and nobody would notice. Search modes 2 and -2 are speed tools for very large sorted ranges; use them only when the data is genuinely sorted, because a binary search over unsorted rows returns wrong answers quietly.
+
+The second situation is a partial match. E2 holds a fragment such as a product family code, and you want any entry that contains it:
+
+```excel
+=XLOOKUP("*"&E2&"*",A2:A100,C2:C100,"No match",2)
+```
+
+The asterisks around E2 mean anything before and after, but they only work because match mode 2 switches wildcard matching on. Omit that 2 and XLOOKUP hunts for a literal string of asterisks and finds nothing. Wildcards are powerful and risky in equal measure: the pattern `"*"&E2&"*"` happily matches the first of fifty similar SKUs, so keep the key specific enough that the first hit is the one you want.
+
+## Troubleshooting and common errors
+
+Most lookup failures trace back to data hygiene rather than the formula. These four cover nearly everything you will meet.
+
+| Error / Symptom | Root Cause | Practical Fix |
+|---|---|---|
+| #N/A on every row | The search key is stored as text while the lookup range holds numbers, or trailing spaces ride along on pasted values | Wrap the key in `=TRIM(B2)` and re-enter the column with one consistent type |
+| #N/A even though the value visibly exists | A hidden space or a data type mismatch, such as a number typed as text on one side only | Clean both sides with TRIM and force one data type before the lookup runs |
+| Wildcard search finds nothing or matches the wrong row | The fifth argument was omitted, so match mode 2 is off and the asterisks are compared literally | Add 2 as the match mode so wildcard matching turns on |
+| Formula reports a blocked spill after an edit | The result range returns multiple columns and the adjacent cells are occupied | Clear the cells to the right of the formula, or move it where the array has room |
+
+## Summary
+
+XLOOKUP replaces column-count arithmetic and two-function wiring with one call that defaults to exact match, looks in any direction, and survives structural edits. Start with Pattern 1 on your next lookup, then reach for search mode -1 once your logs start growing downward.
