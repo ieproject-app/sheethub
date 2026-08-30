@@ -17,7 +17,7 @@
   },
   "articles": {
     "excel-rounding-functions-round-mround-ceiling-floor-guide": {
-      "status": "awaiting_capture",
+      "status": "published_visual",
       "updated": "2026-08-30",
       "template": {
         "kind": "xlsx-local",
@@ -26,10 +26,12 @@
         "registered": true
       },
       "shots": [
-        { "name": "hero", "path": "D:\\Screenshots\\sheethub\\excel-rounding-functions-round-mround-ceiling-floor-guide\\hero.png", "desc": "worksheet tabel nilai mentah + hasil ROUND, ROUNDUP, ROUNDDOWN, MROUND, CEILING, FLOOR per kolom", "webp_url": null },
-        { "name": "currency-round", "path": "D:\\Screenshots\\sheethub\\excel-rounding-functions-round-mround-ceiling-floor-guide\\currency-round.png", "desc": "sheet Invoice Rounding: unit price x qty, ROUND vs ROUNDUP dua desimal + total", "webp_url": null },
-        { "name": "time-mround", "path": "D:\\Screenshots\\sheethub\\excel-rounding-functions-round-mround-ceiling-floor-guide\\time-mround.png", "desc": "sheet Time Rounding: MROUND 0.25, CEILING, FLOOR pada jam kerja", "webp_url": null },
-        { "name": "negative-round", "path": "D:\\Screenshots\\sheethub\\excel-rounding-functions-round-mround-ceiling-floor-guide\\negative-round.png", "desc": "baris angka negatif di Rounding Family: ROUNDUP vs ROUNDDOWN", "webp_url": null }
+        { "name": "hero", "path": "D:\\Screenshots\\sheethub\\excel-rounding-functions-round-mround-ceiling-floor-guide\\hero.png", "desc": "worksheet tabel nilai mentah + hasil ROUND, ROUNDUP, ROUNDDOWN, MROUND, CEILING, FLOOR per kolom", "webp_url": "https://res.cloudinary.com/snipgeek/image/upload/q_auto/f_auto/v1788073778/sheethub/images/excel-rounding-functions-round-mround-ceiling-floor-guide/hero.webp" },
+        { "name": "currency-round", "path": "D:\\Screenshots\\sheethub\\excel-rounding-functions-round-mround-ceiling-floor-guide\\currency-round.png", "desc": "sheet Invoice Rounding: unit price x qty, ROUND vs ROUNDUP dua desimal + total", "webp_url": "https://res.cloudinary.com/snipgeek/image/upload/q_auto/f_auto/v1788073780/sheethub/images/excel-rounding-functions-round-mround-ceiling-floor-guide/currency-round.webp" },
+        { "name": "time-mround", "path": "D:\\Screenshots\\sheethub\\excel-rounding-functions-round-mround-ceiling-floor-guide\\time-mround.png", "desc": "sheet Time Rounding: MROUND 0.25, CEILING, FLOOR pada jam kerja", "webp_url": "https://res.cloudinary.com/snipgeek/image/upload/q_auto/f_auto/v1788073782/sheethub/images/excel-rounding-functions-round-mround-ceiling-floor-guide/time-mround.webp" }
+      ],
+      "dropped_shots": [
+        { "name": "negative-round", "reason": "baris negatif sudah terlihat di shot hero; hindari duplikasi gambar dalam satu artikel" }
       ]
     },
     "google-sheets-unique-function-guide": {

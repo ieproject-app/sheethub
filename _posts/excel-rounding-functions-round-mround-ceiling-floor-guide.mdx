@@ -13,8 +13,7 @@ A price list that shows 19.999 instead of 20.00, or a timesheet total of 7.983 h
 
 <DownloadButton id="excel-rounding-functions-round-mround-ceiling-floor-guide" />
 
-{/* CLOUDINARY: D:\Screenshots\sheethub\excel-rounding-functions-round-mround-ceiling-floor-guide\hero.png — worksheet berisi tabel nilai mentah + hasil ROUND, ROUNDUP, ROUNDDOWN, MROUND, CEILING, FLOOR per kolom (semua fungsi family terlihat dalam satu layar) */}
-> 📸 Hero: tabel rounding family lengkap dengan hasil
+![Excel worksheet comparing ROUND, ROUNDUP, ROUNDDOWN, MROUND, CEILING, and FLOOR results for positive and negative raw values](https://res.cloudinary.com/snipgeek/image/upload/q_auto/f_auto/v1788073778/sheethub/images/excel-rounding-functions-round-mround-ceiling-floor-guide/hero.webp)
 
 The key difference is that formatting only changes how a cell looks while the stored value stays the same. If you then SUM or VLOOKUP that cell, the full precision carries into the result. Rounding with a function changes the value itself. Choose the function when the calculation depends on the rounded number, not just the display. For the display-only path, see the [Excel custom number formats guide](/blog/excel-custom-number-formats-guide).
 
@@ -66,8 +65,7 @@ Rounding each line first is the better choice when individual lines are quoted t
 =ROUNDUP(B2*C2, 2)
 ```
 
-{/* CLOUDINARY: D:\Screenshots\sheethub\excel-rounding-functions-round-mround-ceiling-floor-guide\currency-round.png — tabel invoice: unit price 3 desimal x quantity, kolom ROUND dan ROUNDUP dua desimal, baris total yang cocok */}
-> 📸 Invoice: ROUND vs ROUNDUP dua desimal + total
+![Invoice example where each line total is rounded with ROUND and ROUNDUP to two decimals before summing](https://res.cloudinary.com/snipgeek/image/upload/q_auto/f_auto/v1788073780/sheethub/images/excel-rounding-functions-round-mround-ceiling-floor-guide/currency-round.webp)
 
 ## Pattern 2: Round time to the nearest quarter hour
 
@@ -94,8 +92,7 @@ Note that `MROUND` rounds half away from zero, matching `ROUND`. When the roundi
 =CEILING(D2, 1)
 ```
 
-{/* CLOUDINARY: D:\Screenshots\sheethub\excel-rounding-functions-round-mround-ceiling-floor-guide\time-mround.png — timesheet: kolom jam mentah 7.983 dst, hasil MROUND "0:15" tampil format jam 8:00, plus kolom CEILING dan FLOOR */}
-> 📸 Timesheet: MROUND 15 menit + CEILING/FLOOR
+![Timesheet hours rounded with MROUND to the nearest quarter, plus CEILING and FLOOR direction columns](https://res.cloudinary.com/snipgeek/image/upload/q_auto/f_auto/v1788073782/sheethub/images/excel-rounding-functions-round-mround-ceiling-floor-guide/time-mround.webp)
 
 When the rule is always down, such as counting full boxes only, use `FLOOR`:
 
@@ -112,9 +109,6 @@ Negative numbers trip up rounding, because ROUNDUP and ROUNDDOWN behave differen
 ```excel
 =ROUNDUP(-2.141, 2)
 ```
-
-{/* CLOUDINARY: D:\Screenshots\sheethub\excel-rounding-functions-round-mround-ceiling-floor-guide\negative-round.png — tabel angka negatif (-2.141 dst) dengan hasil ROUNDUP jauh-dari-nol dan ROUNDDOWN mendekati-nol berdampingan */}
-> 📸 Angka negatif: ROUNDUP vs ROUNDDOWN
 
 For a worksheet that tracks refunds or adjustments, choose the direction deliberately for each column. A fee column that always rounds away from zero might be a `ROUNDUP`, while a discount column that always rounds toward zero might be a `ROUNDDOWN`.
 
