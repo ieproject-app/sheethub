@@ -1,6 +1,6 @@
 # AGENTS.md — SheetHub
 
-`sheethub.web.id` — Next.js (App Router) + Tailwind CSS v4. Konten blog MDX English-only di `_posts/*.mdx`, komentar Disqus, template via Google Drive, deployment Firebase App Hosting.
+`sheethub.web.id` — Next.js (App Router) + Tailwind CSS v4. Konten blog MDX English-only di `_posts/*.mdx`, komentar Disqus, contoh file artikel (.xlsx kecil) di-host di repo `public/downloads/templates/` (Google Drive opsional/manual), visual artikel via Cloudinary (skill `sheethub-visual-ops`), deployment Firebase App Hosting.
 
 ## Review & Publikasi Artikel
 - Draf aktif di branch `drafts/sheethub`; production di `main`. Sebelum kerja: pastikan sync (`git pull --ff-only origin <branch>`) dan working tree bersih.
@@ -14,9 +14,10 @@
 - Hierarki provider: `command-code` (utama) → `kiro` (bonus s.d. 1 Sep 2026) → `deepseek` (fallback, wajib peak guard).
 
 ## Standar Konten & Engineering
-- `sheethub-content-generator`: standar MDX & frontmatter SEO (English-only, canonical).
+- `sheethub-content-generator`: standar MDX & frontmatter SEO (English-only, canonical). Setiap artikel baru WAJIB 1 contoh file `.xlsx` repo-hosted + `<DownloadButton>` (G25).
 - `sheethub-blog-tone`: gaya spreadsheet expert untuk artikel Excel/Google Sheets.
 - `sheethub-adsense`, `sheethub-tool-standard`, `sheethub-rules`: kepatuhan AdSense, pola tool interaktif, dan aturan engineering.
+- `sheethub-visual-ops`: loop visual harian (marker screenshot → user capture → webp 4:3 → Cloudinary cloud `snipgeek` folder `sheethub/images/`) — [[ADR-034]] di Second Brain. Proses SATU artikel per ronde dengan handoff card.
 - Catat keputusan arsitektur ke Second Brain (`D:\SecondBrain`) via skill `obsidian-second-brain`.
 
 ## Perintah
