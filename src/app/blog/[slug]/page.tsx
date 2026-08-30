@@ -45,7 +45,14 @@ export async function generateMetadata({
 
   const canonicalPath = "/blog/" + slug;
 
-  const ogImageUrl = "https://sheethub.web.id/opengraph-image";
+  // A real hero image URL (e.g. Cloudinary) wins when present; the
+  // "default-og" sentinel falls back to the generated per-article card
+  // served by ./opengraph-image.tsx in this segment.
+  const externalHero =
+    post.frontmatter.heroImage && /^https?:\/\//.test(post.frontmatter.heroImage)
+      ? post.frontmatter.heroImage
+      : null;
+  const ogImageUrl = externalHero ?? `/blog/${slug}/opengraph-image`;
 
   return {
     title: post.frontmatter.title,
@@ -88,7 +95,7 @@ export async function generateMetadata({
       card: "summary_large_image",
       title: post.frontmatter.title,
       description: post.frontmatter.description,
-      images: [ogImageUrl],
+      images: [ogImageUrl.startsWith("http") ? ogImageUrl : "https://sheethub.web.id" + ogImageUrl],
       creator: "@sheethub",
       site: "@sheethub",
     },
