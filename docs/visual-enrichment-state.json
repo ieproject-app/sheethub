@@ -3,11 +3,12 @@
   "updated": "2026-08-30",
   "goal": "every article has visuals + example file",
   "standard": {
-    "aspectRatio": "4:3 landscape",
-    "canvas": "1600x1200",
+    "aspectRatio": "natural (ikut screenshot)",
+    "maxWidth": 1600,
     "format": "webp q82 -> Cloudinary q_auto/f_auto",
     "cloudinaryFolder": "sheethub/images/<slug>/",
-    "captureRoot": "D:\\Screenshots\\sheethub\\<slug>\\"
+    "intake": "ShareX: C:\\Users\\Iwan Efendi\\Documents\\ShareX\\Screenshots\\YYYY-MM\\ (penamaan bebas, AI yang memetakan)",
+    "serverArchive": "hermes@100.104.234.102:~/Project/sheethub-assets/screenshots/<slug>/ (scp saat process — opsi B)"
   },
   "meta": {
     "totalPosts": 124,
@@ -26,12 +27,33 @@
         "registered": true
       },
       "shots": [
-        { "name": "hero", "path": "D:\\Screenshots\\sheethub\\excel-rounding-functions-round-mround-ceiling-floor-guide\\hero.png", "desc": "worksheet tabel nilai mentah + hasil ROUND, ROUNDUP, ROUNDDOWN, MROUND, CEILING, FLOOR per kolom", "webp_url": "https://res.cloudinary.com/snipgeek/image/upload/q_auto/f_auto/v1788073778/sheethub/images/excel-rounding-functions-round-mround-ceiling-floor-guide/hero.webp" },
-        { "name": "currency-round", "path": "D:\\Screenshots\\sheethub\\excel-rounding-functions-round-mround-ceiling-floor-guide\\currency-round.png", "desc": "sheet Invoice Rounding: unit price x qty, ROUND vs ROUNDUP dua desimal + total", "webp_url": "https://res.cloudinary.com/snipgeek/image/upload/q_auto/f_auto/v1788073780/sheethub/images/excel-rounding-functions-round-mround-ceiling-floor-guide/currency-round.webp" },
-        { "name": "time-mround", "path": "D:\\Screenshots\\sheethub\\excel-rounding-functions-round-mround-ceiling-floor-guide\\time-mround.png", "desc": "sheet Time Rounding: MROUND 0.25, CEILING, FLOOR pada jam kerja", "webp_url": "https://res.cloudinary.com/snipgeek/image/upload/q_auto/f_auto/v1788073782/sheethub/images/excel-rounding-functions-round-mround-ceiling-floor-guide/time-mround.webp" }
+        {
+          "name": "hero",
+          "source_path": "C:\\Users\\Iwan Efendi\\Documents\\ShareX\\Screenshots\\2026-08\\EXCEL_Rounding Family.png",
+          "archived_to": "sheethub-assets/screenshots/excel-rounding-functions-round-mround-ceiling-floor-guide/hero.png",
+          "desc": "worksheet tabel nilai mentah + hasil ROUND, ROUNDUP, ROUNDDOWN, MROUND, CEILING, FLOOR per kolom",
+          "webp_url": "https://res.cloudinary.com/snipgeek/image/upload/q_auto/f_auto/v1788073778/sheethub/images/excel-rounding-functions-round-mround-ceiling-floor-guide/hero.webp"
+        },
+        {
+          "name": "currency-round",
+          "source_path": "C:\\Users\\Iwan Efendi\\Documents\\ShareX\\Screenshots\\2026-08\\EXCEL_Invoice Rounding.png",
+          "archived_to": "sheethub-assets/screenshots/excel-rounding-functions-round-mround-ceiling-floor-guide/currency-round.png",
+          "desc": "sheet Invoice Rounding: unit price x qty, ROUND vs ROUNDUP dua desimal + total",
+          "webp_url": "https://res.cloudinary.com/snipgeek/image/upload/q_auto/f_auto/v1788073780/sheethub/images/excel-rounding-functions-round-mround-ceiling-floor-guide/currency-round.webp"
+        },
+        {
+          "name": "time-mround",
+          "source_path": "C:\\Users\\Iwan Efendi\\Documents\\ShareX\\Screenshots\\2026-08\\EXCEL_Time Rounding.png",
+          "archived_to": "sheethub-assets/screenshots/excel-rounding-functions-round-mround-ceiling-floor-guide/time-mround.png",
+          "desc": "sheet Time Rounding: MROUND 0.25, CEILING, FLOOR pada jam kerja",
+          "webp_url": "https://res.cloudinary.com/snipgeek/image/upload/q_auto/f_auto/v1788073782/sheethub/images/excel-rounding-functions-round-mround-ceiling-floor-guide/time-mround.webp"
+        }
       ],
       "dropped_shots": [
-        { "name": "negative-round", "reason": "baris negatif sudah terlihat di shot hero; hindari duplikasi gambar dalam satu artikel" }
+        {
+          "name": "negative-round",
+          "reason": "baris negatif sudah terlihat di shot hero; hindari duplikasi gambar dalam satu artikel"
+        }
       ]
     },
     "google-sheets-unique-function-guide": {
@@ -44,9 +66,21 @@
         "registered": true
       },
       "shots": [
-        { "name": "hero", "path": "D:\\Screenshots\\sheethub\\google-sheets-unique-function-guide\\hero.png", "desc": "kolom customer berulang + hasil =UNIQUE() spill di sebelahnya", "webp_url": null },
-        { "name": "sort-unique", "path": "D:\\Screenshots\\sheethub\\google-sheets-unique-function-guide\\sort-unique.png", "desc": "hasil SORT(UNIQUE(A2:A17)) terurut A-Z, formula bar terlihat", "webp_url": null },
-        { "name": "unique-rows", "path": "D:\\Screenshots\\sheethub\\google-sheets-unique-function-guide\\unique-rows.png", "desc": "sheet Unique Rows: dedup 3 kolom, hanya baris identik yang hilang", "webp_url": null }
+        {
+          "name": "hero",
+          "desc": "kolom customer berulang + hasil =UNIQUE() spill di sebelahnya",
+          "webp_url": null
+        },
+        {
+          "name": "sort-unique",
+          "desc": "hasil SORT(UNIQUE(A2:A17)) terurut A-Z, formula bar terlihat",
+          "webp_url": null
+        },
+        {
+          "name": "unique-rows",
+          "desc": "sheet Unique Rows: dedup 3 kolom, hanya baris identik yang hilang",
+          "webp_url": null
+        }
       ]
     },
     "xlookup-complete-guide": {
@@ -59,10 +93,26 @@
         "registered": true
       },
       "shots": [
-        { "name": "hero", "path": "D:\\Screenshots\\sheethub\\xlookup-complete-guide\\hero.png", "desc": "sheet Basic & Errors: tabel produk + XLOOKUP P102 hasil harga", "webp_url": null },
-        { "name": "basic-exact", "path": "D:\\Screenshots\\sheethub\\xlookup-complete-guide\\basic-exact.png", "desc": "exact match + custom Not found (P999) dalam satu layar", "webp_url": null },
-        { "name": "left-lookup", "path": "D:\\Screenshots\\sheethub\\xlookup-complete-guide\\left-lookup.png", "desc": "sheet Left Lookup & Spill: cari badge kanan, hasil employee kiri", "webp_url": null },
-        { "name": "multi-column", "path": "D:\\Screenshots\\sheethub\\xlookup-complete-guide\\multi-column.png", "desc": "spill 3 kolom (name/price/stock) dari satu formula", "webp_url": null }
+        {
+          "name": "hero",
+          "desc": "sheet Basic & Errors: tabel produk + XLOOKUP P102 hasil harga",
+          "webp_url": null
+        },
+        {
+          "name": "basic-exact",
+          "desc": "exact match + custom Not found (P999) dalam satu layar",
+          "webp_url": null
+        },
+        {
+          "name": "left-lookup",
+          "desc": "sheet Left Lookup & Spill: cari badge kanan, hasil employee kiri",
+          "webp_url": null
+        },
+        {
+          "name": "multi-column",
+          "desc": "spill 3 kolom (name/price/stock) dari satu formula",
+          "webp_url": null
+        }
       ]
     },
     "countif-countifs-guide": {
@@ -75,10 +125,26 @@
         "registered": true
       },
       "shots": [
-        { "name": "hero", "path": "D:\\Screenshots\\sheethub\\countif-countifs-guide\\hero.png", "desc": "sheet Orders Data + COUNTIF East dengan hasil & formula bar", "webp_url": null },
-        { "name": "wildcards", "path": "D:\\Screenshots\\sheethub\\countif-countifs-guide\\wildcards.png", "desc": "COUNTIF \"Widget*\" hanya menghitung awalan Widget", "webp_url": null },
-        { "name": "countifs-multi", "path": "D:\\Screenshots\\sheethub\\countif-countifs-guide\\countifs-multi.png", "desc": "sheet Summary Formulas baris East AND Product A", "webp_url": null },
-        { "name": "date-range", "path": "D:\\Screenshots\\sheethub\\countif-countifs-guide\\date-range.png", "desc": "sheet Summary Formulas baris Orders in 2026 (rentang tanggal)", "webp_url": null }
+        {
+          "name": "hero",
+          "desc": "sheet Orders Data + COUNTIF East dengan hasil & formula bar",
+          "webp_url": null
+        },
+        {
+          "name": "wildcards",
+          "desc": "COUNTIF \"Widget*\" hanya menghitung awalan Widget",
+          "webp_url": null
+        },
+        {
+          "name": "countifs-multi",
+          "desc": "sheet Summary Formulas baris East AND Product A",
+          "webp_url": null
+        },
+        {
+          "name": "date-range",
+          "desc": "sheet Summary Formulas baris Orders in 2026 (rentang tanggal)",
+          "webp_url": null
+        }
       ]
     },
     "if-nested-ifs-ifs-guide": {
@@ -91,9 +157,21 @@
         "registered": true
       },
       "shots": [
-        { "name": "hero", "path": "D:\\Screenshots\\sheethub\\if-nested-ifs-ifs-guide\\hero.png", "desc": "sheet Grading: skor + Pass/Fail + grade nested IF vs IFS", "webp_url": null },
-        { "name": "if-basic", "path": "D:\\Screenshots\\sheethub\\if-nested-ifs-ifs-guide\\if-basic.png", "desc": "sheet Order Labels: High Value vs Standard + baris boundary 500", "webp_url": null },
-        { "name": "ifs-vs-nested", "path": "D:\\Screenshots\\sheethub\\if-nested-ifs-ifs-guide\\ifs-vs-nested.png", "desc": "sheet Region Bonus: nested IF vs IFS berdampingan hasil sama", "webp_url": null }
+        {
+          "name": "hero",
+          "desc": "sheet Grading: skor + Pass/Fail + grade nested IF vs IFS",
+          "webp_url": null
+        },
+        {
+          "name": "if-basic",
+          "desc": "sheet Order Labels: High Value vs Standard + baris boundary 500",
+          "webp_url": null
+        },
+        {
+          "name": "ifs-vs-nested",
+          "desc": "sheet Region Bonus: nested IF vs IFS berdampingan hasil sama",
+          "webp_url": null
+        }
       ]
     }
   }
