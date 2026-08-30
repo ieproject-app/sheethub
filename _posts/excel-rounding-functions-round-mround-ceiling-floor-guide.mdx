@@ -11,6 +11,11 @@ category: "Formulas & Functions"
 
 A price list that shows 19.999 instead of 20.00, or a timesheet total of 7.983 hours that should read 8.00 hours, turns a clean report into something you have to explain to a manager. The Excel ROUND function fixes the displayed value and the underlying number at the same time, which is where it beats simple number formatting. This guide covers how to use the Excel ROUND function family, including ROUNDUP, ROUNDDOWN, MROUND, CEILING, and FLOOR, with step-by-step implementation patterns and practical troubleshooting for real spreadsheets.
 
+<DownloadButton id="excel-rounding-functions-round-mround-ceiling-floor-guide" />
+
+{/* CLOUDINARY: D:\Screenshots\sheethub\excel-rounding-functions-round-mround-ceiling-floor-guide\hero.png — worksheet berisi tabel nilai mentah + hasil ROUND, ROUNDUP, ROUNDDOWN, MROUND, CEILING, FLOOR per kolom (semua fungsi family terlihat dalam satu layar) */}
+> 📸 Hero: tabel rounding family lengkap dengan hasil
+
 The key difference is that formatting only changes how a cell looks while the stored value stays the same. If you then SUM or VLOOKUP that cell, the full precision carries into the result. Rounding with a function changes the value itself. Choose the function when the calculation depends on the rounded number, not just the display. For the display-only path, see the [Excel custom number formats guide](/blog/excel-custom-number-formats-guide).
 
 ## What the Excel ROUND function family does
@@ -61,6 +66,9 @@ Rounding each line first is the better choice when individual lines are quoted t
 =ROUNDUP(B2*C2, 2)
 ```
 
+{/* CLOUDINARY: D:\Screenshots\sheethub\excel-rounding-functions-round-mround-ceiling-floor-guide\currency-round.png — tabel invoice: unit price 3 desimal x quantity, kolom ROUND dan ROUNDUP dua desimal, baris total yang cocok */}
+> 📸 Invoice: ROUND vs ROUNDUP dua desimal + total
+
 ## Pattern 2: Round time to the nearest quarter hour
 
 Timesheet rounding rules are a classic use case. A 7.983 hour shift should bill as 8.00 hours when the policy is to round to the nearest quarter hour.
@@ -86,6 +94,9 @@ Note that `MROUND` rounds half away from zero, matching `ROUND`. When the roundi
 =CEILING(D2, 1)
 ```
 
+{/* CLOUDINARY: D:\Screenshots\sheethub\excel-rounding-functions-round-mround-ceiling-floor-guide\time-mround.png — timesheet: kolom jam mentah 7.983 dst, hasil MROUND "0:15" tampil format jam 8:00, plus kolom CEILING dan FLOOR */}
+> 📸 Timesheet: MROUND 15 menit + CEILING/FLOOR
+
 When the rule is always down, such as counting full boxes only, use `FLOOR`:
 
 ```excel
@@ -101,6 +112,9 @@ Negative numbers trip up rounding, because ROUNDUP and ROUNDDOWN behave differen
 ```excel
 =ROUNDUP(-2.141, 2)
 ```
+
+{/* CLOUDINARY: D:\Screenshots\sheethub\excel-rounding-functions-round-mround-ceiling-floor-guide\negative-round.png — tabel angka negatif (-2.141 dst) dengan hasil ROUNDUP jauh-dari-nol dan ROUNDDOWN mendekati-nol berdampingan */}
+> 📸 Angka negatif: ROUNDUP vs ROUNDDOWN
 
 For a worksheet that tracks refunds or adjustments, choose the direction deliberately for each column. A fee column that always rounds away from zero might be a `ROUNDUP`, while a discount column that always rounds toward zero might be a `ROUNDDOWN`.
 

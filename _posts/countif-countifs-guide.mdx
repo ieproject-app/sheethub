@@ -13,6 +13,8 @@ Counting cells in Excel sounds simple. Until you need to count only the cells th
 
 This is where COUNTIF and COUNTIFS come in. One is for a single condition. The other handles multiple. Here is exactly how both work, with examples you can use today.
 
+<DownloadButton id="countif-countifs-guide" />
+
 ---
 
 ## Why This Matters
@@ -20,6 +22,9 @@ This is where COUNTIF and COUNTIFS come in. One is for a single condition. The o
 You have a list of orders. You need to know: How many came from the East region? How many exceeded $500? How many were both from the East AND over $500?
 
 Without COUNTIF, you would filter manually or write complex array formulas. With COUNTIF and COUNTIFS, you get the answer in one line.
+
+{/* CLOUDINARY: D:\Screenshots\sheethub\countif-countifs-guide\hero.png — tabel orders (Product, Region, Amount, Date) dengan sel COUNTIF "East" dan hasilnya, formula bar terlihat */}
+> 📸 Hero: tabel orders + COUNTIF East dengan hasil
 
 ---
 
@@ -79,6 +84,9 @@ COUNTIF supports wildcards for partial matches:
 =COUNTIF(A2:A100, "?idget")    // Any single char followed by idget
 ```
 
+{/* CLOUDINARY: D:\Screenshots\sheethub\countif-countifs-guide\wildcards.png — kolom nama produk beragam (Widget A, Widget Pro, Gadget) dengan hasil COUNTIF "Widget*" yang hanya menghitung awalan Widget */}
+> 📸 Wildcard "Widget*" hanya hitung awalan Widget
+
 ---
 
 ## COUNTIFS — Multiple Conditions
@@ -107,11 +115,17 @@ All conditions must be TRUE for a cell to be counted (AND logic).
 =COUNTIFS(C2:C100, ">=100", C2:C100, "<=500")
 ```
 
+{/* CLOUDINARY: D:\Screenshots\sheethub\countif-countifs-guide\countifs-multi.png — dua kriteria sekaligus: Region "East" + Product "Product A" dengan hasil COUNTIFS, kedua range kriteria terlihat */}
+> 📸 COUNTIFS: East DAN Product A
+
 **Count orders from 2026:**
 
 ```excel
 =COUNTIFS(D2:D100, ">=1/1/2026", D2:D100, "<=12/31/2026")
 ```
+
+{/* CLOUDINARY: D:\Screenshots\sheethub\countif-countifs-guide\date-range.png — kolom tanggal orders dengan COUNTIFS rentang 2026 dan hasilnya, format tanggal cell terlihat jelas */}
+> 📸 COUNTIFS rentang tanggal 2026
 
 ---
 

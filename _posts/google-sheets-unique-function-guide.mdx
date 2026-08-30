@@ -13,6 +13,11 @@ A customer import that lists the same buyer five times, or a column of regions r
 
 `UNIQUE` is the formula equivalent of the Data menu's **Remove duplicates** command, but it has one big advantage: it does not touch your source data. It just spills the distinct values into a fresh range, so the original table stays intact and the list stays in sync.
 
+<DownloadButton id="google-sheets-unique-function-guide" />
+
+{/* CLOUDINARY: D:\Screenshots\sheethub\google-sheets-unique-function-guide\hero.png — kolom customer berulang di kiri, hasil =UNIQUE() spill daftar bersih di kolom sebelahnya */}
+> 📸 Hero: kolom duplikat vs hasil UNIQUE spill
+
 ## What is UNIQUE and how does it work?
 
 `UNIQUE` takes a range of values and returns only the distinct entries, dropping every subsequent repeat. By default it deduplicates by row across all the columns you give it, so a row is kept only if the whole combination is new. This is different from `COUNTUNIQUEIFS`, which counts distinct items instead of listing them.
@@ -50,6 +55,9 @@ To see the list in alphabetical order, wrap it with `SORT`:
 =SORT(UNIQUE(A2:A100))
 ```
 
+{/* CLOUDINARY: D:\Screenshots\sheethub\google-sheets-unique-function-guide\sort-unique.png — hasil =SORT(UNIQUE(A2:A100)) berupa daftar nama terurut A-Z, formula bar terlihat */}
+> 📸 SORT(UNIQUE()) daftar A-Z dengan formula bar
+
 Because `SORT` and `UNIQUE` are both dynamic array functions, they spill together and re-sort automatically whenever a name is added or removed. To turn the result into a self-updating selector for a form, this complements the [Google Sheets FILTER function](/blog/filter-function-google-sheets) pattern for live reports.
 
 ## Pattern 2: Extract unique rows based on multiple columns
@@ -72,6 +80,9 @@ To pull only unique rows that also meet a condition, nest the range inside `FILT
 ```
 
 This returns the distinct rows where the date is in 2026 or later. You can wrap the whole thing in `SORT` to fix the order, and each layer recalculates as the source changes.
+
+{/* CLOUDINARY: D:\Screenshots\sheethub\google-sheets-unique-function-guide\unique-rows.png — tabel 3 kolom (customer, region, date) dengan duplikat baris, hasil UNIQUE(A2:C100) hanya baris unik */}
+> 📸 UNIQUE multi-kolom: baris duplikat hilang
 
 If you only need to count how many unique items exist rather than list them, the [COUNTUNIQUEIFS guide](/blog/google-sheets-countuniqueifs-multi-criteria-guide) shows the single-function approach for counting distinct values by criteria.
 

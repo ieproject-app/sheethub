@@ -1,0 +1,98 @@
+{
+  "version": 1,
+  "updated": "2026-08-30",
+  "goal": "every article has visuals + example file",
+  "standard": {
+    "aspectRatio": "4:3 landscape",
+    "canvas": "1600x1200",
+    "format": "webp q82 -> Cloudinary q_auto/f_auto",
+    "cloudinaryFolder": "sheethub/images/<slug>/",
+    "captureRoot": "D:\\Screenshots\\sheethub\\<slug>\\"
+  },
+  "meta": {
+    "totalPosts": 124,
+    "batch": 1,
+    "batchDate": "2026-08-30",
+    "note": "Articles not listed here are implicitly status=pending. Selection order: references/top-30-templates.md first, then newest-first."
+  },
+  "articles": {
+    "excel-rounding-functions-round-mround-ceiling-floor-guide": {
+      "status": "awaiting_capture",
+      "updated": "2026-08-30",
+      "template": {
+        "kind": "xlsx-local",
+        "file": "public/downloads/templates/excel-rounding-functions-round-mround-ceiling-floor-guide.xlsx",
+        "downloadId": "excel-rounding-functions-round-mround-ceiling-floor-guide",
+        "registered": true
+      },
+      "shots": [
+        { "name": "hero", "path": "D:\\Screenshots\\sheethub\\excel-rounding-functions-round-mround-ceiling-floor-guide\\hero.png", "desc": "worksheet tabel nilai mentah + hasil ROUND, ROUNDUP, ROUNDDOWN, MROUND, CEILING, FLOOR per kolom", "webp_url": null },
+        { "name": "currency-round", "path": "D:\\Screenshots\\sheethub\\excel-rounding-functions-round-mround-ceiling-floor-guide\\currency-round.png", "desc": "sheet Invoice Rounding: unit price x qty, ROUND vs ROUNDUP dua desimal + total", "webp_url": null },
+        { "name": "time-mround", "path": "D:\\Screenshots\\sheethub\\excel-rounding-functions-round-mround-ceiling-floor-guide\\time-mround.png", "desc": "sheet Time Rounding: MROUND 0.25, CEILING, FLOOR pada jam kerja", "webp_url": null },
+        { "name": "negative-round", "path": "D:\\Screenshots\\sheethub\\excel-rounding-functions-round-mround-ceiling-floor-guide\\negative-round.png", "desc": "baris angka negatif di Rounding Family: ROUNDUP vs ROUNDDOWN", "webp_url": null }
+      ]
+    },
+    "google-sheets-unique-function-guide": {
+      "status": "awaiting_capture",
+      "updated": "2026-08-30",
+      "template": {
+        "kind": "xlsx-local",
+        "file": "public/downloads/templates/google-sheets-unique-function-guide.xlsx",
+        "downloadId": "google-sheets-unique-function-guide",
+        "registered": true
+      },
+      "shots": [
+        { "name": "hero", "path": "D:\\Screenshots\\sheethub\\google-sheets-unique-function-guide\\hero.png", "desc": "kolom customer berulang + hasil =UNIQUE() spill di sebelahnya", "webp_url": null },
+        { "name": "sort-unique", "path": "D:\\Screenshots\\sheethub\\google-sheets-unique-function-guide\\sort-unique.png", "desc": "hasil SORT(UNIQUE(A2:A17)) terurut A-Z, formula bar terlihat", "webp_url": null },
+        { "name": "unique-rows", "path": "D:\\Screenshots\\sheethub\\google-sheets-unique-function-guide\\unique-rows.png", "desc": "sheet Unique Rows: dedup 3 kolom, hanya baris identik yang hilang", "webp_url": null }
+      ]
+    },
+    "xlookup-complete-guide": {
+      "status": "awaiting_capture",
+      "updated": "2026-08-30",
+      "template": {
+        "kind": "xlsx-local",
+        "file": "public/downloads/templates/xlookup-complete-guide.xlsx",
+        "downloadId": "xlookup-complete-guide",
+        "registered": true
+      },
+      "shots": [
+        { "name": "hero", "path": "D:\\Screenshots\\sheethub\\xlookup-complete-guide\\hero.png", "desc": "sheet Basic & Errors: tabel produk + XLOOKUP P102 hasil harga", "webp_url": null },
+        { "name": "basic-exact", "path": "D:\\Screenshots\\sheethub\\xlookup-complete-guide\\basic-exact.png", "desc": "exact match + custom Not found (P999) dalam satu layar", "webp_url": null },
+        { "name": "left-lookup", "path": "D:\\Screenshots\\sheethub\\xlookup-complete-guide\\left-lookup.png", "desc": "sheet Left Lookup & Spill: cari badge kanan, hasil employee kiri", "webp_url": null },
+        { "name": "multi-column", "path": "D:\\Screenshots\\sheethub\\xlookup-complete-guide\\multi-column.png", "desc": "spill 3 kolom (name/price/stock) dari satu formula", "webp_url": null }
+      ]
+    },
+    "countif-countifs-guide": {
+      "status": "awaiting_capture",
+      "updated": "2026-08-30",
+      "template": {
+        "kind": "xlsx-local",
+        "file": "public/downloads/templates/countif-countifs-guide.xlsx",
+        "downloadId": "countif-countifs-guide",
+        "registered": true
+      },
+      "shots": [
+        { "name": "hero", "path": "D:\\Screenshots\\sheethub\\countif-countifs-guide\\hero.png", "desc": "sheet Orders Data + COUNTIF East dengan hasil & formula bar", "webp_url": null },
+        { "name": "wildcards", "path": "D:\\Screenshots\\sheethub\\countif-countifs-guide\\wildcards.png", "desc": "COUNTIF \"Widget*\" hanya menghitung awalan Widget", "webp_url": null },
+        { "name": "countifs-multi", "path": "D:\\Screenshots\\sheethub\\countif-countifs-guide\\countifs-multi.png", "desc": "sheet Summary Formulas baris East AND Product A", "webp_url": null },
+        { "name": "date-range", "path": "D:\\Screenshots\\sheethub\\countif-countifs-guide\\date-range.png", "desc": "sheet Summary Formulas baris Orders in 2026 (rentang tanggal)", "webp_url": null }
+      ]
+    },
+    "if-nested-ifs-ifs-guide": {
+      "status": "awaiting_capture",
+      "updated": "2026-08-30",
+      "template": {
+        "kind": "xlsx-local",
+        "file": "public/downloads/templates/if-nested-ifs-ifs-guide.xlsx",
+        "downloadId": "if-nested-ifs-ifs-guide",
+        "registered": true
+      },
+      "shots": [
+        { "name": "hero", "path": "D:\\Screenshots\\sheethub\\if-nested-ifs-ifs-guide\\hero.png", "desc": "sheet Grading: skor + Pass/Fail + grade nested IF vs IFS", "webp_url": null },
+        { "name": "if-basic", "path": "D:\\Screenshots\\sheethub\\if-nested-ifs-ifs-guide\\if-basic.png", "desc": "sheet Order Labels: High Value vs Standard + baris boundary 500", "webp_url": null },
+        { "name": "ifs-vs-nested", "path": "D:\\Screenshots\\sheethub\\if-nested-ifs-ifs-guide\\ifs-vs-nested.png", "desc": "sheet Region Bonus: nested IF vs IFS berdampingan hasil sama", "webp_url": null }
+      ]
+    }
+  }
+}
