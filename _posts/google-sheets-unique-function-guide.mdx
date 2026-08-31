@@ -1,0 +1,101 @@
+---
+title: "Google Sheets UNIQUE Function: Extract Distinct Values"
+date: "2026-08-31"
+description: "Remove duplicates and extract distinct values in Google Sheets with the UNIQUE function. Real examples, sorting, and error fixes."
+published: true
+featured: false
+heroImage: "default-og"
+tags: ["google-sheets", "unique", "remove-duplicates", "formulas", "data-cleaning"]
+category: "Google Sheets"
+---
+
+A customer import that lists the same buyer five times, or a column of regions repeated across a hundred rows, makes any summary count say more than it should. The Google Sheets UNIQUE function fixes this by returning a clean list of the distinct values from a range, and because it is a formula, the result recalculates the moment your source data changes. This guide covers how to use the `=UNIQUE()` function in Google Sheets, step-by-step implementation patterns, and practical troubleshooting for real spreadsheets.
+
+`UNIQUE` is the formula equivalent of the Data menu's **Remove duplicates** command, but it has one big advantage: it does not touch your source data. It just spills the distinct values into a fresh range, so the original table stays intact and the list stays in sync.
+
+<DownloadButton id="google-sheets-unique-function-guide" />
+
+{/* CLOUDINARY: D:\Screenshots\sheethub\google-sheets-unique-function-guide\hero.png — kolom customer berulang di kiri, hasil =UNIQUE() spill daftar bersih di kolom sebelahnya */}
+> 📸 Hero: kolom duplikat vs hasil UNIQUE spill
+
+## What is UNIQUE and how does it work?
+
+`UNIQUE` takes a range of values and returns only the distinct entries, dropping every subsequent repeat. By default it deduplicates by row across all the columns you give it, so a row is kept only if the whole combination is new. This is different from `COUNTUNIQUEIFS`, which counts distinct items instead of listing them.
+
+### Syntax
+
+```excel
+=UNIQUE(range, [by_column], [exactly_once])
+```
+
+- **range**: The cells, or the range of cells, containing the values you want to deduplicate.
+- **by_column** *(optional)*: `TRUE` to compare values column by column instead of by row.
+- **exactly_once** *(optional)*: `TRUE` to return only values that appear exactly once, dropping every duplicated value entirely.
+
+The `exactly_once` argument is the part most people miss. `UNIQUE(A2:A100, FALSE, TRUE)` returns only items that show up exactly one time, which removes the duplicates *and* the original copies of anything that was repeated.
+
+For the cross-platform behavior of the same function, the [Excel dynamic array functions guide](/blog/excel-dynamic-array-functions-guide) covers the Excel equivalent, `UNIQUE`, in the context of FILTER, SORT, and SEQUENCE.
+
+## Pattern 1: Build a distinct list of customers
+
+Suppose a support log lists `Customer Name` in column A, from `A2` to `A100`. The same person keeps appearing because they opened several tickets. You want one clean list of customers to feed into a dropdown or a chart.
+
+```excel
+=UNIQUE(A2:A100)
+```
+
+### How this works:
+1. `UNIQUE` reads every name in `A2:A100`.
+2. It keeps the first occurrence of each name and drops the repeats.
+3. The distinct names spill down from the cell where you type the formula.
+
+To see the list in alphabetical order, wrap it with `SORT`:
+
+```excel
+=SORT(UNIQUE(A2:A100))
+```
+
+{/* CLOUDINARY: D:\Screenshots\sheethub\google-sheets-unique-function-guide\sort-unique.png — hasil =SORT(UNIQUE(A2:A100)) berupa daftar nama terurut A-Z, formula bar terlihat */}
+> 📸 SORT(UNIQUE()) daftar A-Z dengan formula bar
+
+Because `SORT` and `UNIQUE` are both dynamic array functions, they spill together and re-sort automatically whenever a name is added or removed. To turn the result into a self-updating selector for a form, this complements the [Google Sheets FILTER function](/blog/filter-function-google-sheets) pattern for live reports.
+
+## Pattern 2: Extract unique rows based on multiple columns
+
+Often a value is unique on its own but the same *combination* appears more than once. A row is a duplicate only when both the customer and the region and the date match. Feed the whole row range into `UNIQUE` and it deduplicates across every selected column.
+
+```excel
+=UNIQUE(A2:C100)
+```
+
+### How this works:
+1. Columns A, B, and C hold the customer, region, and order date.
+2. `UNIQUE` treats each full row as the unit of comparison.
+3. Only truly identical rows are dropped, so two orders by the same customer on different dates both stay.
+
+To pull only unique rows that also meet a condition, nest the range inside `FILTER` first:
+
+```excel
+=UNIQUE(FILTER(A2:C100, C2:C100 >= DATE(2026,1,1)))
+```
+
+This returns the distinct rows where the date is in 2026 or later. You can wrap the whole thing in `SORT` to fix the order, and each layer recalculates as the source changes.
+
+{/* CLOUDINARY: D:\Screenshots\sheethub\google-sheets-unique-function-guide\unique-rows.png — tabel 3 kolom (customer, region, date) dengan duplikat baris, hasil UNIQUE(A2:C100) hanya baris unik */}
+> 📸 UNIQUE multi-kolom: baris duplikat hilang
+
+If you only need to count how many unique items exist rather than list them, the [COUNTUNIQUEIFS guide](/blog/google-sheets-countuniqueifs-multi-criteria-guide) shows the single-function approach for counting distinct values by criteria.
+
+## Troubleshooting and common errors
+
+| Error / Symptom | Root Cause | Practical Fix |
+|---|---|---|
+| `#REF!` or `#VALUE!` | The range includes an empty or incompatible type, or the spill area is blocked by existing data. | Clear the cells below the formula and check that the range contains the same kind of value. |
+| Duplicates still show | The values differ by invisible whitespace or leading spaces, so `"Acme "` and `"Acme"` are treated as two entries. | Wrap each text column in `TRIM` or clean the source first. |
+| `UNIQUE` skips a value you expected | Compare is case-insensitive, so `"Apple"` and `"apple"` count as one. | Use `FILTER` with `EXACT` for a case-sensitive result. |
+| Blank rows appear at the end | Blank cells are treated as a distinct value. | Filter the range with a condition that removes blanks, such as `UNIQUE(FILTER(A2:A100, A2:A100<>""))`. |
+| "Result overflow" message | The output touches a column that already has data. | Move the formula or the blocked data so the spill range stays empty. |
+
+## Summary
+
+The Google Sheets UNIQUE function turns a range into a clean list of distinct values that updates itself as the data changes. Use `UNIQUE` for a simple list, add `by_column` and `exactly_once` for edge cases, nest it with `SORT` or `FILTER` for ordered and conditional results, and keep the source data untouched so nothing is lost. Pair it with `COUNTUNIQUEIFS` when all you need is a count instead of a list.
