@@ -1,0 +1,632 @@
+[
+ {
+  "slug": ".gitkeep",
+  "coverage": "URL is unknown to Google",
+  "words": 0,
+  "date": ""
+ },
+ {
+  "slug": "ai-excel-formulas-prompt-guide",
+  "coverage": "Submitted and indexed",
+  "words": 1296,
+  "date": "2026-07-17"
+ },
+ {
+  "slug": "arrayformula-google-sheets-complete-guide",
+  "coverage": "Submitted and indexed",
+  "words": 1563,
+  "date": "2026-07-24"
+ },
+ {
+  "slug": "conditional-formatting-guide",
+  "coverage": "Submitted and indexed",
+  "words": 724,
+  "date": "2026-07-14"
+ },
+ {
+  "slug": "countif-countifs-guide",
+  "coverage": "Submitted and indexed",
+  "words": 736,
+  "date": "2026-07-14"
+ },
+ {
+  "slug": "data-validation-dropdown-guide",
+  "coverage": "Submitted and indexed",
+  "words": 677,
+  "date": "2026-07-14"
+ },
+ {
+  "slug": "excel-agent-mode-copilot-guide",
+  "coverage": "Discovered - currently not indexed",
+  "words": 1336,
+  "date": "2026-08-20"
+ },
+ {
+  "slug": "excel-calc-error-dynamic-array-guide",
+  "coverage": "Discovered - currently not indexed",
+  "words": 1134,
+  "date": "2026-08-21"
+ },
+ {
+  "slug": "excel-check-performance-guide",
+  "coverage": "Discovered - currently not indexed",
+  "words": 1413,
+  "date": "2026-08-15"
+ },
+ {
+  "slug": "excel-convert-numbers-to-words-guide",
+  "coverage": "Discovered - currently not indexed",
+  "words": 2243,
+  "date": "2026-08-05"
+ },
+ {
+  "slug": "excel-custom-number-formats-guide",
+  "coverage": "Discovered - currently not indexed",
+  "words": 1425,
+  "date": "2026-08-09"
+ },
+ {
+  "slug": "excel-custom-sort-by-color-guide",
+  "coverage": "Discovered - currently not indexed",
+  "words": 1685,
+  "date": "2026-08-26"
+ },
+ {
+  "slug": "excel-data-cleaning-techniques-guide",
+  "coverage": "Submitted and indexed",
+  "words": 2121,
+  "date": "2026-07-24"
+ },
+ {
+  "slug": "excel-date-time-functions-guide",
+  "coverage": "Submitted and indexed",
+  "words": 1516,
+  "date": "2026-08-07"
+ },
+ {
+  "slug": "excel-dependent-dropdown-guide",
+  "coverage": "Discovered - currently not indexed",
+  "words": 1539,
+  "date": "2026-08-16"
+ },
+ {
+  "slug": "excel-dynamic-array-functions-guide",
+  "coverage": "Submitted and indexed",
+  "words": 1556,
+  "date": "2026-07-22"
+ },
+ {
+  "slug": "excel-evaluate-formula-debugging-guide",
+  "coverage": "Discovered - currently not indexed",
+  "words": 1102,
+  "date": "2026-08-21"
+ },
+ {
+  "slug": "excel-floating-point-errors-guide",
+  "coverage": "URL is unknown to Google",
+  "words": 1098,
+  "date": "2026-08-16"
+ },
+ {
+  "slug": "excel-formula-completion-copilot-guide",
+  "coverage": "Discovered - currently not indexed",
+  "words": 1193,
+  "date": "2026-08-20"
+ },
+ {
+  "slug": "excel-formula-errors-troubleshooting-guide",
+  "coverage": "Submitted and indexed",
+  "words": 2128,
+  "date": "2026-07-24"
+ },
+ {
+  "slug": "excel-goal-seek-guide",
+  "coverage": "Discovered - currently not indexed",
+  "words": 1432,
+  "date": "2026-08-25"
+ },
+ {
+  "slug": "excel-groupby-lambda-guide",
+  "coverage": "Discovered - currently not indexed",
+  "words": 1521,
+  "date": "2026-08-16"
+ },
+ {
+  "slug": "excel-groupby-pivotby-deep-dive",
+  "coverage": "Submitted and indexed",
+  "words": 500,
+  "date": "2026-07-14"
+ },
+ {
+  "slug": "excel-histogram-bins-guide",
+  "coverage": "Discovered - currently not indexed",
+  "words": 1440,
+  "date": "2026-08-24"
+ },
+ {
+  "slug": "excel-importtext-importcsv-guide",
+  "coverage": "Submitted and indexed",
+  "words": 1229,
+  "date": "2026-08-07"
+ },
+ {
+  "slug": "excel-july-2026-update",
+  "coverage": "Discovered - currently not indexed",
+  "words": 871,
+  "date": "2026-08-05"
+ },
+ {
+  "slug": "excel-june-2026-update",
+  "coverage": "Submitted and indexed",
+  "words": 397,
+  "date": "2026-07-14"
+ },
+ {
+  "slug": "excel-keyboard-shortcuts-guide",
+  "coverage": "Submitted and indexed",
+  "words": 696,
+  "date": "2026-07-14"
+ },
+ {
+  "slug": "excel-lambda-function-guide",
+  "coverage": "Submitted and indexed",
+  "words": 1630,
+  "date": "2026-07-22"
+ },
+ {
+  "slug": "excel-lambda-helper-functions-guide",
+  "coverage": "Discovered - currently not indexed",
+  "words": 1334,
+  "date": "2026-08-10"
+ },
+ {
+  "slug": "excel-lambda-recursive-loop-calculations-guide",
+  "coverage": "Discovered - currently not indexed",
+  "words": 559,
+  "date": "2026-08-26"
+ },
+ {
+  "slug": "excel-let-function-guide",
+  "coverage": "Submitted and indexed",
+  "words": 1520,
+  "date": "2026-07-28"
+ },
+ {
+  "slug": "excel-linear-interpolation-guide",
+  "coverage": "Discovered - currently not indexed",
+  "words": 1632,
+  "date": "2026-08-25"
+ },
+ {
+  "slug": "excel-makearray-function-guide",
+  "coverage": "Discovered - currently not indexed",
+  "words": 1396,
+  "date": "2026-08-04"
+ },
+ {
+  "slug": "excel-mode-mult-statistical-analysis-guide",
+  "coverage": "Discovered - currently not indexed",
+  "words": 507,
+  "date": "2026-08-26"
+ },
+ {
+  "slug": "excel-named-ranges-guide",
+  "coverage": "Submitted and indexed",
+  "words": 1365,
+  "date": "2026-07-24"
+ },
+ {
+  "slug": "excel-pivottable-spill-error-guide",
+  "coverage": "URL is unknown to Google",
+  "words": 1070,
+  "date": "2026-08-13"
+ },
+ {
+  "slug": "excel-power-query-unpivot-columns-guide",
+  "coverage": "Discovered - currently not indexed",
+  "words": 1342,
+  "date": "2026-08-18"
+ },
+ {
+  "slug": "excel-regexextract-pattern-matching-guide",
+  "coverage": "Discovered - currently not indexed",
+  "words": 690,
+  "date": "2026-08-26"
+ },
+ {
+  "slug": "excel-rounding-functions-round-mround-ceiling-floor-guide",
+  "coverage": "Discovered - currently not indexed",
+  "words": 1236,
+  "date": "2026-08-31"
+ },
+ {
+  "slug": "excel-slicers-pivottable-guide",
+  "coverage": "Discovered - currently not indexed",
+  "words": 1388,
+  "date": "2026-08-25"
+ },
+ {
+  "slug": "excel-spill-ranges-guide",
+  "coverage": "Discovered - currently not indexed",
+  "words": 1608,
+  "date": "2026-08-10"
+ },
+ {
+  "slug": "excel-stale-values-recalculation-guide",
+  "coverage": "Discovered - currently not indexed",
+  "words": 1125,
+  "date": "2026-08-24"
+ },
+ {
+  "slug": "excel-stockhistory-function-guide",
+  "coverage": "Discovered - currently not indexed",
+  "words": 1351,
+  "date": "2026-08-18"
+ },
+ {
+  "slug": "excel-subtotal-aggregate-guide",
+  "coverage": "Discovered - currently not indexed",
+  "words": 1347,
+  "date": "2026-08-09"
+ },
+ {
+  "slug": "excel-switch-vs-nested-ifs-performance-guide",
+  "coverage": "Discovered - currently not indexed",
+  "words": 548,
+  "date": "2026-08-26"
+ },
+ {
+  "slug": "excel-tables-structured-references-guide",
+  "coverage": "Submitted and indexed",
+  "words": 1305,
+  "date": "2026-08-08"
+ },
+ {
+  "slug": "excel-take-drop-chooserows-choosecols-guide",
+  "coverage": "Submitted and indexed",
+  "words": 1490,
+  "date": "2026-08-01"
+ },
+ {
+  "slug": "excel-textjoin-conditional-delimiter-guide",
+  "coverage": "Discovered - currently not indexed",
+  "words": 586,
+  "date": "2026-08-26"
+ },
+ {
+  "slug": "excel-textsplit-textbefore-textafter-guide",
+  "coverage": "Submitted and indexed",
+  "words": 1692,
+  "date": "2026-07-28"
+ },
+ {
+  "slug": "excel-tocol-torow-wrapcols-wraprows-expand-guide",
+  "coverage": "Submitted and indexed",
+  "words": 1577,
+  "date": "2026-08-02"
+ },
+ {
+  "slug": "excel-trace-precedents-dependents-guide",
+  "coverage": "Discovered - currently not indexed",
+  "words": 1553,
+  "date": "2026-08-18"
+ },
+ {
+  "slug": "excel-translate-detectlanguage-guide",
+  "coverage": "Discovered - currently not indexed",
+  "words": 1182,
+  "date": "2026-08-21"
+ },
+ {
+  "slug": "excel-trimrange-guide",
+  "coverage": "Discovered - currently not indexed",
+  "words": 1450,
+  "date": "2026-08-16"
+ },
+ {
+  "slug": "excel-vs-google-sheets-formula-differences",
+  "coverage": "Submitted and indexed",
+  "words": 1579,
+  "date": "2026-07-14"
+ },
+ {
+  "slug": "excel-vstack-hstack-guide",
+  "coverage": "Submitted and indexed",
+  "words": 1260,
+  "date": "2026-07-29"
+ },
+ {
+  "slug": "excel-watch-window-formula-monitoring-guide",
+  "coverage": "Discovered - currently not indexed",
+  "words": 1075,
+  "date": "2026-08-21"
+ },
+ {
+  "slug": "excel-xlookup-multiple-criteria-guide",
+  "coverage": "Discovered - currently not indexed",
+  "words": 1326,
+  "date": "2026-08-18"
+ },
+ {
+  "slug": "filter-function-google-sheets",
+  "coverage": "Submitted and indexed",
+  "words": 645,
+  "date": "2026-07-14"
+ },
+ {
+  "slug": "gemini-ai-google-sheets-guide",
+  "coverage": "Discovered - currently not indexed",
+  "words": 559,
+  "date": "2026-07-14"
+ },
+ {
+  "slug": "google-sheets-20-million-cell-limit-guide",
+  "coverage": "Discovered - currently not indexed",
+  "words": 1105,
+  "date": "2026-08-26"
+ },
+ {
+  "slug": "google-sheets-2026-update",
+  "coverage": "Submitted and indexed",
+  "words": 375,
+  "date": "2026-07-14"
+ },
+ {
+  "slug": "google-sheets-3d-bar-charts-guide",
+  "coverage": "URL is unknown to Google",
+  "words": 1222,
+  "date": "2026-08-16"
+ },
+ {
+  "slug": "google-sheets-ai-function-guide",
+  "coverage": "Submitted and indexed",
+  "words": 1844,
+  "date": "2026-07-21"
+ },
+ {
+  "slug": "google-sheets-array-result-not-expanded-guide",
+  "coverage": "Discovered - currently not indexed",
+  "words": 1342,
+  "date": "2026-08-19"
+ },
+ {
+  "slug": "google-sheets-canvas-dashboard-guide",
+  "coverage": "Submitted and indexed",
+  "words": 1095,
+  "date": "2026-07-24"
+ },
+ {
+  "slug": "google-sheets-checkbox-guide",
+  "coverage": "Discovered - currently not indexed",
+  "words": 1360,
+  "date": "2026-08-11"
+ },
+ {
+  "slug": "google-sheets-combo-scatter-charts-update",
+  "coverage": "Submitted and indexed",
+  "words": 915,
+  "date": "2026-08-02"
+ },
+ {
+  "slug": "google-sheets-conditional-formatting-guide",
+  "coverage": "Discovered - currently not indexed",
+  "words": 1546,
+  "date": "2026-08-16"
+ },
+ {
+  "slug": "google-sheets-countuniqueifs-multi-criteria-guide",
+  "coverage": "Discovered - currently not indexed",
+  "words": 636,
+  "date": "2026-08-26"
+ },
+ {
+  "slug": "google-sheets-date-functions-guide",
+  "coverage": "Discovered - currently not indexed",
+  "words": 1457,
+  "date": "2026-08-12"
+ },
+ {
+  "slug": "google-sheets-dependent-dropdown-guide",
+  "coverage": "Discovered - currently not indexed",
+  "words": 1463,
+  "date": "2026-08-19"
+ },
+ {
+  "slug": "google-sheets-duration-over-24-hours-guide",
+  "coverage": "Discovered - currently not indexed",
+  "words": 1313,
+  "date": "2026-08-19"
+ },
+ {
+  "slug": "google-sheets-fill-with-gemini-guide",
+  "coverage": "URL is unknown to Google",
+  "words": 1490,
+  "date": "2026-08-16"
+ },
+ {
+  "slug": "google-sheets-filter-optional-criteria-guide",
+  "coverage": "Discovered - currently not indexed",
+  "words": 1229,
+  "date": "2026-08-21"
+ },
+ {
+  "slug": "google-sheets-googlefinance-guide",
+  "coverage": "Submitted and indexed",
+  "words": 1341,
+  "date": "2026-07-30"
+ },
+ {
+  "slug": "google-sheets-import-excel-tables-pivots-guide",
+  "coverage": "Discovered - currently not indexed",
+  "words": 808,
+  "date": "2026-08-21"
+ },
+ {
+  "slug": "google-sheets-import-functions-guide",
+  "coverage": "Submitted and indexed",
+  "words": 673,
+  "date": "2026-07-14"
+ },
+ {
+  "slug": "google-sheets-importjson-api-guide",
+  "coverage": "URL is unknown to Google",
+  "words": 1142,
+  "date": "2026-08-26"
+ },
+ {
+  "slug": "google-sheets-indirect-dynamic-sheet-references",
+  "coverage": "Discovered - currently not indexed",
+  "words": 582,
+  "date": "2026-08-26"
+ },
+ {
+  "slug": "google-sheets-let-function-guide",
+  "coverage": "Discovered - currently not indexed",
+  "words": 806,
+  "date": "2026-08-05"
+ },
+ {
+  "slug": "google-sheets-named-functions-guide",
+  "coverage": "Discovered - currently not indexed",
+  "words": 1471,
+  "date": "2026-08-21"
+ },
+ {
+  "slug": "google-sheets-pivot-tables-guide",
+  "coverage": "URL is unknown to Google",
+  "words": 1499,
+  "date": "2026-08-10"
+ },
+ {
+  "slug": "google-sheets-query-advanced-guide",
+  "coverage": "URL is unknown to Google",
+  "words": 1475,
+  "date": "2026-08-09"
+ },
+ {
+  "slug": "google-sheets-regex-functions-guide",
+  "coverage": "Discovered - currently not indexed",
+  "words": 1295,
+  "date": "2026-08-21"
+ },
+ {
+  "slug": "google-sheets-sequence-formula-tricks-guide",
+  "coverage": "Discovered - currently not indexed",
+  "words": 553,
+  "date": "2026-08-26"
+ },
+ {
+  "slug": "google-sheets-sheet-sheets-function-guide",
+  "coverage": "Submitted and indexed",
+  "words": 1496,
+  "date": "2026-08-08"
+ },
+ {
+  "slug": "google-sheets-slicers-dashboard-guide",
+  "coverage": "Discovered - currently not indexed",
+  "words": 1328,
+  "date": "2026-08-19"
+ },
+ {
+  "slug": "google-sheets-sparkline-guide",
+  "coverage": "Submitted and indexed",
+  "words": 1538,
+  "date": "2026-07-30"
+ },
+ {
+  "slug": "google-sheets-sum-filtered-data-custom-criteria",
+  "coverage": "Discovered - currently not indexed",
+  "words": 1081,
+  "date": "2026-08-07"
+ },
+ {
+  "slug": "google-sheets-transpose-query-matrix-transformation",
+  "coverage": "Discovered - currently not indexed",
+  "words": 492,
+  "date": "2026-08-26"
+ },
+ {
+  "slug": "google-sheets-unique-function-guide",
+  "coverage": "URL is unknown to Google",
+  "words": 1032,
+  "date": "2026-08-31"
+ },
+ {
+  "slug": "google-sheets-web-scraping-guide",
+  "coverage": "Discovered - currently not indexed",
+  "words": 1520,
+  "date": "2026-08-16"
+ },
+ {
+  "slug": "groupby-function-excel-guide",
+  "coverage": "Submitted and indexed",
+  "words": 1534,
+  "date": "2026-07-14"
+ },
+ {
+  "slug": "if-nested-ifs-ifs-guide",
+  "coverage": "Submitted and indexed",
+  "words": 771,
+  "date": "2026-07-14"
+ },
+ {
+  "slug": "index-match-formula-guide",
+  "coverage": "Submitted and indexed",
+  "words": 1438,
+  "date": "2026-07-14"
+ },
+ {
+  "slug": "open-utf8-csv-excel-guide",
+  "coverage": "Submitted and indexed",
+  "words": 1258,
+  "date": "2026-07-17"
+ },
+ {
+  "slug": "pivot-table-beginner-guide",
+  "coverage": "Submitted and indexed",
+  "words": 709,
+  "date": "2026-07-14"
+ },
+ {
+  "slug": "python-in-excel-xl-references-guide",
+  "coverage": "Discovered - currently not indexed",
+  "words": 1298,
+  "date": "2026-08-16"
+ },
+ {
+  "slug": "query-function-google-sheets-guide",
+  "coverage": "Submitted and indexed",
+  "words": 1563,
+  "date": "2026-07-14"
+ },
+ {
+  "slug": "regex-functions-excel-guide",
+  "coverage": "Submitted and indexed",
+  "words": 1006,
+  "date": "2026-07-16"
+ },
+ {
+  "slug": "split-text-functions-google-sheets",
+  "coverage": "Submitted and indexed",
+  "words": 537,
+  "date": "2026-07-14"
+ },
+ {
+  "slug": "sumif-vs-sumifs-vs-sumproduct-comparison",
+  "coverage": "Submitted and indexed",
+  "words": 1427,
+  "date": "2026-07-14"
+ },
+ {
+  "slug": "vlookup-vs-xlookup-comparison-guide",
+  "coverage": "Submitted and indexed",
+  "words": 1606,
+  "date": "2026-07-14"
+ },
+ {
+  "slug": "xlookup-complete-guide",
+  "coverage": "Submitted and indexed",
+  "words": 841,
+  "date": "2026-07-14"
+ }
+]

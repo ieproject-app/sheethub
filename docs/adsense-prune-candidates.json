@@ -1,0 +1,82 @@
+{
+  "generated": "2026-09-04",
+  "basis": "GSC URL inspection live (105 URL), word count, near-dup topic pairs; articles published before 2026-08-20 only",
+  "survivorsAfter": 89,
+  "candidates": [
+    {
+      "slug": "excel-lambda-recursive-loop-calculations-guide",
+      "words": 559,
+      "coverage": "Discovered - currently not indexed"
+    },
+    {
+      "slug": "gemini-ai-google-sheets-guide",
+      "words": 559,
+      "coverage": "Discovered - currently not indexed"
+    },
+    {
+      "slug": "google-sheets-let-function-guide",
+      "words": 806,
+      "coverage": "Discovered - currently not indexed"
+    },
+    {
+      "slug": "excel-pivottable-spill-error-guide",
+      "words": 1070,
+      "coverage": "URL is unknown to Google"
+    },
+    {
+      "slug": "excel-floating-point-errors-guide",
+      "words": 1098,
+      "coverage": "URL is unknown to Google"
+    },
+    {
+      "slug": "google-sheets-3d-bar-charts-guide",
+      "words": 1222,
+      "coverage": "URL is unknown to Google"
+    },
+    {
+      "slug": "google-sheets-regex-functions-guide",
+      "words": 1295,
+      "coverage": "Discovered - currently not indexed"
+    },
+    {
+      "slug": "excel-xlookup-multiple-criteria-guide",
+      "words": 1326,
+      "coverage": "Discovered - currently not indexed"
+    },
+    {
+      "slug": "google-sheets-slicers-dashboard-guide",
+      "words": 1328,
+      "coverage": "Discovered - currently not indexed"
+    },
+    {
+      "slug": "excel-lambda-helper-functions-guide",
+      "words": 1334,
+      "coverage": "Discovered - currently not indexed"
+    },
+    {
+      "slug": "google-sheets-dependent-dropdown-guide",
+      "words": 1463,
+      "coverage": "Discovered - currently not indexed"
+    },
+    {
+      "slug": "google-sheets-query-advanced-guide",
+      "words": 1475,
+      "coverage": "URL is unknown to Google"
+    },
+    {
+      "slug": "google-sheets-fill-with-gemini-guide",
+      "words": 1490,
+      "coverage": "URL is unknown to Google"
+    },
+    {
+      "slug": "google-sheets-pivot-tables-guide",
+      "words": 1499,
+      "coverage": "URL is unknown to Google"
+    },
+    {
+      "slug": "google-sheets-conditional-formatting-guide",
+      "words": 1546,
+      "coverage": "Discovered - currently not indexed"
+    }
+  ]
+}
