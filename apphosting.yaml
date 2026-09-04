@@ -39,6 +39,14 @@ env:
       - BUILD
       - RUNTIME
 
+  # AdSense master switch (freeze since 4 Sep 2026 — "Low value content" verdict).
+  # Set to "true" ONLY after the re-application gate passes (target 2 Nov 2026).
+  - variable: NEXT_PUBLIC_ADSENSE_ENABLED
+    value: "false"
+    availability:
+      - BUILD
+      - RUNTIME
+
 #  - variable: NEXT_PUBLIC_INTERNAL_TOOL_ALLOWLIST
 #    secret: INTERNAL_TOOL_ALLOWLIST
 #    availability:

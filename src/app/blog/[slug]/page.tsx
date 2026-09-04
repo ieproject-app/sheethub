@@ -278,7 +278,7 @@ export default async function Page({
             ...(currentTags.length > 0 ? { "keywords": currentTags } : {}),
 	            "author": {
 	              "@type": "Person",
-	              "name": "SheetHub",
+	              "name": initialPost.frontmatter.author || "Iwan Efendi",
 	              "url": "https://sheethub.web.id/about",
 	            },
             "publisher": {

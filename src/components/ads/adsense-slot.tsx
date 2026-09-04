@@ -13,6 +13,10 @@ interface AdSenseSlotProps {
 
 const ADSENSE_CLIENT_ID = "ca-pub-7485721934561798";
 
+// Master switch — must match layout.tsx. When false, slots render as inert
+// placeholders and no ad units are requested from Google.
+const ADSENSE_ENABLED = process.env.NEXT_PUBLIC_ADSENSE_ENABLED === "true";
+
 function subscribe(callback: () => void) {
   window.addEventListener("resize", callback);
   return () => window.removeEventListener("resize", callback);
@@ -33,8 +37,9 @@ function getServerSnapshot() {
 
 /**
  * AdSenseSlot Component
- * - In Development (localhost): Displays a clean, labeled placeholder box for layout planning.
- * - In Production: Renders official Google AdSense ins tag and triggers adsbygoogle.push.
+ * - Master switch OFF (NEXT_PUBLIC_ADSENSE_ENABLED !== "true"): renders nothing.
+ * - Master switch ON + Development (localhost): labeled placeholder for layout planning.
+ * - Master switch ON + Production: official Google AdSense ins tag + adsbygoogle.push.
  * - Safe for React Hydration via useSyncExternalStore.
  */
 export function AdSenseSlot({
@@ -45,6 +50,7 @@ export function AdSenseSlot({
   className,
 }: AdSenseSlotProps) {
   const isDev = useSyncExternalStore(subscribe, getClientSnapshot, getServerSnapshot);
+  const adsActive = ADSENSE_ENABLED && !isDev;
 
   // Default ad slots if not explicitly passed
   const resolvedAdSlot =
@@ -54,16 +60,18 @@ export function AdSenseSlot({
       : "8743452846"); // content-sheethub slot
 
   useEffect(() => {
-    if (!isDev) {
-      try {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const adsbygoogle = (window as any).adsbygoogle || [];
-        adsbygoogle.push({});
-      } catch (err) {
-        console.error("AdSense error:", err);
-      }
+    if (!adsActive) return;
+    try {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const adsbygoogle = (window as any).adsbygoogle || [];
+      adsbygoogle.push({});
+    } catch (err) {
+      console.error("AdSense error:", err);
     }
-  }, [isDev]);
+  }, [adsActive]);
+
+  // Master switch off → no ad markup at all (clean site for re-review).
+  if (!ADSENSE_ENABLED) return null;
 
   if (isDev) {
     const slotDescriptions = {

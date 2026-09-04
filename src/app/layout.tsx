@@ -17,6 +17,11 @@ import {
 } from "next/font/google";
 import { cn } from "@/lib/utils";
 import { WebVitalsReporter } from "@/components/analytics/web-vitals-reporter";
+import { ConsentBanner } from "@/components/consent/consent-banner";
+
+// AdSense master switch — frozen since 4 Sep 2026 (AdSense "Low value content"
+// verdict). Re-enable via apphosting.yaml only after the re-application gate.
+const ADSENSE_ENABLED = process.env.NEXT_PUBLIC_ADSENSE_ENABLED === "true";
 
 const fontDisplay = Manrope({
   subsets: ["latin"],
@@ -149,13 +154,35 @@ export default async function RootLayout({
       suppressHydrationWarning
     >
       <body className="font-sans antialiased fade-in-on-load">
-        <Script
-          id="google-adsense-script"
-          async
-          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7485721934561798"
-          crossOrigin="anonymous"
-          strategy="afterInteractive"
+        {/* Consent Mode v2 default state — inline & synchronous so it always
+            runs before the (afterInteractive) ads script and any gtag load.
+            Deny-by-default; ConsentBanner updates it after the user chooses. */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: [
+              "window.dataLayer=window.dataLayer||[];",
+              "window.gtag=function(){window.dataLayer.push(arguments);};",
+              "gtag('consent','default',{",
+              "'ad_storage':'denied',",
+              "'ad_user_data':'denied',",
+              "'ad_personalization':'denied',",
+              "'analytics_storage':'denied',",
+              "'functionality_storage':'granted',",
+              "'security_storage':'granted',",
+              "'wait_for_update':500",
+              "});",
+            ].join(""),
+          }}
         />
+        {ADSENSE_ENABLED && (
+          <Script
+            id="google-adsense-script"
+            async
+            src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7485721934561798"
+            crossOrigin="anonymous"
+            strategy="afterInteractive"
+          />
+        )}
         <WebVitalsReporter />
         <a href="#main-content" className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-50 focus:px-4 focus:py-2 focus:bg-primary focus:text-primary-foreground focus:rounded-md">
           Skip to main content
@@ -171,6 +198,7 @@ export default async function RootLayout({
             </ReadArticlesProvider>
           </NotificationProvider>
         </ThemeProvider>
+        <ConsentBanner />
       </body>
     </html>
   );
