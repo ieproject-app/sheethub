@@ -1,12 +1,13 @@
 ---
 title: "XLOOKUP Function in Excel: Complete Guide with Examples"
+author: "Iwan Efendi"
 date: "2026-07-14"
 updated: "2026-07-24"
 description: "Learn XLOOKUP in Excel with examples. Left lookups, error handling, multiple values, and advanced scenarios."
 published: true
 featured: false
 heroImage: "default-og"
-tags: ["excel", "formulas", "xlookup", "lookup", "tutorial"]
+tags: ["excel","formulas","xlookup","lookup"]
 category: "Formulas & Functions"
 ---
 
@@ -14,11 +15,16 @@ XLOOKUP is Excel's modern replacement for VLOOKUP, HLOOKUP, and INDEX-MATCH. It 
 
 No more column index numbers. No more fragile ranges. No more #N/A with no explanation. XLOOKUP handles left lookups, returns arrays, and lets you specify what to show when nothing is found.
 
+<DownloadButton id="xlookup-complete-guide" />
+
 ---
 
 ## Why This Matters
 
 If you are still using VLOOKUP, you are making your work harder than it needs to be. XLOOKUP does everything VLOOKUP can do, plus things VLOOKUP simply cannot. Learning it takes five minutes, and it will make every spreadsheet you build from now on more reliable.
+
+{/* CLOUDINARY: D:\Screenshots\sheethub\xlookup-complete-guide\hero.png — tabel produk (ID, Name, Price) dengan formula =XLOOKUP("P102",...) di sel samping dan hasilnya terlihat */}
+> 📸 Hero: tabel produk + XLOOKUP P102 hasil harga
 
 ---
 
@@ -59,6 +65,9 @@ If you are still using VLOOKUP, you are making your work harder than it needs to
 =XLOOKUP(75000, A2:A10, B2:B10, , -1)
 ```
 
+{/* CLOUDINARY: D:\Screenshots\sheethub\xlookup-complete-guide\basic-exact.png — tiga contoh dasar dalam satu sheet: exact match P102, custom "Not found" untuk kode yang tidak ada, dan approximate match bracket pajak */}
+> 📸 Basic: exact + "Not found" + bracket pajak
+
 ---
 
 ## Left Lookup
@@ -71,6 +80,9 @@ XLOOKUP searches any column, in any direction:
 
 This finds B2 in column C and returns the matching value from column A — a left lookup. VLOOKUP cannot do this.
 
+{/* CLOUDINARY: D:\Screenshots\sheethub\xlookup-complete-guide\left-lookup.png — sheet dengan kolom lookup di kanan dan hasil dikembalikan dari kolom kiri, menonjolkan arah pencarian kiri yang tidak bisa VLOOKUP */}
+> 📸 Left lookup: cari kanan, balikin kiri
+
 ---
 
 ## Return Multiple Columns
@@ -82,6 +94,9 @@ XLOOKUP can return an entire row or multiple columns:
 ```
 
 The result spills into three adjacent cells.
+
+{/* CLOUDINARY: D:\Screenshots\sheethub\xlookup-complete-guide\multi-column.png — satu formula XLOOKUP dengan return B2:D100, hasil spill 3 sel sebelahnya (name, price, stock) */}
+> 📸 Spill 3 kolom dari satu formula
 
 ---
 

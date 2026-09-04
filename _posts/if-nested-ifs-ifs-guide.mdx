@@ -1,11 +1,12 @@
 ---
 title: "IF, Nested IF, and IFS: When to Use What in Excel"
+author: "Iwan Efendi"
 date: "2026-07-14"
 description: "Learn IF, nested IF, and IFS in Excel. Know when to use each for decision-making formulas with examples."
 published: true
 featured: false
 heroImage: "default-og"
-tags: ["excel", "formulas", "if", "ifs", "nested-if", "comparison", "tutorial"]
+tags: ["excel","formulas","if","ifs","nested-if","comparison"]
 category: "Comparison"
 ---
 
@@ -13,11 +14,16 @@ The IF function is the most basic decision-making tool in Excel. It checks a con
 
 But what happens when you have more than two outcomes? Three tiers? Five categories? This is where nested IF and IFS come in — and picking the wrong one makes your formula unreadable.
 
+<DownloadButton id="if-nested-ifs-ifs-guide" />
+
 ---
 
 ## Why This Matters
 
 Every spreadsheet eventually needs logic. Bonus tiers, grading scales, discount brackets, status labels. The way you structure your IF logic determines whether your formula is maintainable or a nightmare.
+
+{/* CLOUDINARY: D:\Screenshots\sheethub\if-nested-ifs-ifs-guide\hero.png — sheet grading: kolom skor siswa + hasil IF>=70 Pass/Fail dan grade A-F berdampingan, formula bar menampilkan nested IF */}
+> 📸 Hero: sheet grading skor + hasil Pass/Fail & grade
 
 ---
 
@@ -42,6 +48,9 @@ Every spreadsheet eventually needs logic. Bonus tiers, grading scales, discount 
 ```excel
 =IF(C2>500, "High Value", "Standard")
 ```
+
+{/* CLOUDINARY: D:\Screenshots\sheethub\if-nested-ifs-ifs-guide\if-basic.png — kolom nilai order dengan label High Value/Standard dari satu formula IF, sel input kuning */}
+> 📸 IF dasar: label High Value vs Standard
 
 ---
 
@@ -100,6 +109,9 @@ The `TRUE` at the end acts as a catch-all else.
 ```excel
 =IFS(A1="East", 100, A1="West", 200, A1="North", 300, TRUE, 0)
 ```
+
+{/* CLOUDINARY: D:\Screenshots\sheethub\if-nested-ifs-ifs-guide\ifs-vs-nested.png — dua kolom formula berdampingan: nested IF vs IFS untuk kasus region yang sama, hasil identik */}
+> 📸 Nested IF vs IFS hasil sama, formula beda
 
 ---
 
