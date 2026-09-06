@@ -57,8 +57,8 @@
       ]
     },
     "google-sheets-unique-function-guide": {
-      "status": "awaiting_capture",
-      "updated": "2026-08-30",
+      "status": "published_visual",
+      "updated": "2026-09-06",
       "template": {
         "kind": "xlsx-local",
         "file": "public/downloads/templates/google-sheets-unique-function-guide.xlsx",
@@ -69,17 +69,29 @@
         {
           "name": "hero",
           "desc": "kolom customer berulang + hasil =UNIQUE() spill di sebelahnya",
-          "webp_url": null
-        },
-        {
-          "name": "sort-unique",
-          "desc": "hasil SORT(UNIQUE(A2:A17)) terurut A-Z, formula bar terlihat",
-          "webp_url": null
+          "source_path": "D:\\Download\\OneDrive\\Documents\\ShareX\\Screenshots\\2026-09\\EXCEL_nkYbfqGi5P_Distinct Customers.png",
+          "archived_to": "sheethub-assets/screenshots/google-sheets-unique-function-guide/hero.png",
+          "webp_url": "https://res.cloudinary.com/snipgeek/image/upload/q_auto/f_auto/v1788656609/sheethub/images/google-sheets-unique-function-guide/hero.webp"
         },
         {
           "name": "unique-rows",
           "desc": "sheet Unique Rows: dedup 3 kolom, hanya baris identik yang hilang",
-          "webp_url": null
+          "source_path": "D:\\Download\\OneDrive\\Documents\\ShareX\\Screenshots\\2026-09\\EXCEL_qRThIgkK6B_Unique Rows.png",
+          "archived_to": "sheethub-assets/screenshots/google-sheets-unique-function-guide/unique-rows.png",
+          "webp_url": "https://res.cloudinary.com/snipgeek/image/upload/q_auto/f_auto/v1788656620/sheethub/images/google-sheets-unique-function-guide/unique-rows.webp"
+        },
+        {
+          "name": "exactly-once",
+          "desc": "hasil UNIQUE(A2:A100, FALSE, TRUE) hanya nilai muncul tepat sekali",
+          "source_path": "D:\\Download\\OneDrive\\Documents\\ShareX\\Screenshots\\2026-09\\EXCEL_5KkradPEE7_Exactly Once.png",
+          "archived_to": "sheethub-assets/screenshots/google-sheets-unique-function-guide/exactly-once.png",
+          "webp_url": "https://res.cloudinary.com/snipgeek/image/upload/q_auto/f_auto/v1788656625/sheethub/images/google-sheets-unique-function-guide/exactly-once.webp"
+        }
+      ],
+      "dropped_shots": [
+        {
+          "name": "sort-unique",
+          "reason": "tidak ada capture SORT(UNIQUE()) dari user; konsep sorting tetap dicakup teks artikel, dan shot hero sudah menampilkan hasil UNIQUE spill"
         }
       ]
     },
