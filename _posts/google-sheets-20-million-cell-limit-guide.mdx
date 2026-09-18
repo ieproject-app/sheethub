@@ -51,10 +51,10 @@ The estimate also exposes an easy place to save capacity: archive tabs. If an ar
 More capacity removes one ceiling, but it does not make every operation cheap. Three problems can remain:
 
 1. **Complex formulas still recalculate.** Volatile functions, repeated full-column references, and deeply nested logic can make a workbook slow even below the cell limit. Use bounded ranges and calculate once where possible.
-2. **Large imports still create large outputs.** An import or query that returns unnecessary columns consumes space and makes later formulas work harder. Filter and select only the fields the report needs. For bounded query ranges, see this guide to [advanced QUERY in Google Sheets](/blog/google-sheets-query-advanced-guide).
+2. **Large imports still create large outputs.** An import or query that returns unnecessary columns consumes space and makes later formulas work harder. Filter and select only the fields the report needs. For bounded query ranges, see this guide to [advanced QUERY in Google Sheets](/blog/query-function-google-sheets-guide).
 3. **A full output area can still be blocked.** Dynamic results need clear destination cells. If a large result hits notes, formulas, or merged cells, review this [Google Sheets 20 million cell limit planning for array results](/blog/google-sheets-array-result-not-expanded-guide) before changing the formula.
 
-Formatting deserves the same discipline. Conditional formatting across entire columns may be convenient, but thousands of unnecessary rules add work when the sheet changes. Keep rules scoped to the real data range with these [Google Sheets conditional formatting](/blog/google-sheets-conditional-formatting-guide) techniques.
+Formatting deserves the same discipline. Conditional formatting across entire columns may be convenient, but thousands of unnecessary rules add work when the sheet changes. Keep rules scoped to the real data range with these [Google Sheets conditional formatting](/blog/conditional-formatting-guide) techniques.
 
 ## Reduce size and improve responsiveness
 

@@ -39,7 +39,7 @@ Each function in the family rounds a number based on a count of digits, but they
 
 The negative `num_digits` argument is the part most people miss. `ROUND(1234.567, -2)` returns 1200, because it rounds to the nearest hundreds place.
 
-`ROUND`, `MROUND`, `CEILING`, and `FLOOR` are available in every modern Excel version, including Excel 2021 and Microsoft 365. There is no legacy version restriction here, unlike dynamic array functions. For precision issues that arise from storing many decimals, the [Excel floating point errors guide](/blog/excel-floating-point-errors-guide) explains the underlying binary storage quirks.
+`ROUND`, `MROUND`, `CEILING`, and `FLOOR` are available in every modern Excel version, including Excel 2021 and Microsoft 365. There is no legacy version restriction here, unlike dynamic array functions. For precision issues that arise from storing many decimals, the [Excel floating point errors guide](/blog/excel-formula-errors-troubleshooting-guide) explains the underlying binary storage quirks.
 
 ## Pattern 1: Round currency to two decimals
 

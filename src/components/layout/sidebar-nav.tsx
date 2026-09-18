@@ -75,7 +75,7 @@ const DOCS_NAV: NavSection[] = [
     items: [
       { name: "Evaluate Formula & Debug", href: "/blog/excel-evaluate-formula-debugging-guide" },
       { name: "Fix #CALC! Array Errors", href: "/blog/excel-calc-error-dynamic-array-guide" },
-      { name: "Floating-Point Math Errors", href: "/blog/excel-floating-point-errors-guide" },
+      { name: "Floating-Point Math Errors", href: "/blog/excel-formula-errors-troubleshooting-guide" },
       { name: "Performance Diagnostics", href: "/blog/excel-check-performance-guide" },
     ],
   },

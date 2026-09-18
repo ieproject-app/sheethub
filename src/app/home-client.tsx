@@ -59,7 +59,7 @@ const MODULES = [
     tutorials: [
       { title: "Evaluate Formula Tool & Step-by-Step Debugging", href: "/blog/excel-evaluate-formula-debugging-guide", tag: "Debugging" },
       { title: "How to Fix #CALC! Dynamic Array Errors", href: "/blog/excel-calc-error-dynamic-array-guide", tag: "Error Fix" },
-      { title: "Floating-Point Precision Errors in Spreadsheets", href: "/blog/excel-floating-point-errors-guide", tag: "Math Logic" },
+      { title: "Floating-Point Precision Errors in Spreadsheets", href: "/blog/excel-formula-errors-troubleshooting-guide", tag: "Math Logic" },
       { title: "Workbook Performance & Calculation Diagnostics", href: "/blog/excel-check-performance-guide", tag: "Performance" },
     ],
   },

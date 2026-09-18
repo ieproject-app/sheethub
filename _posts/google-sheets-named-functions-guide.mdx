@@ -98,7 +98,7 @@ Its definition might be:
 
 When you pass a range, make sure the range and criteria have compatible dimensions. A one-column status range cannot filter a three-column data range unless the rows line up as intended. Test both a match and a no-match case before sharing the function.
 
-If the result is meant to feed a report, an [advanced QUERY in Google Sheets](/blog/google-sheets-query-advanced-guide) may be a better fit when grouping, labeling, or sorting is the main task. A named function is most useful when the same piece of logic appears in several formulas.
+If the result is meant to feed a report, an [advanced QUERY in Google Sheets](/blog/query-function-google-sheets-guide) may be a better fit when grouping, labeling, or sorting is the main task. A named function is most useful when the same piece of logic appears in several formulas.
 
 ## Import and manage reusable functions
 
@@ -125,7 +125,7 @@ For debugging, replace the named-function call with its full formula and test th
 
 ## When to use a named function
 
-Use a named function when the same multi-step calculation appears in multiple places and its inputs can be described clearly. Use `LET` when the logic is local to one formula and you mainly need readable intermediate variables. The [LET guide for Google Sheets](/blog/google-sheets-let-function-guide) is a useful comparison for that pattern.
+Use a named function when the same multi-step calculation appears in multiple places and its inputs can be described clearly. Use `LET` when the logic is local to one formula and you mainly need readable intermediate variables. The [LET guide for Google Sheets](/blog/excel-let-function-guide) is a useful comparison for that pattern.
 
 Use a helper column when intermediate values need to be visible, inspected row by row, or reused by several unrelated formulas. Use Apps Script when the operation needs external services, custom JavaScript, scheduled actions, or capabilities that spreadsheet formulas do not provide.
 
