@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updated": "2026-08-30",
+  "updated": "2026-09-24",
   "goal": "every article has visuals + example file",
   "standard": {
     "aspectRatio": "natural (ikut screenshot)",
@@ -96,8 +96,8 @@
       ]
     },
     "xlookup-complete-guide": {
-      "status": "awaiting_capture",
-      "updated": "2026-08-30",
+      "status": "published_visual",
+      "updated": "2026-09-24",
       "template": {
         "kind": "xlsx-local",
         "file": "public/downloads/templates/xlookup-complete-guide.xlsx",
@@ -107,23 +107,37 @@
       "shots": [
         {
           "name": "hero",
-          "desc": "sheet Basic & Errors: tabel produk + XLOOKUP P102 hasil harga",
-          "webp_url": null
+          "status": "embedded",
+          "desc": "Basic & Errors sheet: P102 exact match returns 89.99 and P999 returns Not found.",
+          "source_path": "D:\\Download\\OneDrive\\Documents\\ShareX\\Screenshots\\2026-09\\EXCEL_gTiwRq3q21.png",
+          "archived_to": "sheethub-assets/screenshots/xlookup-complete-guide/hero.png",
+          "webp_url": "https://res.cloudinary.com/snipgeek/image/upload/q_auto/f_auto/v1790257433/sheethub/images/xlookup-complete-guide/hero.webp"
         },
         {
-          "name": "basic-exact",
-          "desc": "exact match + custom Not found (P999) dalam satu layar",
-          "webp_url": null
-        },
-        {
-          "name": "left-lookup",
-          "desc": "sheet Left Lookup & Spill: cari badge kanan, hasil employee kiri",
-          "webp_url": null
+          "name": "approximate-tax",
+          "status": "embedded",
+          "desc": "75,000 income matches the next smaller 50,000 threshold and returns a 20% tax rate.",
+          "source_path": "D:\\Download\\OneDrive\\Documents\\ShareX\\Screenshots\\2026-09\\EXCEL_nTTqlPaP2s.png",
+          "archived_to": "sheethub-assets/screenshots/xlookup-complete-guide/approximate-tax.png",
+          "webp_url": "https://res.cloudinary.com/snipgeek/image/upload/q_auto/f_auto/v1790257433/sheethub/images/xlookup-complete-guide/approximate-tax.webp"
         },
         {
           "name": "multi-column",
-          "desc": "spill 3 kolom (name/price/stock) dari satu formula",
-          "webp_url": null
+          "status": "embedded",
+          "desc": "Left lookup returns Ben Ortega; one XLOOKUP spills Monitor Arm, 89.99, and 25 across three columns.",
+          "source_path": "D:\\Download\\OneDrive\\Documents\\ShareX\\Screenshots\\2026-09\\EXCEL_XBw7usrqTa.png",
+          "archived_to": "sheethub-assets/screenshots/xlookup-complete-guide/multi-column.png",
+          "webp_url": "https://res.cloudinary.com/snipgeek/image/upload/q_auto/f_auto/v1790257433/sheethub/images/xlookup-complete-guide/multi-column.webp"
+        }
+      ],
+      "dropped_shots": [
+        {
+          "name": "basic-exact",
+          "reason": "Exact match and the custom Not found result are both visible in the hero screenshot, so a separate image would repeat them."
+        },
+        {
+          "name": "left-lookup",
+          "reason": "Captured together with the three-column spill in the multi-column screenshot."
         }
       ]
     },
